@@ -61,6 +61,19 @@ namespace AgentCharacterEditor.Panels
 			ListViewOverlays.Items.Add (new ListViewItemCommon ("Narrow", 6));
 		}
 
+		protected override void OnLoadConfig (object sender, EventArgs e)
+		{
+			if (Settings.Default.IsValid)
+			{
+				CheckBoxOverlayTransparent.Checked = Settings.Default.ShowOverlayTransparency;
+			}
+		}
+
+		protected override void OnSaveConfig (object sender, EventArgs e)
+		{
+			Settings.Default.ShowOverlayTransparency = CheckBoxOverlayTransparent.Checked;
+		}
+
 		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Display
@@ -168,41 +181,66 @@ namespace AgentCharacterEditor.Panels
 
 		//=============================================================================
 
-		private void ShowFrameSample (FileFrameOverlay pFrameOverlay)
+		private void ShowOverlaySample (FileFrameOverlay pFrameOverlay)
 		{
 			using (PanelFillingState lFillingState = new PanelFillingState (this))
 			{
-				System.Drawing.Bitmap lBitmap = null;
+				System.Drawing.Bitmap lFrameBitmap = null;
+				System.Drawing.Bitmap lOverlayBitmap = null;
 
 				GroupBoxImage.Text = Titles.Overlay (pFrameOverlay);
+				PanelOverlayImage.SuspendLayout ();
 				PanelSample.SuspendLayout ();
 
 				if (pFrameOverlay == null)
 				{
-					PanelSample.Enabled = false;
+					ButtonShiftUp.Enabled = false;
+					ButtonShiftDown.Enabled = false;
+					ButtonShiftLeft.Enabled = false;
+					ButtonShiftRight.Enabled = false;
+
 					if (!IsPanelEmpty)
 					{
-						lBitmap = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent);
+						lFrameBitmap = CharacterFile.GetFrameBitmap (Frame, true, CheckBoxOverlayTransparent.Checked ? Color.Transparent : Color.Empty);
 					}
 				}
 				else
 				{
-					PanelSample.Enabled = !Program.FileIsReadOnly;
-					lBitmap = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent, (Int16)pFrameOverlay.OverlayType);
+					ButtonShiftUp.Enabled = !Program.FileIsReadOnly;
+					ButtonShiftDown.Enabled = !Program.FileIsReadOnly;
+					ButtonShiftLeft.Enabled = !Program.FileIsReadOnly;
+					ButtonShiftRight.Enabled = !Program.FileIsReadOnly;
+
+					lFrameBitmap = CharacterFile.GetFrameBitmap (Frame, true, CheckBoxOverlayTransparent.Checked ? Color.Transparent : Color.Empty, (Int16)pFrameOverlay.OverlayType);
+					lOverlayBitmap = CharacterFile.GetImageBitmap ((int)pFrameOverlay.ImageNdx, true, CheckBoxOverlayTransparent.Checked ? Color.Transparent : Color.Empty);
 				}
 
-				if (lBitmap == null)
+				if (lFrameBitmap == null)
 				{
 					PictureBoxImageSample.Image = null;
 					PictureBoxImageSample.ClientSize = FrameSample.DefaultImageSize;
 				}
 				else
 				{
-					PictureBoxImageSample.Image = lBitmap;
+					PictureBoxImageSample.Image = lFrameBitmap;
 					PictureBoxImageSample.ClientSize = CharacterFile.Header.ImageSize;
 				}
 
+				if (lOverlayBitmap == null)
+				{
+					PanelOverlayImage.Visible = false;
+					PictureBoxOverlaySample.Image = null;
+				}
+				else
+				{
+					PictureBoxOverlaySample.Image = lOverlayBitmap;
+					PictureBoxOverlaySample.ClientSize = lOverlayBitmap.Size;
+					PanelOverlayImage.Visible = true;
+				}
+
 				PanelSample.ResumeLayout (true);
+				PanelOverlayImage.ResumeLayout (true);
+
 				ButtonShiftUp.Width = ToolStripShiftUp.Width;
 				ButtonShiftDown.Width = ToolStripShiftDown.Width;
 				ButtonShiftLeft.Height = ToolStripShiftLeft.Height;
@@ -325,6 +363,13 @@ namespace AgentCharacterEditor.Panels
 			HandleReplaceChanged ();
 		}
 
+		private void CheckBoxOverlayTransparent_CheckedChanged (object sender, EventArgs e)
+		{
+			if (!IsPanelFilling)
+			{
+				ShowSelectedOverlay ();
+			}
+		}
 
 		#endregion
 	}

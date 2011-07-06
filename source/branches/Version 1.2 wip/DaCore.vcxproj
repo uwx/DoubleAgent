@@ -150,6 +150,7 @@
     <ClCompile Include="Common\AgentFileCache.cpp" />
     <ClCompile Include="Core\AgentFileParts.cpp" />
     <ClCompile Include="Core\AgentFiles.cpp" />
+    <ClCompile Include="Core\AgentFileV15.cpp" />
     <ClCompile Include="Core\AgentIconMaker.cpp" />
     <ClCompile Include="Core\AgentListeningWnd.cpp" />
     <ClCompile Include="Core\AgentNotifyIcon.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Common\AgentFileCache.h" />
     <ClInclude Include="Core\AgentFileParts.h" />
     <ClInclude Include="Core\AgentFiles.h" />
+    <ClInclude Include="Core\AgentFileV15.h" />
     <ClInclude Include="Core\AgentIconMaker.h" />
     <ClInclude Include="Core\AgentListeningWnd.h" />
     <ClInclude Include="Core\AgentNotifyIcon.h" />

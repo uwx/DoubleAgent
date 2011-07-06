@@ -105,10 +105,12 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Core\AgentFile.cpp" />
+    <ClCompile Include="Core\AgentFileAcf.cpp" />
     <ClCompile Include="Core\AgentFileAcs.cpp" />
     <ClCompile Include="Core\AgentFileBinary.cpp" />
     <ClCompile Include="Core\AgentFileParts.cpp" />
     <ClCompile Include="Core\AgentFileScript.cpp" />
+    <ClCompile Include="Core\AgentFileV15.cpp" />
     <ClCompile Include="Core\AgentText.cpp" />
     <ClCompile Include="Core\AgentTextParse.cpp" />
     <ClCompile Include="Managed\BalloonPreview.cpp" />
@@ -126,10 +128,12 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
   <ItemGroup>
     <ClInclude Include="Core\AgentBalloonShape.h" />
     <ClInclude Include="Core\AgentFile.h" />
+    <ClInclude Include="Core\AgentFileAcf.h" />
     <ClInclude Include="Core\AgentFileAcs.h" />
     <ClInclude Include="Core\AgentFileBinary.h" />
     <ClInclude Include="Core\AgentFileParts.h" />
     <ClInclude Include="Core\AgentFileScript.h" />
+    <ClInclude Include="Core\AgentFileV15.h" />
     <ClInclude Include="Core\AgentText.h" />
     <ClInclude Include="Core\AgentTextParse.h" />
     <ClInclude Include="Include\DaVersion.h" />

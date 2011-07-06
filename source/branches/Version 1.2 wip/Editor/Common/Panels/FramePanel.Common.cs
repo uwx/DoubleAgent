@@ -135,14 +135,21 @@ namespace AgentCharacterEditor.Panels
 
 		public override void ShowFilePart (ResolvePart pFilePart)
 		{
-			FilePart = pFilePart;
+			try
+			{
+				FilePart = pFilePart;
 
-			ShowFrameName ();
-			ShowFrameDuration ();
-			ShowFrameSample ();
-			ShowFrameImages ();
-			ShowSelectedImage ();
-			ShowFrameSound ();
+				ShowFrameName ();
+				ShowFrameDuration ();
+				ShowFrameSample ();
+				ShowFrameImages ();
+				ShowSelectedImage ();
+				ShowFrameSound ();
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 		}
 
 		private void ShowFrameName ()

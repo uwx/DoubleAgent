@@ -147,14 +147,21 @@ namespace AgentCharacterEditor.Panels
 
 		public override void ShowFilePart (ResolvePart pFilePart)
 		{
-			FilePart = pFilePart;
+			try
+			{
+				FilePart = pFilePart;
 
-			ShowAnimationName ();
-			ShowReturnAnimations ();
-			ShowReturnAnimation ();
-			ShowDefaultFrameDuration ();
-			ShowAnimationStates ();
-			ShowAnimationFrames ();
+				ShowAnimationName ();
+				ShowReturnAnimations ();
+				ShowReturnAnimation ();
+				ShowDefaultFrameDuration ();
+				ShowAnimationStates ();
+				ShowAnimationFrames ();
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 		}
 
 		private void ShowAnimationName ()

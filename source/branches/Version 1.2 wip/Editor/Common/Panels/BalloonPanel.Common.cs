@@ -65,8 +65,15 @@ namespace AgentCharacterEditor.Panels
 
 		public override void ShowFilePart (ResolvePart pFilePart)
 		{
-			FilePart = pFilePart;
-			ShowBalloonProperties ();
+			try
+			{
+				FilePart = pFilePart;
+				ShowBalloonProperties ();
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 		}
 
 		private void ShowBalloonProperties ()

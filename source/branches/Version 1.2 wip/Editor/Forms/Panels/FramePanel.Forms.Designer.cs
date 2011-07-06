@@ -56,12 +56,40 @@ namespace AgentCharacterEditor.Panels
 			System.Windows.Forms.TableLayoutPanel PanelMiddle;
 			System.Windows.Forms.TableLayoutPanel PanelImage;
 			System.Windows.Forms.TableLayoutPanel PanelSound;
-			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.LabelFrameName = new DoubleAgent.LabelCompat();
 			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.LabelDuration = new DoubleAgent.LabelCompat();
 			this.NumericDuration = new DoubleAgent.NumericUpDownEx();
 			this.LabelDurationUnits = new DoubleAgent.LabelCompat();
+			this.GroupBoxFrame = new System.Windows.Forms.GroupBox();
+			this.PanelFrameSample = new System.Windows.Forms.TableLayoutPanel();
+			this.CheckBoxFrameTransparent = new DoubleAgent.CheckBoxCompat();
+			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
+			this.GroupBoxImage = new System.Windows.Forms.GroupBox();
+			this.PanelImageDetails = new System.Windows.Forms.Panel();
+			this.LabelOffsetX = new DoubleAgent.LabelCompat();
+			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
+			this.LabelOffsetY = new DoubleAgent.LabelCompat();
+			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
+			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
+			this.CheckBoxImageTransparent = new DoubleAgent.CheckBoxCompat();
+			this.PanelImageClip = new System.Windows.Forms.Panel();
+			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
+			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftRight = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripShiftDown = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
+			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
+			this.ToolStripSound = new DoubleAgent.ToolStripEx();
+			this.ButtonSoundPreview = new DoubleAgent.ToolStripButtonCompat();
+			this.TextBoxSoundFile = new DoubleAgent.TextBoxEx();
+			this.ToolStripSoundFile = new DoubleAgent.ToolStripEx();
+			this.ButtonSoundImport = new DoubleAgent.ToolStripButtonCompat();
+			this.ButtonSoundExport = new DoubleAgent.ToolStripButtonCompat();
+			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.GroupBoxImages = new DoubleAgent.GroupBoxCompat();
 			this.PanelImages = new System.Windows.Forms.TableLayoutPanel();
 			this.ListViewImages = new DoubleAgent.ListViewEx();
@@ -80,33 +108,7 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonChooseFile = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonMovePrev = new DoubleAgent.ToolStripButtonCompat();
 			this.ButtonMoveNext = new DoubleAgent.ToolStripButtonCompat();
-			this.GroupBoxFrame = new System.Windows.Forms.GroupBox();
-			this.PictureBoxFrameSample = new AgentCharacterEditor.FrameSample();
-			this.GroupBoxImage = new System.Windows.Forms.GroupBox();
-			this.PanelImageDetails = new System.Windows.Forms.Panel();
-			this.LabelOffsetX = new DoubleAgent.LabelCompat();
-			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
-			this.LabelOffsetY = new DoubleAgent.LabelCompat();
-			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
-			this.CheckBoxTransparent = new DoubleAgent.CheckBoxCompat();
-			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
-			this.PanelImageClip = new System.Windows.Forms.Panel();
-			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
-			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
-			this.ToolStripShiftRight = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftRight = new DoubleAgent.ToolStripButtonEx();
-			this.ToolStripShiftDown = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
-			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
-			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
 			this.GroupBoxSound = new DoubleAgent.GroupBoxCompat();
-			this.ToolStripSound = new DoubleAgent.ToolStripEx();
-			this.ButtonSoundPreview = new DoubleAgent.ToolStripButtonCompat();
-			this.TextBoxSoundFile = new DoubleAgent.TextBoxEx();
-			this.ToolStripSoundFile = new DoubleAgent.ToolStripEx();
-			this.ButtonSoundImport = new DoubleAgent.ToolStripButtonCompat();
-			this.ButtonSoundExport = new DoubleAgent.ToolStripButtonCompat();
 			PanelFrame = new System.Windows.Forms.Panel();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -114,15 +116,11 @@ namespace AgentCharacterEditor.Panels
 			PanelMiddle = new System.Windows.Forms.TableLayoutPanel();
 			PanelImage = new System.Windows.Forms.TableLayoutPanel();
 			PanelSound = new System.Windows.Forms.TableLayoutPanel();
-			this.PanelMain.SuspendLayout();
 			PanelFrame.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).BeginInit();
-			this.GroupBoxImages.SuspendLayout();
-			this.PanelImages.SuspendLayout();
-			this.ContextMenuImages.SuspendLayout();
-			this.ToolStripImages.SuspendLayout();
 			PanelMiddle.SuspendLayout();
 			this.GroupBoxFrame.SuspendLayout();
+			this.PanelFrameSample.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).BeginInit();
 			this.GroupBoxImage.SuspendLayout();
 			PanelImage.SuspendLayout();
@@ -136,33 +134,16 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftRight.SuspendLayout();
 			this.ToolStripShiftDown.SuspendLayout();
 			this.ToolStripShiftLeft.SuspendLayout();
-			this.GroupBoxSound.SuspendLayout();
 			PanelSound.SuspendLayout();
 			this.ToolStripSound.SuspendLayout();
 			this.ToolStripSoundFile.SuspendLayout();
+			this.PanelMain.SuspendLayout();
+			this.GroupBoxImages.SuspendLayout();
+			this.PanelImages.SuspendLayout();
+			this.ContextMenuImages.SuspendLayout();
+			this.ToolStripImages.SuspendLayout();
+			this.GroupBoxSound.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// PanelMain
-			// 
-			this.PanelMain.ColumnCount = 1;
-			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelMain.Controls.Add(PanelFrame, 0, 0);
-			this.PanelMain.Controls.Add(this.GroupBoxImages, 0, 1);
-			this.PanelMain.Controls.Add(PanelMiddle, 0, 2);
-			this.PanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
-			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-			this.PanelMain.Location = new System.Drawing.Point(9, 0);
-			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelMain.Name = "PanelMain";
-			this.PanelMain.RowCount = 4;
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.PanelMain.Size = new System.Drawing.Size(682, 650);
-			this.PanelMain.TabIndex = 0;
 			// 
 			// PanelFrame
 			// 
@@ -248,229 +229,20 @@ namespace AgentCharacterEditor.Panels
 			this.LabelDurationUnits.TabIndex = 4;
 			this.LabelDurationUnits.Text = "(1/100 seconds)";
 			// 
-			// GroupBoxImages
-			// 
-			this.GroupBoxImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.GroupBoxImages.AutoSize = true;
-			this.GroupBoxImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.GroupBoxImages.Controls.Add(this.PanelImages);
-			this.GroupBoxImages.Location = new System.Drawing.Point(0, 37);
-			this.GroupBoxImages.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
-			this.GroupBoxImages.Name = "GroupBoxImages";
-			this.GroupBoxImages.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxImages.Size = new System.Drawing.Size(682, 223);
-			this.GroupBoxImages.TabIndex = 0;
-			this.GroupBoxImages.TabStop = false;
-			this.GroupBoxImages.Text = "Images";
-			// 
-			// PanelImages
-			// 
-			this.PanelImages.AutoSize = true;
-			this.PanelImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.PanelImages.ColumnCount = 1;
-			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelImages.Controls.Add(this.ListViewImages, 0, 1);
-			this.PanelImages.Controls.Add(this.ToolStripImages, 0, 0);
-			this.PanelImages.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelImages.Location = new System.Drawing.Point(6, 24);
-			this.PanelImages.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelImages.Name = "PanelImages";
-			this.PanelImages.RowCount = 2;
-			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.PanelImages.Size = new System.Drawing.Size(670, 193);
-			this.PanelImages.TabIndex = 0;
-			// 
-			// ListViewImages
-			// 
-			this.ListViewImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.ListViewImages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeaderImage,
-            this.ColumnHeaderPosition,
-            this.ColumnHeaderSize,
-            this.ColumnHeaderPath});
-			this.ListViewImages.ContextMenuStrip = this.ContextMenuImages;
-			this.ListViewImages.FullRowSelect = true;
-			this.ListViewImages.GridLines = true;
-			this.ListViewImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.ListViewImages.HideSelection = false;
-			this.ListViewImages.Location = new System.Drawing.Point(0, 30);
-			this.ListViewImages.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-			this.ListViewImages.MaximumSize = new System.Drawing.Size(10000, 400);
-			this.ListViewImages.MinimumSize = new System.Drawing.Size(200, 100);
-			this.ListViewImages.MultiSelect = false;
-			this.ListViewImages.Name = "ListViewImages";
-			this.ListViewImages.ShowGroups = false;
-			this.ListViewImages.ShowItemToolTips = true;
-			this.ListViewImages.Size = new System.Drawing.Size(670, 163);
-			this.ListViewImages.TabIndex = 1;
-			this.ListViewImages.UseCompatibleStateImageBehavior = false;
-			this.ListViewImages.View = System.Windows.Forms.View.Details;
-			this.ListViewImages.ItemActivate += new System.EventHandler(this.ListViewImages_ItemActivate);
-			this.ListViewImages.SelectedIndexChanged += new System.EventHandler(this.ListViewImages_SelectedIndexChanged);
-			this.ListViewImages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListViewImages_MouseUp);
-			// 
-			// ColumnHeaderImage
-			// 
-			this.ColumnHeaderImage.Text = "Image";
-			this.ColumnHeaderImage.Width = 100;
-			// 
-			// ColumnHeaderPosition
-			// 
-			this.ColumnHeaderPosition.Text = "Offset";
-			this.ColumnHeaderPosition.Width = 90;
-			// 
-			// ColumnHeaderSize
-			// 
-			this.ColumnHeaderSize.Text = "Dimensions";
-			this.ColumnHeaderSize.Width = 90;
-			// 
-			// ColumnHeaderPath
-			// 
-			this.ColumnHeaderPath.Text = "Path";
-			this.ColumnHeaderPath.Width = 100;
-			// 
-			// ContextMenuImages
-			// 
-			this.ContextMenuImages.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItemAdd,
-            this.MenuItemChooseFile,
-            toolStripSeparator2,
-            this.MenuItemMovePrev,
-            this.MenuItemMoveNext,
-            toolStripSeparator3});
-			this.ContextMenuImages.Name = "ContextMenuImages";
-			this.ContextMenuImages.Size = new System.Drawing.Size(222, 128);
-			this.ContextMenuImages.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuImages_Opening);
-			// 
-			// MenuItemAdd
-			// 
-			this.MenuItemAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
-			this.MenuItemAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemAdd.Name = "MenuItemAdd";
-			this.MenuItemAdd.Size = new System.Drawing.Size(221, 28);
-			this.MenuItemAdd.Text = "Add a new image";
-			this.MenuItemAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
-			// 
-			// MenuItemChooseFile
-			// 
-			this.MenuItemChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
-			this.MenuItemChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemChooseFile.Name = "MenuItemChooseFile";
-			this.MenuItemChooseFile.Size = new System.Drawing.Size(221, 28);
-			this.MenuItemChooseFile.Text = "Open image file";
-			this.MenuItemChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
-			// 
 			// toolStripSeparator2
 			// 
 			toolStripSeparator2.Name = "toolStripSeparator2";
 			toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
-			// 
-			// MenuItemMovePrev
-			// 
-			this.MenuItemMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
-			this.MenuItemMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemMovePrev.Name = "MenuItemMovePrev";
-			this.MenuItemMovePrev.Size = new System.Drawing.Size(221, 28);
-			this.MenuItemMovePrev.Text = "Move image up";
-			this.MenuItemMovePrev.Click += new System.EventHandler(this.ButtonMovePrev_Click);
-			// 
-			// MenuItemMoveNext
-			// 
-			this.MenuItemMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
-			this.MenuItemMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.MenuItemMoveNext.Name = "MenuItemMoveNext";
-			this.MenuItemMoveNext.Size = new System.Drawing.Size(221, 28);
-			this.MenuItemMoveNext.Text = "Move image down";
-			this.MenuItemMoveNext.Click += new System.EventHandler(this.ButtonMoveNext_Click);
 			// 
 			// toolStripSeparator3
 			// 
 			toolStripSeparator3.Name = "toolStripSeparator3";
 			toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
 			// 
-			// ToolStripImages
-			// 
-			this.ToolStripImages.BackColor = System.Drawing.Color.Transparent;
-			this.ToolStripImages.CanOverflow = false;
-			this.ToolStripImages.Dock = System.Windows.Forms.DockStyle.None;
-			this.ToolStripImages.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.ToolStripImages.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ButtonAdd,
-            this.ButtonDelete,
-            this.ButtonChooseFile,
-            toolStripSeparator1,
-            this.ButtonMovePrev,
-            this.ButtonMoveNext});
-			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
-			this.ToolStripImages.Name = "ToolStripImages";
-			this.ToolStripImages.Size = new System.Drawing.Size(129, 27);
-			this.ToolStripImages.TabIndex = 0;
-			// 
-			// ButtonAdd
-			// 
-			this.ButtonAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
-			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonAdd.Name = "ButtonAdd";
-			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonAdd.Size = new System.Drawing.Size(24, 24);
-			this.ButtonAdd.Text = "Add a new image";
-			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
-			// 
-			// ButtonDelete
-			// 
-			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
-			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonDelete.Name = "ButtonDelete";
-			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonDelete.Size = new System.Drawing.Size(24, 24);
-			this.ButtonDelete.Text = "Remove";
-			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
-			// 
-			// ButtonChooseFile
-			// 
-			this.ButtonChooseFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
-			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonChooseFile.Name = "ButtonChooseFile";
-			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonChooseFile.Size = new System.Drawing.Size(24, 24);
-			this.ButtonChooseFile.Text = "Open image file";
-			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
-			// 
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1.Name = "toolStripSeparator1";
 			toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
-			// 
-			// ButtonMovePrev
-			// 
-			this.ButtonMovePrev.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
-			this.ButtonMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonMovePrev.Name = "ButtonMovePrev";
-			this.ButtonMovePrev.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonMovePrev.Size = new System.Drawing.Size(24, 24);
-			this.ButtonMovePrev.Text = "Move image up";
-			this.ButtonMovePrev.Click += new System.EventHandler(this.ButtonMovePrev_Click);
-			// 
-			// ButtonMoveNext
-			// 
-			this.ButtonMoveNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.ButtonMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
-			this.ButtonMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.ButtonMoveNext.Name = "ButtonMoveNext";
-			this.ButtonMoveNext.Padding = new System.Windows.Forms.Padding(2);
-			this.ButtonMoveNext.Size = new System.Drawing.Size(24, 24);
-			this.ButtonMoveNext.Text = "Move image down";
-			this.ButtonMoveNext.Click += new System.EventHandler(this.ButtonMoveNext_Click);
 			// 
 			// PanelMiddle
 			// 
@@ -495,22 +267,51 @@ namespace AgentCharacterEditor.Panels
 			// 
 			this.GroupBoxFrame.AutoSize = true;
 			this.GroupBoxFrame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.GroupBoxFrame.Controls.Add(this.PictureBoxFrameSample);
+			this.GroupBoxFrame.Controls.Add(this.PanelFrameSample);
 			this.GroupBoxFrame.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GroupBoxFrame.Location = new System.Drawing.Point(373, 9);
+			this.GroupBoxFrame.Location = new System.Drawing.Point(338, 9);
 			this.GroupBoxFrame.Margin = new System.Windows.Forms.Padding(9, 9, 0, 0);
 			this.GroupBoxFrame.Name = "GroupBoxFrame";
 			this.GroupBoxFrame.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxFrame.Size = new System.Drawing.Size(309, 310);
+			this.GroupBoxFrame.Size = new System.Drawing.Size(344, 310);
 			this.GroupBoxFrame.TabIndex = 4;
 			this.GroupBoxFrame.TabStop = false;
 			this.GroupBoxFrame.Text = "Frame";
+			// 
+			// PanelFrameSample
+			// 
+			this.PanelFrameSample.ColumnCount = 1;
+			this.PanelFrameSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelFrameSample.Controls.Add(this.CheckBoxFrameTransparent, 0, 1);
+			this.PanelFrameSample.Controls.Add(this.PictureBoxFrameSample, 0, 0);
+			this.PanelFrameSample.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelFrameSample.Location = new System.Drawing.Point(6, 24);
+			this.PanelFrameSample.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelFrameSample.Name = "PanelFrameSample";
+			this.PanelFrameSample.RowCount = 2;
+			this.PanelFrameSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelFrameSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelFrameSample.Size = new System.Drawing.Size(332, 280);
+			this.PanelFrameSample.TabIndex = 3;
+			// 
+			// CheckBoxFrameTransparent
+			// 
+			this.CheckBoxFrameTransparent.AutoSize = true;
+			this.PanelFrameSample.SetColumnSpan(this.CheckBoxFrameTransparent, 3);
+			this.CheckBoxFrameTransparent.Location = new System.Drawing.Point(3, 140);
+			this.CheckBoxFrameTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+			this.CheckBoxFrameTransparent.Name = "CheckBoxFrameTransparent";
+			this.CheckBoxFrameTransparent.Size = new System.Drawing.Size(151, 21);
+			this.CheckBoxFrameTransparent.TabIndex = 3;
+			this.CheckBoxFrameTransparent.Text = "Show transparency";
+			this.CheckBoxFrameTransparent.UseVisualStyleBackColor = true;
+			this.CheckBoxFrameTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxFrameTransparent_CheckedChanged);
 			// 
 			// PictureBoxFrameSample
 			// 
 			this.PictureBoxFrameSample.BackColor = System.Drawing.SystemColors.Window;
 			this.PictureBoxFrameSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.PictureBoxFrameSample.Location = new System.Drawing.Point(6, 24);
+			this.PictureBoxFrameSample.Location = new System.Drawing.Point(0, 0);
 			this.PictureBoxFrameSample.Margin = new System.Windows.Forms.Padding(0);
 			this.PictureBoxFrameSample.MaximumSize = new System.Drawing.Size(258, 258);
 			this.PictureBoxFrameSample.Name = "PictureBoxFrameSample";
@@ -529,7 +330,7 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxImage.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
 			this.GroupBoxImage.Name = "GroupBoxImage";
 			this.GroupBoxImage.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxImage.Size = new System.Drawing.Size(364, 310);
+			this.GroupBoxImage.Size = new System.Drawing.Size(329, 310);
 			this.GroupBoxImage.TabIndex = 4;
 			this.GroupBoxImage.TabStop = false;
 			this.GroupBoxImage.Text = "Image %1";
@@ -550,7 +351,7 @@ namespace AgentCharacterEditor.Panels
 			PanelImage.Name = "PanelImage";
 			PanelImage.RowCount = 1;
 			PanelImage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			PanelImage.Size = new System.Drawing.Size(352, 280);
+			PanelImage.Size = new System.Drawing.Size(317, 280);
 			PanelImage.TabIndex = 2;
 			// 
 			// PanelImageDetails
@@ -561,11 +362,10 @@ namespace AgentCharacterEditor.Panels
 			this.PanelImageDetails.Controls.Add(this.NumericOffsetX);
 			this.PanelImageDetails.Controls.Add(this.LabelOffsetY);
 			this.PanelImageDetails.Controls.Add(this.NumericOffsetY);
-			this.PanelImageDetails.Controls.Add(this.CheckBoxTransparent);
 			this.PanelImageDetails.Location = new System.Drawing.Point(198, 27);
 			this.PanelImageDetails.Margin = new System.Windows.Forms.Padding(12, 27, 0, 0);
 			this.PanelImageDetails.Name = "PanelImageDetails";
-			this.PanelImageDetails.Size = new System.Drawing.Size(154, 89);
+			this.PanelImageDetails.Size = new System.Drawing.Size(119, 53);
 			this.PanelImageDetails.TabIndex = 3;
 			// 
 			// LabelOffsetX
@@ -636,18 +436,6 @@ namespace AgentCharacterEditor.Panels
             0});
 			this.NumericOffsetY.Validated += new System.EventHandler(this.NumericOffsetY_Validated);
 			// 
-			// CheckBoxTransparent
-			// 
-			this.CheckBoxTransparent.AutoSize = true;
-			this.CheckBoxTransparent.Location = new System.Drawing.Point(0, 65);
-			this.CheckBoxTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
-			this.CheckBoxTransparent.Name = "CheckBoxTransparent";
-			this.CheckBoxTransparent.Size = new System.Drawing.Size(151, 21);
-			this.CheckBoxTransparent.TabIndex = 2;
-			this.CheckBoxTransparent.Text = "Show transparency";
-			this.CheckBoxTransparent.UseVisualStyleBackColor = true;
-			this.CheckBoxTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxTransparent_CheckedChanged);
-			// 
 			// PanelSample
 			// 
 			this.PanelSample.AutoSize = true;
@@ -656,6 +444,7 @@ namespace AgentCharacterEditor.Panels
 			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.Controls.Add(this.CheckBoxImageTransparent, 0, 3);
 			this.PanelSample.Controls.Add(this.PanelImageClip, 1, 1);
 			this.PanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
 			this.PanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
@@ -665,12 +454,26 @@ namespace AgentCharacterEditor.Panels
 			this.PanelSample.Location = new System.Drawing.Point(0, 0);
 			this.PanelSample.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelSample.Name = "PanelSample";
-			this.PanelSample.RowCount = 3;
+			this.PanelSample.RowCount = 4;
 			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.PanelSample.Size = new System.Drawing.Size(186, 186);
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelSample.Size = new System.Drawing.Size(186, 222);
 			this.PanelSample.TabIndex = 1;
+			// 
+			// CheckBoxImageTransparent
+			// 
+			this.CheckBoxImageTransparent.AutoSize = true;
+			this.PanelSample.SetColumnSpan(this.CheckBoxImageTransparent, 3);
+			this.CheckBoxImageTransparent.Location = new System.Drawing.Point(3, 198);
+			this.CheckBoxImageTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+			this.CheckBoxImageTransparent.Name = "CheckBoxImageTransparent";
+			this.CheckBoxImageTransparent.Size = new System.Drawing.Size(151, 21);
+			this.CheckBoxImageTransparent.TabIndex = 2;
+			this.CheckBoxImageTransparent.Text = "Show transparency";
+			this.CheckBoxImageTransparent.UseVisualStyleBackColor = true;
+			this.CheckBoxImageTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxImageTransparent_CheckedChanged);
 			// 
 			// PanelImageClip
 			// 
@@ -844,20 +647,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
 			// 
-			// GroupBoxSound
-			// 
-			this.GroupBoxSound.Controls.Add(PanelSound);
-			this.GroupBoxSound.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GroupBoxSound.Location = new System.Drawing.Point(0, 588);
-			this.GroupBoxSound.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
-			this.GroupBoxSound.MaximumSize = new System.Drawing.Size(730, 10000);
-			this.GroupBoxSound.Name = "GroupBoxSound";
-			this.GroupBoxSound.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
-			this.GroupBoxSound.Size = new System.Drawing.Size(682, 62);
-			this.GroupBoxSound.TabIndex = 1;
-			this.GroupBoxSound.TabStop = false;
-			this.GroupBoxSound.Text = "Sound Effect";
-			// 
 			// PanelSound
 			// 
 			PanelSound.AutoSize = true;
@@ -954,6 +743,251 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonSoundExport.Size = new System.Drawing.Size(24, 24);
 			this.ButtonSoundExport.Text = "Save sound";
 			// 
+			// PanelMain
+			// 
+			this.PanelMain.ColumnCount = 1;
+			this.PanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.Controls.Add(PanelFrame, 0, 0);
+			this.PanelMain.Controls.Add(this.GroupBoxImages, 0, 1);
+			this.PanelMain.Controls.Add(PanelMiddle, 0, 2);
+			this.PanelMain.Controls.Add(this.GroupBoxSound, 0, 3);
+			this.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelMain.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+			this.PanelMain.Location = new System.Drawing.Point(9, 0);
+			this.PanelMain.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelMain.Name = "PanelMain";
+			this.PanelMain.RowCount = 4;
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.PanelMain.Size = new System.Drawing.Size(682, 650);
+			this.PanelMain.TabIndex = 0;
+			// 
+			// GroupBoxImages
+			// 
+			this.GroupBoxImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.GroupBoxImages.AutoSize = true;
+			this.GroupBoxImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.GroupBoxImages.Controls.Add(this.PanelImages);
+			this.GroupBoxImages.Location = new System.Drawing.Point(0, 37);
+			this.GroupBoxImages.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxImages.Name = "GroupBoxImages";
+			this.GroupBoxImages.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxImages.Size = new System.Drawing.Size(682, 223);
+			this.GroupBoxImages.TabIndex = 0;
+			this.GroupBoxImages.TabStop = false;
+			this.GroupBoxImages.Text = "Images";
+			// 
+			// PanelImages
+			// 
+			this.PanelImages.AutoSize = true;
+			this.PanelImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelImages.ColumnCount = 1;
+			this.PanelImages.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelImages.Controls.Add(this.ListViewImages, 0, 1);
+			this.PanelImages.Controls.Add(this.ToolStripImages, 0, 0);
+			this.PanelImages.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelImages.Location = new System.Drawing.Point(6, 24);
+			this.PanelImages.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelImages.Name = "PanelImages";
+			this.PanelImages.RowCount = 2;
+			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelImages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelImages.Size = new System.Drawing.Size(670, 193);
+			this.PanelImages.TabIndex = 0;
+			// 
+			// ListViewImages
+			// 
+			this.ListViewImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.ListViewImages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ColumnHeaderImage,
+            this.ColumnHeaderPosition,
+            this.ColumnHeaderSize,
+            this.ColumnHeaderPath});
+			this.ListViewImages.ContextMenuStrip = this.ContextMenuImages;
+			this.ListViewImages.FullRowSelect = true;
+			this.ListViewImages.GridLines = true;
+			this.ListViewImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.ListViewImages.HideSelection = false;
+			this.ListViewImages.Location = new System.Drawing.Point(0, 30);
+			this.ListViewImages.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.ListViewImages.MaximumSize = new System.Drawing.Size(10000, 400);
+			this.ListViewImages.MinimumSize = new System.Drawing.Size(200, 100);
+			this.ListViewImages.MultiSelect = false;
+			this.ListViewImages.Name = "ListViewImages";
+			this.ListViewImages.ShowGroups = false;
+			this.ListViewImages.ShowItemToolTips = true;
+			this.ListViewImages.Size = new System.Drawing.Size(670, 163);
+			this.ListViewImages.TabIndex = 1;
+			this.ListViewImages.UseCompatibleStateImageBehavior = false;
+			this.ListViewImages.View = System.Windows.Forms.View.Details;
+			this.ListViewImages.ItemActivate += new System.EventHandler(this.ListViewImages_ItemActivate);
+			this.ListViewImages.SelectedIndexChanged += new System.EventHandler(this.ListViewImages_SelectedIndexChanged);
+			this.ListViewImages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListViewImages_MouseUp);
+			// 
+			// ColumnHeaderImage
+			// 
+			this.ColumnHeaderImage.Text = "Image";
+			this.ColumnHeaderImage.Width = 100;
+			// 
+			// ColumnHeaderPosition
+			// 
+			this.ColumnHeaderPosition.Text = "Offset";
+			this.ColumnHeaderPosition.Width = 90;
+			// 
+			// ColumnHeaderSize
+			// 
+			this.ColumnHeaderSize.Text = "Dimensions";
+			this.ColumnHeaderSize.Width = 90;
+			// 
+			// ColumnHeaderPath
+			// 
+			this.ColumnHeaderPath.Text = "Path";
+			this.ColumnHeaderPath.Width = 100;
+			// 
+			// ContextMenuImages
+			// 
+			this.ContextMenuImages.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItemAdd,
+            this.MenuItemChooseFile,
+            toolStripSeparator2,
+            this.MenuItemMovePrev,
+            this.MenuItemMoveNext,
+            toolStripSeparator3});
+			this.ContextMenuImages.Name = "ContextMenuImages";
+			this.ContextMenuImages.Size = new System.Drawing.Size(222, 128);
+			this.ContextMenuImages.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuImages_Opening);
+			// 
+			// MenuItemAdd
+			// 
+			this.MenuItemAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
+			this.MenuItemAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemAdd.Name = "MenuItemAdd";
+			this.MenuItemAdd.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemAdd.Text = "Add a new image";
+			this.MenuItemAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
+			// 
+			// MenuItemChooseFile
+			// 
+			this.MenuItemChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
+			this.MenuItemChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemChooseFile.Name = "MenuItemChooseFile";
+			this.MenuItemChooseFile.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemChooseFile.Text = "Open image file";
+			this.MenuItemChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
+			// 
+			// MenuItemMovePrev
+			// 
+			this.MenuItemMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
+			this.MenuItemMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMovePrev.Name = "MenuItemMovePrev";
+			this.MenuItemMovePrev.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemMovePrev.Text = "Move image up";
+			this.MenuItemMovePrev.Click += new System.EventHandler(this.ButtonMovePrev_Click);
+			// 
+			// MenuItemMoveNext
+			// 
+			this.MenuItemMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
+			this.MenuItemMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.MenuItemMoveNext.Name = "MenuItemMoveNext";
+			this.MenuItemMoveNext.Size = new System.Drawing.Size(221, 28);
+			this.MenuItemMoveNext.Text = "Move image down";
+			this.MenuItemMoveNext.Click += new System.EventHandler(this.ButtonMoveNext_Click);
+			// 
+			// ToolStripImages
+			// 
+			this.ToolStripImages.BackColor = System.Drawing.Color.Transparent;
+			this.ToolStripImages.CanOverflow = false;
+			this.ToolStripImages.Dock = System.Windows.Forms.DockStyle.None;
+			this.ToolStripImages.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.ToolStripImages.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonAdd,
+            this.ButtonDelete,
+            this.ButtonChooseFile,
+            toolStripSeparator1,
+            this.ButtonMovePrev,
+            this.ButtonMoveNext});
+			this.ToolStripImages.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+			this.ToolStripImages.Location = new System.Drawing.Point(0, 0);
+			this.ToolStripImages.Name = "ToolStripImages";
+			this.ToolStripImages.Size = new System.Drawing.Size(129, 27);
+			this.ToolStripImages.TabIndex = 0;
+			// 
+			// ButtonAdd
+			// 
+			this.ButtonAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonAdd.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileNew;
+			this.ButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonAdd.Name = "ButtonAdd";
+			this.ButtonAdd.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonAdd.Size = new System.Drawing.Size(24, 24);
+			this.ButtonAdd.Text = "Add a new image";
+			this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
+			// 
+			// ButtonDelete
+			// 
+			this.ButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonDelete.Image = global::AgentCharacterEditor.Properties.Resources.ImgEditDelete;
+			this.ButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonDelete.Name = "ButtonDelete";
+			this.ButtonDelete.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonDelete.Size = new System.Drawing.Size(24, 24);
+			this.ButtonDelete.Text = "Remove";
+			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
+			// 
+			// ButtonChooseFile
+			// 
+			this.ButtonChooseFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonChooseFile.Image = global::AgentCharacterEditor.Properties.Resources.ImgFileOpen;
+			this.ButtonChooseFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonChooseFile.Name = "ButtonChooseFile";
+			this.ButtonChooseFile.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonChooseFile.Size = new System.Drawing.Size(24, 24);
+			this.ButtonChooseFile.Text = "Open image file";
+			this.ButtonChooseFile.Click += new System.EventHandler(this.ButtonOpen_Click);
+			// 
+			// ButtonMovePrev
+			// 
+			this.ButtonMovePrev.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMovePrev.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveUp;
+			this.ButtonMovePrev.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMovePrev.Name = "ButtonMovePrev";
+			this.ButtonMovePrev.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMovePrev.Size = new System.Drawing.Size(24, 24);
+			this.ButtonMovePrev.Text = "Move image up";
+			this.ButtonMovePrev.Click += new System.EventHandler(this.ButtonMovePrev_Click);
+			// 
+			// ButtonMoveNext
+			// 
+			this.ButtonMoveNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.ButtonMoveNext.Image = global::AgentCharacterEditor.Properties.Resources.ImgMoveDown;
+			this.ButtonMoveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.ButtonMoveNext.Name = "ButtonMoveNext";
+			this.ButtonMoveNext.Padding = new System.Windows.Forms.Padding(2);
+			this.ButtonMoveNext.Size = new System.Drawing.Size(24, 24);
+			this.ButtonMoveNext.Text = "Move image down";
+			this.ButtonMoveNext.Click += new System.EventHandler(this.ButtonMoveNext_Click);
+			// 
+			// GroupBoxSound
+			// 
+			this.GroupBoxSound.Controls.Add(PanelSound);
+			this.GroupBoxSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GroupBoxSound.Location = new System.Drawing.Point(0, 588);
+			this.GroupBoxSound.Margin = new System.Windows.Forms.Padding(0, 9, 0, 0);
+			this.GroupBoxSound.MaximumSize = new System.Drawing.Size(730, 10000);
+			this.GroupBoxSound.Name = "GroupBoxSound";
+			this.GroupBoxSound.Padding = new System.Windows.Forms.Padding(6, 9, 6, 6);
+			this.GroupBoxSound.Size = new System.Drawing.Size(682, 62);
+			this.GroupBoxSound.TabIndex = 1;
+			this.GroupBoxSound.TabStop = false;
+			this.GroupBoxSound.Text = "Sound Effect";
+			// 
 			// FramePanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -961,21 +995,14 @@ namespace AgentCharacterEditor.Panels
 			this.Controls.Add(this.PanelMain);
 			this.Name = "FramePanel";
 			this.Size = new System.Drawing.Size(700, 650);
-			this.PanelMain.ResumeLayout(false);
-			this.PanelMain.PerformLayout();
 			PanelFrame.ResumeLayout(false);
 			PanelFrame.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericDuration)).EndInit();
-			this.GroupBoxImages.ResumeLayout(false);
-			this.GroupBoxImages.PerformLayout();
-			this.PanelImages.ResumeLayout(false);
-			this.PanelImages.PerformLayout();
-			this.ContextMenuImages.ResumeLayout(false);
-			this.ToolStripImages.ResumeLayout(false);
-			this.ToolStripImages.PerformLayout();
 			PanelMiddle.ResumeLayout(false);
 			PanelMiddle.PerformLayout();
 			this.GroupBoxFrame.ResumeLayout(false);
+			this.PanelFrameSample.ResumeLayout(false);
+			this.PanelFrameSample.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxFrameSample)).EndInit();
 			this.GroupBoxImage.ResumeLayout(false);
 			this.GroupBoxImage.PerformLayout();
@@ -986,6 +1013,7 @@ namespace AgentCharacterEditor.Panels
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).EndInit();
 			this.PanelSample.ResumeLayout(false);
+			this.PanelSample.PerformLayout();
 			this.PanelImageClip.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).EndInit();
 			this.ToolStripShiftUp.ResumeLayout(false);
@@ -996,14 +1024,23 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftDown.PerformLayout();
 			this.ToolStripShiftLeft.ResumeLayout(false);
 			this.ToolStripShiftLeft.PerformLayout();
-			this.GroupBoxSound.ResumeLayout(false);
-			this.GroupBoxSound.PerformLayout();
 			PanelSound.ResumeLayout(false);
 			PanelSound.PerformLayout();
 			this.ToolStripSound.ResumeLayout(false);
 			this.ToolStripSound.PerformLayout();
 			this.ToolStripSoundFile.ResumeLayout(false);
 			this.ToolStripSoundFile.PerformLayout();
+			this.PanelMain.ResumeLayout(false);
+			this.PanelMain.PerformLayout();
+			this.GroupBoxImages.ResumeLayout(false);
+			this.GroupBoxImages.PerformLayout();
+			this.PanelImages.ResumeLayout(false);
+			this.PanelImages.PerformLayout();
+			this.ContextMenuImages.ResumeLayout(false);
+			this.ToolStripImages.ResumeLayout(false);
+			this.ToolStripImages.PerformLayout();
+			this.GroupBoxSound.ResumeLayout(false);
+			this.GroupBoxSound.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -1050,7 +1087,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.TableLayoutPanel PanelImages;
 		private DoubleAgent.ToolStripButtonCompat ButtonChooseFile;
 		private System.Windows.Forms.TableLayoutPanel PanelSample;
-		private DoubleAgent.CheckBoxCompat CheckBoxTransparent;
+		private DoubleAgent.CheckBoxCompat CheckBoxImageTransparent;
 		private Global.ContextMenuEdit ContextMenuImages;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemAdd;
 		private System.Windows.Forms.ToolStripMenuItem MenuItemChooseFile;
@@ -1061,5 +1098,7 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.Panel PanelImageDetails;
 		private DoubleAgent.TextBoxEx TextBoxFrameName;
 		private System.Windows.Forms.GroupBox GroupBoxFrame;
+		private System.Windows.Forms.TableLayoutPanel PanelFrameSample;
+		private DoubleAgent.CheckBoxCompat CheckBoxFrameTransparent;
 	}
 }

@@ -22,6 +22,7 @@
 #include <math.h>
 #include "AgentFileBinary.h"
 #include "AgentFileAcs.h"
+#include "AgentFileAcf.h"
 #ifdef	__cplusplus_cli
 #include "AgtErr.h"
 #else
@@ -33,7 +34,6 @@
 #include "AgentFileAcf.h"
 #ifdef	_DEBUG
 #include "Registry.h"
-#include "ImageDebugger.h"
 #include "DebugStr.h"
 #include "DebugProcess.h"
 #endif
@@ -68,19 +68,37 @@ CAgentFileBinary* CAgentFileBinary::CreateInstance (LPCTSTR pPath)
 #endif
 {
 #ifdef	__cplusplus_cli
-	return gcnew CAgentFileAcs;
-#else
-	if	(
-			(pPath)
-		&&	(_tcsicmp (PathFindExtension (pPath), sAcfFileExt) == 0)
-		)
+	if	(!String::IsNullOrEmpty (const_cast <String^> (pPath)))
 	{
-		return CAgentFileAcf::CreateInstance ();
+		if	(String::Compare (System::IO::Path::GetExtension (const_cast <String^> (pPath)), AcfFileExt, true) == 0)
+		{
+			return CAgentFileAcf::CreateInstance ();
+		}
+		else
+		{
+			return CAgentFileAcs::CreateInstance ();
+		}
 	}
 	else
 	{
 		return CAgentFileAcs::CreateInstance ();
 	}
+#else
+	if	(pPath)
+	{
+		if	(_tcsicmp (PathFindExtension (pPath), sAcfFileExt) == 0)
+		{
+			return CAgentFileAcf::CreateInstance ();
+		}
+		else
+		{
+			return CAgentFileAcs::CreateInstance ();
+		}
+	}
+	else
+	{
+		return CAgentFileAcs::CreateInstance ();
+	}	
 #endif
 }
 
@@ -427,7 +445,7 @@ HRESULT CAgentFileBinary::ReadHeader ()
 		}
 		else
 		{
-			throw gcnew Exception ("The specified file is not a Microsoft Agent 2.x character file.");
+			throw gcnew Exception (String::Format ("{0} is not a Microsoft Agent 2.x character file.", mPath));
 		}
 	}
 	return true;
@@ -508,7 +526,7 @@ LPCVOID CAgentFileBinary::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated)
 #endif
 
 #ifdef	__cplusplus_cli
-		mTts = gcnew CAgentFileTts;
+		mTts = gcnew CAgentFileTts (this);
 		mTts->mEngine = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
 #else
 		mTts.mEngine = *(LPCGUID)lByte;
@@ -707,7 +725,7 @@ LPCVOID CAgentFileBinary::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminat
 #endif
 
 #ifdef	__cplusplus_cli
-		mBalloon = gcnew CAgentFileBalloon;
+		mBalloon = gcnew CAgentFileBalloon (this);
 		mBalloon->mLines = *lByte;
 #else
 		mBalloon.mLines = *lByte;
@@ -914,6 +932,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer)
 
 	lPaletteSize = *(LPCDWORD)lByte;
 	lByte += sizeof(DWORD);
+
 	if	(lPaletteSize > 0)
 	{
 #ifdef	__cplusplus_cli
@@ -929,7 +948,7 @@ LPCVOID CAgentFileBinary::ReadBufferPalette (LPCVOID pBuffer)
 			)
 		{
 
-			for (lNdx = 0; lNdx < 256; lNdx++)
+			for (lNdx = 0; lNdx < (int)lPaletteSize; lNdx++)
 			{
 				//lColors [lNdx] = System::Drawing::ColorTranslator::FromWin32 (*(LPCOLORREF)lByte);
 				lColors [lNdx] = System::Drawing::Color::FromArgb (255, (int)lByte[2], (int)lByte[1], (int)lByte[0]); // BGRA
@@ -1557,7 +1576,6 @@ LPCVOID CAgentFileBinary::ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize, 
 			lGestures = gcnew List<String^>;
 #else
 			lStateNdx = FindSortedString (mStates.mNames, lState);
-
 			if	(lStateNdx < 0)
 			{
 				mStates.mGestures.InsertAt (lStateNdx = AddSortedString (mStates.mNames, lState), CAtlStringArray());
@@ -2216,95 +2234,6 @@ void CAgentFileBinary::DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize)
 			lFileMapping.Close ();
 		}
 		catch AnyExceptionDebug
-	}
-#endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CAgentFileBinary::DumpPalette (LPVOID pPalette)
-{
-#ifdef	_DEBUG
-	tArrayPtr <BYTE>	lInfoBuff;
-	BITMAPINFO *		lInfo;
-	ATL::CImage			lDumpBmp;
-	LPBYTE				lDumpBits;
-
-	lInfoBuff = new BYTE [sizeof (BITMAPINFOHEADER) + (sizeof(COLORREF) * 256)];
-	lInfo = (BITMAPINFO *) (LPBYTE) lInfoBuff;
-
-	lInfo->bmiHeader.biSize = sizeof (lInfo->bmiHeader);
-	lInfo->bmiHeader.biWidth = 256;
-	lInfo->bmiHeader.biHeight = -256;
-	lInfo->bmiHeader.biBitCount = 8;
-	lInfo->bmiHeader.biPlanes = 1;
-	lInfo->bmiHeader.biCompression = BI_RGB;
-	lInfo->bmiHeader.biSizeImage = lInfo->bmiHeader.biWidth * abs (lInfo->bmiHeader.biHeight);
-	lInfo->bmiHeader.biClrUsed = 256;
-	memcpy (lInfo->bmiColors, pPalette, sizeof(DWORD) * 256);
-
-	lDumpBmp.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, NULL, NULL, 0));
-	if	(lDumpBits = ::GetImageBits (lDumpBmp))
-	{
-		for	(long lNdx = 0; lNdx < (long) lInfo->bmiHeader.biSizeImage; lNdx++)
-		{
-			lDumpBits [lNdx] = (BYTE) ((lNdx >> 4) & 0x000F) | ((lNdx >> 8) & 0x00F0);
-		}
-		GdiFlush ();
-
-#ifdef	_SAVE_IMAGE
-		CImageDebugger::SaveBitmap (lDumpBmp, _T("Palette"));
-#else
-#ifdef	_SAVE_PALETTE
-		lDumpName += _T(" - Palette");
-		CImageDebugger::SaveBitmap (lDumpBmp, lDumpName);
-#endif
-#endif
-#ifdef	_DUMP_PALETTE
-		CImageDebugger::DumpBitmap (_DUMP_PALETTE, *lInfo, lDumpBits, _T("Palette"));
-#endif
-	}
-#endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CAgentFileBinary::SaveImage (CAgentFileImage* pImage)
-{
-#ifdef	_DEBUG
-	if	(pImage)
-	{
-		try
-		{
-			ATL::CImage			lBitmap;
-			tArrayPtr <BYTE>	lInfoBuffer;
-			LPBITMAPINFO		lInfo;
-			LPVOID				lBits = NULL;
-
-			if	(
-					(lInfoBuffer = new BYTE [GetImageFormat (NULL)])
-				&&	(lInfo = (LPBITMAPINFO) (LPBYTE) lInfoBuffer)
-				)
-			{
-				GetImageFormat (lInfo, pImage, false);
-
-				lBitmap.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, NULL, NULL, 0));
-				if	(lBits = ::GetImageBits (lBitmap))
-				{
-					CAtlString	lDumpName;
-
-					memcpy (lBits, pImage->Bits, pImage->BitsSize);
-					GdiFlush ();
-					lDumpName.Format (_T("Image %.4u"), pImage->ImageNum);
-					CImageDebugger::SaveBitmap (lBitmap, lDumpName);
-				}
-			}
-		}
-		catch AnyExceptionSilent
 	}
 #endif
 }

@@ -158,12 +158,14 @@ public:
 protected:
 	void Disconnect (bool pAbandonned);
 	void UnloadAllCharacters (bool pAbandonned = false);
+	void UnloadAllCharacters (DaSvrCharacter * pCharacter, bool pAbandonned);
 	CAtlString GetSearchPath ();
 	HRESULT LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long& pCharID, long& pReqID);
 	HRESULT UnloadCharacter (long pCharID);
 
 protected:
-	CAtlOwnPtrMap <long, CFileDownload>	mCharactersLoading;
+	CAtlOwnPtrMap <long, CFileDownload>	mLoadingFiles;
+	CAtlMap <long, IUnknownPtr>			mLoadingCharacters;
 private:
 	DWORD								mCharacterStyle;
 	UINT								mUsingHandler;

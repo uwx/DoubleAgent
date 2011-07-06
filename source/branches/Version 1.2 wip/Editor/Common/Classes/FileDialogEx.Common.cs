@@ -93,6 +93,7 @@ namespace AgentCharacterEditor.Global
 
 				lFilter.Append (FileExtTypeName (".acd", "Character Definition Files") + " (*.acd)|*.acd");
 				lFilter.Append ("|" + FileExtTypeName (".acs", "Character Files") + " (*.acs)|*.acs");
+				lFilter.Append ("|" + FileExtTypeName (".acf", "HTTP Character Files") + " (*.acf)|*.acf");
 				lFilter.Append ("|All Files (*.*)|*.*");
 				return lFilter.ToString ();
 			}

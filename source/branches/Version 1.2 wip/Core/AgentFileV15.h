@@ -19,7 +19,8 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "AgentFileBinary.h"
+#include "AgentFile.h"
+class CAgentFileV15Reader;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli
@@ -31,23 +32,21 @@ namespace Character {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli
-#define CAgentFileAcs AcsFile
-/// <summary>
-///	An Agent Character definition stored in a single binary-formatted file.
-/// </summary>
-public ref class AcsFile : public CAgentFileBinary
+#define CAgentFileV15 V15File
+public ref class V15File : public CAgentFile
 #else
-class CAgentFileAcs : public CAgentFileBinary
+class CAgentFileV15 : public CAgentFile
 #endif
 {
+protected:
+	CAgentFileV15 ();
 public:
-	CAgentFileAcs ();
-	_DACORE_IMPEXP virtual ~CAgentFileAcs ();
+	_DACORE_IMPEXP virtual ~CAgentFileV15 ();
 #ifdef	__cplusplus_cli
-	static CAgentFileAcs^ CreateInstance ();
+	static CAgentFileV15^ CreateInstance ();
 #else
-	DECLARE_DLL_OBJECT_EX(CAgentFileAcs, _DACORE_IMPEXP)
-	_DACORE_IMPEXP static CAgentFileAcs* CreateInstance ();
+	DECLARE_DLL_OBJECT_EX(CAgentFileV15, _DACORE_IMPEXP)
+	_DACORE_IMPEXP static CAgentFileV15* CreateInstance ();
 #endif
 
 // Methods
@@ -61,11 +60,22 @@ public:
 public:
 #ifdef	__cplusplus_cli
 	virtual property bool IsAcsFile {virtual bool get() override;}
+	virtual property bool IsOpen {virtual bool get() override;}
+#else
+	_DACORE_IMPEXP virtual bool get_IsAcsFile () const;
+	_DACORE_IMPEXP virtual bool get_IsOpen () const;
+#endif
+
+#ifndef	__cplusplus_cli
+	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetGesture (INT_PTR pGestureNdx);
+	_DACORE_IMPEXP virtual const CAgentFileAnimation* GetAnimation (INT_PTR pAnimationNdx);
+#endif	
+
+#ifdef	__cplusplus_cli
 	virtual bool Open (const System::String^ pPath) override;
 	virtual bool Save (const System::String^ pPath, CAgentFile^ pSource) override;
 	virtual void Close () override;
 #else
-	_DACORE_IMPEXP virtual bool get_IsAcsFile () const;
 	_DACORE_IMPEXP virtual HRESULT Open (LPCTSTR pPath);
 	_DACORE_IMPEXP virtual void Close ();
 #endif
@@ -73,6 +83,7 @@ public:
 #ifdef	__cplusplus_cli
 	virtual property int ImageCount {virtual int get() override;}
 	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
+	//virtual System::Drawing::Bitmap^ GetImageBitmap (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor) override;
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
 	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL);
@@ -88,81 +99,48 @@ public:
 	_DACORE_IMPEXP virtual LPCVOID GetSound (INT_PTR pSoundNdx);
 #endif
 
-protected:
-#ifdef	__cplusplus_cli
-	virtual bool LoadFile (System::String^) override;
-	virtual bool ReadHeader () override;
-	virtual bool ReadNames (bool pFirstLetterCaps) override;
-	virtual bool ReadStates () override;
-	virtual bool ReadGestures () override;
-#else
-	virtual HRESULT LoadFile (LPCTSTR pPath);
-	virtual HRESULT ReadHeader ();
-	virtual bool ReadNames (bool pFirstLetterCaps);
-	virtual bool ReadStates ();
-	virtual bool ReadGestures ();
-#endif
-
 // Implementation
 protected:
-	bool ReadAcsHeader ();
-	LPCVOID ReadBufferHeader (LPCVOID pBuffer);
 #ifdef	__cplusplus_cli
-	CAgentFileAnimation^ ReadAcsAnimation (DWORD pOffset, DWORD pSize);
-	CAgentFileImage^ ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum);
-	array <BYTE>^ ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum);
+	bool ReadHeaderStream ();
+#else	
+	HRESULT ReadHeaderStream ();
+#endif	
+
+	LPCVOID ReadBufferHeader (LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferIdentity (LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferTts (LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferBalloon (LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferPalette (LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferAnimations (LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferStates (LPCVOID pBuffer, DWORD pBufferSize);
+#ifdef	__cplusplus_cli
+	LPCVOID ReadBufferSounds (CAgentFileAnimation^ pAnimation, LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferImages (CAgentFileAnimation^ pAnimation, LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferFrames (CAgentFileAnimation^ pAnimation, LPCVOID pBuffer, DWORD pBufferSize, Int32 pFirstImage, Int32 pFirstSound);
 #else
-	CAgentFileAnimation* ReadAcsAnimation (DWORD pOffset, DWORD pSize);
-	CAgentFileImage* ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum);
-	LPCVOID ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum);
-#endif
-
-	bool ReadImageIndex ();
-	void FreeImageIndex ();
-
-	bool ReadSoundIndex ();
-	void FreeSoundIndex ();
+	LPCVOID ReadBufferSounds (CAgentFileAnimation* pAnimation, LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferImages (CAgentFileAnimation* pAnimation, LPCVOID pBuffer, DWORD pBufferSize);
+	LPCVOID ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOID pBuffer, DWORD pBufferSize, long pFirstImage, long pFirstSound);
+#endif	
 
 #ifdef	__cplusplus_cli
-	void FreeUnusedImages ();
-	void FreeUnusedSounds ();
-
-	DWORD WriteAcsHeader (DWORD pFileOffset, CAgentFile^ pSource);
-	LPVOID WriteBufferHeader (LPVOID pBuffer, CAgentFileHeader^ pHeader);
-	DWORD WriteImageIndex (DWORD pFileOffset, CAgentFile^ pSource);
-	DWORD WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource);
-
-	DWORD WriteGestures (DWORD pFileOffset, CAgentFile^ pSource);
-	LPVOID WriteAcsAnimation (LPVOID pBuffer, CAgentFileAnimation^ pAnimation);
-
-	DWORD WriteImages (DWORD pFileOffset, CAgentFile^ pSource);
-	LPVOID WriteAcsImage (LPVOID pBuffer, CAgentFileImage^ pImage);
-
-	DWORD WriteSounds (DWORD pFileOffset, CAgentFile^ pSource);
-	LPVOID WriteAcsSound (LPVOID pBuffer, array <BYTE>^ pSound);
-#endif
-
-protected:
-#ifndef	__cplusplus_cli
-	void DumpAcsImages (UINT pLogLevel);
-	void DumpAcsImage (INT_PTR pImageNdx, UINT pLogLevel);
+	ref class V15FileAnimation^ GetV15Animation (int pAnimationNdx);
+internal:	
+	bool ReadAnimationStream (ref class V15FileAnimation^ pAnimation);
+#else
+	HRESULT ReadAnimationStream (CAgentFileAnimation* pAnimation);
 #endif
 
 protected:
 #ifdef	__cplusplus_cli
-	UInt32										mFileNamesOffset;
-	UInt32										mFileNamesSize;
-	UInt32										mFileStatesOffset;
-	UInt32										mFileStatesSize;
-	array <KeyValuePair <UInt32, UInt32> >^		mImageIndex;
-	array <KeyValuePair <UInt32, UInt32> >^		mSoundIndex;
+	CAgentFileV15Reader*									mFileReader; 
+	System::Collections::Generic::List <CAgentFileImage^>^	mStreamImages;
+	System::Collections::Generic::List <array <BYTE>^>^		mStreamSounds;
 #else
-	DWORD										mFileNamesOffset;
-	DWORD										mFileNamesSize;
-	DWORD										mFileStatesOffset;
-	DWORD										mFileStatesSize;
-	CAtlStructArray <ULARGE_INTEGER>			mImageIndex;
-	CAtlStructArray <ULARGE_INTEGER>			mSoundIndex;
+	tPtr <CAgentFileV15Reader>								mFileReader; 
+	CAtlOwnPtrArray <CAgentFileImage>						mStreamImages;
+	CAtlOwnPtrArray <CAtlByteArray>							mStreamSounds;
 #endif
 };
 

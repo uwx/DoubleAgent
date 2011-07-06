@@ -162,8 +162,10 @@ public:
 #else
 public:
 	DECLARE_DLL_OBJECT(CAgentFileImage)
+	friend class CAgentFile;
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -281,6 +283,7 @@ public:
 	friend class CAgentFileBinary;
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -360,6 +363,7 @@ internal:
 public:
 	DECLARE_DLL_OBJECT(CAgentFileName)
 	friend class CAgentFileBinary;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -492,6 +496,7 @@ internal:
 public:
 	DECLARE_DLL_OBJECT(CAgentFileTts)
 	friend class CAgentFileBinary;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -592,6 +597,7 @@ internal:
 public:
 	DECLARE_DLL_OBJECT(CAgentFileBalloon)
 	friend class CAgentFileBinary;
+	friend class CAgentFileV15;
 	friend class CDaCmnBalloon;
 #endif
 };
@@ -665,6 +671,7 @@ public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameImage)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -786,6 +793,7 @@ public:
 	DECLARE_DLL_OBJECT(CAgentFileFrameOverlay)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -942,6 +950,7 @@ public:
 	DECLARE_DLL_OBJECT(CAgentFileFrame)
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
+	friend class CAgentFileV15;
 #endif
 };
 
@@ -1004,8 +1013,8 @@ public:
 	property System::String^ Name {System::String^ get(); void set (System::String^ pName);}
 	property Byte ReturnType {Byte get(); void set (Byte pReturnType);}
 	property System::String^ ReturnName {System::String^ get(); void set (System::String^ pReturnName);}
-	property UInt16 FrameCount {UInt16 get();}
-	property FileFrames^ Frames {FileFrames^ get();}
+	virtual property UInt16 FrameCount {virtual UInt16 get();}
+	virtual property FileFrames^ Frames {virtual FileFrames^ get();}
 #else
 	__declspec(property(get=get_Name))			tBstrPtr				Name;
 	__declspec(property(get=get_ReturnType))	BYTE					ReturnType;
@@ -1028,8 +1037,6 @@ internal:
 	Byte							mReturnType;
 	System::String^					mReturnName;
 	FileFrames^						mFrames;
-	[NonSerialized]	System::String^	mAcaFileName;
-	[NonSerialized]	DWORD			mAcaChksum;
 #else
 protected:
 	tBstrPtr						mName;
@@ -1037,8 +1044,8 @@ protected:
 	tBstrPtr						mReturnName;
 	USHORT							mFrameCount;
 	CAgentFileFrames				mFrames;
-	tBstrPtr						mAcaFileName;
-	DWORD							mAcaChksum;
+	tBstrPtr						mFileName;
+	DWORD							mFileCheckSum;
 #endif
 
 public:
@@ -1047,12 +1054,12 @@ public:
 #ifdef	__cplusplus_cli
 internal:
 #endif
-	void Empty ();
+	virtual void Empty ();
 
 #ifdef	__cplusplus_cli
 public:
-	Boolean CopyTo (FileAnimation^ pTarget);
-	Boolean CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy);
+	virtual Boolean CopyTo (FileAnimation^ pTarget);
+	virtual Boolean CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy);
     virtual System::String^ ToString() override;
 internal:
 	CAgentFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer);
@@ -1062,6 +1069,7 @@ public:
 	friend class CAgentFile;
 	friend class CAgentFileAcs;
 	friend class CAgentFileAcf;
+	friend class CAgentFileV15;
 #endif
 };
 

@@ -224,11 +224,9 @@ void CAnimationTestDlg::ShowCharacters ()
 		}
 
 /**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\TestChar1.acs"));
-/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\TestChar1Copy.acs"));
 /**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\Empty.acs"));
-/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\EmptyCopy.acs"));
-/**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\MerlinCopy.acs"));
 /**/	mCharacterList.InsertItem (0, _T("file://C:/DoubleAgent/_Test/Chars/TestChar1.acf"));
+/**/	mCharacterList.InsertItem (0, _T("http://www.careforme.ca/jess/agent/Jess.acf"));
 		mCharacterList.InsertItem (0, _T("<default>"));
 	}
 
@@ -1193,7 +1191,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 	if	(
 			(mDaServer)
 		&&	(mCharacterId != 0)
-		&&	(mDaCharacter == NULL)
+		//&&	(mDaCharacter == NULL)
 		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mDaServer->GetCharacterEx (mCharacterId, &lDaCharacter), _T("GetCharacterEx"))))
 		)
 	{
@@ -1201,9 +1199,9 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 	}
 	else
 	if	(
-			(mMsServer != NULL)
+			(mMsServer)
 		&&	(mCharacterId != 0)
-		&&	(mMsCharacter == NULL)
+		//&&	(mMsCharacter == NULL)
 		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mMsServer->GetCharacterEx (mCharacterId, &lMsCharacter), _T("GetCharacterEx"))))
 		)
 	{
@@ -1234,7 +1232,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 
 		lWinTitle.Format (_T("%s [%d]"), mWinTitle, mCharacterId);
 		SetWindowText (lWinTitle);
-		lRet = true;
+		//lRet = true;
 	}
 	else
 	if	(mMsCharacter != NULL)
@@ -1255,7 +1253,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 
 		lWinTitle.Format (_T("%s [%d] (Native)"), mWinTitle, mCharacterId);
 		SetWindowText (lWinTitle);
-		lRet = true;
+		//lRet = true;
 	}
 
 	ShowCharacterDetails ();

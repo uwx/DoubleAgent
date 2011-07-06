@@ -1266,7 +1266,7 @@ bool CAgentFileScript::ParseAnimationFrame (ScriptReader^ pReader, CAgentFileAni
 			{
 				if	(lToken = pReader->NextValue (lLine))
 				{
-					lFrame->mExitFrame = (Int16)pReader->GetInt (lToken);
+					lFrame->mExitFrame = (Int16)pReader->GetInt (lToken)-1;
 				}
 			}
 			else
@@ -1322,7 +1322,7 @@ bool CAgentFileScript::WriteAnimationFrame (ScriptWriter^ pWriter, CAgentFile^ p
 	pWriter->WriteValue (pWriter->Keywords->FrameDuration, pWriter->FormatInt (pFrame->Duration));
 	if	(pFrame->ExitFrame >= 0)
 	{
-		pWriter->WriteValue (pWriter->Keywords->FrameExitBranch, pWriter->FormatInt (pFrame->ExitFrame));
+		pWriter->WriteValue (pWriter->Keywords->FrameExitBranch, pWriter->FormatInt (pFrame->ExitFrame+1));
 	}
 	if	(
 			(pFrame->SoundNdx >= 0)
@@ -1368,7 +1368,7 @@ bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFra
 #ifdef	__cplusplus_cli
 	String^	lLine;
 	String^	lToken;
-	Int16	lBranchTarget = -1;
+	Int16	lBranchTarget = 0;
 	UInt16	lBranchProbability = 0;
 	int		lBranchNdx = 0;
 
@@ -1404,7 +1404,7 @@ bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFra
 		}
 
 		if	(
-				(lBranchTarget >= 0)
+				(lBranchTarget > 0)
 			&&	(lBranchProbability > 0)
 			&&	(lBranchNdx < 3)
 			)
@@ -1417,7 +1417,7 @@ bool CAgentFileScript::ParseFrameBranching (ScriptReader^ pReader, CAgentFileFra
 			{
 				pFrame->mBranching = gcnew array <CAgentFileFrameBranch> (1);
 			}
-			pFrame->mBranching[lBranchNdx].mFrameNdx = lBranchTarget;
+			pFrame->mBranching[lBranchNdx].mFrameNdx = lBranchTarget-1;
 			pFrame->mBranching[lBranchNdx].mProbability = lBranchProbability;
 
 			lBranchTarget = 0;
@@ -1446,7 +1446,7 @@ bool CAgentFileScript::WriteFrameBranching (ScriptWriter^ pWriter, CAgentFile^ p
 		{
 			if	(pFrame->mBranching [lNdx].mProbability)
 			{
-				pWriter->WriteValue (pWriter->Keywords->BranchingTarget, pWriter->FormatInt (pFrame->mBranching [lNdx].mFrameNdx));
+				pWriter->WriteValue (pWriter->Keywords->BranchingTarget, pWriter->FormatInt (pFrame->mBranching [lNdx].mFrameNdx+1));
 				pWriter->WriteValue (pWriter->Keywords->BranchingProbability, pWriter->FormatInt (pFrame->mBranching [lNdx].mProbability));
 			}
 		}

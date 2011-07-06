@@ -66,8 +66,14 @@ namespace AgentCharacterEditor.Panels
 			this.MouthImages = new System.Windows.Forms.ImageList(this.components);
 			this.GroupBoxOverlays = new System.Windows.Forms.GroupBox();
 			this.PanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelFrame = new System.Windows.Forms.Panel();
+			this.LabelFrameName = new System.Windows.Forms.Label();
+			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			this.GroupBoxImage = new DoubleAgent.GroupBoxCompat();
 			this.PanelImage = new System.Windows.Forms.TableLayoutPanel();
+			this.PanelOverlayImage = new System.Windows.Forms.TableLayoutPanel();
+			this.LabelOverlayImage = new System.Windows.Forms.Label();
+			this.PictureBoxOverlaySample = new AgentCharacterEditor.FrameSample();
 			this.PanelOverlayDetails = new System.Windows.Forms.Panel();
 			this.LabelOffsetX = new DoubleAgent.LabelCompat();
 			this.NumericOffsetX = new DoubleAgent.NumericUpDownEx();
@@ -75,6 +81,7 @@ namespace AgentCharacterEditor.Panels
 			this.NumericOffsetY = new DoubleAgent.NumericUpDownEx();
 			this.CheckBoxReplace = new DoubleAgent.CheckBoxCompat();
 			this.PanelSample = new System.Windows.Forms.TableLayoutPanel();
+			this.CheckBoxOverlayTransparent = new DoubleAgent.CheckBoxCompat();
 			this.PictureBoxImageSample = new AgentCharacterEditor.FrameSample();
 			this.ToolStripShiftUp = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftUp = new DoubleAgent.ToolStripButtonEx();
@@ -84,9 +91,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftDown = new DoubleAgent.ToolStripButtonEx();
 			this.ToolStripShiftLeft = new DoubleAgent.ToolStripEx();
 			this.ButtonShiftLeft = new DoubleAgent.ToolStripButtonEx();
-			this.PanelFrame = new System.Windows.Forms.Panel();
-			this.LabelFrameName = new System.Windows.Forms.Label();
-			this.TextBoxFrameName = new DoubleAgent.TextBoxEx();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			PanelOverlays = new System.Windows.Forms.TableLayoutPanel();
 			PanelOverlays.SuspendLayout();
@@ -94,8 +98,11 @@ namespace AgentCharacterEditor.Panels
 			this.ContextMenuOverlaysList.SuspendLayout();
 			this.GroupBoxOverlays.SuspendLayout();
 			this.PanelMain.SuspendLayout();
+			this.PanelFrame.SuspendLayout();
 			this.GroupBoxImage.SuspendLayout();
 			this.PanelImage.SuspendLayout();
+			this.PanelOverlayImage.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxOverlaySample)).BeginInit();
 			this.PanelOverlayDetails.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).BeginInit();
@@ -105,7 +112,6 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftRight.SuspendLayout();
 			this.ToolStripShiftDown.SuspendLayout();
 			this.ToolStripShiftLeft.SuspendLayout();
-			this.PanelFrame.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStripSeparator1
@@ -302,6 +308,40 @@ namespace AgentCharacterEditor.Panels
 			this.PanelMain.Size = new System.Drawing.Size(682, 600);
 			this.PanelMain.TabIndex = 0;
 			// 
+			// PanelFrame
+			// 
+			this.PanelFrame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.PanelFrame.AutoSize = true;
+			this.PanelFrame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.PanelFrame.Controls.Add(this.LabelFrameName);
+			this.PanelFrame.Controls.Add(this.TextBoxFrameName);
+			this.PanelFrame.Location = new System.Drawing.Point(0, 0);
+			this.PanelFrame.Margin = new System.Windows.Forms.Padding(0);
+			this.PanelFrame.Name = "PanelFrame";
+			this.PanelFrame.Size = new System.Drawing.Size(682, 28);
+			this.PanelFrame.TabIndex = 0;
+			// 
+			// LabelFrameName
+			// 
+			this.LabelFrameName.AutoSize = true;
+			this.LabelFrameName.Location = new System.Drawing.Point(0, 6);
+			this.LabelFrameName.Name = "LabelFrameName";
+			this.LabelFrameName.Size = new System.Drawing.Size(48, 17);
+			this.LabelFrameName.TabIndex = 0;
+			this.LabelFrameName.Text = "Frame";
+			// 
+			// TextBoxFrameName
+			// 
+			this.TextBoxFrameName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.TextBoxFrameName.Location = new System.Drawing.Point(131, 3);
+			this.TextBoxFrameName.MaximumSize = new System.Drawing.Size(600, 50);
+			this.TextBoxFrameName.Name = "TextBoxFrameName";
+			this.TextBoxFrameName.ReadOnly = true;
+			this.TextBoxFrameName.Size = new System.Drawing.Size(551, 22);
+			this.TextBoxFrameName.TabIndex = 1;
+			// 
 			// GroupBoxImage
 			// 
 			this.GroupBoxImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -319,9 +359,11 @@ namespace AgentCharacterEditor.Panels
 			// 
 			// PanelImage
 			// 
-			this.PanelImage.ColumnCount = 2;
+			this.PanelImage.ColumnCount = 3;
+			this.PanelImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.PanelImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.PanelImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelImage.Controls.Add(this.PanelOverlayImage, 2, 0);
 			this.PanelImage.Controls.Add(this.PanelOverlayDetails, 0, 0);
 			this.PanelImage.Controls.Add(this.PanelSample, 0, 0);
 			this.PanelImage.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -333,18 +375,59 @@ namespace AgentCharacterEditor.Panels
 			this.PanelImage.Size = new System.Drawing.Size(670, 264);
 			this.PanelImage.TabIndex = 0;
 			// 
+			// PanelOverlayImage
+			// 
+			this.PanelOverlayImage.ColumnCount = 1;
+			this.PanelOverlayImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelOverlayImage.Controls.Add(this.LabelOverlayImage, 0, 0);
+			this.PanelOverlayImage.Controls.Add(this.PictureBoxOverlaySample, 0, 1);
+			this.PanelOverlayImage.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelOverlayImage.Location = new System.Drawing.Point(435, 0);
+			this.PanelOverlayImage.Margin = new System.Windows.Forms.Padding(12, 0, 0, 0);
+			this.PanelOverlayImage.Name = "PanelOverlayImage";
+			this.PanelOverlayImage.RowCount = 2;
+			this.PanelOverlayImage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+			this.PanelOverlayImage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.PanelOverlayImage.Size = new System.Drawing.Size(235, 264);
+			this.PanelOverlayImage.TabIndex = 2;
+			// 
+			// LabelOverlayImage
+			// 
+			this.LabelOverlayImage.AutoSize = true;
+			this.LabelOverlayImage.Location = new System.Drawing.Point(0, 0);
+			this.LabelOverlayImage.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+			this.LabelOverlayImage.Name = "LabelOverlayImage";
+			this.LabelOverlayImage.Size = new System.Drawing.Size(99, 17);
+			this.LabelOverlayImage.TabIndex = 0;
+			this.LabelOverlayImage.Text = "Overlay image";
+			this.LabelOverlayImage.Visible = false;
+			// 
+			// PictureBoxOverlaySample
+			// 
+			this.PictureBoxOverlaySample.BackColor = System.Drawing.SystemColors.Window;
+			this.PictureBoxOverlaySample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.PictureBoxOverlaySample.Location = new System.Drawing.Point(0, 27);
+			this.PictureBoxOverlaySample.Margin = new System.Windows.Forms.Padding(0);
+			this.PictureBoxOverlaySample.MaximumSize = new System.Drawing.Size(258, 258);
+			this.PictureBoxOverlaySample.Name = "PictureBoxOverlaySample";
+			this.PictureBoxOverlaySample.Size = new System.Drawing.Size(130, 130);
+			this.PictureBoxOverlaySample.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.PictureBoxOverlaySample.TabIndex = 5;
+			this.PictureBoxOverlaySample.TabStop = false;
+			// 
 			// PanelOverlayDetails
 			// 
+			this.PanelOverlayDetails.AutoSize = true;
+			this.PanelOverlayDetails.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.PanelOverlayDetails.Controls.Add(this.LabelOffsetX);
 			this.PanelOverlayDetails.Controls.Add(this.NumericOffsetX);
 			this.PanelOverlayDetails.Controls.Add(this.LabelOffsetY);
 			this.PanelOverlayDetails.Controls.Add(this.NumericOffsetY);
 			this.PanelOverlayDetails.Controls.Add(this.CheckBoxReplace);
-			this.PanelOverlayDetails.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PanelOverlayDetails.Location = new System.Drawing.Point(198, 27);
 			this.PanelOverlayDetails.Margin = new System.Windows.Forms.Padding(12, 27, 0, 0);
 			this.PanelOverlayDetails.Name = "PanelOverlayDetails";
-			this.PanelOverlayDetails.Size = new System.Drawing.Size(472, 237);
+			this.PanelOverlayDetails.Size = new System.Drawing.Size(225, 89);
 			this.PanelOverlayDetails.TabIndex = 1;
 			// 
 			// LabelOffsetX
@@ -435,6 +518,7 @@ namespace AgentCharacterEditor.Panels
 			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.PanelSample.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.PanelSample.Controls.Add(this.CheckBoxOverlayTransparent, 0, 3);
 			this.PanelSample.Controls.Add(this.PictureBoxImageSample, 1, 1);
 			this.PanelSample.Controls.Add(this.ToolStripShiftUp, 1, 0);
 			this.PanelSample.Controls.Add(this.ToolStripShiftRight, 2, 1);
@@ -444,12 +528,26 @@ namespace AgentCharacterEditor.Panels
 			this.PanelSample.Location = new System.Drawing.Point(0, 0);
 			this.PanelSample.Margin = new System.Windows.Forms.Padding(0);
 			this.PanelSample.Name = "PanelSample";
-			this.PanelSample.RowCount = 3;
+			this.PanelSample.RowCount = 4;
 			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-			this.PanelSample.Size = new System.Drawing.Size(186, 186);
+			this.PanelSample.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.PanelSample.Size = new System.Drawing.Size(186, 222);
 			this.PanelSample.TabIndex = 0;
+			// 
+			// CheckBoxOverlayTransparent
+			// 
+			this.CheckBoxOverlayTransparent.AutoSize = true;
+			this.PanelSample.SetColumnSpan(this.CheckBoxOverlayTransparent, 3);
+			this.CheckBoxOverlayTransparent.Location = new System.Drawing.Point(3, 198);
+			this.CheckBoxOverlayTransparent.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+			this.CheckBoxOverlayTransparent.Name = "CheckBoxOverlayTransparent";
+			this.CheckBoxOverlayTransparent.Size = new System.Drawing.Size(151, 21);
+			this.CheckBoxOverlayTransparent.TabIndex = 5;
+			this.CheckBoxOverlayTransparent.Text = "Show transparency";
+			this.CheckBoxOverlayTransparent.UseVisualStyleBackColor = true;
+			this.CheckBoxOverlayTransparent.CheckedChanged += new System.EventHandler(this.CheckBoxOverlayTransparent_CheckedChanged);
 			// 
 			// PictureBoxImageSample
 			// 
@@ -615,40 +713,6 @@ namespace AgentCharacterEditor.Panels
 			this.ButtonShiftLeft.RepeatEnd += new DoubleAgent.ToolStripButtonEx.RepeatEndEventHandler(this.ButtonShiftLeft_RepeatEnd);
 			this.ButtonShiftLeft.Click += new System.EventHandler(this.ButtonShiftLeft_Click);
 			// 
-			// PanelFrame
-			// 
-			this.PanelFrame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.PanelFrame.AutoSize = true;
-			this.PanelFrame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.PanelFrame.Controls.Add(this.LabelFrameName);
-			this.PanelFrame.Controls.Add(this.TextBoxFrameName);
-			this.PanelFrame.Location = new System.Drawing.Point(0, 0);
-			this.PanelFrame.Margin = new System.Windows.Forms.Padding(0);
-			this.PanelFrame.Name = "PanelFrame";
-			this.PanelFrame.Size = new System.Drawing.Size(682, 28);
-			this.PanelFrame.TabIndex = 0;
-			// 
-			// LabelFrameName
-			// 
-			this.LabelFrameName.AutoSize = true;
-			this.LabelFrameName.Location = new System.Drawing.Point(0, 6);
-			this.LabelFrameName.Name = "LabelFrameName";
-			this.LabelFrameName.Size = new System.Drawing.Size(48, 17);
-			this.LabelFrameName.TabIndex = 0;
-			this.LabelFrameName.Text = "Frame";
-			// 
-			// TextBoxFrameName
-			// 
-			this.TextBoxFrameName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.TextBoxFrameName.Location = new System.Drawing.Point(131, 3);
-			this.TextBoxFrameName.MaximumSize = new System.Drawing.Size(600, 50);
-			this.TextBoxFrameName.Name = "TextBoxFrameName";
-			this.TextBoxFrameName.ReadOnly = true;
-			this.TextBoxFrameName.Size = new System.Drawing.Size(551, 22);
-			this.TextBoxFrameName.TabIndex = 1;
-			// 
 			// OverlayPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -666,14 +730,20 @@ namespace AgentCharacterEditor.Panels
 			this.GroupBoxOverlays.PerformLayout();
 			this.PanelMain.ResumeLayout(false);
 			this.PanelMain.PerformLayout();
+			this.PanelFrame.ResumeLayout(false);
+			this.PanelFrame.PerformLayout();
 			this.GroupBoxImage.ResumeLayout(false);
 			this.PanelImage.ResumeLayout(false);
 			this.PanelImage.PerformLayout();
+			this.PanelOverlayImage.ResumeLayout(false);
+			this.PanelOverlayImage.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PictureBoxOverlaySample)).EndInit();
 			this.PanelOverlayDetails.ResumeLayout(false);
 			this.PanelOverlayDetails.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.NumericOffsetY)).EndInit();
 			this.PanelSample.ResumeLayout(false);
+			this.PanelSample.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PictureBoxImageSample)).EndInit();
 			this.ToolStripShiftUp.ResumeLayout(false);
 			this.ToolStripShiftUp.PerformLayout();
@@ -683,8 +753,6 @@ namespace AgentCharacterEditor.Panels
 			this.ToolStripShiftDown.PerformLayout();
 			this.ToolStripShiftLeft.ResumeLayout(false);
 			this.ToolStripShiftLeft.PerformLayout();
-			this.PanelFrame.ResumeLayout(false);
-			this.PanelFrame.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -727,6 +795,10 @@ namespace AgentCharacterEditor.Panels
 		private System.Windows.Forms.Label LabelFrameName;
 		private DoubleAgent.TextBoxEx TextBoxFrameName;
 		private System.Windows.Forms.TableLayoutPanel PanelImage;
+		private DoubleAgent.CheckBoxCompat CheckBoxOverlayTransparent;
+		private System.Windows.Forms.TableLayoutPanel PanelOverlayImage;
+		private System.Windows.Forms.Label LabelOverlayImage;
+		private FrameSample PictureBoxOverlaySample;
 
 	}
 }

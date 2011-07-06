@@ -109,6 +109,7 @@ protected:
 	LPVOID WriteBufferIcon (LPVOID pBuffer, CAgentFileHeader^ pHeader);
 #endif
 
+public:	
 #ifdef	__cplusplus_cli
 	static LPCVOID ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, System::String^% pString);
 	static LPVOID WriteBufferString (LPVOID pBuffer, bool pNullTerminated, System::String^ pString);
@@ -117,14 +118,14 @@ protected:
 	static LPCVOID ReadBufferString (LPCVOID pBuffer, bool pNullTerminated, tBstrPtr& pString);
 #endif
 
+protected:
 	bool DecodeImage (LPCVOID pSrcBits, ULONG pSrcCount, LPBYTE pTrgBits, ULONG pTrgCount, long pTrgWidth, long pTrgHeight);
-	ULONG DecodeData (LPCVOID pSrcData, ULONG pSrcSize, LPVOID pTrgData, ULONG pTrgSize);
+public:	
+	static ULONG DecodeData (LPCVOID pSrcData, ULONG pSrcSize, LPVOID pTrgData, ULONG pTrgSize);
 
 protected:
 #ifndef	__cplusplus_cli
 	void DumpBlocks (UINT pLogLevel, UINT pMaxBlockSize=512);
-	void DumpPalette (LPVOID pPalette);
-	void SaveImage (CAgentFileImage* pImage);
 #endif
 
 protected:

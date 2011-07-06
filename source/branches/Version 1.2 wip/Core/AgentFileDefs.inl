@@ -58,6 +58,9 @@ static LPCTSTR		sAcsFileExt = _T(".acs");
 static LPCTSTR		sAcfFileExt = _T(".acf");
 static const DWORD	sAcsFileSignature = 0xABCDABC3;
 static const DWORD	sAcfFileSignature = 0xABCDABC4;
+static const DWORD	sAcsFileSignatureV15 = 0xABCDABC1;
+static const DWORD	sAcsFileSignatureV15_0 = 0xE011CFD0;
+static const DWORD	sAcsFileSignatureV15_1 = 0xE11AB1A1;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli

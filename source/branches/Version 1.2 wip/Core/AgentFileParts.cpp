@@ -700,7 +700,7 @@ CAgentFileTts::~CAgentFileTts ()
 void CAgentFileTts::Empty ()
 {
 	mGender = 0;
-	mLanguage = 0;
+	mLanguage = MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT);
 #ifdef	__cplusplus_cli
 	mEngine = Guid::Empty;
 	mMode = Guid::Empty;
@@ -2697,12 +2697,10 @@ CAgentFileAnimation::~CAgentFileAnimation ()
 
 void CAgentFileAnimation::Empty ()
 {
-	mAcaChksum = 0;
 	mReturnType = 2;
 #ifdef	__cplusplus_cli
 	mName = String::Empty;
 	mReturnName = nullptr;
-	mAcaFileName = nullptr;
 	if	(mOwner)
 	{
 		mFrames = gcnew CAgentFileFrames (mOwner, this);
@@ -2714,9 +2712,10 @@ void CAgentFileAnimation::Empty ()
 #else
 	mName = NULL;
 	mReturnName = NULL;
-	mAcaFileName = NULL;
 	mFrameCount = 0;
 	mFrames = NULL;
+	mFileCheckSum = 0;
+	mFileName = NULL;
 #endif
 }
 
@@ -2861,9 +2860,7 @@ Boolean CAgentFileAnimation::CopyTo (CAgentFileAnimation^ pTarget, Boolean pDeep
 		)
 	{
 		pTarget->mReturnType = mReturnType;
-		pTarget->mReturnName = mReturnName;
-		pTarget->mAcaFileName = mAcaFileName;
-		pTarget->mAcaChksum = mAcaChksum;
+		pTarget->mReturnName = mReturnName ? gcnew String (mReturnName) : nullptr;
 
 		if	(pDeepCopy)
 		{

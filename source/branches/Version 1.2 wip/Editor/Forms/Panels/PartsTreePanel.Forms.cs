@@ -183,13 +183,20 @@ namespace AgentCharacterEditor.Panels
 
 		public override void ShowFilePart (ResolvePart pFilePart)
 		{
-			FilePart = pFilePart;
-
-			InitNodeTags ();
-			ShowAnimationNames ();
-			if (TreeViewMain.SelectedNode != null)
+			try
 			{
-				TreeViewMain.SelectedNode.EnsureVisible ();
+				FilePart = pFilePart;
+
+				InitNodeTags ();
+				ShowAnimationNames ();
+				if (TreeViewMain.SelectedNode != null)
+				{
+					TreeViewMain.SelectedNode.EnsureVisible ();
+				}
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
 			}
 		}
 

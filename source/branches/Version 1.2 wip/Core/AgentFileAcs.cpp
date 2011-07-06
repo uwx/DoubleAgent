@@ -62,6 +62,8 @@ CAgentFileAcs::~CAgentFileAcs ()
 	Close ();
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 #ifdef	__cplusplus_cli
 CAgentFileAcs^ CAgentFileAcs::CreateInstance ()
 #else
@@ -74,6 +76,101 @@ CAgentFileAcs* CAgentFileAcs::CreateInstance ()
 #else
 	return new CAgentFileAcs;
 #endif
+}
+
+#ifdef	__cplusplus_cli
+bool CAgentFileAcs::CheckFileSignature (const System::String^ pPath)
+#else
+bool CAgentFileAcs::CheckFileSignature (LPCTSTR pPath)
+#endif	
+{
+	bool	lRet = false;
+	
+	try
+	{
+#ifdef	__cplusplus_cli
+		String^						lPath = ParseFilePath (pPath);
+		System::IO::FileStream^		lFileStream;
+		System::IO::BinaryReader^	lFileReader;
+#else
+		CAtlString					lPath = ParseFilePath (pPath);
+		CFileHandle					lFileHandle;
+		CGenericHandle				lFileMapping;
+		CMappedHandle				lFileView;
+#endif
+
+#ifdef	__cplusplus_cli
+		try
+		{
+			lFileStream = gcnew FileStream (lPath, FileMode::Open, FileAccess::Read);
+		}
+		catch AnyExceptionSilent
+		
+		if	(
+				(lFileStream)
+			&&	(lFileStream->Length >= sizeof(DWORD))
+			&&	(lFileReader = gcnew BinaryReader (lFileStream))
+			)
+#else
+		lFileHandle = CreateFile (lPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+
+		if	(
+				(lFileHandle.SafeIsValid ())
+			&&	(GetFileSize (lFileHandle, NULL) >= sizeof(DWORD))
+			&&	((lFileMapping = CreateFileMapping (lFileHandle, NULL, PAGE_READONLY, 0, 0, NULL)).SafeIsValid())
+			&&	((lFileView = MapViewOfFile (lFileMapping, FILE_MAP_READ, 0, 0, sizeof(DWORD))).SafeIsValid())
+			)
+#endif
+		{
+			DWORD	lSignature = 0;
+			
+#ifdef	__cplusplus_cli
+			lSignature = lFileReader->ReadUInt32 ();
+#else
+			lSignature = ((const DWORD *)(LPVOID)lFileView)[0];
+#endif
+			if	(lSignature == sAcsFileSignature)
+			{
+				lRet = true;
+			}
+		}
+		
+#ifdef	__cplusplus_cli
+		if	(lFileReader)
+		{
+			try
+			{
+				lFileReader->Close ();
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				lFileReader->~BinaryReader ();
+			}
+			catch AnyExceptionDebug
+		}
+		if	(lFileStream)
+		{
+			try
+			{
+				lFileStream->Close ();
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				lFileStream->~FileStream ();
+			}
+			catch AnyExceptionDebug
+		}
+#else
+		lFileView.Close ();
+		lFileMapping.Close ();
+		lFileHandle.Close ();
+#endif
+	}
+	catch AnyExceptionDebug
+	
+	return lRet;	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -108,6 +205,8 @@ bool CAgentFileAcs::Open (const System::String^ pPath)
 	bool	lRet = false;
 	String^	lPath = ParseFilePath (pPath);
 
+	Close ();
+
 #ifdef	_DEBUG_LOAD
 	UINT	lLogLevel = mLogLevel;
 	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
@@ -117,7 +216,6 @@ bool CAgentFileAcs::Open (const System::String^ pPath)
 		LogMessage (mLogLevel, _T("Open [%s]"), _B(lPath));
 	}
 
-	Close ();
 	mPath = lPath;
 	lRet = LoadFile (lPath);
 
@@ -137,19 +235,18 @@ HRESULT CAgentFileAcs::Open (LPCTSTR pPath)
 	HRESULT		lResult = S_OK;
 	CAtlString	lPath = ParseFilePath (pPath);
 
+	Close ();
+
 #ifdef	_DEBUG_LOAD
 	UINT lLogLevel = mLogLevel;
 	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
-
-	Close ();
-	mPath = lPath;
-
 	if	(LogIsActive (mLogLevel))
 	{
 		LogMessage (mLogLevel, _T("Open [%s]"), lPath);
 	}
 
+	mPath = lPath;
 	lResult = LoadFile (lPath);
 
 	if	(FAILED (lResult))
@@ -408,7 +505,14 @@ CAgentFileImage* CAgentFileAcs::GetImage (INT_PTR pImageNdx, bool p32Bit, const 
 		&&	(pImageNdx < mImageIndex->Length)
 		)
 	{
-		lImage = ReadAcsImage (mImageIndex [pImageNdx].Key, mImageIndex [pImageNdx].Value, (UINT)pImageNdx, p32Bit, pBkColor);
+		lImage = ReadAcsImage (mImageIndex [pImageNdx].Key, mImageIndex [pImageNdx].Value, (UINT)pImageNdx);
+		if	(
+				(lImage)
+			&&	(p32Bit)
+			)
+		{
+			lImage = Get32BitImage (lImage, pBkColor);
+		}
 	}
 	return lImage;
 #else
@@ -420,7 +524,14 @@ CAgentFileImage* CAgentFileAcs::GetImage (INT_PTR pImageNdx, bool p32Bit, const 
 		&&	(pImageNdx < (INT_PTR)mImageIndex.GetCount())
 		)
 	{
-		lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, p32Bit, pBkColor);
+		lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx);
+		if	(
+				(lImage)
+			&&	(p32Bit)
+			)
+		{
+			lImage = Get32BitImage (lImage, pBkColor);
+		}
 	}
 	return lImage.Detach ();
 #endif
@@ -994,7 +1105,6 @@ bool CAgentFileAcs::ReadStates ()
 
 			mFileStream->Seek (sizeof(DWORD), SeekOrigin::Begin);
 			lBlockDef.QuadPart = mFileReader->ReadUInt64 ();
-LogMessage (LogIfActive, _T("Block [%u] States [%d] [%d]"), lBlockDef.HighPart, mFileStatesSize, mFileNamesOffset-mFileStatesOffset);
 			mFileStream->Seek ((lBlockOffset=lBlockDef.LowPart)+mFileStatesOffset, SeekOrigin::Begin);
 			lBlockBuffer = mFileReader->ReadBytes (lBlockLength=mFileNamesOffset-mFileStatesOffset);
 			lBlock = &lBlockBuffer [0];
@@ -1262,7 +1372,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 			if	(
 					(lFrameCount > 0)
 #ifdef	__cplusplus_cli
-				&&	(lRet = gcnew CAgentFileAnimation (nullptr, mGestures))
+				&&	(lRet = gcnew CAgentFileAnimation (this, mGestures))
 #else
 				&&	(lRet = new CAgentFileAnimation)
 #endif
@@ -1286,7 +1396,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 				if	(
 						(lFrameCount > 0)
 #ifdef	__cplusplus_cli
-					&&	(lRet->mFrames = gcnew CAgentFileFrames (nullptr, lRet))
+					&&	(lRet->mFrames = gcnew CAgentFileFrames (this, lRet))
 #else
 					&&	(lRet->mFrames = new CAgentFileFrame [lFrameCount])
 #endif
@@ -1298,7 +1408,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 					for	(lFrameNdx = 0; lFrameNdx < lFrameCount; lFrameNdx++)
 					{
 #ifdef	__cplusplus_cli
-						CAgentFileFrame^	lFrame = gcnew CAgentFileFrame (nullptr, lRet->Frames);
+						CAgentFileFrame^	lFrame = gcnew CAgentFileFrame (this, lRet->Frames);
 #else
 						CAgentFileFrame*	lFrame = &lRet->mFrames [(int)lFrameNdx];
 #endif
@@ -1322,7 +1432,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						if	(
 								(lImageCount > 0)
 #ifdef	__cplusplus_cli
-							&&	(lFrame->mImages = gcnew CAgentFileFrameImages (nullptr, lFrame))
+							&&	(lFrame->mImages = gcnew CAgentFileFrameImages (this, lFrame))
 #else
 							&&	(lFrame->mImages = new CAgentFileFrameImage [lImageCount])
 #endif
@@ -1334,7 +1444,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 							for	(lNdx = 0; lNdx < (INT_PTR)lImageCount; lNdx++)
 							{
 #ifdef	__cplusplus_cli
-								CAgentFileFrameImage^	lFrameImage = gcnew CAgentFileFrameImage (nullptr, lFrame);
+								CAgentFileFrameImage^	lFrameImage = gcnew CAgentFileFrameImage (this, lFrame);
 #else
 								CAgentFileFrameImage*	lFrameImage = &lFrame->mImages [lNdx];
 #endif
@@ -1370,6 +1480,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						lByte += sizeof(WORD);
 						lFrame->mExitFrame = *(LPCWORD)lByte;
 						lByte += sizeof(WORD);
+
 #ifdef	_DEBUG_ANIMATION
 						if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 						{
@@ -1378,11 +1489,14 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #endif
 						lBranchCount = *lByte;
 						lByte++;
+#ifdef	__cplusplus_cli
 						if	(lBranchCount > 0)
 						{
-#ifdef	__cplusplus_cli
 							lFrame->mBranching = gcnew array <CAgentFileFrameBranch> (lBranchCount);
+						}
 #endif
+						if	(lBranchCount > 0)
+						{
 							lFrame->mBranching [0].mFrameNdx = LOWORD(((LPCDWORD)lByte) [0]);
 							lFrame->mBranching [0].mProbability = HIWORD(((LPCDWORD)lByte) [0]);
 						}
@@ -1413,7 +1527,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 						if	(
 								(lOverlayCount > 0)
 #ifdef	__cplusplus_cli
-							&&	(lFrame->mOverlays = gcnew CAgentFileFrameOverlays (nullptr, lFrame))
+							&&	(lFrame->mOverlays = gcnew CAgentFileFrameOverlays (this, lFrame))
 #else
 							&&	(lFrame->mOverlays = new CAgentFileFrameOverlay [lOverlayCount])
 #endif
@@ -1425,7 +1539,7 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 							for	(lNdx = 0; lNdx < (INT_PTR)lOverlayCount; lNdx++)
 							{
 #ifdef	__cplusplus_cli
-								CAgentFileFrameOverlay^	lOverlay = gcnew CAgentFileFrameOverlay (nullptr, lFrame);
+								CAgentFileFrameOverlay^	lOverlay = gcnew CAgentFileFrameOverlay (this, lFrame);
 #else
 								CAgentFileFrameOverlay*	lOverlay = &lFrame->mOverlays [lNdx];
 #endif
@@ -1467,6 +1581,9 @@ CAgentFileAnimation* CAgentFileAcs::ReadAcsAnimation (DWORD pOffset, DWORD pSize
 #ifdef	__cplusplus_cli
 								lFrame->mOverlays->Add (lOverlay);
 #endif
+//#ifdef	__cplusplus_cli
+//								LogMessage (LogDebug, _T("[%s] [%s] Frame [%u] Overlay [%u] [%u] - Image [%d] Offset [%d %d] Something [%d %d]"), _B(mPath), _B(lRet->mName), lFrameNdx, lNdx, lOverlay->mOverlayType, lOverlay->mImageNdx, lOverlay->mOffset.X, lOverlay->mOffset.Y, lOverlay->mSomething.X, lOverlay->mSomething.Y);
+//#endif							
 #ifdef	_DEBUG_ANIMATION
 								if	(LogIsActive (MaxLogLevel (mLogLevel, _DEBUG_ANIMATION)))
 								{
@@ -2304,17 +2421,15 @@ DWORD CAgentFileAcs::WriteSoundIndex (DWORD pFileOffset, CAgentFile^ pSource)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	__cplusplus_cli
-CAgentFileImage^ CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, System::Drawing::Color pBkColor)
+CAgentFileImage^ CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum)
 #else
-CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit, const COLORREF* pBkColor)
+CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum)
 #endif
 {
 #ifdef	__cplusplus_cli
 	CAgentFileImage^		lRet = nullptr;
-	CAgentFileImage^		l32BitImage = nullptr;
 #else
 	tPtr <CAgentFileImage>	lRet;
-	tPtr <CAgentFileImage>	l32BitImage;
 #endif
 
 	try
@@ -2489,117 +2604,6 @@ CAgentFileImage* CAgentFileAcs::ReadAcsImage (DWORD pOffset, DWORD pSize, UINT p
 					LogMessage (LogDebug, _T("------"));
 #endif
 				}
-#endif
-			}
-
-			if	(
-					(p32Bit)
-				&&	(lRet)
-#ifdef	__cplusplus_cli
-				&&	(mHeader->Palette)
-				&&	(l32BitImage = gcnew CAgentFileImage)
-				&&	(lBitsSize = lRet->mImageSize.Width * lRet->mImageSize.Height * 4)
-				&&	(l32BitImage->mBits = gcnew array <BYTE> (lBitsSize))
-#else
-				&&	(mHeader.Palette)
-				&&	(l32BitImage = new CAgentFileImage)
-				&&	(l32BitImage->mBitsSize = lRet->mImageSize.cx * lRet->mImageSize.cy * 4)
-				&&	(l32BitImage->mBits = new BYTE [l32BitImage->mBitsSize])
-#endif
-				)
-			{
-#ifdef	__cplusplus_cli
-				System::Drawing::Point	lPixel;
-				int						lSrcNdx;
-				int						lTrgNdx;
-#else
-				CPoint					lPixel;
-				INT_PTR					lSrcNdx;
-				INT_PTR					lTrgNdx;
-#endif
-				int						lSrcScanBytes;
-				int						lTrgScanBytes;
-
-				l32BitImage->mImageNum = pImageNum;
-				l32BitImage->mImageSize = lImageSize;
-				l32BitImage->mIs32Bit = true;
-
-#ifdef	__cplusplus_cli
-				lSrcScanBytes = ((lImageSize.Width + 3) / 4) * 4;
-				lTrgScanBytes = lImageSize.Width * 4;
-#else
-				lSrcScanBytes = ((lImageSize.cx + 3) / 4) * 4;
-				lTrgScanBytes = lImageSize.cx * 4;
-#endif
-
-#ifdef	__cplusplus_cli
-				for	(lPixel.Y = 0; lPixel.Y < lImageSize.Height; lPixel.Y++)
-#else
-				for	(lPixel.y = 0; lPixel.y < lImageSize.cy; lPixel.y++)
-#endif
-				{
-#ifdef	__cplusplus_cli
-					lSrcNdx = lPixel.Y * lSrcScanBytes;
-					lTrgNdx = lPixel.Y * lTrgScanBytes;
-#else
-					lSrcNdx = lPixel.y * lSrcScanBytes;
-					lTrgNdx = lPixel.y * lTrgScanBytes;
-#endif
-
-#ifdef	__cplusplus_cli
-					for	(lPixel.X = 0; lPixel.X < lImageSize.Width; lPixel.X++)
-#else
-					for	(lPixel.x = 0; lPixel.x < lImageSize.cx; lPixel.x++)
-#endif
-					{
-#ifdef	__cplusplus_cli
-						lImageBits = &l32BitImage->mBits[lTrgNdx];
-						if	(lRet->mBits [lSrcNdx] == mHeader->mTransparency)
-						{
-							if	(pBkColor == Color::Transparent)
-							{
-								*(LPCOLORREF)(LPBYTE)lImageBits = 0;
-							}
-							else 
-							if	(pBkColor == Color::Empty)
-							{
-								*(LPCOLORREF)(LPBYTE)lImageBits = mHeader->mPalette->Entries [(long)lRet->mBits [lSrcNdx]].ToArgb() | 0xFF000000;
-							}
-							else
-							{
-								*(LPCOLORREF)(LPBYTE)lImageBits = pBkColor.ToArgb() | 0xFF000000;
-							}
-						}
-						else
-						{
-							*(LPCOLORREF)(LPBYTE)lImageBits = mHeader->mPalette->Entries [(long)lRet->mBits [lSrcNdx]].ToArgb() | 0xFF000000;
-						}
-#else
-						if	(lRet->mBits [lSrcNdx] == mHeader.mTransparency)
-						{
-							if	(pBkColor)
-							{
-								*(LPCOLORREF)(l32BitImage->mBits+lTrgNdx) = *pBkColor | 0xFF000000;
-							}
-							else
-							{
-								*(LPCOLORREF)(l32BitImage->mBits+lTrgNdx) = 0;
-							}
-						}
-						else
-						{
-							*(LPCOLORREF)(l32BitImage->mBits+lTrgNdx) = mHeader.mPalette [(long)lRet->mBits [lSrcNdx]] | 0xFF000000;
-						}
-#endif
-						lSrcNdx++;
-						lTrgNdx += 4;
-					}
-				}
-
-#ifdef	__cplusplus_cli
-				lRet = l32BitImage;
-#else
-				lRet = l32BitImage.Detach();
 #endif
 			}
 		}
@@ -3234,7 +3238,7 @@ void CAgentFileAcs::DumpAcsImages (UINT pLogLevel)
 
 			for	(lImageNdx = 0; lImageNdx < (INT_PTR)mImageIndex.GetCount(); lImageNdx++)
 			{
-				if	(lImage = ReadAcsImage (mImageIndex [lImageNdx].LowPart, mImageIndex [lImageNdx].HighPart, (UINT)lImageNdx, false, NULL))
+				if	(lImage = ReadAcsImage (mImageIndex [lImageNdx].LowPart, mImageIndex [lImageNdx].HighPart, (UINT)lImageNdx))
 				{
 #ifdef	_SAVE_IMAGE
 					SaveImage (lImage);
@@ -3264,7 +3268,7 @@ void CAgentFileAcs::DumpAcsImage (INT_PTR pImageNdx, UINT pLogLevel)
 		{
 			tPtr <CAgentFileImage>	lImage;
 
-			if	(lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, false, NULL))
+			if	(lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx))
 			{
 #ifdef	_SAVE_IMAGE
 				SaveImage (lImage);

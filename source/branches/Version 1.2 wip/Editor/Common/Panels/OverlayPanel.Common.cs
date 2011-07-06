@@ -131,14 +131,21 @@ namespace AgentCharacterEditor.Panels
 
 		public override void ShowFilePart (ResolvePart pFilePart)
 		{
-			FilePart = pFilePart;
-
-			ShowFrameName ();
-			ShowFrameOverlays ();
-			if (!IsPanelEmpty)
+			try
 			{
-				SelectUsedOverlay (-1);
-				ShowSelectedOverlay ();
+				FilePart = pFilePart;
+
+				ShowFrameName ();
+				ShowFrameOverlays ();
+				if (!IsPanelEmpty)
+				{
+					SelectUsedOverlay (-1);
+					ShowSelectedOverlay ();
+				}
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
 			}
 		}
 
@@ -192,7 +199,7 @@ namespace AgentCharacterEditor.Panels
 				NumericOffsetX.IsModified = false;
 				NumericOffsetY.IsModified = false;
 
-				ShowFrameSample (pFrameOverlay);
+				ShowOverlaySample (pFrameOverlay);
 			}
 		}
 

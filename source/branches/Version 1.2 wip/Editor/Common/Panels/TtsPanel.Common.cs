@@ -75,8 +75,15 @@ namespace AgentCharacterEditor.Panels
 
 		public override void ShowFilePart (ResolvePart pFilePart)
 		{
-			FilePart = pFilePart;
-			ShowTtsProperties ();
+			try
+			{
+				FilePart = pFilePart;
+				ShowTtsProperties ();
+			}
+			catch (Exception pException)
+			{
+				System.Diagnostics.Debug.Print (pException.Message);
+			}
 		}
 
 		//=============================================================================
@@ -149,8 +156,15 @@ namespace AgentCharacterEditor.Panels
 
 					TextBoxTTSModeID.Text = FileTts.ModeId.ToString ().ToUpper ();
 					TextBoxVendor.Text = (lVoiceInfo == null) ? "" : lVoiceInfo.Manufacturer.Replace ("&&", "&");
-					TextBoxLanguage.Text = new System.Globalization.CultureInfo (FileTts.Language).DisplayName;
 					TextBoxGender.Text = VoiceComboItem.GenderName (FileTts.Gender);
+					try
+					{
+						TextBoxLanguage.Text = new System.Globalization.CultureInfo (FileTts.Language).DisplayName;
+					}
+					catch
+					{
+						TextBoxLanguage.Clear ();
+					}
 				}
 			}
 		}

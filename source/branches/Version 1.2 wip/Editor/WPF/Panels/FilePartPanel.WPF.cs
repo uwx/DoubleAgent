@@ -110,7 +110,7 @@ namespace AgentCharacterEditor.Panels
 			}
 			public void RestoreContext (FilePartPanel pPanel)
 			{
-				pPanel.FilePart = FilePart;
+				pPanel.ShowFilePart (FilePart);
 				if (FocusedElement != null)
 				{
 					FocusedElement.Focus ();

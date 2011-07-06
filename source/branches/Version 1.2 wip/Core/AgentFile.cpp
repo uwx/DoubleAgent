@@ -24,6 +24,7 @@
 #include "AgtErr.h"
 #include "AgentFileAcs.h"
 #include "AgentFileScript.h"
+#include "AgentFileV15.h"
 #else
 #include <shlwapi.h>
 #include <wininet.h>
@@ -31,9 +32,12 @@
 #include "GuidStr.h"
 #include "StringArrayEx.h"
 #include "AgentFileBinary.h"
+#include "AgentFileV15.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "DebugStr.h"
+#include "ImageDebugger.h"
+#include "ImageTools.h"
 #endif
 #endif
 #include "AgentFileDefs.inl"
@@ -82,8 +86,16 @@ CAgentFile* CAgentFile::CreateInstance (LPCTSTR pPath)
 			return CAgentFileScript::CreateInstance ();
 		}
 		else
+		if	(
+				(String::Compare (System::IO::Path::GetExtension (lPath), AcsFileExt, true) == 0)
+			&&	(CAgentFileV15::CheckFileSignature (pPath))
+			)
 		{
-			return CAgentFileAcs::CreateInstance ();
+			return CAgentFileV15::CreateInstance ();
+		}
+		else
+		{
+			return CAgentFileBinary::CreateInstance (lPath);
 		}
 	}
 	else
@@ -91,7 +103,18 @@ CAgentFile* CAgentFile::CreateInstance (LPCTSTR pPath)
 		return CAgentFileAcs::CreateInstance ();
 	}
 #else
-	return CAgentFileBinary::CreateInstance (pPath);
+	if	(
+			(pPath)
+		&&	(_tcsicmp (PathFindExtension (pPath), sAcsFileExt) == 0)
+		&&	(CAgentFileV15::CheckFileSignature (pPath))
+		)
+	{
+		return CAgentFileV15::CreateInstance ();
+	}
+	else
+	{
+		return CAgentFileBinary::CreateInstance (pPath);
+	}
 #endif
 }
 
@@ -104,13 +127,13 @@ bool CAgentFile::IsProperFilePath (const System::String^ pPath)
 {
 	String^	lPath = ParseFilePath (pPath);
 
-	if	(!lPath->IsNullOrEmpty (lPath))
+	if	(!String::IsNullOrEmpty (lPath))
 	{
 		System::Uri^	lUri = gcnew System::Uri (lPath);
 
 		if	(
-				(lUri->UriSchemeFile)
-			||	(lUri->UriSchemeHttp)
+				(lUri->Scheme == lUri->UriSchemeFile)
+			||	(lUri->Scheme == lUri->UriSchemeHttp)
 			)
 		{
 			return true;
@@ -158,11 +181,11 @@ bool CAgentFile::IsRelativeFilePath (const System::String^ pPath)
 
 	if	(!pPath->IsNullOrEmpty (const_cast <System::String^> (pPath)))
 	{
-		lPath = lPath->Copy (const_cast <System::String^> (pPath));
+		lPath = String::Copy (const_cast <System::String^> (pPath));
 		lPath->Trim ();
 
 		if	(
-				(!lPath->IsNullOrEmpty (lPath))
+				(!String::IsNullOrEmpty (lPath))
 			&&	(!System::Uri::IsWellFormedUriString (lPath, System::UriKind::RelativeOrAbsolute))
 			&&	(
 					(!System::IO::Path::IsPathRooted (lPath))
@@ -209,9 +232,9 @@ System::String^ CAgentFile::ParseFilePath (const System::String^ pPath)
 
 	if	(!pPath->IsNullOrEmpty (const_cast <String^> (pPath)))
 	{
-		lPath = lPath->Copy (const_cast <String^> (pPath));
+		lPath = String::Copy (const_cast <String^> (pPath));
 		lPath->Trim ();
-		if	(!lPath->IsNullOrEmpty (lPath))
+		if	(!String::IsNullOrEmpty (lPath))
 		{
 			try
 			{
@@ -219,7 +242,7 @@ System::String^ CAgentFile::ParseFilePath (const System::String^ pPath)
 			}
 			catch AnyExceptionSilent
 		}
-		if	(lPath->IsNullOrEmpty (lPath))
+		if	(String::IsNullOrEmpty (lPath))
 		{
 			lPath = nullptr;
 		}
@@ -273,7 +296,35 @@ tBstrPtr CAgentFile::ParseFilePath (LPCTSTR pPath)
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef	__cplusplus_cli
+#ifdef	__cplusplus_cli
+System::String^ CAgentFile::ParseRelativePath (const System::String^ pPath)
+{
+	String^	lPath;
+
+	if	(
+			(!String::IsNullOrEmpty (mPath))
+		&&	(!String::IsNullOrEmpty (const_cast <String^> (pPath)))
+		)
+	{
+		lPath = String::Copy (const_cast <String^> (pPath));
+		lPath->Trim ();
+
+		if	(!lPath->IsNullOrEmpty (lPath))
+		{
+			try
+			{
+				lPath = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (mPath), System::IO::Path::GetFileName (lPath));
+			}
+			catch AnyExceptionSilent
+		}
+		if	(String::IsNullOrEmpty (lPath))
+		{
+			lPath = nullptr;
+		}
+	}
+	return lPath;
+}
+#else
 tBstrPtr CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
 {
 	CAtlString	lRelativePath (pRelativePath);
@@ -1000,6 +1051,173 @@ UINT CAgentFile::GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage*
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef	__cplusplus_cli
+CAgentFileImage^ CAgentFile::Get32BitImage (CAgentFileImage^ p8BitImage)
+{
+	return Get32BitImage (p8BitImage, Color::Transparent);
+}
+CAgentFileImage^ CAgentFile::Get32BitImage (CAgentFileImage^ p8BitImage, System::Drawing::Color pBkColor)
+#else	
+CAgentFileImage* CAgentFile::Get32BitImage (const CAgentFileImage* p8BitImage, const COLORREF* pBkColor)
+#endif
+{
+#ifdef	__cplusplus_cli
+	CAgentFileImage^		l32BitImage = nullptr;
+#else	
+	tPtr <CAgentFileImage>	l32BitImage;
+#endif
+	if	(
+			(p8BitImage)
+		&&	(p8BitImage->Is32Bit)
+#ifdef	__cplusplus_cli
+		&&	(pBkColor == Color::Empty)
+#else
+		&&	(!pBkColor)
+#endif		
+		)
+	{
+#ifdef	__cplusplus_cli
+		return p8BitImage;
+#else
+		return const_cast <CAgentFileImage*> (p8BitImage);
+#endif
+	}
+	else
+	if	(
+			(p8BitImage)
+		&&	(!p8BitImage->Is32Bit)
+		&&	(p8BitImage->mBits)
+#ifdef	__cplusplus_cli
+		&&	(Header)
+		&&	(Header->Palette)
+#else
+		&&	(Header.Palette)
+#endif
+		)
+	{
+		try
+		{
+			DWORD	lBitsSize;
+
+			if	(
+#ifdef	__cplusplus_cli
+					(l32BitImage = gcnew CAgentFileImage)
+				&&	(lBitsSize = p8BitImage->mImageSize.Width * p8BitImage->mImageSize.Height * 4)
+				&&	(l32BitImage->mBits = gcnew array <BYTE> (lBitsSize))
+#else
+					(l32BitImage = new CAgentFileImage)
+				&&	(lBitsSize = l32BitImage->mBitsSize = p8BitImage->mImageSize.cx * p8BitImage->mImageSize.cy * 4)
+				&&	(l32BitImage->mBits = new BYTE [lBitsSize])
+#endif
+				)
+			{
+#ifdef	__cplusplus_cli
+				pin_ptr <BYTE>					lImageBits;
+				System::Drawing::Size			lImageSize = p8BitImage->mImageSize;
+				System::Drawing::Point			lPixel;
+				array <System::Drawing::Color>^	lPaletteEntries = Header->Palette->Entries;
+				Byte							lTransparency = Header->Transparency;
+				int								lSrcNdx;
+				int								lTrgNdx;
+#else
+				CSize							lImageSize = p8BitImage->mImageSize;
+				CPoint							lPixel;
+				LPCOLORREF						lPalette = Header.Palette;
+				BYTE							lTransparency = Header.Transparency;
+				INT_PTR							lSrcNdx;
+				INT_PTR							lTrgNdx;
+#endif
+				int								lSrcScanBytes;
+				int								lTrgScanBytes;
+
+				l32BitImage->mImageNum = p8BitImage->mImageNum;
+				l32BitImage->mImageSize = p8BitImage->mImageSize;
+				l32BitImage->mIs32Bit = true;
+
+#ifdef	__cplusplus_cli
+				lSrcScanBytes = ((lImageSize.Width + 3) / 4) * 4;
+				lTrgScanBytes = lImageSize.Width * 4;
+#else
+				lSrcScanBytes = ((lImageSize.cx + 3) / 4) * 4;
+				lTrgScanBytes = lImageSize.cx * 4;
+#endif
+
+#ifdef	__cplusplus_cli
+				for	(lPixel.Y = 0; lPixel.Y < lImageSize.Height; lPixel.Y++)
+#else
+				for	(lPixel.y = 0; lPixel.y < lImageSize.cy; lPixel.y++)
+#endif
+				{
+#ifdef	__cplusplus_cli
+					lSrcNdx = lPixel.Y * lSrcScanBytes;
+					lTrgNdx = lPixel.Y * lTrgScanBytes;
+#else
+					lSrcNdx = lPixel.y * lSrcScanBytes;
+					lTrgNdx = lPixel.y * lTrgScanBytes;
+#endif
+
+#ifdef	__cplusplus_cli
+					for	(lPixel.X = 0; lPixel.X < lImageSize.Width; lPixel.X++)
+#else
+					for	(lPixel.x = 0; lPixel.x < lImageSize.cx; lPixel.x++)
+#endif
+					{
+#ifdef	__cplusplus_cli
+						lImageBits = &l32BitImage->mBits[lTrgNdx];
+						if	(p8BitImage->mBits [lSrcNdx] == lTransparency)
+						{
+							if	(pBkColor == Color::Transparent)
+							{
+								*(LPCOLORREF)(LPBYTE)lImageBits = 0;
+							}
+							else 
+							if	(pBkColor == Color::Empty)
+							{
+								*(LPCOLORREF)(LPBYTE)lImageBits = lPaletteEntries [(long)p8BitImage->mBits [lSrcNdx]].ToArgb() | 0xFF000000;
+							}
+							else
+							{
+								*(LPCOLORREF)(LPBYTE)lImageBits = pBkColor.ToArgb() | 0xFF000000;
+							}
+						}
+						else
+						{
+							*(LPCOLORREF)(LPBYTE)lImageBits = lPaletteEntries [(long)p8BitImage->mBits [lSrcNdx]].ToArgb() | 0xFF000000;
+						}
+#else
+						if	(p8BitImage->mBits [lSrcNdx] == lTransparency)
+						{
+							if	(pBkColor)
+							{
+								*(LPCOLORREF)(l32BitImage->mBits+lTrgNdx) = *pBkColor | 0xFF000000;
+							}
+							else
+							{
+								*(LPCOLORREF)(l32BitImage->mBits+lTrgNdx) = 0;
+							}
+						}
+						else
+						{
+							*(LPCOLORREF)(l32BitImage->mBits+lTrgNdx) = lPalette [(long)p8BitImage->mBits [lSrcNdx]] | 0xFF000000;
+						}
+#endif
+						lSrcNdx++;
+						lTrgNdx += 4;
+					}
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+#ifdef	__cplusplus_cli
+	return l32BitImage;
+#else	
+	return l32BitImage.Detach();
+#endif	
+}	
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	__cplusplus_cli
 UINT CAgentFile::GetImageBits (LPBYTE pImageBits, int pImageNdx)
 {
 	return GetImageBits (pImageBits, pImageNdx, false);
@@ -1359,10 +1577,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 								)
 							{
 #ifdef	__cplusplus_cli
-								if	(
-										(lImageNdx == 0)
-									&&	(pBkColor == Color::Empty)
-									)
+								if	(pBkColor == Color::Empty)
 								{
 									*(COLORREF*)(pImageBits + lTrgNdx) = lPalette->Entries [lImageBits [lSrcNdx]].ToArgb() | 0xFF000000;
 								}
@@ -1691,7 +1906,10 @@ CAgentFileName* CAgentFile::FindName (WORD pLangID)
 #endif
 		}
 
-		if	(!lName)
+		if	(
+				(!lName)
+			&&	(pLangID != MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT))
+			)
 		{
 			lName = FindName (MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT));
 		}
@@ -1898,9 +2116,9 @@ void CAgentFile::LogGestures (UINT pLogLevel, LPCTSTR pFormat, ...) const
 				{
 					CAtlString	lSuffix;
 
-					if	(lAnimation->mAcaFileName.Ptr())
+					if	(lAnimation->mFileName.Ptr())
 					{
-						lSuffix.Format (_T(" File [%ls] [%8.8X]"), (BSTR)lAnimation->mAcaFileName, lAnimation->mAcaChksum);
+						lSuffix.Format (_T(" File [%ls] [%8.8X]"), (BSTR)lAnimation->mFileName, lAnimation->mFileCheckSum);
 					}
 					LogMessage (pLogLevel|LogHighVolume, _T("  %s Name [%ls] Frames [%hu] Return [%hu] [%ls]%s"), mGestures.mNames [lNdx], (BSTR)lAnimation->mName, lAnimation->mFrameCount, lAnimation->mReturnType, (BSTR)lAnimation->mReturnName, lSuffix);
 				}
@@ -2018,6 +2236,93 @@ void CAgentFile::LogBalloon (const CAgentFileBalloon& pBalloon, UINT pLogLevel, 
 				LogMessage (pLogLevel, _T("%s  Font Strike   [%hu]"), lIndent, pBalloon.Font.lfStrikeOut);
 		}
 		catch AnyExceptionDebug
+	}
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentFile::DumpPalette (LPVOID pPalette, DWORD pPaletteSize)
+{
+#ifdef	_DEBUG
+	tArrayPtr <BYTE>	lInfoBuff;
+	BITMAPINFO *		lInfo;
+	ATL::CImage			lDumpBmp;
+	LPBYTE				lDumpBits;
+
+	lInfoBuff = new BYTE [sizeof (BITMAPINFOHEADER) + (sizeof(COLORREF) * pPaletteSize)];
+	lInfo = (BITMAPINFO *) (LPBYTE) lInfoBuff;
+
+	lInfo->bmiHeader.biSize = sizeof (lInfo->bmiHeader);
+	lInfo->bmiHeader.biWidth = 256;
+	lInfo->bmiHeader.biHeight = -256;
+	lInfo->bmiHeader.biBitCount = 8;
+	lInfo->bmiHeader.biPlanes = 1;
+	lInfo->bmiHeader.biCompression = BI_RGB;
+	lInfo->bmiHeader.biSizeImage = lInfo->bmiHeader.biWidth * abs (lInfo->bmiHeader.biHeight);
+	lInfo->bmiHeader.biClrUsed = pPaletteSize;
+	memcpy (lInfo->bmiColors, pPalette, sizeof(DWORD) * pPaletteSize);
+
+	lDumpBmp.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, NULL, NULL, 0));
+	if	(lDumpBits = ::GetImageBits (lDumpBmp))
+	{
+		for	(long lNdx = 0; lNdx < (long) lInfo->bmiHeader.biSizeImage; lNdx++)
+		{
+			lDumpBits [lNdx] = (BYTE) ((lNdx >> 4) & 0x000F) | ((lNdx >> 8) & 0x00F0);
+		}
+		GdiFlush ();
+
+#ifdef	_SAVE_IMAGE
+		CImageDebugger::SaveBitmap (lDumpBmp, _T("Palette"));
+#else
+#ifdef	_SAVE_PALETTE
+		lDumpName += _T(" - Palette");
+		CImageDebugger::SaveBitmap (lDumpBmp, lDumpName);
+#endif
+#endif
+#ifdef	_DUMP_PALETTE
+		CImageDebugger::DumpBitmap (_DUMP_PALETTE, *lInfo, lDumpBits, _T("Palette"));
+#endif
+	}
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentFile::SaveImage (CAgentFileImage* pImage)
+{
+#ifdef	_DEBUG
+	if	(pImage)
+	{
+		try
+		{
+			ATL::CImage			lBitmap;
+			tArrayPtr <BYTE>	lInfoBuffer;
+			LPBITMAPINFO		lInfo;
+			LPVOID				lBits = NULL;
+
+			if	(
+					(lInfoBuffer = new BYTE [GetImageFormat (NULL)])
+				&&	(lInfo = (LPBITMAPINFO) (LPBYTE) lInfoBuffer)
+				)
+			{
+				GetImageFormat (lInfo, pImage, false);
+
+				lBitmap.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, NULL, NULL, 0));
+				if	(lBits = ::GetImageBits (lBitmap))
+				{
+					CAtlString	lDumpName;
+
+					memcpy (lBits, pImage->Bits, pImage->BitsSize);
+					GdiFlush ();
+					lDumpName.Format (_T("Image %.4u"), pImage->ImageNum);
+					CImageDebugger::SaveBitmap (lBitmap, lDumpName);
+				}
+			}
+		}
+		catch AnyExceptionSilent
 	}
 #endif
 }

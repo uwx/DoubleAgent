@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using AgentCharacterEditor.Global;
+using AgentCharacterEditor.Properties;
 using DoubleAgent;
 using DoubleAgent.Character;
 
@@ -25,6 +26,21 @@ namespace AgentCharacterEditor.Panels
 			{
 				Program.MainWindow.ViewChanged += new EventHandler (OnViewChanged);
 			}
+		}
+
+		protected override void OnLoadConfig (object sender, EventArgs e)
+		{
+			if (Settings.Default.IsValid)
+			{
+				CheckBoxImageTransparent.IsChecked = Settings.Default.ShowImageTransparency;
+				CheckBoxFrameTransparent.IsChecked = Settings.Default.ShowFrameTransparency;
+			}
+		}
+
+		protected override void OnSaveConfig (object sender, EventArgs e)
+		{
+			Settings.Default.ShowImageTransparency = CheckBoxImageTransparent.IsChecked ?? false;
+			Settings.Default.ShowFrameTransparency = CheckBoxFrameTransparent.IsChecked ?? false;
 		}
 
 		protected override Size ArrangeOverride (Size arrangeBounds)
@@ -65,7 +81,7 @@ namespace AgentCharacterEditor.Panels
 
 				if (!IsPanelEmpty && (Frame.Images != null))
 				{
-					lBitmap = CharacterFile.GetFrameBitmap (Frame, true, System.Drawing.Color.Transparent);
+					lBitmap = CharacterFile.GetFrameBitmap (Frame, true, CheckBoxFrameTransparent.IsChecked.Value ? System.Drawing.Color.Transparent : System.Drawing.Color.Empty);
 				}
 				ImageFrameSample.Source = (lBitmap == null) ? null : lBitmap.MakeImageSource ();
 			}
@@ -162,7 +178,7 @@ namespace AgentCharacterEditor.Panels
 
 					try
 					{
-						lBitmap = CharacterFile.GetImageBitmap ((int)pFrameImage.ImageNdx, true, (CheckBoxTransparent.IsChecked.Value ? System.Drawing.Color.Transparent : System.Drawing.Color.Empty));
+						lBitmap = CharacterFile.GetImageBitmap ((int)pFrameImage.ImageNdx, true, CheckBoxImageTransparent.IsChecked.Value ? System.Drawing.Color.Transparent : System.Drawing.Color.Empty);
 					}
 					catch (Exception pException)
 					{
@@ -393,9 +409,20 @@ namespace AgentCharacterEditor.Panels
 
 		//=============================================================================
 
-		private void CheckBoxTransparent_CheckChanged (object sender, RoutedEventArgs e)
+		private void CheckBoxImageTransparent_CheckChanged (object sender, RoutedEventArgs e)
 		{
-			ShowSelectedImage ();
+			if (!IsPanelFilling)
+			{
+				ShowSelectedImage ();
+			}
+		}
+
+		private void CheckBoxFrameTransparent_CheckChanged (object sender, RoutedEventArgs e)
+		{
+			if (!IsPanelFilling)
+			{
+				ShowFrameSample ();
+			}
 		}
 
 		#endregion

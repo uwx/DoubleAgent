@@ -20,6 +20,9 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "AgentFileAcf.h"
+#ifdef	__cplusplus_cli
+#include "AgtErr.h"
+#else
 #include <shlwapi.h>
 #include <wininet.h>
 #include "DaCore.h"
@@ -30,12 +33,51 @@
 #include "Registry.h"
 #include "DebugStr.h"
 #endif
+#endif
 #include "AgentFileDefs.inl"
 
-#ifndef __cplusplus_cli
+#ifdef __cplusplus_cli
+using namespace System::Collections::Generic;
+using namespace System::Runtime::Serialization;
+#else
 IMPLEMENT_DLL_OBJECT(CAgentFileAcf)
 #endif
 
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+namespace DoubleAgent {
+namespace Character {
+#endif
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	__cplusplus_cli
+[Serializable] private ref class AcfFileAnimation : public FileAnimation
+{
+public:	
+	[NonSerialized]	System::String^	mFileName;
+	[NonSerialized]	UInt32			mFileCheckSum;
+
+internal:
+	AcfFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer);
+public:	
+	virtual ~AcfFileAnimation ();
+internal:
+	virtual void Empty () override;
+
+public:	
+	virtual property UInt16 FrameCount {virtual UInt16 get() override;}
+	virtual property FileFrames^ Frames {virtual FileFrames^ get() override;}
+	virtual Boolean CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy) override;
+    virtual System::String^ ToString() override;
+
+internal:
+	property Boolean IsLoaded {Boolean get(); void set (Boolean pValue);}
+	void EnsureIsLoaded ();
+};
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentFileAcf::CAgentFileAcf()
@@ -54,13 +96,32 @@ CAgentFileAcf::~CAgentFileAcf ()
 	Close ();
 }
 
+#ifdef	__cplusplus_cli
+CAgentFileAcf^ CAgentFileAcf::CreateInstance ()
+#else
 CAgentFileAcf* CAgentFileAcf::CreateInstance ()
+#endif
 {
+#ifdef	__cplusplus_cli
+	LogStart (false);
+	return gcnew CAgentFileAcf;
+#else
 	return new CAgentFileAcf;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::IsAcfFile::get ()
+{
+	if	(IsOpen)
+	{
+		return (mSignature == sAcfFileSignature);
+	}
+	return true;
+}
+#else
 bool CAgentFileAcf::get_IsAcfFile () const
 {
 	if	(IsOpen)
@@ -69,24 +130,63 @@ bool CAgentFileAcf::get_IsAcfFile () const
 	}
 	return false;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::Open (const System::String^ pPath)
+{
+	bool			lRet = false;
+	String^			lPath = ParseFilePath (pPath);
+	System::Uri^	lUri = gcnew System::Uri (lPath);
+
+	Close ();
+
+#ifdef	_DEBUG_LOAD
+	UINT	lLogLevel = mLogLevel;
+	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
+#endif
+	if	(LogIsActive (mLogLevel))
+	{
+		LogMessage (mLogLevel, _T("Open [%s]"), _B(lPath));
+	}
+
+	if	(lUri->Scheme == lUri->UriSchemeHttp)
+	{
+		throw gcnew NotSupportedException ("The HTTP scheme is not yet supported.");
+	}
+	else
+	{
+		mPath = lPath;
+		lRet = LoadFile (lPath);
+	}
+	if	(!lRet)
+	{
+		mPath = nullptr;
+	}
+
+#ifdef	_DEBUG_LOAD
+	mLogLevel = lLogLevel;
+#endif
+	return lRet;
+}
+#else
 HRESULT CAgentFileAcf::Open (LPCTSTR pPath)
 {
 	HRESULT		lResult = S_OK;
 	CAtlString	lPath = ParseFilePath (pPath);
+
+	Close ();
 
 #ifdef	_DEBUG_LOAD
 	UINT lLogLevel = mLogLevel;
 	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
 
-	Close ();
 	mPath = lPath;
-
 	if	(LogIsActive (mLogLevel))
 	{
 		LogMessage (mLogLevel, _T("Open [%s]"), lPath);
@@ -121,15 +221,30 @@ HRESULT CAgentFileAcf::Open (LPCTSTR pPath)
 #endif
 	return lResult;
 }
+#endif
+
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::Save (const System::String^ pPath, CAgentFile^ pSource)
+{
+	throw gcnew NotSupportedException ("Saving ACF files is not yet supported.");
+}
+#endif
 
 void CAgentFileAcf::Close ()
 {
+#ifdef	__cplusplus_cli
+	mAcaImages = gcnew System::Collections::Generic::List <CAgentFileImage^> ();
+	mAcaSounds = gcnew System::Collections::Generic::List <array <BYTE>^> ();
+#else
 	mAcaImages.DeleteAll ();
 	mAcaSounds.DeleteAll ();
+#endif	
 	__super::Close ();
 	mSignature = sAcfFileSignature;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+#ifndef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentFileAcf::SetDownloadMode (bool pRefresh, bool pReload, bool pSecure)
@@ -177,10 +292,27 @@ HRESULT CAgentFileAcf::LoadAcf (CFileDownload* pDownload)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#endif	// __cplusplus_cli
+/////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::IsAnimationLoaded (int pAnimationNdx)
+#else
 bool CAgentFileAcf::IsAnimationLoaded (INT_PTR pAnimationNdx)
+#endif
 {
-	bool					lRet = false;
+	bool				lRet = false;
+#ifdef	__cplusplus_cli
+	AcfFileAnimation^	lAnimation;
+
+	if	(
+			(IsOpen)
+		&&	(lAnimation = GetAcfAnimation (pAnimationNdx))
+		)
+	{
+		lRet = lAnimation->IsLoaded;
+	}
+#else
 	CAgentFileAnimation*	lAnimation = NULL;
 
 	if	(
@@ -188,16 +320,42 @@ bool CAgentFileAcf::IsAnimationLoaded (INT_PTR pAnimationNdx)
 		&&	(pAnimationNdx >= 0)
 		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount())
 		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
-		&&	(lAnimation->mAcaChksum == (DWORD)-1)
+		&&	(lAnimation->mFileCheckSum == (DWORD)-1)
 		)
 	{
 		lRet = true;
 	}
+#endif	
 	return lRet;
 }
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::LoadAnimationAca (int pAnimationNdx)
+#else
 HRESULT CAgentFileAcf::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload* pDownload)
+#endif
 {
+#ifdef	__cplusplus_cli
+	bool				lRet = false;
+	AcfFileAnimation^	lAnimation;
+	
+	if	(
+			(IsOpen)
+		&&	(lAnimation = GetAcfAnimation (pAnimationNdx))
+		)
+	{
+		if	(lAnimation->IsLoaded)
+		{
+			lRet = true;
+		}
+		else
+		if	(ReadAcaFile (lAnimation))
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+#else	
 	HRESULT					lResult = S_OK;
 	CAgentFileAnimation*	lAnimation = NULL;
 
@@ -222,14 +380,14 @@ HRESULT CAgentFileAcf::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload* p
 			lResult = AGENTERR_INVALIDANIMATION;
 		}
 		else
-		if	(lAnimation->mAcaChksum == (DWORD)-1)
+		if	(lAnimation->mFileCheckSum == (DWORD)-1)
 		{
 			lResult = S_FALSE;
 		}
 		else
 		{
 			lResult = ReadAcaFile (lAnimation, CAtlString ((BSTR) pDownload->GetCacheName()));
-			lAnimation->mAcaChksum = (DWORD)-1;
+			lAnimation->mFileCheckSum = (DWORD)-1;
 		}
 	}
 	else
@@ -237,8 +395,25 @@ HRESULT CAgentFileAcf::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload* p
 		lResult = AGENTERR_ANIMATIONNOTFOUND;
 	}
 	return lResult;
+#endif	
 }
 
+#ifdef	__cplusplus_cli
+System::String^ CAgentFileAcf::GetAnimationAcaPath (int pAnimationNdx)
+{
+	String^				lPath;
+	AcfFileAnimation^	lAnimation;
+
+	if	(
+			(IsOpen)
+		&&	(lAnimation = GetAcfAnimation (pAnimationNdx))
+		)
+	{
+		lPath = GetAcaPath (lAnimation);
+	}
+	return lPath;
+}
+#else
 tBstrPtr CAgentFileAcf::GetAnimationAcaPath (INT_PTR pAnimationNdx)
 {
 	CAtlString				lPath;
@@ -255,28 +430,79 @@ tBstrPtr CAgentFileAcf::GetAnimationAcaPath (INT_PTR pAnimationNdx)
 	}
 	return lPath.AllocSysString();
 }
+#endif	
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::IsAnimationLoaded (System::String^ pAnimationName)
+{
+	if	(mGestures->Contains (pAnimationName))
+	{
+		return IsAnimationLoaded (mGestures->IndexOf (mGestures [pAnimationName]));
+	}
+	return false;
+}
+#else
 bool CAgentFileAcf::IsAnimationLoaded (LPCTSTR pAnimationName)
 {
 	return IsAnimationLoaded (FindAnimation (pAnimationName));
 }
+#endif
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::LoadAnimationAca (System::String^ pAnimationName)
+{
+	if	(mGestures->Contains (pAnimationName))
+	{
+		return LoadAnimationAca (mGestures->IndexOf (mGestures [pAnimationName]));
+	}
+	return false;
+}
+#else
 HRESULT CAgentFileAcf::LoadAnimationAca (LPCTSTR pAnimationName, CFileDownload* pDownload)
 {
 	return LoadAnimationAca (FindAnimation (pAnimationName), pDownload);
 }
+#endif
 
+#ifdef	__cplusplus_cli
+System::String^ CAgentFileAcf::GetAnimationAcaPath (System::String^ pAnimationName)
+{
+	if	(mGestures->Contains (pAnimationName))
+	{
+		return GetAnimationAcaPath (mGestures->IndexOf (mGestures [pAnimationName]));
+	}
+	return nullptr;
+}
+#else
 tBstrPtr CAgentFileAcf::GetAnimationAcaPath (LPCTSTR pAnimationName)
 {
 	return GetAnimationAcaPath (FindAnimation (pAnimationName));
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+AcfFileAnimation^ CAgentFileAcf::GetAcfAnimation (int pAnimationNdx)
+{
+	AcfFileAnimation^	lAnimation;
+
+	if	(
+			(IsOpen)
+		&&	(pAnimationNdx >= 0)
+		&&	(pAnimationNdx < mGestures->Count)
+		&&	(AcfFileAnimation::typeid->IsAssignableFrom (mGestures [pAnimationNdx]->GetType()))
+		)
+	{
+		lAnimation = safe_cast<AcfFileAnimation^> (mGestures [pAnimationNdx]);
+	}
+	return lAnimation;
+}
+#else
 const CAgentFileAnimation* CAgentFileAcf::GetGesture (INT_PTR pGestureNdx)
 {
 	CAgentFileAnimation*	lRet = const_cast <CAgentFileAnimation*> (__super::GetGesture (pGestureNdx));
@@ -298,46 +524,125 @@ const CAgentFileAnimation* CAgentFileAcf::GetAnimation (INT_PTR pAnimationNdx)
 	}
 	return lRet;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+int CAgentFileAcf::ImageCount::get ()
+{
+	return mAcaImages->Count;
+}
+#else
 INT_PTR CAgentFileAcf::GetImageCount () const
 {
 	return mAcaImages.GetCount();
 }
+#endif
 
+#ifdef	__cplusplus_cli
+CAgentFileImage^ CAgentFileAcf::GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor)
+{
+	CAgentFileImage^	lImage;
+	CAgentFileImage^	lAcaImage;
+
+	if	(
+			(pImageNdx >= 0)
+		&&	(pImageNdx < mAcaImages->Count)
+		&&	(lAcaImage = mAcaImages [pImageNdx])
+		)
+	{
+		if	(p32Bit)
+		{
+			lImage = Get32BitImage (lAcaImage, pBkColor);
+		}
+		else
+		if	(lImage = gcnew CAgentFileImage)
+		{
+			lImage->mImageNum = lAcaImage->mImageNum;
+			lImage->mImageSize = lAcaImage->mImageSize;
+			if	(
+					(lAcaImage->mBits)
+				&&	(lImage->mBits = gcnew array<BYTE> (lAcaImage->mBits->Length))
+				)
+			{
+				Array::Copy (lAcaImage->mBits, lImage->mBits, lAcaImage->mBits->Length);
+				
+				if	(p32Bit)
+				{
+				}
+			}
+		}
+	}
+	return lImage;
+}
+#else
 CAgentFileImage* CAgentFileAcf::GetImage (INT_PTR pImageNdx, bool p32Bit, const COLORREF* pBkColor)
 {
 	tPtr <CAgentFileImage>	lImage;
-	const CAgentFileImage*	lAcfImage;
+	const CAgentFileImage*	lAcaImage;
 
 	if	(
 			(pImageNdx >= 0)
 		&&	(pImageNdx < (INT_PTR)mAcaImages.GetCount())
-		&&	(lAcfImage = mAcaImages [pImageNdx])
-		&&	(lImage = new CAgentFileImage)
-		&&	(lImage->mBits = new BYTE [lAcfImage->mBitsSize])
+		&&	(lAcaImage = mAcaImages [pImageNdx])
 		)
 	{
-		lImage->mImageNum = lAcfImage->mImageNum;
-		lImage->mImageSize = lAcfImage->mImageSize;
-		lImage->mBitsSize = lAcfImage->mBitsSize;
-		memcpy (lImage->mBits.Ptr(), lAcfImage->mBits.Ptr(), lImage->mBitsSize);
-	}
-	else
-	{
-		lImage = NULL;
+		if	(p32Bit)
+		{
+			lImage = Get32BitImage (lAcaImage, pBkColor);
+		}
+		else
+		if	(
+				(lImage = new CAgentFileImage)
+			&&	(lImage->mBits = new BYTE [lAcaImage->mBitsSize])
+			)
+		{
+			lImage->mImageNum = lAcaImage->mImageNum;
+			lImage->mImageSize = lAcaImage->mImageSize;
+			lImage->mBitsSize = lAcaImage->mBitsSize;
+			memcpy (lImage->mBits.Ptr(), lAcaImage->mBits.Ptr(), lImage->mBitsSize);
+		}
+		else
+		{
+			lImage = NULL;
+		}
 	}
 	return lImage.Detach ();
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+int CAgentFileAcf::SoundCount::get ()
+{
+	return mAcaSounds->Count;
+}
+#else
 INT_PTR CAgentFileAcf::GetSoundCount () const
 {
 	return mAcaSounds.GetCount();
 }
+#endif
 
+#ifdef	__cplusplus_cli
+int CAgentFileAcf::GetSoundSize (int pSoundNdx)
+{
+	long	lRet = -1;
+
+	if	(
+			(pSoundNdx >= 0)
+		&&	(pSoundNdx < mAcaSounds->Count)
+		)
+	{
+		lRet = mAcaSounds[pSoundNdx]->Length;
+	}
+	return lRet;
+}
+#else
 long CAgentFileAcf::GetSoundSize (INT_PTR pSoundNdx)
 {
 	long			lRet = -1;
@@ -349,7 +654,21 @@ long CAgentFileAcf::GetSoundSize (INT_PTR pSoundNdx)
 	}
 	return lRet;
 }
+#endif
 
+#ifdef	__cplusplus_cli
+array <BYTE>^ CAgentFileAcf::GetSound (int pSoundNdx)
+{
+	if	(
+			(pSoundNdx >= 0)
+		&&	(pSoundNdx < mAcaSounds->Count)
+		)
+	{
+		return mAcaSounds [pSoundNdx];
+	}
+	return nullptr;
+}
+#else
 LPCVOID CAgentFileAcf::GetSound (INT_PTR pSoundNdx)
 {
 	LPCVOID			lSound = NULL;
@@ -361,26 +680,48 @@ LPCVOID CAgentFileAcf::GetSound (INT_PTR pSoundNdx)
 	}
 	return lSound;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::ReadHeader ()
+#else
 HRESULT CAgentFileAcf::ReadHeader ()
+#endif
 {
+#ifdef	__cplusplus_cli
+	bool	lRet = __super::ReadHeader ();
+#else
 	HRESULT	lResult = __super::ReadHeader ();
+#endif
 
 	if	(
+#ifdef	__cplusplus_cli
+			(lRet)
+#else
 			(SUCCEEDED (lResult))
+#endif
 		&&	(
 				(mSignature != sAcfFileSignature)
 			||	(!ReadAcfHeader ())
 			)
 		)
 	{
+#ifdef	__cplusplus_cli
+		throw gcnew Exception ("The specified file is not a Microsoft Agent 2.x character file.");
+#else
 		lResult = AGENTPROVERROR_MAGIC;
+#endif
 	}
+
+#ifdef	__cplusplus_cli
+	return lRet;
+#else
 	return lResult;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -388,10 +729,20 @@ HRESULT CAgentFileAcf::ReadHeader ()
 bool CAgentFileAcf::ReadAcfHeader ()
 {
 	bool				lRet = false;
+
+#ifdef	__cplusplus_cli
+	UInt32				lUncompressedSize;
+	UInt32				lCompressedSize;
+	array <BYTE>^		lHeaderBuffer;
+	pin_ptr <BYTE>		lHeaderData;
+	array <BYTE>^		lCompressedBuffer;
+	pin_ptr <BYTE>		lCompressedData;
+#else
 	DWORD				lUncompressedSize;
 	DWORD				lCompressedSize;
 	LPCBYTE				lHeaderData = NULL;
 	tArrayPtr <BYTE>	lUncompressedData;
+#endif	
 
 	FreeNames ();
 	FreeGestures ();
@@ -402,116 +753,61 @@ bool CAgentFileAcf::ReadAcfHeader ()
 		&&	(IsAcfFile)
 		)
 	{
+#ifdef	__cplusplus_cli
+		mFileStream->Seek (sizeof(DWORD), SeekOrigin::Begin);
+		lUncompressedSize = mFileReader->ReadUInt32 ();
+		lCompressedSize = mFileReader->ReadUInt32 ();
+#else
 		lUncompressedSize = ((LPCDWORD)(LPVOID)mFileView) [1];
 		lCompressedSize = ((LPCDWORD)(LPVOID)mFileView) [2];
+#endif		
 
 		if	(LogIsActive (mLogLevel))
 		{
-			LogMessage (mLogLevel, _T("  [%s] UncompressedSize [%u] CompressedSize [%u]"), mPath, lUncompressedSize, lCompressedSize);
+			LogMessage (mLogLevel, _T("  [%s] UncompressedSize [%u] CompressedSize [%u]"), _B(mPath), lUncompressedSize, lCompressedSize);
 		}
 
 		if	(lCompressedSize == 0)
 		{
+#ifdef	__cplusplus_cli
+			lHeaderBuffer = mFileReader->ReadBytes (lUncompressedSize);
+			lHeaderData = &lHeaderBuffer[0];
+#else
 			lHeaderData = ((LPCBYTE)(LPVOID)mFileView) + sizeof(DWORD)*3;
+#endif			
 		}
 		else
+		{
+#ifdef	__cplusplus_cli
+			lCompressedBuffer = mFileReader->ReadBytes (lCompressedSize);
+			lCompressedData = &lCompressedBuffer[0]; 
+			lHeaderBuffer = gcnew array <BYTE> (lUncompressedSize);
+			lHeaderData = &lHeaderBuffer[0];
+			
+			if	(DecodeData (lCompressedData, lCompressedSize, lHeaderData, lUncompressedSize) != lUncompressedSize)
+			{
+				lHeaderData = nullptr;
+			}
+#else
+			if	(
+					(lUncompressedData = new BYTE [lUncompressedSize])
+				&&	(DecodeData (((LPCBYTE)(LPVOID)mFileView) + sizeof(DWORD)*3, lCompressedSize, (LPBYTE)lUncompressedData, lUncompressedSize) == lUncompressedSize)
+				)
+			{
+				lHeaderData = lUncompressedData;
+			}
+#endif			
+		}
+
 		if	(
-				(lUncompressedData = new BYTE [lUncompressedSize])
-			&&	(DecodeData (((LPCBYTE)(LPVOID)mFileView) + sizeof(DWORD)*3, lCompressedSize, (LPBYTE)lUncompressedData, lUncompressedSize) == lUncompressedSize)
+				(lHeaderData)
+			&&	(ReadBufferHeader (lHeaderData, lUncompressedSize))
 			)
 		{
-			lHeaderData = lUncompressedData;
+			lRet = true;
 		}
 
-		if	(lHeaderData)
-		{
-			try
-			{
-				LPCBYTE						lByte = lHeaderData;
-				DWORD						lStrLen;
-				LPCWSTR						lStr;
-				WORD						lGestureCount;
-				tPtr <CAgentFileAnimation>	lGesture;
-
-				//LogDump (LogDebug, (LPBYTE)lHeaderData, lUncompressedSize);
-
-				mVersionMinor = *(LPCWORD)lByte;
-				lByte += sizeof (WORD);
-				mVersionMajor = *(LPCWORD)lByte;
-				lByte += sizeof (WORD);
-				lGestureCount = *(LPWORD)lByte;
-				lByte += sizeof (WORD);
-
-				while (lGestureCount > 0)
-				{
-					lGesture = new CAgentFileAnimation;
-
-					lStrLen = *(LPCDWORD)lByte;
-					lByte += sizeof(DWORD);
-					if	(lStrLen)
-					{
-						lStr = (LPCWSTR) lByte;
-						lByte += lStrLen * sizeof (WCHAR);
-						lGesture->mName = (CAtlString (lStr, lStrLen)).AllocSysString ();
-					}
-
-					lStrLen = *(LPCDWORD)lByte;
-					lByte += sizeof(DWORD);
-					if	(lStrLen)
-					{
-						lStr = (LPCWSTR) lByte;
-						lByte += lStrLen * sizeof (WCHAR);
-						lGesture->mAcaFileName = (CAtlString (lStr, lStrLen)).AllocSysString ();
-					}
-
-					lStrLen = *(LPCDWORD)lByte;
-					lByte += sizeof(DWORD);
-					if	(lStrLen)
-					{
-						lStr = (LPCWSTR) lByte;
-						lByte += lStrLen * sizeof (WCHAR);
-						lGesture->mReturnName = (CAtlString (lStr, lStrLen)).AllocSysString ();
-					}
-
-					lGesture->mAcaChksum = *(LPDWORD)lByte;
-					lByte += sizeof(DWORD);
-
-					mGestures.mAnimations.InsertAt (AddSortedString (mGestures.mNames, CAtlString ((BSTR)lGesture->mName)), lGesture);
-					lGesture.Detach ();
-					lGestureCount--;
-				}
-
-				mHeader.mGuid = *(LPCGUID)lByte;
-				lByte += sizeof (GUID);
-				lByte = (LPCBYTE)ReadBufferNames (lByte, 0, false, true);
-
-				mHeader.mImageSize.cx = *(LPCWORD)lByte;
-				lByte += sizeof (WORD);
-				mHeader.mImageSize.cy = *(LPCWORD)lByte;
-				lByte += sizeof (WORD);
-				mHeader.mTransparency = *lByte;
-				lByte++;
-				mHeader.mStyle = *(LPCDWORD)lByte;
-				lByte += sizeof(DWORD);
-				lByte += sizeof(DWORD); // Unknown - always 0x0000002
-
-				if	(mHeader.mStyle & CharStyleTts)
-				{
-					lByte = (LPCBYTE)ReadBufferTts (lByte, false);
-				}
-				if	(mHeader.mStyle & CharStyleBalloon)
-				{
-					lByte = (LPCBYTE)ReadBufferBalloon (lByte, false);
-				}
-				lByte = (LPCBYTE)ReadBufferPalette (lByte);
-				lByte = (LPCBYTE)ReadBufferIcon (lByte);
-				lByte = (LPCBYTE)ReadBufferStates (lByte, lUncompressedSize-(DWORD)(lByte-lHeaderData), false);
-
-				lRet = true;
-			}
-			catch AnyExceptionDebug
-		}
-
+#ifndef	__cplusplus_cli
 		if	(LogIsActive (mLogLevel))
 		{
 			Log (mLogLevel);
@@ -519,23 +815,159 @@ bool CAgentFileAcf::ReadAcfHeader ()
 			LogStates (mLogLevel);
 			LogGestures (mLogLevel);
 		}
+#endif		
 	}
-
 	return lRet;
 }
 
+LPCVOID CAgentFileAcf::ReadBufferHeader (LPCVOID pBuffer, DWORD pBufferSize)
+{
+	LPCBYTE	lByte = (LPCBYTE)pBuffer;
+
+	try
+	{
+		WORD						lAnimationCount;
+#ifdef	__cplusplus_cli
+		AcfFileAnimation^			lAnimation;
+#else
+		tPtr <CAgentFileAnimation>	lAnimation;
+#endif		
+
+		mVersionMinor = *(LPCWORD)lByte;
+		lByte += sizeof (WORD);
+		mVersionMajor = *(LPCWORD)lByte;
+		lByte += sizeof (WORD);
+		lAnimationCount = *(LPWORD)lByte;
+		lByte += sizeof (WORD);
+
+		while (lAnimationCount > 0)
+		{
+#ifdef	__cplusplus_cli
+			lAnimation = gcnew AcfFileAnimation (this, mGestures);
+#else
+			lAnimation = new CAgentFileAnimation;
+#endif			
+
+			lByte = (LPCBYTE)ReadBufferString (lByte, false, lAnimation->mName);
+			lByte = (LPCBYTE)ReadBufferString (lByte, false, lAnimation->mFileName);
+			lByte = (LPCBYTE)ReadBufferString (lByte, false, lAnimation->mReturnName);
+			lAnimation->mFileCheckSum = *(LPDWORD)lByte;
+			lByte += sizeof(DWORD);
+
+#ifdef	__cplusplus_cli
+			mGestures->Add (lAnimation);
+#else			
+			mGestures.mAnimations.InsertAt (AddSortedString (mGestures.mNames, CAtlString ((BSTR)lAnimation->mName)), lAnimation);
+			lAnimation.Detach ();
+#endif			
+			lAnimationCount--;
+		}
+
+#ifdef	__cplusplus_cli
+		mHeader->mGuid = System::Guid (*(LPCDWORD)lByte, *(LPCWORD)(lByte+4), *(LPCWORD)(lByte+6), lByte[8], lByte[9], lByte[10], lByte[11], lByte[12], lByte[13], lByte[14], lByte[15]);
+#else
+		mHeader.mGuid = *(LPCGUID)lByte;
+#endif		
+		lByte += sizeof (GUID);
+		lByte = (LPCBYTE)ReadBufferNames (lByte, 0, false, true);
+
+#ifdef	__cplusplus_cli
+		mHeader->mImageSize.Width = *(LPCWORD)lByte;
+#else
+		mHeader.mImageSize.cx = *(LPCWORD)lByte;
+#endif		
+		lByte += sizeof (WORD);
+#ifdef	__cplusplus_cli
+		mHeader->mImageSize.Height = *(LPCWORD)lByte;
+#else
+		mHeader.mImageSize.cy = *(LPCWORD)lByte;
+#endif		
+		lByte += sizeof (WORD);
+#ifdef	__cplusplus_cli
+		mHeader->mTransparency = *lByte;
+#else
+		mHeader.mTransparency = *lByte;
+#endif
+		lByte++;
+#ifdef	__cplusplus_cli
+		mHeader->mStyle = *(LPCDWORD)lByte;
+#else
+		mHeader.mStyle = *(LPCDWORD)lByte;
+#endif
+		lByte += sizeof(DWORD);
+		lByte += sizeof(DWORD); // Unknown - always 0x0000002
+
+#ifdef	__cplusplus_cli
+		if	(mHeader->mStyle & (DWORD)CharacterStyle::Tts)
+#else
+		if	(mHeader.mStyle & CharStyleTts)
+#endif		
+		{
+			lByte = (LPCBYTE)ReadBufferTts (lByte, false);
+		}
+#ifdef	__cplusplus_cli
+		if	(mHeader->mStyle & (DWORD)CharacterStyle::Balloon)
+#else
+		if	(mHeader.mStyle & CharStyleBalloon)
+#endif		
+		{
+			lByte = (LPCBYTE)ReadBufferBalloon (lByte, false);
+		}
+		lByte = (LPCBYTE)ReadBufferPalette (lByte);
+		lByte = (LPCBYTE)ReadBufferIcon (lByte);
+		lByte = (LPCBYTE)ReadBufferStates (lByte, pBufferSize-(DWORD)(lByte-(LPBYTE)pBuffer), false);
+
+		return lByte;
+	}
+	catch AnyExceptionDebug
+	
+	return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	__cplusplus_cli
+System::String^ CAgentFileAcf::GetAcaPath (AcfFileAnimation^ pAnimation)
+{
+	if	(pAnimation)
+	{
+		return ParseRelativePath (pAnimation->mFileName);
+	}
+	return nullptr;
+}
+#else
 CAtlString CAgentFileAcf::GetAcaPath (CAgentFileAnimation* pAnimation)
 {
 	if	(pAnimation)
 	{
-		return CAtlString (ParseRelativePath (CAtlString(pAnimation->mAcaFileName)));
+		return CAtlString (ParseRelativePath (CAtlString(pAnimation->mFileName)));
 	}
 	return CAtlString();
 }
+#endif
 
-HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit)
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::ReadAcaFile (ref class AcfFileAnimation^ pAnimation)
+{
+	bool	lRet = false;
+	
+	if	(pAnimation)
+	{
+		if	(
+				(!pAnimation->IsLoaded)
+			&&	(!String::IsNullOrEmpty (pAnimation->mFileName))
+			)
+		{
+			lRet = ReadAcaFile (pAnimation, GetAcaPath (pAnimation));
+		}
+		pAnimation->IsLoaded = true;
+	}
+	return lRet;
+}
+#else
+HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -546,8 +978,8 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit
 
 	if	(
 			(pAnimation)
-		&&	(pAnimation->mAcaChksum != (DWORD)-1)
-		&&	(pAnimation->mAcaFileName.Ptr ())
+		&&	(pAnimation->mFileCheckSum != (DWORD)-1)
+		&&	(pAnimation->mFileName.Ptr ())
 		)
 	{
 		try
@@ -567,12 +999,12 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit
 
 				if	(SUCCEEDED (lResult = mFileDownload->Download ()))
 				{
-					lResult = ReadAcaFile (pAnimation, CAtlString ((BSTR) mFileDownload->GetCacheName()), p32Bit);
+					lResult = ReadAcaFile (pAnimation, CAtlString ((BSTR) mFileDownload->GetCacheName()));
 				}
 			}
 			else
 			{
-				lResult = ReadAcaFile (pAnimation, lPath, p32Bit);
+				lResult = ReadAcaFile (pAnimation, lPath);
 			}
 		}
 		catch AnyExceptionDebug
@@ -580,54 +1012,106 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, bool p32Bit
 
 	if	(pAnimation)
 	{
-		pAnimation->mAcaChksum = (DWORD)-1;
+		pAnimation->mFileCheckSum = (DWORD)-1;
 	}
 #ifdef	_DEBUG_LOAD
 	mLogLevel = lLogLevel;
 #endif
 	return lResult;
 }
+#endif
 
-HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPath, bool p32Bit)
+#ifdef	__cplusplus_cli
+bool CAgentFileAcf::ReadAcaFile (ref class AcfFileAnimation^ pAnimation, System::String^ pPath)
+#else
+HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPath)
+#endif
 {
+#ifdef	__cplusplus_cli
+	bool	lRet = false;
+#else
 	HRESULT	lResult = S_FALSE;
+#endif
 
 #ifdef	_DEBUG_LOAD
 	UINT lLogLevel = mLogLevel;
 	mLogLevel = MinLogLevel (mLogLevel, _DEBUG_LOAD);
 #endif
-
+	
 	try
 	{
-		CFileHandle	lFileHandle;
-		CGenericHandle	lFileMapping;
-		CMappedHandle	lFileView;
-		DWORD			lFileSize;
+#ifdef	__cplusplus_cli
+		System::IO::FileStream^		lFileStream;
+		System::IO::BinaryReader^	lFileReader;
+		UInt32						lFileSize;
+#else
+		CFileHandle					lFileHandle;
+		CGenericHandle				lFileMapping;
+		CMappedHandle				lFileView;
+		DWORD						lFileSize;
+#endif		
 
+#ifdef	__cplusplus_cli
+		try
+		{
+			lFileStream = gcnew FileStream (pPath, FileMode::Open, FileAccess::Read);
+		}
+		catch (Exception^ pException)
+		{
+			__LogCliException (LogIfActive);
+		}
+#else
 		lFileHandle = CreateFile (pPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+#endif		
 
+#ifdef	__cplusplus_cli
+		if	(
+				(lFileStream)
+			&&	(lFileSize = (UInt32)lFileStream->Length)
+			&&	(lFileReader = gcnew BinaryReader (lFileStream))
+			)
+#else
 		if	(
 				(lFileHandle.SafeIsValid ())
 			&&	(lFileSize = GetFileSize (lFileHandle, NULL))
 			&&	((lFileMapping = CreateFileMapping (lFileHandle, NULL, PAGE_READONLY, 0, 0, NULL)).SafeIsValid())
 			&&	((lFileView = MapViewOfFile (lFileMapping, FILE_MAP_READ, 0, 0, lFileSize)).SafeIsValid())
 			)
+#endif			
 		{
 			if	(LogIsActive (mLogLevel))
 			{
 				LogMessage (mLogLevel, _T(""));
-				LogMessage (mLogLevel, _T("Opened [%ls] [%ls] [%s] [%u]"), (BSTR)pAnimation->mName, (BSTR)pAnimation->mAcaFileName, pPath, lFileSize);
+				LogMessage (mLogLevel, _T("Opened [%s] [%s] [%s] [%u]"), _B(pAnimation->mName), _B(pAnimation->mFileName), _B(pPath), lFileSize);
 			}
 
 			try
 			{
-				LPCBYTE				lByte = (LPCBYTE)(LPVOID)lFileView;
-				DWORD				lVersion;
-				DWORD				lChksum;
+#ifdef	__cplusplus_cli
+				array <BYTE>^		lFileBuffer;
+				pin_ptr <BYTE>		lFileData;
+				UInt32				lUncompressedSize;
+				UInt32				lCompressedSize;
+				array <BYTE>^		lUncompressedBuffer;
+				pin_ptr <BYTE>		lUncompressedData;
+#else
+				LPCBYTE				lFileData;
 				DWORD				lUncompressedSize;
 				DWORD				lCompressedSize;
-				LPCBYTE				lAnimationData = NULL;
 				tArrayPtr <BYTE>	lUncompressedData;
+#endif				
+				LPCBYTE				lAnimationData = NULL;
+				LPCBYTE				lByte;
+				DWORD				lVersion;
+				DWORD				lChksum;
+
+#ifdef	__cplusplus_cli
+				lFileBuffer = lFileReader->ReadBytes (lFileSize);
+				lFileData = &lFileBuffer[0];
+				lByte = lFileData;
+#else
+				lByte = lFileData = (LPCBYTE)(LPVOID)lFileView;
+#endif				
 
 				lVersion = MAKELONG (((LPCWORD)lByte) [0], ((LPCWORD)lByte) [1]);
 				lByte += sizeof(WORD) * 2;
@@ -636,9 +1120,12 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 
 				if	(
 						(HIWORD (lVersion) >= 2)
-					&&	(lChksum == pAnimation->mAcaChksum)
+					&&	(lChksum == pAnimation->mFileCheckSum)
 					)
 				{
+#ifdef	__cplusplus_cli
+					pAnimation->IsLoaded = true;
+#endif
 					if	(*lByte)
 					{
 						lByte++;
@@ -648,8 +1135,13 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 						lByte += sizeof(DWORD);
 
 						if	(
-								(lCompressedSize <= lFileSize - (lByte - (LPCBYTE)(LPVOID)lFileView))
+								(lCompressedSize <= lFileSize - (lByte - (LPBYTE)lFileData))
+#ifdef	__cplusplus_cli
+							&&	(lUncompressedBuffer = gcnew array <BYTE> (lUncompressedSize))
+							&&	(lUncompressedData = &lUncompressedBuffer[0])
+#else
 							&&	(lUncompressedData = new BYTE [lUncompressedSize])
+#endif							
 							&&	(DecodeData (lByte, lCompressedSize, (LPBYTE)lUncompressedData, lUncompressedSize) == lUncompressedSize)
 							)
 						{
@@ -660,38 +1152,43 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 					{
 						lByte++;
 						lAnimationData = lByte;
-						lUncompressedSize = lFileSize - (DWORD)(lByte - (LPCBYTE)(LPVOID)lFileView);
+						lUncompressedSize = lFileSize - (DWORD)(lByte - (LPBYTE)lFileData);
 					}
 				}
 
-				if	(lAnimationData)
+				if	(lByte = lAnimationData)
 				{
-					WORD	lImageStart = (WORD)mAcaImages.GetCount();
-
-					lByte = lAnimationData;
-					lResult = ReadAcaSounds (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit);
-					if	(SUCCEEDED (lResult))
+#ifdef	__cplusplus_cli
+					Int32	lFirstSound = (Int32)mAcaSounds->Count;
+					Int32	lFirstImage = (Int32)mAcaImages->Count;
+#else
+					long	lFirstSound = (long)mAcaSounds.GetCount();
+					long	lFirstImage = (long)mAcaImages.GetCount();
+#endif					
+					
+					if	(
+							(lByte = (LPCBYTE)ReadBufferSounds (pAnimation, lByte, lUncompressedSize-(DWORD)(lByte-lAnimationData)))
+						&&	(lByte = (LPCBYTE)ReadBufferImages (pAnimation, lByte, lUncompressedSize-(DWORD)(lByte-lAnimationData)))
+						)
 					{
-						lResult = ReadAcaImages (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit);
-					}
-					if	(SUCCEEDED (lResult))
-					{
-#ifdef	_DEBUG_LOAD
-						LogMessage (_DEBUG_LOAD, _T("Unknown [%2.2X]"), *lByte);
-#endif
-						lByte += sizeof(BYTE); // Unknown
-						lUncompressedSize -= sizeof(BYTE);
-						lResult = ReadAcaFrames (pAnimation, (LPCVOID&)lByte, lUncompressedSize, lImageStart, p32Bit);
+						pAnimation->mReturnType = *lByte;
+						lByte += sizeof(BYTE);
+						
+						lByte = (LPCBYTE)ReadBufferFrames (pAnimation, lByte, lUncompressedSize-(DWORD)(lByte-lAnimationData), lFirstImage, lFirstSound);
 					}
 
 #ifdef	_DEBUG_LOAD
-					LogMessage (_DEBUG_LOAD, _T("Leftover [%u]"), lUncompressedSize );
-					LogDump (_DEBUG_LOAD, (LPBYTE)lByte, lUncompressedSize);
+					if	((DWORD)(lByte-lAnimationData) < lUncompressedSize)
+					{
+						LogMessage (_DEBUG_LOAD, _T("Leftover [%u]"), lUncompressedSize-(DWORD)(lByte-lAnimationData));
+						LogDump (_DEBUG_LOAD, (LPBYTE)lByte, lUncompressedSize-(DWORD)(lByte-lAnimationData));
+					}
 #endif
 				}
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	__cplusplus_cli
 		else
 		{
 			lResult = HRESULT_FROM_WIN32 (GetLastError());
@@ -704,25 +1201,61 @@ HRESULT CAgentFileAcf::ReadAcaFile (CAgentFileAnimation* pAnimation, LPCTSTR pPa
 				LogWinErr (LogNormal|LogTime, GetLastError(), _T("Open [%s]"), pPath);
 			}
 		}
-
+#endif
+		
+#ifdef	__cplusplus_cli
+		if	(lFileReader)
+		{
+			try
+			{
+				lFileReader->Close ();
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				lFileReader->~BinaryReader ();
+			}
+			catch AnyExceptionDebug
+		}
+		if	(lFileStream)
+		{
+			try
+			{
+				lFileStream->Close ();
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				lFileStream->~FileStream ();
+			}
+			catch AnyExceptionDebug
+		}
+#else
 		lFileView.Close ();
 		lFileMapping.Close ();
 		lFileHandle.Close ();
+#endif		
 	}
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_LOAD
 	mLogLevel = lLogLevel;
 #endif
+#ifdef	__cplusplus_cli
+	return lRet;
+#else
 	return lResult;
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, WORD pImageStart, bool p32Bit)
+#ifdef	__cplusplus_cli
+LPCVOID CAgentFileAcf::ReadBufferFrames (CAgentFileAnimation^ pAnimation, LPCVOID pBuffer, DWORD pBufferSize, Int32 pFirstImage, Int32 pFirstSound)
+#else
+LPCVOID CAgentFileAcf::ReadBufferFrames (CAgentFileAnimation* pAnimation, LPCVOID pBuffer, DWORD pBufferSize, long pFirstImage, long pFirstSound)
+#endif
 {
-	HRESULT	lResult = S_OK;
-
 	try
 	{
 		LPCBYTE	lByte = (LPCBYTE)pBuffer;
@@ -740,20 +1273,25 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 		}
 #endif
 
-		if	(pAnimation->mFrames = new CAgentFileFrame [lFrameCount])
+		if	(
+				(lFrameCount > 0)
+#ifdef	__cplusplus_cli
+			&&	(pAnimation->mFrames = gcnew CAgentFileFrames (this, pAnimation))
+#else
+			&&	(pAnimation->mFrames = new CAgentFileFrame [lFrameCount])
+#endif
+			)		
 		{
+#ifndef	__cplusplus_cli
 			pAnimation->mFrameCount = lFrameCount;
-		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
-
-		if	(SUCCEEDED (lResult))
-		{
+#endif
 			for	(lFrameNum = 0; lFrameNum < lFrameCount; lFrameNum++)
 			{
+#ifdef	__cplusplus_cli
+				CAgentFileFrame^	lFrame = gcnew CAgentFileFrame (this, pAnimation->Frames);
+#else				
 				CAgentFileFrame*	lFrame = &pAnimation->mFrames [(short)(long)lFrameNum];
+#endif				
 				BYTE				lBranchCount;
 				BYTE				lOverlayCount;
 				BYTE				lOverlayReplace;
@@ -761,12 +1299,31 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 
 				//LogDump (LogDebugFast, (LPBYTE)lByte, sizeof(WORD)*7);
 
+#ifdef	__cplusplus_cli
+				pAnimation->mFrames->Add (lFrame);
+				lFrame->mImages = gcnew CAgentFileFrameImages (this, lFrame);
+				lFrame->mImages->Add (gcnew CAgentFileFrameImage (this, lFrame));
+				lFrame->mImages[0]->mImageNdx = (Int32)(*(LPCWORD)lByte);
+				if	(lFrame->mImages[0]->mImageNdx >= 0)
+				{
+					lFrame->mImages[0]->mImageNdx += (Int32)pFirstImage;
+				}
+#else				
 				lFrame->mImageCount = 1;
 				lFrame->mImages = new CAgentFileFrameImage [1];
-				lFrame->mImages [0].mImageNdx = *(LPCWORD)lByte + pImageStart;
+				lFrame->mImages[0].mImageNdx = (long)(*(LPCWORD)lByte);
+				if	(lFrame->mImages[0].mImageNdx >= 0)
+				{
+					lFrame->mImages[0].mImageNdx += (long)pFirstImage;
+				}
+#endif
 				lByte += sizeof(WORD);
 
-				lFrame->mSoundNdx = *(LPCWORD)lByte;
+				lFrame->mSoundNdx = (short)*(LPCWORD)lByte;
+				if	(lFrame->mSoundNdx >= 0)
+				{
+					lFrame->mSoundNdx += (short)pFirstSound;
+				}
 				lByte += sizeof(WORD);
 				lFrame->mDuration = *(LPCWORD)lByte;
 				lByte += sizeof(WORD);
@@ -783,6 +1340,12 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 #endif
 				lBranchCount = *lByte;
 				lByte++;
+#ifdef	__cplusplus_cli
+				if	(lBranchCount > 0)
+				{
+					lFrame->mBranching = gcnew array <CAgentFileFrameBranch> (lBranchCount);
+				}
+#endif				
 				if	(lBranchCount > 0)
 				{
 					lFrame->mBranching [0].mFrameNdx = LOWORD(((LPCDWORD)lByte) [0]);
@@ -791,12 +1354,12 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 				if	(lBranchCount > 1)
 				{
 					lFrame->mBranching [1].mFrameNdx = LOWORD(((LPCDWORD)lByte) [1]);
-					lFrame->mBranching [1].mProbability = LOWORD(((LPCDWORD)lByte) [1]);
+					lFrame->mBranching [1].mProbability = HIWORD(((LPCDWORD)lByte) [1]);
 				}
 				if	(lBranchCount > 2)
 				{
 					lFrame->mBranching [2].mFrameNdx = LOWORD(((LPCDWORD)lByte) [2]);
-					lFrame->mBranching [2].mProbability = LOWORD(((LPCDWORD)lByte) [2]);
+					lFrame->mBranching [2].mProbability = HIWORD(((LPCDWORD)lByte) [2]);
 				}
 				lByte += sizeof(WORD)*lBranchCount*2;
 
@@ -811,21 +1374,15 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 #endif
 				lOverlayCount = *lByte;
 				lByte++;
-				if	(lOverlayCount > 0)
-				{
-					if	(lFrame->mOverlays = new CAgentFileFrameOverlay [lOverlayCount])
-					{
-						lFrame->mOverlayCount = lOverlayCount;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
 
 				if	(
 						(lOverlayCount > 0)
-					&&	(SUCCEEDED (lResult))
+#ifdef	__cplusplus_cli
+					&&	(lFrame->mOverlays = gcnew CAgentFileFrameOverlays (this, lFrame))
+#else
+					&&	(lFrame->mOverlays = new CAgentFileFrameOverlay [lOverlayCount])
+					&&	(lFrame->mOverlayCount = lOverlayCount)
+#endif						
 					)
 				{
 					lOverlayReplace = *lByte;
@@ -838,46 +1395,81 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 #endif
 					if	(lOverlayReplace)
 					{
-						LogMessage (LogDebug, _T("  ??? [%u]"), *(LPCDWORD)lByte);
+						LogMessage (LogDebug, _T("  Unknown [%u]"), *(LPCDWORD)lByte);
 						lByte += sizeof (DWORD);
 					}
 
 					for	(lNdx = 0; lNdx < (INT_PTR)lOverlayCount; lNdx++)
 					{
+#ifdef	__cplusplus_cli
+						CAgentFileFrameOverlay^	lOverlay = gcnew CAgentFileFrameOverlay (this, lFrame);
+						CAgentFileImage^		lOverlayImage = gcnew CAgentFileImage;
+						pin_ptr <BYTE>			lImageBits;
+#else
 						CAgentFileFrameOverlay*	lOverlay = &lFrame->mOverlays [lNdx];
 						tPtr <CAgentFileImage>	lOverlayImage = new CAgentFileImage;
-
-						//LogDump (LogDebugFast, (LPBYTE)lByte, 15);
+#endif						
+						DWORD					lOverlaySize;
 
 						lOverlay->mOverlayType = (AgentMouthOverlay)*lByte;
 						lByte += sizeof(BYTE);
-						lOverlayImage->mBitsSize = *(LPCDWORD)lByte;
+						lOverlaySize = *(LPCDWORD)lByte;
 						lByte += sizeof(DWORD);
 						lByte += sizeof(BYTE); // Unknown
 						lOverlay->mReplaceFlag = (*lByte) ? true : false;
 						lByte += sizeof(BYTE);
+#ifdef	__cplusplus_cli
+						lOverlay->mOffset.X = (long)(short)*(LPCWORD)lByte;
+#else
 						lOverlay->mOffset.x = (long)(short)*(LPCWORD)lByte;
+#endif						
 						lByte += sizeof(WORD);
+#ifdef	__cplusplus_cli
+						lOverlay->mOffset.Y = (long)(short)*(LPCWORD)lByte;
+#else
 						lOverlay->mOffset.y = (long)(short)*(LPCWORD)lByte;
+#endif						
 						lByte += sizeof(WORD);
+#ifdef	__cplusplus_cli
+						lOverlayImage->mImageSize.Width = (long)(short)*(LPCWORD)lByte;
+#else
 						lOverlayImage->mImageSize.cx = (long)(short)*(LPCWORD)lByte;
+#endif						
 						lByte += sizeof(WORD);
+#ifdef	__cplusplus_cli
+						lOverlayImage->mImageSize.Height = (long)(short)*(LPCWORD)lByte;
+#else
 						lOverlayImage->mImageSize.cy = (long)(short)*(LPCWORD)lByte;
+#endif						
 						lByte += sizeof(WORD);
+#ifdef	__cplusplus_cli
+						lFrame->mOverlays->Add (lOverlay);
+#endif
 
-						if	(lOverlayImage->mBits = new BYTE [lOverlayImage->mBitsSize])
+#ifdef	__cplusplus_cli
+						if	(lOverlayImage->mBits = gcnew array <BYTE> (lOverlaySize))
+#else						
+						if	(lOverlayImage->mBits = new BYTE [lOverlaySize])
+#endif						
 						{
-							memcpy (lOverlayImage->mBits.Ptr(), lByte, lOverlayImage->mBitsSize);
-							lByte += lOverlayImage->mBitsSize;
-
+#ifdef	__cplusplus_cli
+							lImageBits = &lOverlayImage->mBits[0];
+							memcpy (lImageBits, lByte, lOverlaySize);
+							lOverlayImage->mImageNum = (UInt32)mAcaImages->Count;
+							lOverlay->mImageNdx = lOverlayImage->mImageNum;
+							mAcaImages->Add (lOverlayImage);
+#else							
+							memcpy (lOverlayImage->mBits.Ptr(), lByte, lOverlaySize);
+							lOverlayImage->mBitsSize = lOverlaySize;
+							lOverlayImage->mImageNum = (long)mAcaImages.GetCount();
+							lOverlay->mImageNdx = lOverlayImage->mImageNum;
 							mAcaImages.Add (lOverlayImage.Detach ());
-							lOverlay->mImageNdx = (DWORD)(mAcaImages.GetCount()-1);
+#endif							
 						}
-						else
-						{
-							lResult = E_OUTOFMEMORY;
-							break;
-						}
+						lByte += lOverlaySize;
+//#ifdef	__cplusplus_cli
+//						LogMessage (LogDebugFast, _T("[%s] [%s] Frame [%u] Overlay [%u] [%u] [%u] - Image [%d] Offset [%d %d] Size [%d %d]"), _B(mPath), _B(pAnimation->mName), lFrameNum, lNdx, lOverlay->mOverlayType, lOverlaySize, lOverlay->mImageNdx, lOverlay->mOffset.X, lOverlay->mOffset.Y, lOverlayImage->mImageSize.Width, lOverlayImage->mImageSize.Height);
+//#endif							
 
 						if	(lOverlay->mReplaceFlag)
 						{
@@ -898,10 +1490,6 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 					}
 				}
 
-				if	(FAILED (lResult))
-				{
-					break;
-				}
 				if	(lByte > (LPCBYTE)pBuffer + pBufferSize)
 				{
 #ifdef	_DEBUG
@@ -912,52 +1500,82 @@ HRESULT CAgentFileAcf::ReadAcaFrames (CAgentFileAnimation* pAnimation, LPCVOID& 
 			}
 		}
 
-		pBufferSize -= (DWORD)(lByte - (LPCBYTE)pBuffer);
-		pBuffer = (LPCVOID)lByte;
+		return lByte;
 	}
 	catch AnyExceptionDebug
 
-	return lResult;
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit)
+#ifdef	__cplusplus_cli
+LPCVOID CAgentFileAcf::ReadBufferImages (CAgentFileAnimation^ pAnimation, LPCVOID pBuffer, DWORD pBufferSize)
+#else
+LPCVOID CAgentFileAcf::ReadBufferImages (CAgentFileAnimation* pAnimation, LPCVOID pBuffer, DWORD pBufferSize)
+#endif
 {
-	HRESULT	lResult = S_OK;
-
 	try
 	{
 		LPCBYTE					lByte = (LPCBYTE)pBuffer;
-		WORD					lImageStart = (WORD)mAcaImages.GetCount();
+		DWORD					lByteCount;
 		WORD					lImageCount;
 		WORD					lImageNum;
+#ifdef	__cplusplus_cli
+		CAgentFileImage^		lImage;
+		pin_ptr <BYTE>			lImageBits;
+#else
 		tPtr <CAgentFileImage>	lImage;
-		DWORD					lByteCount;
+#endif
 
 		lImageCount = *(LPCWORD)lByte;
 		lByte += sizeof(WORD);
 
 #ifdef	_DEBUG_LOAD
-		LogMessage (_DEBUG_LOAD, _T("[%ls] Aca Images [%hu] Starting [%u]"), (BSTR)pAnimation->mName, lImageCount, lImageStart);
+		if	(LogIsActive (mLogLevel))
+		{
+			LogMessage (mLogLevel|LogHighVolume, _T("[%ls] Aca Images [%hu] Starting [%u]"), (BSTR)pAnimation->mName, lImageCount, mAcaImages.GetCount());
+		}
 #endif
 		for	(lImageNum = 0; lImageNum < lImageCount; lImageNum++)
 		{
 			lByteCount = *(LPCDWORD)lByte;
 			lByte += sizeof(DWORD);
 			lByte += sizeof(BYTE); // Unknown
+
 #ifdef	_DEBUG_LOAD
-			LogMessage (_DEBUG_LOAD, _T("  Image [%hu (%hu)] of [%hu]"), lImageNum, lImageNum + lImageStart, lByteCount);
+			if	(LogIsActive (mLogLevel))
+			{
+				LogMessage (mLogLevel|LogHighVolume, _T("  Image [%hu (%hu)] of [%hu]"), lImageNum, mAcaImages.GetCount(), lByteCount);
+			}
 #endif
+#ifdef	__cplusplus_cli
+			if	(
+					(lImage = gcnew CAgentFileImage)
+				&&	(lImage->mBits = gcnew array <BYTE> (lByteCount))
+				)
+#else
 			if	(
 					(lImage = new CAgentFileImage)
 				&&	(lImage->mBits = new BYTE [lByteCount])
 				)
+#endif				
 			{
-				lImage->mImageNum = lImageNum + lImageStart;
-				lImage->mImageSize = mHeader.ImageSize;
+#ifdef	__cplusplus_cli
+				lImageBits = &lImage->mBits[0];
+				memcpy (lImageBits, lByte, lByteCount);
+
+				lImage->mImageSize = mHeader->ImageSize;
+				lImage->mImageNum = (UInt32)mAcaImages->Count;
+				mAcaImages->Add (lImage);
+#else
 				lImage->mBitsSize = lByteCount;
 				memcpy (lImage->mBits, lByte, lByteCount);
+
+				lImage->mImageSize = mHeader.ImageSize;
+				lImage->mImageNum = (long)mAcaImages.GetCount();
+				mAcaImages.Add (lImage.Detach ());
+#endif				
 
 #ifdef	_SAVE_IMAGE
 				if	(LogIsActive (_SAVE_IMAGE))
@@ -965,13 +1583,7 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 					SaveImage (lImage);
 				}
 #endif
-				mAcaImages.Add (lImage.Detach ());
-
 #ifdef	_DUMP_IMAGE
-				//if	(LogIsActive (MaxLogLevel (mLogLevel, _DUMP_IMAGE)))
-				//{
-				//	DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, MaxLogLevel (mLogLevel, _DUMP_IMAGE));
-				//}
 				if	(LogIsActive (_DUMP_IMAGE))
 				{
 					DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, _DUMP_IMAGE);
@@ -980,7 +1592,6 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 			}
 			else
 			{
-				lResult = E_OUTOFMEMORY;
 				break;
 			}
 
@@ -991,6 +1602,7 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 			LogMessage (_DEBUG_LOAD, _T("  Region [%hu]"), lByteCount);
 			LogDump (_DEBUG_LOAD, (LPBYTE)lByte, lByteCount);
 #endif
+
 			lByte += lByteCount;
 			if	(lByte > (LPCBYTE)pBuffer + pBufferSize)
 			{
@@ -1001,61 +1613,195 @@ HRESULT CAgentFileAcf::ReadAcaImages (CAgentFileAnimation* pAnimation, LPCVOID& 
 			}
 		}
 
-		pBufferSize -= (DWORD)(lByte - (LPCBYTE)pBuffer);
-		pBuffer = (LPCVOID)lByte;
+		return lByte;
 	}
 	catch AnyExceptionDebug
 
-	return lResult;
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentFileAcf::ReadAcaSounds (CAgentFileAnimation* pAnimation, LPCVOID& pBuffer, DWORD& pBufferSize, bool p32Bit)
+#ifdef	__cplusplus_cli
+LPCVOID CAgentFileAcf::ReadBufferSounds (CAgentFileAnimation^ pAnimation, LPCVOID pBuffer, DWORD pBufferSize)
+#else
+LPCVOID CAgentFileAcf::ReadBufferSounds (CAgentFileAnimation* pAnimation, LPCVOID pBuffer, DWORD pBufferSize)
+#endif
 {
-	HRESULT	lResult = S_OK;
-
 	try
 	{
 		LPCBYTE					lByte = (LPCBYTE)pBuffer;
-		WORD					lSoundStart = (WORD)mAcaSounds.GetCount();
 		WORD					lSoundCount;
 		WORD					lSoundNum;
-		tPtr <CAtlByteArray>	lSound;
 		DWORD					lByteCount;
+#ifdef	__cplusplus_cli
+		array <BYTE>^			lSound;
+		pin_ptr <BYTE>			lSoundBytes;
+#else		
+		tPtr <CAtlByteArray>	lSound;
+#endif		
 
 		lSoundCount = *(LPCWORD)lByte;
 		lByte += sizeof(WORD);
 
 #ifdef	_DEBUG_LOAD
-		LogMessage (_DEBUG_LOAD, _T("[%ls] Aca Sounds [%hu] Starting [%u]"), (BSTR)pAnimation->mName, lSoundCount, lSoundStart);
+		if	(LogIsActive (mLogLevel))
+		{
+			LogMessage (mLogLevel|LogHighVolume, _T("[%ls] Aca Sounds [%hu] Starting [%u]"), (BSTR)pAnimation->mName, lSoundCount, mAcaSounds.GetCount());
+		}
 #endif
 		for	(lSoundNum = 0; lSoundNum < lSoundCount; lSoundNum++)
 		{
 			lByteCount = *(LPCDWORD)lByte;
 			lByte += sizeof(DWORD);
+
 #ifdef	_DEBUG_LOAD
-			LogMessage (_DEBUG_LOAD, _T("  Sound [%hu (%hu)] of [%hu]"), lSoundNum, lSoundNum + lSoundStart, lByteCount);
-#endif
-			if	(lSound = new CAtlByteArray)
+			if	(LogIsActive (mLogLevel))
 			{
+				LogMessage (mLogLevel|LogHighVolume, _T("  Sound [%hu (%hu)] of [%hu]"), lSoundNum, mAcaSounds.GetCount(), lByteCount);
+			}
+#endif
+#ifdef	__cplusplus_cli
+			if	(lSound = gcnew array <BYTE> (lByteCount))
+#else
+			if	(lSound = new CAtlByteArray)
+#endif			
+			{
+#ifdef	__cplusplus_cli
+				lSoundBytes = &lSound[0];
+				memcpy (lSoundBytes, lByte, lByteCount);
+				mAcaSounds->Add (lSound);
+#else
 				lSound->SetCount (lByteCount);
 				memcpy (lSound->GetData(), lByte, lByteCount);
-				mAcaSounds.SetAtGrow (lSoundNum+lSoundStart, lSound.Detach());
+				mAcaSounds.Add (lSound.Detach());
+#endif				
 			}
 			lByte += lByteCount;
+
+			if	(lByte > (LPCBYTE)pBuffer + pBufferSize)
+			{
+#ifdef	_DEBUG
+				LogMessage (LogDebug, _T("!!! Screwed !!!"));
+#endif
+				break;
+			}
 		}
 
-		pBufferSize -= (DWORD)(lByte - (LPCBYTE)pBuffer);
-		pBuffer = (LPCVOID)lByte;
+		return lByte;
 	}
 	catch AnyExceptionDebug
 
-	return lResult;
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+/////////////////////////////////////////////////////////////////////////////
+
+AcfFileAnimation::AcfFileAnimation (CharacterFile^ pOwner, FileGestures^ pContainer)
+:	FileAnimation (pOwner, pContainer)
+{
+}
+
+AcfFileAnimation::~AcfFileAnimation ()
+{
+}
+
+void AcfFileAnimation::Empty ()
+{
+	__super::Empty ();
+	mFileCheckSum = 0;
+	mFileName = nullptr;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+UInt16 AcfFileAnimation::FrameCount::get()
+{
+	EnsureIsLoaded ();	
+	return __super::get();
+}
+
+FileFrames^ AcfFileAnimation::Frames::get()
+{
+	EnsureIsLoaded ();	
+	return __super::get();
+}
+
+Boolean AcfFileAnimation::CopyTo (FileAnimation^ pTarget, Boolean pDeepCopy)
+{
+	Boolean				lRet;
+	AcfFileAnimation^	lTarget;
+
+	EnsureIsLoaded ();	
+	lRet = __super::CopyTo (pTarget, pDeepCopy);
+
+	if	(
+			(lRet)
+		&&	(AcfFileAnimation::typeid->IsAssignableFrom (pTarget->GetType()))
+		&&	(lTarget = safe_cast <AcfFileAnimation^> (pTarget))
+		)
+	{
+		lTarget->mFileCheckSum = mFileCheckSum;
+		lTarget->mFileName = mFileName ? gcnew String (mFileName) : nullptr;
+	}
+	return lRet;
+}
+
+System::String^ AcfFileAnimation::ToString()
+{
+	EnsureIsLoaded ();	
+    return String::Format ("{0} [{1}]", __super::ToString(), mFileName);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+Boolean AcfFileAnimation::IsLoaded::get()
+{
+	return mFileCheckSum == (UInt32)-1; 
+}
+
+void AcfFileAnimation::IsLoaded::set (Boolean pValue)
+{
+	mFileCheckSum = pValue ? (UInt32)-1 : 0;
+}
+
+void AcfFileAnimation::EnsureIsLoaded ()
+{
+	if	(!IsLoaded)
+	{
+		try
+		{
+			CAgentFileAcf^	lOwner;
+			
+			if	(
+					(
+						(lOwner = safe_cast <CAgentFileAcf^> (mOwner))
+					||	(
+							(mContainer)
+						&&	(lOwner = safe_cast <CAgentFileAcf^> (mContainer->mOwner))
+						)
+					)
+				&&	(lOwner->mGestures)
+				&&	(lOwner->mGestures->Contains (this))
+				)
+			{
+				lOwner->ReadAcaFile (this);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif	__cplusplus_cli
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+#ifndef	__cplusplus_cli
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentFileAcf::DumpAcaImages (UINT pLogLevel)
@@ -1102,4 +1848,11 @@ void CAgentFileAcf::DumpAcaImage (INT_PTR pImageNdx, UINT pLogLevel)
 #endif
 }
 
+/////////////////////////////////////////////////////////////////////////////
+#endif	// __cplusplus_cli
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+} // namespace Character
+} // namespace DoubleAgent
+#endif
 /////////////////////////////////////////////////////////////////////////////

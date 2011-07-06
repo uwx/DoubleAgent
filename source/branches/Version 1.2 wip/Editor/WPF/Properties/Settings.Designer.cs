@@ -331,5 +331,29 @@ namespace AgentCharacterEditor.Properties {
                 this["DeleteFrameShiftsBranchingTarget"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowImageTransparency {
+            get {
+                return ((bool)(this["ShowImageTransparency"]));
+            }
+            set {
+                this["ShowImageTransparency"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowOverlayTransparency {
+            get {
+                return ((bool)(this["ShowOverlayTransparency"]));
+            }
+            set {
+                this["ShowOverlayTransparency"] = value;
+            }
+        }
     }
 }

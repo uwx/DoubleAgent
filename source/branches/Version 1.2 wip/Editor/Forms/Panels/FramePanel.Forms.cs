@@ -51,13 +51,15 @@ namespace AgentCharacterEditor.Panels
 		{
 			if (Settings.Default.IsValid)
 			{
-				CheckBoxTransparent.Checked = Settings.Default.ShowFrameTransparency;
+				CheckBoxImageTransparent.Checked = Settings.Default.ShowImageTransparency;
+				CheckBoxFrameTransparent.Checked = Settings.Default.ShowFrameTransparency;
 			}
 		}
 
 		protected override void OnSaveConfig (object sender, EventArgs e)
 		{
-			Settings.Default.ShowFrameTransparency = CheckBoxTransparent.Checked;
+			Settings.Default.ShowImageTransparency = CheckBoxImageTransparent.Checked;
+			Settings.Default.ShowFrameTransparency = CheckBoxFrameTransparent.Checked;
 		}
 
 		#endregion
@@ -86,7 +88,7 @@ namespace AgentCharacterEditor.Panels
 			}
 			else
 			{
-				PictureBoxFrameSample.Image = CharacterFile.GetFrameBitmap (Frame, true, Color.Transparent);
+				PictureBoxFrameSample.Image = CharacterFile.GetFrameBitmap (Frame, true, CheckBoxFrameTransparent.Checked ? Color.Transparent : Color.Empty);
 				PictureBoxFrameSample.ClientSize = CharacterFile.Header.ImageSize;
 			}
 			PanelMain.ResumeLayout (true);
@@ -207,7 +209,7 @@ namespace AgentCharacterEditor.Panels
 					}
 					try
 					{
-						lBitmap = CharacterFile.GetImageBitmap ((int)pFrameImage.ImageNdx, true, (CheckBoxTransparent.Checked ? Color.Transparent : Color.Empty));
+						lBitmap = CharacterFile.GetImageBitmap ((int)pFrameImage.ImageNdx, true, CheckBoxImageTransparent.Checked ? Color.Transparent : Color.Empty);
 					}
 					catch
 					{
@@ -224,7 +226,11 @@ namespace AgentCharacterEditor.Panels
 					PictureBoxImageSample.Location = new Point (0, 0);
 					PictureBoxImageSample.Image = null;
 					PictureBoxImageSample.ResumeLayout (true);
-					PanelSample.Enabled = false;
+
+					ButtonShiftUp.Enabled = false;
+					ButtonShiftDown.Enabled = false;
+					ButtonShiftLeft.Enabled = false;
+					ButtonShiftRight.Enabled = false;
 				}
 				else
 				{
@@ -234,7 +240,11 @@ namespace AgentCharacterEditor.Panels
 					PictureBoxImageSample.Location = PictureBoxFrameSample.ImageToClient (pFrameImage.Offset);
 					PictureBoxImageSample.Image = lBitmap;
 					PictureBoxImageSample.ResumeLayout (true);
-					PanelSample.Enabled = !Program.FileIsReadOnly;
+
+					ButtonShiftUp.Enabled = !Program.FileIsReadOnly;
+					ButtonShiftDown.Enabled = !Program.FileIsReadOnly;
+					ButtonShiftLeft.Enabled = !Program.FileIsReadOnly;
+					ButtonShiftRight.Enabled = !Program.FileIsReadOnly;
 				}
 
 				PanelSample.ResumeLayout (true);
@@ -403,9 +413,20 @@ namespace AgentCharacterEditor.Panels
 
 		//=============================================================================
 
-		private void CheckBoxTransparent_CheckedChanged (object sender, EventArgs e)
+		private void CheckBoxImageTransparent_CheckedChanged (object sender, EventArgs e)
 		{
-			ShowSelectedImage ();
+			if (!IsPanelFilling)
+			{
+				ShowSelectedImage ();
+			}
+		}
+
+		private void CheckBoxFrameTransparent_CheckedChanged (object sender, EventArgs e)
+		{
+			if (!IsPanelFilling)
+			{
+				ShowFrameSample ();
+			}
 		}
 
 		#endregion

@@ -168,7 +168,7 @@ CDaCmnCharacter* CGlobalAnchor::_GetCharacter (long pCharID, CAgentFileCache& pF
 
 	try
 	{
-		INT_PTR			lFileNdx;
+		INT_PTR		lFileNdx;
 		CAgentFile*	lFile;
 
 		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)

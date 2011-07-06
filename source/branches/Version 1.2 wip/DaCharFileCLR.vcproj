@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentFileAcf.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentFileAcs.cpp"
 				>
 			</File>
@@ -220,6 +224,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\AgentFileScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentFileV15.cpp"
 				>
 			</File>
 			<File
@@ -293,6 +301,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentFileAcf.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentFileAcs.h"
 				>
 			</File>
@@ -310,6 +322,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\AgentFileScript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentFileV15.h"
 				>
 			</File>
 			<File

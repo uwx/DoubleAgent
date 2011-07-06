@@ -642,110 +642,144 @@ HRESULT WINAPI DaServer::DelegateIDaSvrCharacterFiles (void* pv, REFIID iid, LPV
 
 void DaServer::UnloadAllCharacters (bool pAbandonned)
 {
-	INT_PTR			lFileNdx;
-	CAgentFile*	lFile;
+	if	(CachedFileCount() > 0)
+	{
+		INT_PTR		lFileNdx;
+		CAgentFile*	lFile;
 
 #ifdef	_LOG_INSTANCE
-	if	(
-			(CachedFileCount() > 0)
-		&&	(LogIsActive (_LOG_INSTANCE))
-		)
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), CachedFileCount(), pAbandonned);
-	}
-#endif
-	for	(lFileNdx = CachedFileCount()-1; lFileNdx >= 0; lFileNdx--)
-	{
-		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-		INT_PTR								lClientNdx;
-
-		if	(
-				(lFile = GetCachedFile (lFileNdx))
-			&&	(GetFileClients (lFile, lFileClients))
-			)
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			try
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), CachedFileCount(), pAbandonned);
+		}
+#endif
+		for	(lFileNdx = CachedFileCount()-1; lFileNdx >= 0; lFileNdx--)
+		{
+			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+			INT_PTR								lClientNdx;
+
+			if	(
+					(lFile = GetCachedFile (lFileNdx))
+				&&	(GetFileClients (lFile, lFileClients))
+				)
 			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+				try
 				{
-					DaSvrCharacter *	lCharacter = NULL;
-
-					try
-					{
-						lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]);
-					}
-					catch AnyExceptionDebug
-
-					if	(lCharacter)
+					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						try
 						{
-							if	(pAbandonned)
+							DaSvrCharacter *	lCharacter;
+							
+							if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 							{
-								bool	lCanFinalRelease = lCharacter->CanFinalRelease();
-#ifdef	_LOG_ABANDONED
-								if	(LogIsActive (_LOG_ABANDONED))
-								{
-									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p(%d)(%d)] CanFinalRelease [%u]"), this, max(m_dwRef,-1), lCharacter, lCharacter->GetCharID(), max(lCharacter->m_dwRef,-1), lCanFinalRelease);
-								}
-#endif
-								try
-								{
-									lCharacter->Terminate (false, pAbandonned);
-								}
-								catch AnyExceptionDebug
-								try
-								{
-									lCharacter->Terminate (true, pAbandonned);
-								}
-								catch AnyExceptionDebug
-
-								if	(lCanFinalRelease)
-								{
-									try
-									{
-										delete lCharacter;
-									}
-									catch AnyExceptionSilent
-								}
-								else
-								{
-									_AtlModule.mObjectWasAbandoned = true;
-								}
-#ifdef	_LOG_ABANDONED
-								if	(LogIsActive (_LOG_ABANDONED))
-								{
-									LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p] Done"), this, max(m_dwRef,-1), lCharacter);
-								}
-#endif
-							}
-							else
-							if	(lCharacter->CanFinalRelease ())
-							{
-								lCharacter->Terminate (false);
-#ifdef	_STRICT_COMPATIBILITY
-								lCharacter->Terminate (true);
-
-								try
-								{
-									delete lCharacter;
-								}
-								catch AnyExceptionSilent
-#else
-								lCharacter->Release ();
-#endif
-							}
-							else
-							{
-								lCharacter->Abandon ();
+								UnloadAllCharacters (lCharacter, pAbandonned);
 							}
 						}
 						catch AnyExceptionDebug
 					}
 				}
+				catch AnyExceptionDebug
+			}
+		}
+	}
+
+	if	(!mLoadingCharacters.IsEmpty())
+	{
+		POSITION	lPos;
+
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadLoadingCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), mLoadingCharacters.GetCount(), pAbandonned);
+		}
+#endif
+		for	(lPos = mLoadingCharacters.GetStartPosition(); lPos;)
+		{
+			try
+			{
+				long				lCharID;
+				IUnknownPtr			lLoadingCharacter;
+				DaSvrCharacter *	lCharacter;
+
+				mLoadingCharacters.GetNextAssoc (lPos, lCharID, lLoadingCharacter);
+				if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lLoadingCharacter.GetInterfacePtr()))
+				{
+					UnloadAllCharacters (lCharacter, pAbandonned);
+				}
 			}
 			catch AnyExceptionDebug
 		}
+	}
+}
+
+void DaServer::UnloadAllCharacters (DaSvrCharacter * pCharacter, bool pAbandonned)
+{
+	if	(pCharacter)
+	{
+		try
+		{
+			if	(pAbandonned)
+			{
+				bool	lCanFinalRelease = pCharacter->CanFinalRelease();
+#ifdef	_LOG_ABANDONED
+				if	(LogIsActive (_LOG_ABANDONED))
+				{
+					LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p(%d)(%d)] CanFinalRelease [%u]"), this, max(m_dwRef,-1), pCharacter, pCharacter->GetCharID(), max(pCharacter->m_dwRef,-1), lCanFinalRelease);
+				}
+#endif
+				try
+				{
+					pCharacter->Terminate (false, pAbandonned);
+				}
+				catch AnyExceptionDebug
+				try
+				{
+					pCharacter->Terminate (true, pAbandonned);
+				}
+				catch AnyExceptionDebug
+
+				if	(lCanFinalRelease)
+				{
+					try
+					{
+						delete pCharacter;
+					}
+					catch AnyExceptionSilent
+				}
+				else
+				{
+					_AtlModule.mObjectWasAbandoned = true;
+				}
+#ifdef	_LOG_ABANDONED
+				if	(LogIsActive (_LOG_ABANDONED))
+				{
+					LogMessage (_LOG_ABANDONED, _T("[%p(%d)] TerminateCharacter [%p] Done"), this, max(m_dwRef,-1), pCharacter);
+				}
+#endif
+			}
+			else
+			if	(pCharacter->CanFinalRelease ())
+			{
+				pCharacter->Terminate (false);
+#ifdef	_STRICT_COMPATIBILITY
+				pCharacter->Terminate (true);
+
+				try
+				{
+					delete pCharacter;
+				}
+				catch AnyExceptionSilent
+#else
+				pCharacter->Release ();
+#endif
+			}
+			else
+			{
+				pCharacter->Abandon ();
+			}
+		}
+		catch AnyExceptionDebug
 	}
 }
 
@@ -814,16 +848,39 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long& pChar
 		)
 	{
 		tPtr <CFileDownload>	lDownload;
+		DaSvrCharacter *		lSvrCharacter = NULL;
+
+		lDownload = CFileDownload::CreateInstance (lFilePath);
+		if	(lDownload)
+		{
+			lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.NextCharID(), &mNotify, &_AtlModule, mClientMutexName);
+			if	(lSvrCharacter)
+			{
+#ifdef	_STRICT_COMPATIBILITY
+				lSvrCharacter->AddRef ();
+#endif
+				pCharID = lSvrCharacter->GetCharID();
+				mLoadingCharacters.SetAt (lSvrCharacter->GetCharID(), lSvrCharacter->GetControllingUnknown());
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
 #endif
 		mNotify.RequestStart (pReqID);
 
-		if	(lDownload = CFileDownload::CreateInstance (lFilePath))
+		if	(SUCCEEDED (lResult))
 		{
-			lDownload->mUserData = pCharID = _AtlModule.NextCharID();
-			mCharactersLoading.SetAt (pReqID, lDownload);
+			lDownload->mUserData = lSvrCharacter->GetCharID();
+			mLoadingFiles.SetAt (pReqID, lDownload);
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
@@ -838,13 +895,28 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long& pChar
 			}
 			else
 			{
-				mCharactersLoading.RemoveKey (pReqID);
+				mLoadingFiles.RemoveKey (pReqID);
 			}
 		}
-		else
+
+		if	(
+				(FAILED (lResult))
+			&&	(lSvrCharacter)
+			)
 		{
-			lResult = E_OUTOFMEMORY;
+			mLoadingCharacters.RemoveKey (lSvrCharacter->GetCharID());
+
+			try
+			{
+#ifdef	_STRICT_COMPATIBILITY
+				lSvrCharacter->Release ();
+#else
+				delete lSvrCharacter;
+#endif
+			}
+			catch AnyExceptionSilent
 		}
+
 		if	(FAILED (lResult))
 		{
 #ifdef	_DEBUG_REQUESTS
@@ -857,7 +929,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, bool pIsDefault, long& pChar
 	else
 	{
 		tPtr <CAgentFile>	lLoadFile;
-		CAgentFile*		lAgentFile = NULL;
+		CAgentFile*			lAgentFile = NULL;
 		DaSvrCharacter *	lSvrCharacter = NULL;
 
 		if	(pReqID <= 0)
@@ -958,14 +1030,16 @@ bool DaServer::_OnDownloadComplete (CFileDownload* pDownload)
 
 	if	(
 			(pDownload)
-		&&	(mCharactersLoading.FindValue (pDownload, lReqID))
+		&&	(mLoadingFiles.FindValue (pDownload, lReqID))
 		)
 	{
 		try
 		{
 			HRESULT					lResult;
 			tPtr <CAgentFileAcf>	lLoadFile;
-			CAgentFile*			lAgentFile = NULL;
+			CAgentFile*				lAgentFile = NULL;
+			long					lCharID = (long)pDownload->mUserData;
+			IUnknownPtr				lLoadingCharacter;
 			DaSvrCharacter *		lSvrCharacter = NULL;
 
 			if	(lLoadFile = CAgentFileAcf::CreateInstance())
@@ -983,11 +1057,11 @@ bool DaServer::_OnDownloadComplete (CFileDownload* pDownload)
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
 					else
-					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &_AtlModule, mClientMutexName))
+					if	(
+							(mLoadingCharacters.Lookup (lCharID, lLoadingCharacter))
+						&&	(lSvrCharacter = dynamic_cast <DaSvrCharacter *> (lLoadingCharacter.GetInterfacePtr()))
+						)
 					{
-#ifdef	_STRICT_COMPATIBILITY
-						lSvrCharacter->AddRef ();
-#endif
 						if	(
 								(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile)))
 							&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (NULL, mCharacterStyle, WS_EX_TOPMOST)))
@@ -1008,28 +1082,35 @@ bool DaServer::_OnDownloadComplete (CFileDownload* pDownload)
 							_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls\t%d"), pDownload->GetURL(), lAgentFile->Path, lReqID);
 #endif
 						}
-						else
-						{
-							try
-							{
-#ifdef	_STRICT_COMPATIBILITY
-								lSvrCharacter->Release ();
-#else
-								delete lSvrCharacter;
-#endif
-							}
-							catch AnyExceptionSilent
-						}
 					}
 					else
 					{
-						lResult = E_OUTOFMEMORY;
+						lResult = AGENTERR_CHARACTERINVALID;
 					}
 				}
 			}
 			else
 			{
 				lResult = E_OUTOFMEMORY;
+			}
+
+			mLoadingCharacters.RemoveKey (lCharID);
+			lLoadingCharacter = NULL;
+
+			if	(
+					(FAILED (lResult))
+				&&	(lSvrCharacter != NULL)
+				)
+			{
+				try
+				{
+#ifdef	_STRICT_COMPATIBILITY
+					lSvrCharacter->Release ();
+#else
+					delete lSvrCharacter;
+#endif
+				}
+				catch AnyExceptionSilent
 			}
 
 #ifdef	_DEBUG_REQUESTS
@@ -1310,7 +1391,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch ** Character)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter"), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter [%d]"), this, max(m_dwRef,-1), CharacterID);
 #endif
 	HRESULT	lResult;
 
@@ -1339,7 +1420,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch **
 HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrCharacter **Character)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterEx"), this, max(m_dwRef,-1));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterEx [%d]"), this, max(m_dwRef,-1), CharacterID);
 #endif
 	HRESULT				lResult = S_OK;
 	DaSvrCharacter *	lCharacter;
@@ -1357,25 +1438,15 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 	}
 	else
 	{
-		POSITION		lPos;
-		long			lReqID;
-		CFileDownload*	lDownload = NULL;
+		IUnknownPtr	lLoadingCharacter;
 
-		for	(lPos = mCharactersLoading.GetStartPosition(); lPos;)
+		if	(
+				(mLoadingCharacters.Lookup (CharacterID, lLoadingCharacter))
+			&&	(lCharacter = dynamic_cast <DaSvrCharacter *> (lLoadingCharacter.GetInterfacePtr()))
+			)
 		{
-			lDownload = NULL;
-			mCharactersLoading.GetNextAssoc (lPos, lReqID, lDownload);
-			if	(
-					(lDownload)
-				&&	(lDownload->mUserData == CharacterID)
-				)
-			{
-				break;
-			}
-		}
-		if	(lDownload)
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lSvrCharacter = lCharacter->GetControllingUnknown ();
+			(*Character) = lSvrCharacter.Detach ();
 		}
 		else
 		{

@@ -175,6 +175,7 @@ public:
 	static bool IsProperFilePath (const System::String^ pPath);
 	static bool IsRelativeFilePath (const System::String^ pPath);
 	static System::String^ ParseFilePath (const System::String^ pPath);
+	System::String^ ParseRelativePath (const System::String^ pPath);
 #else
 	_DACORE_IMPEXP static bool IsProperFilePath (LPCTSTR pPath);
 	_DACORE_IMPEXP static bool IsRelativeFilePath (LPCTSTR pPath);
@@ -215,6 +216,8 @@ public:
 	CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit);
 	virtual CAgentFileImage^ GetImage (int pImageNdx, bool p32Bit, System::Drawing::Color pBkColor);
 	virtual System::String^ GetImageFilePath (int pImageNdx);
+	CAgentFileImage^ Get32BitImage (CAgentFileImage^ p8BitImage);
+	CAgentFileImage^ Get32BitImage (CAgentFileImage^ p8BitImage, System::Drawing::Color pBkColor);
 	UINT GetImageBits (LPBYTE pImageBits, int pImageNdx);
 	UINT GetImageBits (LPBYTE pImageBits, int pImageNdx, bool p32Bit);
 	UINT GetImageBits (LPBYTE pImageBits, CAgentFileImage^ pImage);
@@ -234,6 +237,7 @@ public:
 #else
 	_DACORE_IMPEXP virtual INT_PTR GetImageCount () const;
 	_DACORE_IMPEXP virtual CAgentFileImage* GetImage (INT_PTR pImageNdx, bool p32Bit = false, const COLORREF* pBkColor = NULL);
+	_DACORE_IMPEXP CAgentFileImage* Get32BitImage (const CAgentFileImage* p8BitImage, const COLORREF* pBkColor = NULL);
 	_DACORE_IMPEXP UINT GetImageFormat (LPBITMAPINFO pImageInfo, const CAgentFileImage* pImage = NULL, bool p32Bit = false) const;
 	_DACORE_IMPEXP UINT GetImageBits (LPBYTE pImageBits, const CAgentFileImage* pImage, bool p32Bit = false) const;
 	_DACORE_IMPEXP UINT GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame, bool p32Bit = false, const COLORREF* pBkColor = NULL, SHORT pOverlayType = -1);
@@ -259,6 +263,8 @@ public:
 	_DACORE_IMPEXP void LogGestures (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 	_DACORE_IMPEXP static void LogTts (const CAgentFileTts& pTts, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	_DACORE_IMPEXP static void LogBalloon (const CAgentFileBalloon& pBalloon, UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP void DumpPalette (LPVOID pPalette, DWORD pPaletteSize);
+	_DACORE_IMPEXP void SaveImage (CAgentFileImage* pImage);
 #endif
 
 protected:

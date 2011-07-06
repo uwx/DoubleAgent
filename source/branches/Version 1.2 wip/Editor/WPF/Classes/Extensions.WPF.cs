@@ -331,11 +331,11 @@ namespace AgentCharacterEditor.Global
 		{
 			foreach (Object lItem in pComboBox.Items)
 			{
-				if ((lItem is String) && ((lItem as String) == pString))
+				if ((lItem is String) && (String.Compare ((lItem as String), pString, true) == 0))
 				{
 					return pComboBox.Items.IndexOf (lItem);
 				}
-				else if ((lItem is ComboBoxItem) && ((lItem as ComboBoxItem).Content.ToString () == pString))
+				else if ((lItem is ComboBoxItem) && (String.Compare ((lItem as ComboBoxItem).Content.ToString (), pString, true) == 0))
 				{
 					return pComboBox.Items.IndexOf (lItem);
 				}

@@ -1270,9 +1270,9 @@ bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPref
 					if  (pDumpOffsets)
 					{
 #ifdef	_WIN32
-						_stprintf (lCodes, _T("[%4.4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
+						_stprintf (lCodes, _T("[%4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
 #else
-						wsprintf (lCodes, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+						wsprintf (lCodes, "[%4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
 #endif
 					}
 					else
@@ -1389,9 +1389,9 @@ bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR 
 					if  (pDumpOffsets)
 					{
 #ifdef	_WIN32
-						_stprintf (lCodes32, _T("[%4.4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
+						_stprintf (lCodes32, _T("[%4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
 #else
-						wsprintf (lCodes32, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+						wsprintf (lCodes32, "[%4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
 #endif
 					}
 					else

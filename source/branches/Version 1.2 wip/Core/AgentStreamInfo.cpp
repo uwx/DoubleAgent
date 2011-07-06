@@ -1108,7 +1108,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::TruncateAnimationLoop (long pMinDura
 long CAgentStreamInfo::SequenceAnimationFrames (CAnimationSequence* pSequence, long pAnimationNdx, long pStartFrameNdx, long pEndFrameNdx, long pLoopFrameNdx, long pMaxLoopTime, bool pExit)
 {
 	long						lRet = -1;
-	CAgentFile*				lAgentFile = GetAgentFile();
+	CAgentFile*					lAgentFile = GetAgentFile();
 	const CAgentFileAnimation*	lAnimation = lAgentFile->GetAnimation (pAnimationNdx);
 	long						lMaxFrameNdx = min (pEndFrameNdx, (long)(short)lAnimation->FrameCount - 1L);
 	long						lFrameNdx;
