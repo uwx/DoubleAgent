@@ -1431,31 +1431,21 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 		lResult = E_POINTER;
 	}
 	else
-	if	(lCharacter = dynamic_cast <DaSvrCharacter *> (GetInstanceCharacter (CharacterID)))
+	if	(
+			(lCharacter = dynamic_cast <DaSvrCharacter *> (GetInstanceCharacter (CharacterID)))
+		||	(lCharacter = dynamic_cast <DaSvrCharacter *> (GetLoadingCharacter (CharacterID)))
+		)
 	{
 		lSvrCharacter = lCharacter->GetControllingUnknown ();
 		(*Character) = lSvrCharacter.Detach ();
 	}
 	else
 	{
-		IUnknownPtr	lLoadingCharacter;
-
-		if	(
-				(mLoadingCharacters.Lookup (CharacterID, lLoadingCharacter))
-			&&	(lCharacter = dynamic_cast <DaSvrCharacter *> (lLoadingCharacter.GetInterfacePtr()))
-			)
-		{
-			lSvrCharacter = lCharacter->GetControllingUnknown ();
-			(*Character) = lSvrCharacter.Detach ();
-		}
-		else
-		{
 #ifdef	_STRICT_COMPATIBILITY_NOT
-			lResult = E_OUTOFMEMORY;
+		lResult = E_OUTOFMEMORY;
 #else
-			lResult = AGENTERR_CHARACTERINVALID;
+		lResult = AGENTERR_CHARACTERINVALID;
 #endif
-		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer));
@@ -1497,6 +1487,23 @@ HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrChara
 	}
 #endif
 	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDaCmnCharacter* DaServer::GetLoadingCharacter (long pCharID)
+{
+	IUnknownPtr			lLoadingCharacter;
+	DaSvrCharacter *	lCharacter;
+
+	if	(
+			(mLoadingCharacters.Lookup (pCharID, lLoadingCharacter))
+		&&	(lCharacter = dynamic_cast <DaSvrCharacter *> (lLoadingCharacter.GetInterfacePtr()))
+		)
+	{
+		return lCharacter;
+	}
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////

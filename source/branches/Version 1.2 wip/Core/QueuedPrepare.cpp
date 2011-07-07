@@ -147,6 +147,12 @@ bool CQueuedPrepare::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool p
 
 bool CQueuedPrepare::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
+#ifdef	_LOG_QUEUE_OPS
+	if	(LogIsActive (_LOG_QUEUE_OPS))
+	{
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Abort QueuedPrepare [%p(%d)] Started [%u]"), pAgentWnd, mCharID, this, mReqID, mStarted);
+	}
+#endif
 	if	(CancelDownloads () == S_OK)
 	{
 		return true;
@@ -392,6 +398,13 @@ HRESULT CQueuedPrepare::StartDownloads ()
 			CFileDownload*	lDownload = NULL;
 
 			mDownloads.GetNextAssoc (lPos, lAnimationName, lDownload);
+
+			if	(FAILED (lDownload->IsDownloadComplete ()))
+			{
+				mDownloadsRunning.Remove (lDownload);
+				mDownloadsDone.AddSortedQS (lDownload);
+				continue;
+			}
 
 			if	(
 					(mDownloadsDone.FindSortedQS (lDownload) >= 0)

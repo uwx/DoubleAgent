@@ -363,7 +363,7 @@ HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd* pCharacterWnd, DWORD pInit
 HRESULT CDaCmnCharacter::RealizePopup (CWindow* pParentWnd, DWORD pInitialStyle, DWORD pExStyle)
 {
 	HRESULT								lResult = S_OK;
-	CAgentPopupWnd*					lPopupWnd;
+	CAgentPopupWnd*						lPopupWnd;
 	CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 	INT_PTR								lClientNdx;
 
@@ -640,7 +640,7 @@ HRESULT CDaCmnCharacter::GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile>& pAg
 
 bool CDaCmnCharacter::IsVisible (bool pOrIsShowing) const
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(
@@ -661,7 +661,7 @@ bool CDaCmnCharacter::IsVisible (bool pOrIsShowing) const
 
 bool CDaCmnCharacter::IsShowing () const
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(
@@ -679,7 +679,7 @@ bool CDaCmnCharacter::IsShowing () const
 
 bool CDaCmnCharacter::IsHiding () const
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(
@@ -699,7 +699,7 @@ bool CDaCmnCharacter::IsHiding () const
 
 long CDaCmnCharacter::Show (bool pFast, bool pImmediate)
 {
-	long					lReqID = 0;
+	long				lReqID = 0;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
 
@@ -724,10 +724,10 @@ long CDaCmnCharacter::Show (bool pFast, bool pImmediate)
 
 long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 {
-	long					lReqID = 0;
+	long				lReqID = 0;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CAgentBalloonWnd*		lBalloonWnd;
+	CAgentBalloonWnd*	lBalloonWnd;
 
 	StopListening (false, ListenComplete_CharacterClientDeactivated);
 
@@ -766,7 +766,7 @@ long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 
 bool CDaCmnCharacter::IsInputActive () const
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(
@@ -783,7 +783,7 @@ bool CDaCmnCharacter::IsInputActive () const
 
 bool CDaCmnCharacter::IsClientActive () const
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(
@@ -798,7 +798,7 @@ bool CDaCmnCharacter::IsClientActive () const
 
 long CDaCmnCharacter::GetActiveClient () const
 {
-	long					lRet = 0;
+	long				lRet = 0;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(lCharacterWnd = GetCharacterWnd ())
@@ -835,11 +835,11 @@ short CDaCmnCharacter::GetActiveState () const
 
 bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 {
-	bool					lRet = false;
-	long					lPrevCharId = 0;
+	bool				lRet = false;
+	long				lPrevCharId = 0;
 	CAgentCharacterWnd*	lCharacterWnd;
-	CDaCmnCharacter*		lNextCharacter = NULL;
-	CDaCmnBalloon*			lBalloon = NULL;
+	CDaCmnCharacter*	lNextCharacter = NULL;
+	CDaCmnBalloon*		lBalloon = NULL;
 
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
@@ -944,7 +944,7 @@ bool CDaCmnCharacter::SetActiveClient (bool pActive, bool pInputActive)
 
 HRESULT CDaCmnCharacter::SetActiveState (short pActiveState)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(pActiveState == ActiveState_Inactive)
@@ -1046,7 +1046,7 @@ INT_PTR CDaCmnCharacter::GetClientCount (int pSkipCharID) const
 
 DWORD CDaCmnCharacter::GetStyle () const
 {
-	DWORD					lStyle = 0;
+	DWORD				lStyle = 0;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(IsIdleEnabled ())
@@ -1082,7 +1082,7 @@ DWORD CDaCmnCharacter::GetStyle () const
 
 HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 {
-	HRESULT					lResult = S_FALSE;
+	HRESULT				lResult = S_FALSE;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
 
@@ -1213,8 +1213,8 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 
 HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 {
-	HRESULT					lResult = S_OK;
-	LANGID					lLangID;
+	HRESULT				lResult = S_OK;
+	LANGID				lLangID;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(pLangID == LANG_USER_DEFAULT)
@@ -1302,9 +1302,9 @@ void CDaCmnCharacter::PropagateLangID ()
 	{
 		try
 		{
-			CDaCmnBalloon*			lBalloon = NULL;
+			CDaCmnBalloon*		lBalloon = NULL;
 			CDaCmnCommands*		lCommands = NULL;
-			CVoiceCommandsWnd*		lVoiceCommandsWnd;
+			CVoiceCommandsWnd*	lVoiceCommandsWnd;
 			CAgentListeningWnd*	lListeningWnd;
 			CAgentPopupWnd*		lPopupWnd;
 
@@ -1420,7 +1420,7 @@ bool CDaCmnCharacter::IsIconVisible () const
 
 bool CDaCmnCharacter::ShowIcon (bool pShow)
 {
-	bool				lRet = false;
+	bool			lRet = false;
 	CAgentPopupWnd*	lPopupWnd;
 
 	if	(mIconData.mShowIcon != pShow)
@@ -1679,7 +1679,7 @@ void CDaCmnCharacter::TransferListeningState (CDaCmnCharacter* pOtherCharacter)
 
 bool CDaCmnCharacter::ShowListeningState (bool pShow)
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 #ifdef	_DEBUG_LISTEN
@@ -1731,7 +1731,7 @@ bool CDaCmnCharacter::ShowListeningState (bool pShow)
 
 bool CDaCmnCharacter::ShowHearingState (bool pShow)
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 #ifdef	_DEBUG_LISTEN
@@ -1853,9 +1853,9 @@ void CDaCmnCharacter::ReleaseSapiInput (bool pAbandonned)
 
 HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 {
-	HRESULT					lResult = S_FALSE;
+	HRESULT				lResult = S_FALSE;
 	CAgentCharacterWnd*	lCharacterWnd;
-	bool					lExcludeActive = false;
+	bool				lExcludeActive = false;
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
@@ -1980,20 +1980,22 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long& pReqID)
 {
 	HRESULT					lResult = E_FAIL;
-	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentCharacterWnd*		lCharacterWnd = GetCharacterWnd ();
 	tPtr <CQueuedPrepare>	lPrepare;
+
 
 #ifdef	_DEBUG_PREPARE
 	if	(LogIsActive (_DEBUG_PREPARE))
 	{
-		LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaCmnCharacter Prepare [%d %u] [%s]"), this, mCharID, pType, pQueue, pName);
+		LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaCmnCharacter Prepare [%d %u] [%s] File [%p] Wnd [%p]"), this, mCharID, pType, pQueue, pName, mFile, lCharacterWnd);
 	}
 #endif
+	if	(!lCharacterWnd)
+	{
+		pQueue = false;
+	}
 
-	if	(
-			(lCharacterWnd = GetCharacterWnd ())
-		&&	(mFile)
-		)
+	if	(mFile)
 	{
 		if	(
 				(
@@ -2053,7 +2055,10 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 					lResult = lPrepare->PutSoundUrl (mFile, pName, mNotify);
 				}
 
-				if	(pQueue)
+				if	(
+						(pQueue)
+					&&	(lCharacterWnd)
+					)
 				{
 					if	(SUCCEEDED (lResult))
 					{
@@ -2248,7 +2253,7 @@ void CDaCmnCharacter::_OnCharacterNameChanged (long pCharID)
 void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
 	CAgentCharacterWnd*	lCharacterWnd;
-	CVoiceCommandsWnd*		lVoiceCommandsWnd;
+	CVoiceCommandsWnd*	lVoiceCommandsWnd;
 
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
@@ -2394,7 +2399,7 @@ bool CDaCmnCharacter::_OnDefaultCommand (long pCharID, HWND pOwner, const CPoint
 
 bool CDaCmnCharacter::DoContextMenu (HWND pOwner, const CPoint& pPosition)
 {
-	CDaCmnCommands*	lCommands;
+	CDaCmnCommands*		lCommands;
 	CDaCmnCommand*		lCommand;
 	long				lCommandId;
 	CVoiceCommandsWnd*	lVoiceCommandsWnd = NULL;
@@ -2480,7 +2485,7 @@ bool CDaCmnCharacter::DoDefaultCommand (HWND pOwner, const CPoint& pPosition)
 
 bool CDaCmnCharacter::DoMenuCommand (USHORT pCommandId)
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CDaCmnCommands*		lCommands;
 
@@ -2607,8 +2612,8 @@ CAgentPopupWnd* CDaCmnCharacter::GetPopupWnd (bool pMustExist) const
 CAgentBalloonWnd* CDaCmnCharacter::GetBalloonWnd (bool pCreateObject)
 {
 	CAgentCharacterWnd*	lCharacterWnd;
-	CAgentBalloonWnd*		lBalloonWnd = NULL;
-	CDaCmnBalloon*			lBalloon = NULL;
+	CAgentBalloonWnd*	lBalloonWnd = NULL;
+	CDaCmnBalloon*		lBalloon = NULL;
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
@@ -2687,7 +2692,7 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter*& pOtherC
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
 		CDaCmnCharacter*					lCharacter;
-		CAgentCharacterWnd*				lCharacterWnd;
+		CAgentCharacterWnd*					lCharacterWnd;
 
 		if	(mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
 		{
@@ -2719,11 +2724,11 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter*& pOtherC
 
 void CDaCmnCharacter::_OnOptionsChanged ()
 {
-	CDaSettingsConfig		lSettingsConfig;
+	CDaSettingsConfig	lSettingsConfig;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentListeningWnd*	lListeningWnd;
-	CAgentBalloonWnd*		lBalloonWnd;
-	CDaCmnBalloon*			lBalloon;
+	CAgentBalloonWnd*	lBalloonWnd;
+	CDaCmnBalloon*		lBalloon;
 
 	lSettingsConfig.LoadConfig ();
 
@@ -2791,11 +2796,11 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 	{
 		try
 		{
-			HRESULT					lResult;
+			HRESULT				lResult;
 			CAgentCharacterWnd*	lCharacterWnd = GetCharacterWnd (false);
 			CAgentPopupWnd*		lPopupWnd = GetPopupWnd (false);
 			CAgentFile*			lOldFile = GetFile ();
-			tPtr <CAgentFile>		lLoadFile;
+			tPtr <CAgentFile>	lLoadFile;
 			CAgentFile*			lNewFile;
 
 			if	(
@@ -2937,7 +2942,7 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 
 HRESULT CDaCmnCharacter::SetPosition (long Left, long Top)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
 
@@ -2975,10 +2980,10 @@ HRESULT CDaCmnCharacter::SetPosition (long Left, long Top)
 
 HRESULT CDaCmnCharacter::GetPosition (long *Left, long *Top)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect (0,0,0,0);
+	CRect				lRect (0,0,0,0);
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -3008,7 +3013,7 @@ HRESULT CDaCmnCharacter::GetPosition (long *Left, long *Top)
 
 HRESULT CDaCmnCharacter::SetSize (long Width, long Height)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
 
@@ -3044,10 +3049,10 @@ HRESULT CDaCmnCharacter::SetSize (long Width, long Height)
 
 HRESULT CDaCmnCharacter::GetSize (long *Width, long *Height)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect (0,0,0,0);
+	CRect				lRect (0,0,0,0);
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -3178,7 +3183,7 @@ HRESULT CDaCmnCharacter::Prepare (long Type, BSTR Name, long Queue, long *Reques
 		lResult = E_POINTER;
 	}
 	else
-	if	(GetCharacterWnd ())
+	if	(mFile)
 	{
 		lResult = DoPrepare (Type, CAtlString (Name), (Queue != 0), lReqID);
 	}
@@ -3196,9 +3201,9 @@ HRESULT CDaCmnCharacter::Prepare (long Type, BSTR Name, long Queue, long *Reques
 
 HRESULT CDaCmnCharacter::Play (BSTR Animation, long *RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	long					lReqID = 0;
+	long				lReqID = 0;
 
 	if	(!Animation)
 	{
@@ -3232,10 +3237,10 @@ HRESULT CDaCmnCharacter::Play (BSTR Animation, long *RequestID)
 
 HRESULT CDaCmnCharacter::Stop (long RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	LPVOID					lRequest = NULL;
-	CDaCmnCharacter*		lOtherCharacter = NULL;
+	LPVOID				lRequest = NULL;
+	CDaCmnCharacter*	lOtherCharacter = NULL;
 
 	if	(RequestID <= 0)
 	{
@@ -3292,9 +3297,9 @@ HRESULT CDaCmnCharacter::StopAll (long Types)
 
 HRESULT CDaCmnCharacter::MoveTo (short X, short Y, long Speed, long *RequestID)
 {
-	HRESULT				lResult = S_OK;
+	HRESULT			lResult = S_OK;
 	CAgentPopupWnd*	lPopupWnd;
-	long				lReqID = 0;
+	long			lReqID = 0;
 
 	if	(lPopupWnd = GetPopupWnd ())
 	{
@@ -3335,9 +3340,9 @@ HRESULT CDaCmnCharacter::MoveTo (short X, short Y, long Speed, long *RequestID)
 
 HRESULT CDaCmnCharacter::GestureAt (short X, short Y, long *RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	long					lReqID = 0;
+	long				lReqID = 0;
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
@@ -3408,9 +3413,9 @@ HRESULT CDaCmnCharacter::GestureAt (short X, short Y, long *RequestID)
 
 HRESULT CDaCmnCharacter::Think (BSTR Text, class CAgentTextObject* pTextObject, long *RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	long					lReqID = 0;
+	long				lReqID = 0;
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
@@ -3444,11 +3449,11 @@ HRESULT CDaCmnCharacter::Think (BSTR Text, class CAgentTextObject* pTextObject, 
 
 HRESULT CDaCmnCharacter::Wait (long WaitForRequestID, long *RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	LPVOID					lOtherRequest = NULL;
-	CDaCmnCharacter*		lOtherCharacter = NULL;
-	long					lReqID = 0;
+	LPVOID				lOtherRequest = NULL;
+	CDaCmnCharacter*	lOtherCharacter = NULL;
+	long				lReqID = 0;
 
 	if	(RequestID <= 0)
 	{
@@ -3492,11 +3497,11 @@ HRESULT CDaCmnCharacter::Wait (long WaitForRequestID, long *RequestID)
 
 HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	LPVOID					lOtherRequest = NULL;
-	CDaCmnCharacter*		lOtherCharacter = NULL;
-	long					lReqID = 0;
+	LPVOID				lOtherRequest = NULL;
+	CDaCmnCharacter*	lOtherCharacter = NULL;
+	long				lReqID = 0;
 
 	if	(RequestID <= 0)
 	{
@@ -3544,7 +3549,7 @@ HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 
 HRESULT CDaCmnCharacter::ShowPopupMenu (short X, short Y)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(mNotify->mAnchor->mAnchor.GetActiveCharacter() != GetCharID())
@@ -3644,9 +3649,9 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 
 HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject* pTextObject, BSTR Url, long *RequestID)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
-	long					lReqID = 0;
+	long				lReqID = 0;
 
 	if	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
 	{
@@ -4299,10 +4304,10 @@ HRESULT CDaCmnCharacter::put_SRModeID (BSTR SRModeID)
 
 HRESULT CDaCmnCharacter::get_Left (short *Left)
 {
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CRect					lRect (0,0,0,0);
+	CRect				lRect (0,0,0,0);
 
 	if	(!Left)
 	{
@@ -4701,7 +4706,7 @@ HRESULT CDaCmnCharacter::put_ActiveState (ActiveStateType ActiveState)
 
 HRESULT CDaCmnCharacter::get_IdleState (VARIANT_BOOL *IdleState)
 {
-	HRESULT					lResult;
+	HRESULT				lResult;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(lCharacterWnd = GetCharacterWnd ())

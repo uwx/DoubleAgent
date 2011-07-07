@@ -2606,7 +2606,6 @@ bool CAgentWnd::DoAnimationQueue (bool& pNextActivateImmediate, DWORD& pNextQueu
 				lQueuedAction->LogAction (_TRACE_ACTION_INSTANCE|LogToCache, _T("Advance"));
 			}
 #endif
-
 			if	(lQueuedAction->Advance (mQueue, this))
 			{
 				pNextActivateImmediate = (mQueue.GetNextAction () != lQueuedAction);

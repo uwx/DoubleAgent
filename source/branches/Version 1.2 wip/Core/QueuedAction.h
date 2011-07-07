@@ -201,7 +201,7 @@ public:
 // Attributes
 public:
 	tPtr <class CAgentText>				mText;
-	class CAgentTextObject*			mTextObject;
+	class CAgentTextObject*				mTextObject;
 	IUnknownPtr							mTextObjectRef;
 	tPtr <class CAgentBalloonOptions>	mBalloonOptions;
 
@@ -231,7 +231,7 @@ public:
 public:
 	class CSapiVoice*					mVoice;
 	tPtr <class CAgentText>				mText;
-	class CAgentTextObject*			mTextObject;
+	class CAgentTextObject*				mTextObject;
 	IUnknownPtr							mTextObjectRef;
 	CAtlString							mSoundUrl;
 	tPtr <class CAgentBalloonOptions>	mBalloonOptions;

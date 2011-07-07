@@ -155,6 +155,9 @@ public:
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void*pvDestContext, CLSID *pClsid);
 
 // Implementation
+public:
+	class CDaCmnCharacter* GetLoadingCharacter (long pCharID);
+
 protected:
 	void Disconnect (bool pAbandonned);
 	void UnloadAllCharacters (bool pAbandonned = false);

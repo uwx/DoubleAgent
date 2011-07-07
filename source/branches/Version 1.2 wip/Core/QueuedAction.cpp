@@ -211,7 +211,7 @@ bool CQueuedState::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 
 bool CQueuedState::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
-	bool				lRet = false;
+	bool	lRet = false;
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
@@ -403,8 +403,8 @@ CQueuedShow::~CQueuedShow ()
 
 bool CQueuedShow::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	bool					lShown = true;
+	bool				lRet = false;
+	bool				lShown = true;
 	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(mPaused)
@@ -569,9 +569,9 @@ CQueuedHide::~CQueuedHide ()
 
 bool CQueuedHide::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
-	CAgentBalloonWnd*		lBalloonWnd;
+	CAgentBalloonWnd*	lBalloonWnd;
 	CAgentListeningWnd*	lListeningWnd;
 
 	if	(mPaused)
@@ -813,11 +813,12 @@ bool CQueuedMove::Cycle (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 
 bool CQueuedMove::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
 	CAgentPopupWnd*		lPopupWnd;
-	CPoint					lOffset;
-	CRect					lWinRect;
+	CAgentBalloonWnd*	lBalloonWnd;
+	CPoint				lOffset;
+	CRect				lWinRect;
 
 	if	(mPaused)
 	{
@@ -856,6 +857,15 @@ bool CQueuedMove::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 				if	(mTimeAllowed > 0)
 				{
 					CAtlOwnPtrList <CQueuedAction>	lQueue;
+
+					if	(
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
+						&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+						&&	(lBalloonWnd->IsWindow ())
+						)
+					{
+						lBalloonWnd->HideBalloon ();
+					}
 
 					if	(lOffset.x < 0)
 					{
@@ -963,7 +973,7 @@ bool CQueuedMove::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 						if	(pQueue.GetNextAction (QueueActionMove) == this)
 						{
 							pQueue.RemoveHead ();
-	#ifdef	_STRICT_COMPATIBILITY
+#ifdef	_STRICT_COMPATIBILITY
 							if	(
 									(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 								&&	(!lCharacterWnd->IsCharShown ())
@@ -972,7 +982,7 @@ bool CQueuedMove::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 								NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
 							}
 							else
-	#endif
+#endif
 							{
 								NotifyComplete (pAgentWnd->mNotify);
 							}
@@ -1099,8 +1109,8 @@ CQueuedWait::~CQueuedWait ()
 
 bool CQueuedWait::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CQueuedAction*			lOtherRequest;
+	bool				lRet = false;
+	CQueuedAction*		lOtherRequest;
 	CAgentCharacterWnd*	lRequestOwner = NULL;
 
 	if	(mPaused)
@@ -1205,10 +1215,10 @@ CQueuedInterrupt::~CQueuedInterrupt ()
 
 bool CQueuedInterrupt::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CQueuedAction*			lOtherRequest;
+	bool				lRet = false;
+	CQueuedAction*		lOtherRequest;
 	CAgentCharacterWnd*	lRequestOwner = NULL;
-	HRESULT					lStatus;
+	HRESULT				lStatus;
 
 	if	(mPaused)
 	{

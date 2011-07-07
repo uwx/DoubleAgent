@@ -42,6 +42,7 @@
 #include "ErrorInfo.h"
 #include "GuidStr.h"
 #include "ThreadSecurity.h"
+#include "Elapsed.h"
 #include "DebugStr.h"
 #include "DebugWin.h"
 
@@ -85,6 +86,10 @@ DaControl::DaControl()
 #endif
 
 #ifdef	_DEBUG
+	if	(GetProfileDebugInt(_T("ForceRaiseRequest")) < 0)
+	{
+		mRaiseRequestErrors = false;
+	}
 	if	(GetProfileDebugInt(_T("ForceStandAlone")) > 0)
 	{
 		mAutoConnect = 0;
@@ -1217,7 +1222,6 @@ void DaControl::CompleteRequests (bool pIdleTime)
 	try
 	{
 		MSG	lMsg;
-
 		while (PeekMessage (&lMsg, m_hWnd, mCompleteRequestsMsg, mCompleteRequestsMsg, PM_REMOVE))
 		{;}
 	}
@@ -1227,10 +1231,10 @@ void DaControl::CompleteRequests (bool pIdleTime)
 	{
 		try
 		{
-			POSITION							lPos;
-			INT_PTR								lNdx;
-			long								lReqID;
-			DaCtlRequest *						lRequest;
+			POSITION						lPos;
+			INT_PTR							lNdx;
+			long							lReqID;
+			DaCtlRequest *					lRequest;
 			CAtlPtrTypeArray <DaCtlRequest>	lActiveRequests;
 
 #ifdef	_DEBUG_REQUEST
@@ -1246,7 +1250,10 @@ void DaControl::CompleteRequests (bool pIdleTime)
 				if	(
 						((lRequest->mCategory & DaRequestCategoryMask) == 0)
 					||	((lRequest->mCategory & DaRequestNotifyMask) == DaRequestNotifyMask)
-					||	(lRequest->m_dwRef <= 1)
+					||	(
+							(lRequest->m_dwRef <= 1)
+						&&	((lRequest->mCategory & DaRequestCategoryMask) != DaRequestLoad)
+						)
 					)
 				{
 					//
@@ -1353,6 +1360,44 @@ void DaControl::CompleteRequests (bool pIdleTime)
 						if	(lRequest->mStatus == RequestStatus_Pending)
 						{
 							LogMessage (_DEBUG_REQUEST, _T("  Pending Request [%p(%d)(%d)] Status [%s] Category [%s] (@%d)"), lRequest, lRequest->mReqID, max(lRequest->m_dwRef,-1), lRequest->StatusStr(), lRequest->CategoryStr(), __LINE__);
+						}
+#endif
+#ifdef	_DEBUG
+						if	(
+								(!pIdleTime)
+							&&	((lRequest->mCategory & DaRequestCategoryMask) == DaRequestLoad)
+							&&	(
+									(lRequest->mStatus == RequestStatus_Pending)
+								||	(lRequest->mStatus == RequestStatus_InProgress)
+								)
+							)
+						{
+							//
+							//	This means that a function is initiating a request (!pIdleTime) and there
+							//	is still an outstanding load request.
+							//
+							//	Wait a bit for the load request to complete.
+							//
+							DWORD	lStartTime = GetTickCount ();
+							long	lWaitTime = GetProfileDebugInt(_T("ForceLoadWait"));
+
+							if	(lWaitTime > 0)
+							{
+								lReqID = lRequest->mReqID;
+								do
+								{
+									MSG	lMsg;
+									PeekMessage (&lMsg, m_hWnd, 0, 0, PM_NOREMOVE);
+								}
+								while	(
+											(mActiveRequests.Lookup (lReqID, lRequest))
+										&&	(
+												(lRequest->mStatus == RequestStatus_Pending)
+											||	(lRequest->mStatus == RequestStatus_InProgress)
+											)
+										&&	(ElapsedTicks (lStartTime) < lWaitTime)
+										);
+								}
 						}
 #endif
 					}

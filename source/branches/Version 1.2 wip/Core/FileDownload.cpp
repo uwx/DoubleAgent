@@ -463,7 +463,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 		{
 			try
 			{
-				lResult = LogComErr (LogNormal|LogTime, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis));
+				lResult = LogComErr (LogNormal|LogTime, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis), lURL);
 				lCacheName.ReleaseBuffer ();
 			}
 			catch AnyExceptionDebug

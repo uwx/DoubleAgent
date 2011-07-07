@@ -18,13 +18,12 @@
     <OutputPath>\BinDa\Bin\Help2\</OutputPath>
     <HtmlHelpName>DoubleAgent</HtmlHelpName>
     <DocumentationSources>
-      <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\Interop\DoubleAgent.AxControl.dll" />
-      <DocumentationSource sourceFile="Sandcastle\DoubleAgent.AxControl.xml" />
-      <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\Interop\DoubleAgent.Control.dll" />
-      <DocumentationSource sourceFile="Sandcastle\DoubleAgent.Control.xml" />
-      <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\Interop\DoubleAgent.Server.dll" />
-      <DocumentationSource sourceFile="Sandcastle\DoubleAgent.Server.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.AxControl.dll" />
+<DocumentationSource sourceFile="Sandcastle\DoubleAgent.AxControl.xml" />
+<DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.Control.dll" />
+<DocumentationSource sourceFile="Sandcastle\DoubleAgent.Control.xml" />
+<DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.Server.dll" />
+<DocumentationSource sourceFile="Sandcastle\DoubleAgent.Server.xml" /></DocumentationSources>
     <HtmlHelp1xCompilerPath>%ProgramFiles(x86)%\HTML Help Workshop\</HtmlHelp1xCompilerPath>
     <SandcastlePath>%ProgramFiles(x86)%\Sandcastle\</SandcastlePath>
     <MissingTags>Parameter, Returns, Value, Namespace, TypeParameter</MissingTags>

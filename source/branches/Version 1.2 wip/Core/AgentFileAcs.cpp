@@ -2700,7 +2700,7 @@ DWORD CAgentFileAcs::WriteImages (DWORD pFileOffset, CAgentFile^ pSource)
 						*(LPDWORD)lByte = 0; // Size of image region
 						lByte += sizeof(DWORD);
 
-						lImageIndex->Add (KeyValuePair <UInt32, UInt32> ((lImageStart-lBlock) + pFileOffset, lByte-lImageStart));
+						lImageIndex->Add (KeyValuePair <UInt32, UInt32> ((UInt32)(lImageStart-lBlock) + pFileOffset, (UInt32)(lByte-lImageStart)));
 					}
 					else
 					{
@@ -2951,7 +2951,7 @@ DWORD CAgentFileAcs::WriteSounds (DWORD pFileOffset, CAgentFile^ pSource)
 #endif
 						lSoundStart = lByte;
 						lByte = (LPBYTE)WriteAcsSound (lSoundStart, lSound);
-						lSoundIndex->Add (KeyValuePair <UInt32, UInt32> ((lSoundStart-lBlock) + pFileOffset, lByte-lSoundStart));
+						lSoundIndex->Add (KeyValuePair <UInt32, UInt32> ((UInt32)(lSoundStart-lBlock) + pFileOffset, (UInt32)(lByte-lSoundStart)));
 					}
 				}
 

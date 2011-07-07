@@ -600,13 +600,13 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		_AtlModule.PostServerCall (mOwner->mServer);
 	}
 
-	if	(
-			(lReqID)
-		&&	(ppidRequest)
-		)
+	if	(lReqID)
 	{
-		lRequest.Attach (mOwner->PutRequest (DaRequestLoad, lReqID, lResult));
-		(*ppidRequest) = lRequest.Detach();
+		lRequest.Attach (mOwner->PutRequest (DaRequestLoad, lReqID, lResult)); // Create request even if not returned - load requests are handled specially.
+		if	(ppidRequest)
+		{
+			(*ppidRequest) = lRequest.Detach();
+		}
 	}
 	if	(
 			(SUCCEEDED (lResult))

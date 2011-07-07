@@ -75,7 +75,7 @@ void CAgentBalloonShape::InitLayout ()
 #ifdef	__cplusplus_cli
 	mRounding.Width = 7;
 	mRounding.Height = 7;
-	mCalloutSize.Width = 4;
+	mCalloutSize.Width = 8;
 	mCalloutSize.Height = 8;
 #else
 	DWORD	lDialogUnits = MAKELONG (12,6); //GetDialogBaseUnits ();
@@ -123,11 +123,15 @@ CRect CAgentBalloonShape::RecalcLayout (const CRect& pTextRect, const CRect& pRe
 #endif
 {
 #ifdef	_TRACE_LAYOUT
+	try
+	{
 #ifdef	__cplusplus_cli
-	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+		LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
 #else
-	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
+		LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
 #endif	
+	}
+	catch AnyExceptionSilent
 #endif	
 
 	CalcLayout (pTextRect, pRefRect, pBounds, mBalloonRect, mCalloutBeg, mCalloutEnd);
@@ -167,11 +171,15 @@ CRect CAgentBalloonShape::RecalcLayout (const CRect& pTextRect, const CRect& pRe
 #endif
 
 #ifdef	_TRACE_LAYOUT
+	try
+	{
 #ifdef	__cplusplus_cli
-	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), mTextRect.Left, mTextRect.Top, mTextRect.Right, mTextRect.Bottom, mBalloonRect.Left, mBalloonRect.Top, mBalloonRect.Right, mBalloonRect.Bottom, mBounds.Left, mBounds.Top, mBounds.Right, mBounds.Bottom);
+		LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f] Callout Beg [%.1f %.1f] End [%.1f %.1f]"), mTextRect.Left, mTextRect.Top, mTextRect.Right, mTextRect.Bottom, mBalloonRect.Left, mBalloonRect.Top, mBalloonRect.Right, mBalloonRect.Bottom, mBounds.Left, mBounds.Top, mBounds.Right, mBounds.Bottom, mCalloutBeg.X, mCalloutBeg.Y, mCalloutEnd.X, mCalloutEnd.Y);
 #else
-	LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%d %d %d %d] Balloon [%d %d %d %d] Bounds [%d %d %d %d]"), mTextRect.left, mTextRect.top, mTextRect.right, mTextRect.bottom, mBalloonRect.left, mBalloonRect.top, mBalloonRect.right, mBalloonRect.bottom, mBounds.left, mBounds.top, mBounds.right, mBounds.bottom);
+		LogMessage (_TRACE_LAYOUT, _T("RecalcLayout Text [%d %d %d %d] Balloon [%d %d %d %d] Bounds [%d %d %d %d] Callout Beg [%d %d] End [%d %d]"), mTextRect.left, mTextRect.top, mTextRect.right, mTextRect.bottom, mBalloonRect.left, mBalloonRect.top, mBalloonRect.right, mBalloonRect.bottom, mBounds.left, mBounds.top, mBounds.right, mBounds.bottom, mCalloutBeg.x, mCalloutBeg.y, mCalloutEnd.x, mCalloutEnd.y);
 #endif	
+	}
+	catch AnyExceptionSilent
 #endif	
 
 	return mBounds;
@@ -188,13 +196,17 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 #ifdef	__cplusplus_cli
 	SizeF		lRefSize;
 	PointF		lRefCenter;
+	PointF		lRefCenterOffset;
 	SizeF		lBalloonSize;
 	PointF		lBalloonCenter;
+	PointF		lBalloonCenterOffset;
 #else
 	_complex	lRefSize;
 	_complex	lRefCenter;
+	_complex	lRefCenterOffset;
 	_complex	lBalloonSize;
 	_complex	lBalloonCenter;
+	_complex	lBalloonCenterOffset;
 	_complex	lBegPos;
 	_complex	lEndPos;
 #endif
@@ -213,42 +225,58 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	pBalloonRect.DeflateRect (mRounding.cx, mRounding.cy);
 
 #ifdef	_TRACE_LAYOUT
-	InitTrace (pBalloonRect, pRefRect, pTextRect);
-	TraceRect (pBalloonRect, RGB(0xFF,0x80,0x80));
-	TraceRect (pRefRect, RGB(0x00,0xFF,0x00));
-	TraceRect (pTextRect, RGB(0x00,0xFF,0xFF));
+	try
+	{
+		InitTrace (pBalloonRect, pRefRect, pTextRect);
+		TraceRect (pBalloonRect, RGB(0xFF,0x80,0x80));
+		TraceRect (pRefRect, RGB(0x00,0xFF,0x00));
+		TraceRect (pTextRect, RGB(0x00,0xFF,0xFF));
+	}
+	catch AnyExceptionSilent
 #endif
 #endif
 
 #ifdef	__cplusplus_cli
 	lRefSize.Width = pRefRect.Width;
 	lRefSize.Height = pRefRect.Height;
-	lRefCenter.X = pRefRect.X + lRefSize.Width/2.0f;
-	lRefCenter.Y = pRefRect.Y + lRefSize.Height/2.0f;
+	lRefCenterOffset.X = lRefSize.Width*0.5f;
+	lRefCenterOffset.Y = lRefSize.Height*0.5f;
+	lRefCenter.X = pRefRect.X + lRefCenterOffset.X;
+	lRefCenter.Y = pRefRect.Y + lRefCenterOffset.Y;
 	lBalloonSize.Width = pBalloonRect.Width;
 	lBalloonSize.Height = pBalloonRect.Height;
-	lBalloonCenter.X = pBalloonRect.X + lBalloonSize.Width/2.0f;
-	lBalloonCenter.Y = pBalloonRect.Y + lBalloonSize.Height/2.0f;
+	lBalloonCenterOffset.X = lBalloonSize.Width*0.5f;
+	lBalloonCenterOffset.Y = lBalloonSize.Height*0.5f;
+	lBalloonCenter.X = pBalloonRect.X + lBalloonCenterOffset.X;
+	lBalloonCenter.Y = pBalloonRect.Y + lBalloonCenterOffset.Y;
 
 #ifdef	_TRACE_LAYOUT
-	LogMessage (_TRACE_LAYOUT, _T("Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
-	LogMessage (_TRACE_LAYOUT, _T("  Balloon [%.1f %.1f] center [%.1f %.1f] Ref [%.1f %.1f] center [%.1f %.1f]"), lBalloonSize.Width, lBalloonSize.Height, lBalloonCenter.X, lBalloonCenter.Y, lRefSize.Width, lRefSize.Height, lRefCenter.X, lRefCenter.Y);
+	try
+	{
+		LogMessage (_TRACE_LAYOUT, _T("Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+		LogMessage (_TRACE_LAYOUT, _T("  Balloon [%.1f %.1f] center [%.1f %.1f] Ref [%.1f %.1f] center [%.1f %.1f]"), lBalloonSize.Width, lBalloonSize.Height, lBalloonCenter.X, lBalloonCenter.Y, lRefSize.Width, lRefSize.Height, lRefCenter.X, lRefCenter.Y);
+	}
+	catch AnyExceptionSilent
 #endif
 #else
 	lRefSize.x = (double)pRefRect.Width();
 	lRefSize.y = (double)pRefRect.Height();
-	lRefCenter.x = (double)pRefRect.left + lRefSize.x/2.0f - 0.5f;
-	lRefCenter.y = (double)pRefRect.top + lRefSize.y/2.0f - 0.5f;
+	lRefCenter.x = (double)pRefRect.left + (lRefCenterOffset.x=lRefSize.x*0.5f) - 0.5f;
+	lRefCenter.y = (double)pRefRect.top + (lRefCenterOffset.y=lRefSize.y*0.5f) - 0.5f;
 	lBalloonSize.x = (double)pBalloonRect.Width();
 	lBalloonSize.y = (double)pBalloonRect.Height();
-	lBalloonCenter.x = (double)pBalloonRect.left + lBalloonSize.x/2.0f - 0.5f;
-	lBalloonCenter.y = (double)pBalloonRect.top + lBalloonSize.y/2.0f - 0.5f;
+	lBalloonCenter.x = (double)pBalloonRect.left + (lBalloonCenterOffset.x=lBalloonSize.x*0.5f) - 0.5f;
+	lBalloonCenter.y = (double)pBalloonRect.top + (lBalloonCenterOffset.y=lBalloonSize.y*0.5f) - 0.5f;
 
 #ifdef	_TRACE_LAYOUT
-	LogMessage (_TRACE_LAYOUT, _T("Text [%d %d %d %d] Balloon [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
-	LogMessage (_TRACE_LAYOUT, _T("  Balloon [%d %d] center [%d %d] Ref [%d %d] center [%d %d]"), dtol(lBalloonSize.x), dtol(lBalloonSize.y), dtol(lBalloonCenter.x), dtol(lBalloonCenter.y), dtol(lRefSize.x), dtol(lRefSize.y), dtol(lRefCenter.x), dtol(lRefCenter.y));
-	TracePointFill (lBalloonCenter, RGB(0xFF,0x00,0x00));
-	TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
+	try
+	{
+		LogMessage (_TRACE_LAYOUT, _T("Text [%d %d %d %d] Balloon [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
+		LogMessage (_TRACE_LAYOUT, _T("  Balloon [%d %d] center [%d %d] Ref [%d %d] center [%d %d]"), dtol(lBalloonSize.x), dtol(lBalloonSize.y), dtol(lBalloonCenter.x), dtol(lBalloonCenter.y), dtol(lRefSize.x), dtol(lRefSize.y), dtol(lRefCenter.x), dtol(lRefCenter.y));
+		TracePointFill (lBalloonCenter, RGB(0xFF,0x00,0x00));
+		TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
+	}
+	catch AnyExceptionSilent
 #endif
 #endif
 
@@ -257,11 +285,15 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	CalcRectIntersect (pCalloutEnd, lRefCenter, lRefSize, pCalloutBeg);
 
 #ifdef	_TRACE_LAYOUT
-	Single lCalloutLgth = Math::Sqrt ((pCalloutEnd.X-pCalloutBeg.X)+(pCalloutEnd.X-pCalloutBeg.X) + (pCalloutEnd.Y-pCalloutBeg.Y)*(pCalloutEnd.Y-pCalloutBeg.Y));
-	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y, lCalloutLgth);
+	try
+	{
+		Single lCalloutLgth = (Single)Math::Sqrt ((pCalloutEnd.X-pCalloutBeg.X)+(pCalloutEnd.X-pCalloutBeg.X) + (pCalloutEnd.Y-pCalloutBeg.Y)*(pCalloutEnd.Y-pCalloutBeg.Y));
+		LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y, lCalloutLgth);
+	}
+	catch AnyExceptionSilent
 #endif
 
-	pBalloonRect = RectangleF (lBalloonCenter.X-lBalloonSize.Width/2.0f, lBalloonCenter.Y-lBalloonSize.Height/2.0f, pBalloonRect.Width, pBalloonRect.Height);
+	pBalloonRect = RectangleF (lBalloonCenter.X-lBalloonCenterOffset.X, lBalloonCenter.Y-lBalloonCenterOffset.Y, pBalloonRect.Width, pBalloonRect.Height);
 	FixupNearPoint (pCalloutBeg, pRefRect);
 	FixupNearPoint (pCalloutEnd, pBalloonRect);
 #else
@@ -269,16 +301,24 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 	CalcRectIntersect (lEndPos, lRefCenter, lRefSize, lBegPos);
 
 #ifdef	_TRACE_LAYOUT
-	TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
-	TracePointFill (lBegPos, RGB(0x80,0xFF,0x00));
-	TracePointFill (lEndPos, RGB(0xFF,0x80,0x00));
+	try
+	{
+		TracePointFill (lRefCenter, RGB(0x00,0xFF,0x00));
+		TracePointFill (lBegPos, RGB(0x80,0xFF,0x00));
+		TracePointFill (lEndPos, RGB(0xFF,0x80,0x00));
+	}
+	catch AnyExceptionSilent
 #endif
 #ifdef	_TRACE_LAYOUT
-	double lCalloutLgth = _hypot (lEndPos.x - lBegPos.x, lEndPos.y - lBegPos.y);
-	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%d]"), lBegPos.x, lBegPos.y, lEndPos.x, lEndPos.y, dtol(lCalloutLgth));
+	try
+	{
+		double lCalloutLgth = _hypot (lEndPos.x - lBegPos.x, lEndPos.y - lBegPos.y);
+		LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f] Length [%d]"), lBegPos.x, lBegPos.y, lEndPos.x, lEndPos.y, dtol(lCalloutLgth));
+	}
+	catch AnyExceptionSilent
 #endif
 
-	pBalloonRect = CRect (CPoint (dtolUp(lBalloonCenter.x-lBalloonSize.x/2.0), dtolUp(lBalloonCenter.y-lBalloonSize.y/2.0)), pBalloonRect.Size());
+	pBalloonRect = CRect (CPoint (dtolUp(lBalloonCenter.x-lBalloonCenterOffset.x), dtolUp(lBalloonCenter.y-lBalloonCenterOffset.y)), pBalloonRect.Size());
 	pCalloutBeg.x = dtol(lBegPos.x);
 	pCalloutBeg.y = dtol(lBegPos.y);
 	pCalloutEnd.x = dtol(lEndPos.x);
@@ -293,16 +333,34 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 		||	(pCalloutEnd.X > pBalloonRect.Right - mRounding.Width)
 		)
 	{
-		pCalloutEnd.Y = Math::Min (Math::Max (pCalloutEnd.Y, pBalloonRect.Top + mRounding.Height + mCalloutSize.Height*2), pBalloonRect.Bottom - mRounding.Height - mCalloutSize.Height*2);
+		if	(mRounding.Height*2 + mCalloutSize.Width*4 < pBalloonRect.Height)
+		{
+			pCalloutEnd.Y = Math::Min (Math::Max (pCalloutEnd.Y, pBalloonRect.Top + mRounding.Height + mCalloutSize.Width*2), pBalloonRect.Bottom - mRounding.Height - mCalloutSize.Width*2);
+		}
+		else
+		{
+			pCalloutEnd.Y = pBalloonRect.Top + pBalloonRect.Height/2;
+		}
 	}
 	else
 	{
-		pCalloutEnd.X = Math::Min (Math::Max (pCalloutEnd.X, pBalloonRect.Left + mRounding.Width + mCalloutSize.Width*2), pBalloonRect.Right - mRounding.Width - mCalloutSize.Width*2);
+		if	(mRounding.Width*2 + mCalloutSize.Width*4 < pBalloonRect.Width)
+		{
+			pCalloutEnd.X = Math::Min (Math::Max (pCalloutEnd.X, pBalloonRect.Left + mRounding.Width + mCalloutSize.Width*2), pBalloonRect.Right - mRounding.Width - mCalloutSize.Width*2);
+		}
+		else
+		{
+			pCalloutEnd.X = pBalloonRect.Left + pBalloonRect.Width/2;
+		}
 	}
 
 #ifdef	_TRACE_LAYOUT
-	LogMessage (_TRACE_LAYOUT, _T("  Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
-	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y);
+	try
+	{
+		LogMessage (_TRACE_LAYOUT, _T("  Text [%.1f %.1f %.1f %.1f] Balloon [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pTextRect.Left, pTextRect.Top, pTextRect.Right, pTextRect.Bottom, pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+		LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%.1f %.1f] End [%.1f %.1f]"), pCalloutBeg.X, pCalloutBeg.Y, pCalloutEnd.X, pCalloutEnd.Y);
+	}
+	catch AnyExceptionSilent
 #endif	
 #else
 	if	(
@@ -310,20 +368,38 @@ void CAgentBalloonShape::CalcLayout (const CRect& pTextRect, const CRect& pRefRe
 		||	(pCalloutEnd.x > pBalloonRect.right - mRounding.cx)
 		)
 	{
-		pCalloutEnd.y = min (max (pCalloutEnd.y, pBalloonRect.top + mRounding.cy + mCalloutSize.cy*2), pBalloonRect.bottom - mRounding.cy - mCalloutSize.cy*2);
+		if	(mRounding.cy*2 + mCalloutSize.cx*4 < pBalloonRect.Height())
+		{
+			pCalloutEnd.y = min (max (pCalloutEnd.y, pBalloonRect.top + mRounding.cy + mCalloutSize.cx*2), pBalloonRect.bottom - mRounding.cy - mCalloutSize.cx*2);
+		}
+		else
+		{
+			pCalloutEnd.y = pBalloonRect.top + pBalloonRect.Height()/2;
+		}
 	}
 	else
 	{
-		pCalloutEnd.x = min (max (pCalloutEnd.x, pBalloonRect.left + mRounding.cx + mCalloutSize.cx*2), pBalloonRect.right - mRounding.cx - mCalloutSize.cx*2);
+		if	(mRounding.cx*2 + mCalloutSize.cx*4 < pBalloonRect.Width())
+		{
+			pCalloutEnd.x = min (max (pCalloutEnd.x, pBalloonRect.left + mRounding.cx + mCalloutSize.cx*2), pBalloonRect.right - mRounding.cx - mCalloutSize.cx*2);
+		}
+		else
+		{
+			pCalloutEnd.x = pBalloonRect.left + pBalloonRect.Width()/2;
+		}
 	}
 
 #ifdef	_TRACE_LAYOUT
-	LogMessage (_TRACE_LAYOUT, _T("  Text [%d %d %d %d] Balloon [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
-	LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%d %d] End [%d %d]"), pCalloutBeg.x, pCalloutBeg.y, pCalloutEnd.x, pCalloutEnd.y);
-	TraceRect (pBalloonRect, RGB(0xFF,0xFF,0xFF));
-	TracePointFrame (pCalloutBeg, RGB(0xFF,0xFF,0xFF));
-	TracePointFrame (pCalloutEnd, RGB(0xFF,0xFF,0xFF));
-	ShowTrace ();
+	try
+	{
+		LogMessage (_TRACE_LAYOUT, _T("  Text [%d %d %d %d] Balloon [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pTextRect.left, pTextRect.top, pTextRect.right, pTextRect.bottom, pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
+		LogMessage (_TRACE_LAYOUT, _T("  Callout Beg [%d %d] End [%d %d]"), pCalloutBeg.x, pCalloutBeg.y, pCalloutEnd.x, pCalloutEnd.y);
+		TraceRect (pBalloonRect, RGB(0xFF,0xFF,0xFF));
+		TracePointFrame (pCalloutBeg, RGB(0xFF,0xFF,0xFF));
+		TracePointFrame (pCalloutEnd, RGB(0xFF,0xFF,0xFF));
+		ShowTrace ();
+	}
+	catch AnyExceptionSilent
 #endif
 #endif
 }
@@ -357,11 +433,15 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 #endif
 
 #ifdef	_TRACE_LAYOUT
+	try
+	{
 #ifdef	__cplusplus_cli
-	LogMessage (_TRACE_LAYOUT, _T("  Point [%.1f %.1f] to center [%.1f %.1f] = Angle [%f]"), lRefPoint.X, lRefPoint.Y, pRectCenter.X, pRectCenter.Y, lAngle);
+		LogMessage (_TRACE_LAYOUT, _T("  Point [%.1f %.1f] to center [%.1f %.1f] = Angle [%f]"), lRefPoint.X, lRefPoint.Y, pRectCenter.X, pRectCenter.Y, lAngle);
 #else
-	LogMessage (_TRACE_LAYOUT, _T("  Point [%d %d] to center [%d %d] = Angle [%f]"), (int)lRefPoint.x, (int)lRefPoint.y, (int)pRectCenter.x, (int)pRectCenter.y, lAngle);
+		LogMessage (_TRACE_LAYOUT, _T("  Point [%d %d] to center [%d %d] = Angle [%f]"), (int)lRefPoint.x, (int)lRefPoint.y, (int)pRectCenter.x, (int)pRectCenter.y, lAngle);
 #endif	
+	}
+	catch AnyExceptionSilent
 #endif
 
 	if	(pMinAngle > 0.0)
@@ -386,7 +466,11 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 		lRefPoint.X = pRectCenter.X - (Single)Math::Cos (lAngle) * lLength;
 		lRefPoint.Y = pRectCenter.Y - (Single)Math::Sin (lAngle) * lLength;
 #ifdef	_TRACE_LAYOUT
-		LogMessage (_TRACE_LAYOUT, _T("  Point [%.1f %.1f] to center [%.1f %.1f] = Angle [%f] Min [%f]"), lRefPoint.X, lRefPoint.Y, pRectCenter.X, pRectCenter.Y, lAngle, pMinAngle);
+		try
+		{
+			LogMessage (_TRACE_LAYOUT, _T("  Point [%.1f %.1f] to center [%.1f %.1f] = Angle [%f] Min [%f]"), lRefPoint.X, lRefPoint.Y, pRectCenter.X, pRectCenter.Y, lAngle, pMinAngle);
+		}
+		catch AnyExceptionSilent
 #endif
 #else
 		double	lLength = _hypot (pRectCenter.y - lRefPoint.y, pRectCenter.x - lRefPoint.x);
@@ -408,7 +492,11 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 		lRefPoint.x = pRectCenter.x - cos (lAngle) * lLength;
 		lRefPoint.y = pRectCenter.y - sin (lAngle) * lLength;
 #ifdef	_TRACE_LAYOUT
-		LogMessage (_TRACE_LAYOUT, _T("  Point [%d %d] to center [%d %d] = Angle [%f] Min [%f]"), (int)lRefPoint.x, (int)lRefPoint.y, (int)pRectCenter.x, (int)pRectCenter.y, lAngle, pMinAngle);
+		try
+		{
+			LogMessage (_TRACE_LAYOUT, _T("  Point [%d %d] to center [%d %d] = Angle [%f] Min [%f]"), (int)lRefPoint.x, (int)lRefPoint.y, (int)pRectCenter.x, (int)pRectCenter.y, lAngle, pMinAngle);
+		}
+		catch AnyExceptionSilent
 #endif
 #endif
 	}
@@ -503,11 +591,15 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 #endif	
 
 #ifdef	_TRACE_LAYOUT
+	try
+	{
 #ifdef	__cplusplus_cli
-	LogMessage (_TRACE_LAYOUT, _T("  Validate [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
+		LogMessage (_TRACE_LAYOUT, _T("  Validate [%.1f %.1f %.1f %.1f] Ref [%.1f %.1f %.1f %.1f] Bounds [%.1f %.1f %.1f %.1f]"), pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom, pRefRect.Left, pRefRect.Top, pRefRect.Right, pRefRect.Bottom, pBounds.Left, pBounds.Top, pBounds.Right, pBounds.Bottom);
 #else
-	LogMessage (_TRACE_LAYOUT, _T("  Validate [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
+		LogMessage (_TRACE_LAYOUT, _T("  Validate [%d %d %d %d] Ref [%d %d %d %d] Bounds [%d %d %d %d]"), pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom, pRefRect.left, pRefRect.top, pRefRect.right, pRefRect.bottom, pBounds.left, pBounds.top, pBounds.right, pBounds.bottom);
 #endif	
+	}
+	catch AnyExceptionSilent
 #endif	
 
 #ifdef	__cplusplus_cli
@@ -732,14 +824,18 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 #endif
 
 #ifdef	_TRACE_LAYOUT
-	if	(lRet)
+	try
 	{
+		if	(lRet)
+		{
 #ifdef	__cplusplus_cli
-		LogMessage (_TRACE_LAYOUT, _T("  Validate [%.1f %.1f %.1f %.1f]"), pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom);
+			LogMessage (_TRACE_LAYOUT, _T("  Validate [%.1f %.1f %.1f %.1f]"), pBalloonRect.Left, pBalloonRect.Top, pBalloonRect.Right, pBalloonRect.Bottom);
 #else
-		LogMessage (_TRACE_LAYOUT, _T("  Validate [%d %d %d %d]"), pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom);
+			LogMessage (_TRACE_LAYOUT, _T("  Validate [%d %d %d %d]"), pBalloonRect.left, pBalloonRect.top, pBalloonRect.right, pBalloonRect.bottom);
 #endif	
+		}
 	}
+	catch AnyExceptionSilent
 #endif	
 	return lRet;
 }
@@ -1043,12 +1139,12 @@ void CAgentBalloonSpeak::InitLayout ()
 	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%f %f] Callout [%f %f]"), _B(GetType()->Name), mRounding.Width, mRounding.Height, mCalloutSize.Width, mCalloutSize.Height);
 #endif
 #else
-#ifdef	_TRACE_LAYOUT
+#ifdef	_TRACE_LAYOUT_NOT
 	mCalloutSize.cx = MulDiv (mCalloutSize.cx, 5, 4);
 	mCalloutSize.cy = MulDiv (mCalloutSize.cy, 4, 1);
 #endif
 #ifdef	_DEBUG_LAYOUT
-	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjClassName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
+	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjTypeName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
 #endif
 #endif
 }
@@ -1241,8 +1337,8 @@ void CAgentBalloonSpeak::GetCalloutPoints (Gdiplus::PointF* pPoints)
 	RectangleF		lBalloonRect (mBalloonRect);
 	Single			lCalloutAngle;
 	Single			lCalloutExtension;
-	INT_PTR			lPointNdx;
-	INT_PTR			lExtendCount;
+	int				lPointNdx;
+	int				lExtendCount;
 	PointF			lExtendPoint;
 #else
 	Gdiplus::RectF	lBalloonRect ((Gdiplus::REAL)mBalloonRect.left+1, (Gdiplus::REAL)mBalloonRect.top+1, (Gdiplus::REAL)mBalloonRect.Width()-2, (Gdiplus::REAL)mBalloonRect.Height()-2);
@@ -1378,7 +1474,7 @@ void CAgentBalloonThink::InitLayout ()
 	mCalloutSize.cx = MulDiv (mCalloutSize.cx, 3, 2);
 	mCalloutSize.cy = MulDiv (mCalloutSize.cy, 4, 1);
 #ifdef	_DEBUG_LAYOUT
-	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjClassName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
+	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjTypeName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
 #endif
 #endif
 }
@@ -1704,51 +1800,72 @@ System::Windows::Media::Drawing^ CAgentBalloonThink::MakeDrawing (System::Window
 
 void CAgentBalloonShape::InitTrace (const CRect& pRect)
 {
-#ifdef	_TRACE_LAYOUT
-	if	(mTraceBuffer = new CImageBuffer)
+#ifdef	_TRACE_LAYOUT_NOT
+	try
 	{
-		mTraceBuffer->CreateBuffer (pRect.Size()+CSize(4,4));
-		OffsetWindowOrgEx (*mTraceBuffer->mDC, pRect.left-2, pRect.top-2, NULL);
+		if	(mTraceBuffer = new CImageBuffer)
+		{
+			mTraceBuffer->CreateBuffer (pRect.Size()+CSize(4,4));
+			SetWindowOrgEx (*mTraceBuffer->mDC, pRect.left-2, pRect.top-2, NULL);
+		}
 	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::InitTrace (const CRect& pRect1, const CRect& pRect2)
 {
 #ifdef	_TRACE_LAYOUT
-	CRect	lBufferRect;
+	try
+	{
+		CRect	lBufferRect;
 
-	lBufferRect.UnionRect (pRect1, pRect2);
-	InitTrace (lBufferRect);
+		lBufferRect.UnionRect (pRect1, pRect2);
+		InitTrace (lBufferRect);
+	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::InitTrace (const CRect& pRect1, const CRect& pRect2, const CRect& pRect3)
 {
 #ifdef	_TRACE_LAYOUT
-	CRect	lBufferRect;
+	try
+	{
+		CRect	lBufferRect;
 
-	lBufferRect.UnionRect (pRect1, pRect2);
-	lBufferRect.UnionRect (lBufferRect, pRect3);
-	InitTrace (lBufferRect);
+		lBufferRect.UnionRect (pRect1, pRect2);
+		lBufferRect.UnionRect (lBufferRect, pRect3);
+		InitTrace (lBufferRect);
+	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::ShowTrace ()
 {
 #ifdef	_TRACE_LAYOUT
-	if	(mTraceBuffer)
+	try
 	{
-		mTraceBuffer->EndBuffer ();
-
-		if	(
-				(mTraceDebugger)
-			||	(mTraceDebugger = new CImageDebugger)
-			)
+		if	(mTraceBuffer)
 		{
-			mTraceDebugger->ShowBitmap (*mTraceBuffer->mImage, 1, _T("Calc"));
+			mTraceBuffer->EndBuffer ();
+
+			if	(
+					(mTraceBuffer->mImage)
+				&&	(
+						(mTraceDebugger)
+					||	(mTraceDebugger = new CImageDebugger)
+					)
+				)
+			{
+				mTraceDebugger->ShowBitmap (mTraceBuffer->mImage->Detach(), 1, _T("Calc"), true, false);
+			}
+
+			mTraceBuffer = NULL;
 		}
 	}
+	catch AnyExceptionSilent
 #endif
 }
 
@@ -1757,46 +1874,66 @@ void CAgentBalloonShape::ShowTrace ()
 void CAgentBalloonShape::TraceRect (const CRect& pRect, COLORREF pColor) const
 {
 #ifdef	_TRACE_LAYOUT
-	if	(mTraceBuffer)
+	try
 	{
-		CBrushHandle lBrush = ::CreateSolidBrush (pColor);
-		FrameRect (*mTraceBuffer->mDC, pRect, lBrush);
+		if	(mTraceBuffer)
+		{
+			CBrushHandle lBrush = ::CreateSolidBrush (pColor);
+			FrameRect (*mTraceBuffer->mDC, pRect, lBrush);
+		}
 	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::TracePointFill (const CPoint& pPoint, COLORREF pColor, UINT pSize) const
 {
 #ifdef	_TRACE_LAYOUT
-	if	(mTraceBuffer)
+	try
 	{
-		FillSolidRect (*mTraceBuffer->mDC, CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), pColor);
+		if	(mTraceBuffer)
+		{
+			FillSolidRect (*mTraceBuffer->mDC, CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), pColor);
+		}
 	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::TracePointFill (const _complex& pPoint, COLORREF pColor, UINT pSize) const
 {
 #ifdef	_TRACE_LAYOUT
-	TracePointFill (CPoint (dtol(pPoint.x), dtol(pPoint.y)), pColor, pSize);
+	try
+	{
+		TracePointFill (CPoint (dtol(pPoint.x), dtol(pPoint.y)), pColor, pSize);
+	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::TracePointFrame (const CPoint& pPoint, COLORREF pColor, UINT pSize) const
 {
 #ifdef	_TRACE_LAYOUT
-	if	(mTraceBuffer)
+	try
 	{
-		CBrushHandle lBrush = ::CreateSolidBrush (pColor);
-		FrameRect (*mTraceBuffer->mDC, CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), lBrush);
+		if	(mTraceBuffer)
+		{
+			CBrushHandle lBrush = ::CreateSolidBrush (pColor);
+			FrameRect (*mTraceBuffer->mDC, CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), lBrush);
+		}
 	}
+	catch AnyExceptionSilent
 #endif
 }
 
 void CAgentBalloonShape::TracePointFrame (const _complex& pPoint, COLORREF pColor, UINT pSize) const
 {
 #ifdef	_TRACE_LAYOUT
-	TracePointFrame (CPoint (dtol(pPoint.x), dtol(pPoint.y)), pColor, pSize);
+	try
+	{
+		TracePointFrame (CPoint (dtol(pPoint.x), dtol(pPoint.y)), pColor, pSize);
+	}
+	catch AnyExceptionSilent
 #endif
 }
 

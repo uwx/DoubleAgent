@@ -15,19 +15,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Util", "DaUtil.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilMfc", "DaUtilMfc.vcxproj", "{98CBCD3C-8A86-4F51-B48A-5A0C11492995}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TlbToAsm", "tools\TlbToAsm\TlbToAsm.vcxproj", "{8052FC92-3A66-449E-85EC-626BD6A72782}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TlbToAsm", "Tools\TlbToAsm\TlbToAsm.vcxproj", "{8052FC92-3A66-449E-85EC-626BD6A72782}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ControlStub", "MsControl.vcxproj", "{1CF81F7F-D3FA-4050-8967-E875FF950726}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlToHtml", "tools\XmlToHtml\XmlToHtml.vcxproj", "{24421899-7E34-4C3E-9213-8C719DB7CD03}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlToHtml", "Tools\XmlToHtml\XmlToHtml.vcxproj", "{24421899-7E34-4C3E-9213-8C719DB7CD03}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApiHelp", "ApiHelp.vcxproj", "{DC9A7406-4660-494F-A0EB-6275C18D590C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsiHxReg", "tools\MsiHxReg\MsiHxReg.vcxproj", "{65F5BAFF-B070-473A-8B3B-A54C3B9DC3DD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsiHxReg", "Tools\MsiHxReg\MsiHxReg.vcxproj", "{65F5BAFF-B070-473A-8B3B-A54C3B9DC3DD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharFileCLR", "DaCharFileCLR.vcxproj", "{BC62D6F2-CF64-4F75-99E8-C76B192BEEE7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHFB Plugin", "tools\SHFB Plugin\SHFB Plugin.vcxproj", "{DC57B238-7EDC-4B2C-8797-8591859DD653}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHFB Plugin", "Tools\SHFB Plugin\SHFB Plugin.vcxproj", "{DC57B238-7EDC-4B2C-8797-8591859DD653}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
