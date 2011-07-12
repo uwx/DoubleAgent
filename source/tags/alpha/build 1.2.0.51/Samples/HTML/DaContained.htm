@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<script language="javascript" type="text/javascript">
+		var mDaCharacterName = "Genie";
+		var mDaCharacterFile = "C:\\Windows\\MsAgent\\Chars\\Genie.acs";
+
+		function window_onload()
+		{
+			DaAgentControl.AutoConnect = 0;
+			DaAgentControl.Connected = 0;
+			DaAgentControl.RaiseRequestErrors = false;
+			DaAgentControl.Characters.Load(mDaCharacterName, mDaCharacterFile);
+			DaAgentControl.RaiseRequestErrors = true;
+
+			DaAgentControl.ControlCharacter = DaAgentControl.Characters.Character(mDaCharacterName);
+			if (DaAgentControl.ControlCharacter != undefined)
+			{
+				DaAgentControl.ControlCharacter.Show(false);
+				DaAgentControl.ControlCharacter.Speak(DaAgentControl.ControlCharacter.Name + ", Double Agent", "");
+			}
+		}
+		function ShowDaCopyright()
+		{
+			DaAgentControl.PropertySheet.Visible = true;
+			DaAgentControl.PropertySheet.Page = "Copyright";
+		}
+	</script>
+	<script language="javascript" type="text/javascript" for="DaAgentControl" event="Click">
+		if (arguments[1] == 1)
+		{
+			DaAgentControl.ControlCharacter.Left = arguments[3] - DaAgentControl.ControlCharacter.Width/2;
+			DaAgentControl.ControlCharacter.Top = arguments[4] - DaAgentControl.ControlCharacter.Height/2;
+		}
+	</script>
+	<script language="javascript" type="text/javascript" for="DaAgentControl" event="DblClick">
+		if (arguments[1] == 1)
+		{
+			DaAgentControl.ControlCharacter.Speak(DaAgentControl.ControlCharacter.Name + ", Double Agent", "");
+		}
+	</script>
+</head>
+<body onload="window_onload()">
+	<object id="DaAgentControl" classid="CLSID:1147E530-A208-11DE-ABF2-002421116FB2"
+		width="400px" height="400px" border="3px">
+	</object>
+	<p>
+		This page uses <a href="#" onclick="ShowDaCopyright(); return false;">Double Agent</a>
+		under the GNU Public License.</p>
+</body>
+</html>

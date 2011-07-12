@@ -1,0 +1,467 @@
+﻿<panels:FilePartPanel x:Class="AgentCharacterEditor.Panels.AnimationPanel"
+					  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  xmlns:previews="clr-namespace:AgentCharacterEditor.Previews"
+					  xmlns:custom="clr-namespace:DoubleAgent"
+					  mc:Ignorable="d"
+					  d:DesignHeight="600"
+					  d:DesignWidth="800">
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="OnCanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="OnCanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="OnCanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="OnCanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
+	<Control.Resources>
+		<Style x:Key="AnimationRateSlider"
+			   TargetType="{x:Type Slider}">
+			<Setter Property="Stylus.IsPressAndHoldEnabled"
+					Value="false" />
+			<Setter Property="Background"
+					Value="Transparent" />
+			<Setter Property="Foreground"
+					Value="{StaticResource BackgroundLightBrush}" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Slider}">
+						<Grid Background="{TemplateBinding Background}"
+							  SnapsToDevicePixels="true">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto"
+											   MinHeight="{TemplateBinding Slider.MinHeight}" />
+								<RowDefinition Height="Auto" />
+							</Grid.RowDefinitions>
+							<TickBar x:Name="TopTick"
+									 Grid.Row="0"
+									 Height="6.0"
+									 Visibility="Collapsed"
+									 Placement="Top"
+									 Fill="{TemplateBinding Foreground}" />
+							<TickBar x:Name="BottomTick"
+									 Grid.Row="2"
+									 Height="6.0"
+									 Visibility="Collapsed"
+									 Placement="Bottom"
+									 Fill="{TemplateBinding Foreground}" />
+							<Border x:Name="TrackBackground"
+									Grid.Row="1"
+									Height="6.0"
+									Margin="1,0"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									CornerRadius="3"
+									BorderThickness="0.5"
+									BorderBrush="{StaticResource BackgroundDarkBrush}"
+									Background="{StaticResource BackgroundLightBrush}"
+									Opacity="0.5">
+								<Canvas Margin="-6,-1">
+									<Rectangle x:Name="PART_SelectionRange"
+											   Visibility="Hidden"
+											   Height="0"
+											   Fill="Transparent"
+											   Stroke="Transparent"
+											   StrokeThickness="1.0" />
+								</Canvas>
+							</Border>
+							<Track Grid.Row="1"
+								   Name="PART_Track">
+								<Track.DecreaseRepeatButton>
+									<RepeatButton Style="{StaticResource SliderRepeatButton}"
+												  Command="{x:Static Slider.DecreaseLarge}" />
+								</Track.DecreaseRepeatButton>
+								<Track.IncreaseRepeatButton>
+									<RepeatButton Style="{StaticResource SliderRepeatButton}"
+												  Command="{x:Static Slider.IncreaseLarge}" />
+								</Track.IncreaseRepeatButton>
+								<Track.Thumb>
+									<Thumb x:Name="Thumb"
+										   Style="{StaticResource HorizontalSliderThumb}" />
+								</Track.Thumb>
+							</Track>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="TickPlacement"
+									 Value="TopLeft">
+								<Setter TargetName="TopTick"
+										Property="Visibility"
+										Value="Visible" />
+							</Trigger>
+							<Trigger Property="TickPlacement"
+									 Value="BottomRight">
+								<Setter TargetName="BottomTick"
+										Property="Visibility"
+										Value="Visible" />
+							</Trigger>
+							<Trigger Property="TickPlacement"
+									 Value="Both">
+								<Setter TargetName="TopTick"
+										Property="Visibility"
+										Value="Visible" />
+								<Setter TargetName="BottomTick"
+										Property="Visibility"
+										Value="Visible" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Control.Resources>
+	<Grid Name="MainGrid"
+		  Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="MainLeft"
+							  MaxWidth="600" />
+			<ColumnDefinition Name="MainRight"
+							  Width="Auto" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<GroupBox Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition  Width="Auto" />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition  Height="Auto" />
+						<RowDefinition  Height="Auto" />
+					</Grid.RowDefinitions>
+					<Label Content="Animation name"
+						   HorizontalAlignment="Left"
+						   Name="LabelName"
+						   VerticalAlignment="Center"
+						   Style="{StaticResource PanelLabel}"
+						   Width="100" />
+					<custom:TextBoxEx Grid.Column="1"
+									  x:Name="TextBoxName"
+									  VerticalAlignment="Center"
+									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  IsModifiedChanged="TextBoxName_IsModifiedChanged" />
+					<Label Content="Return animation"
+						   HorizontalAlignment="Left"
+						   Name="LabelReturn"
+						   VerticalAlignment="Center"
+						   Width="100"
+						   Grid.Row="1"
+						   Style="{StaticResource PanelLabel}" />
+					<ComboBox Grid.Column="1"
+							  Name="ComboBoxReturn"
+							  VerticalAlignment="Center"
+							  Grid.Row="1"
+							  Margin="2"
+							  SelectionChanged="ComboBoxReturn_SelectionChanged" />
+				</Grid>
+				<Label Grid.Column="1"
+					   HorizontalAlignment="Right"
+					   Name="LabelStates"
+					   VerticalAlignment="Top"
+					   Margin="10,0,0,0"
+					   Style="{StaticResource PanelLabel}">
+					<TextBlock Text="Used by state(s)"
+							   Width="50"
+							   TextWrapping="Wrap">
+					</TextBlock>
+				</Label>
+				<ListView Grid.Column="2"
+						  HorizontalAlignment="Right"
+						  Name="ListViewStates"
+						  VerticalAlignment="Stretch"
+						  Width="120"
+						  SelectionMode="Single"
+						  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+						  ScrollViewer.VerticalScrollBarVisibility="Auto"
+						  Height="70"
+						  ItemContainerStyle="{StaticResource ListViewItemCommon}"
+						  MouseDoubleClick="ListViewStates_MouseDoubleClick">
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel Orientation="Vertical" />
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+				</ListView>
+			</Grid>
+		</GroupBox>
+		<GroupBox Grid.Row="1"
+				  Grid.ColumnSpan="2"
+				  Header="Frames"
+				  Style="{StaticResource PanelGroupBox}"
+				  Name="GroupBoxFrames">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid Margin="0,0,0,2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<previews:FramesToolBar x:Name="ToolBarFrames"
+											HorizontalAlignment="Left"
+											VerticalAlignment="Top"
+											Margin="2,0" />
+					<ToolBar Grid.Column="1"
+							 Style="{StaticResource PanelToolBar}"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Top"
+							 Margin="2,0">
+						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+								  Height="Auto"
+								  Name="ButtonShowBranching"
+								  Width="Auto"
+								  ToolTip="Show branching"
+								  IsChecked="True"
+								  Checked="ButtonShowBranching_CheckChanged"
+								  Unchecked="ButtonShowBranching_CheckChanged">
+							<custom:ImageState NormalSource="{StaticResource ImgShowBranching}"
+											   Style="{StaticResource ToolButtonImage}" />
+						</CheckBox>
+						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
+								  Height="Auto"
+								  Name="ButtonShowExitBranching"
+								  Width="Auto"
+								  ToolTip="Show exit branching"
+								  IsChecked="True"
+								  Checked="ButtonShowExitBranching_CheckChanged"
+								  Unchecked="ButtonShowExitBranching_CheckChanged">
+							<custom:ImageState NormalSource="{StaticResource ImgShowExitBranching}"
+											   Style="{StaticResource ToolButtonImage}" />
+						</CheckBox>
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
+						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
+									 Height="Auto"
+									 Name="ButtonViewSmall"
+									 Width="Auto"
+									 ToolTip="Small"
+									 GroupName="View"
+									 Checked="ButtonViewSmall_Checked">
+							<custom:ImageState NormalSource="{StaticResource ImgViewSmall}"
+											   Style="{StaticResource ToolButtonImage}" />
+						</RadioButton>
+						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
+									 Height="Auto"
+									 Name="ButtonViewMedium"
+									 Width="Auto"
+									 ToolTip="Medium"
+									 GroupName="View"
+									 IsChecked="True"
+									 Checked="ButtonViewMedium_Checked">
+							<custom:ImageState NormalSource="{StaticResource ImgViewMedium}"
+											   Style="{StaticResource ToolButtonImage}" />
+						</RadioButton>
+						<RadioButton Style="{StaticResource {x:Static ToolBar.RadioButtonStyleKey}}"
+									 Height="Auto"
+									 Name="ButtonViewLarge"
+									 Width="Auto"
+									 ToolTip="Large"
+									 GroupName="View"
+									 Checked="ButtonViewLarge_Checked">
+							<custom:ImageState NormalSource="{StaticResource ImgViewLarge}"
+											   Style="{StaticResource ToolButtonImage}" />
+						</RadioButton>
+					</ToolBar>
+					<Label Content="New frame duration"
+						   Grid.Column="2"
+						   HorizontalAlignment="Right"
+						   Name="LabelDuration"
+						   VerticalAlignment="Center"
+						   Style="{StaticResource PanelLabel}" />
+					<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+										  Grid.Column="3"
+										  HorizontalAlignment="Right"
+										  x:Name="NumericFrameDuration"
+										  VerticalAlignment="Center"
+										  Width="60"
+										  ContextMenu="{StaticResource ContextMenuTextBox}"
+										  Minimum="0"
+										  IsModifiedChanged="NumericFrameDuration_IsModifiedChanged"
+										  Margin="2,0" />
+					<Label Content="(1/100 sec)"
+						   Grid.Column="4"
+						   HorizontalAlignment="Right"
+						   Name="LabelDurationDesc"
+						   VerticalAlignment="Center"
+						   Style="{StaticResource PanelLabel}" />
+				</Grid>
+				<ContentControl Name="FramesViewContainer"
+								IsTabStop="False"
+								Grid.Row="1"
+								Style="{StaticResource PanelContent}"
+								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+								PreviewMouseLeftButtonDown="FramesView_PreviewMouseLeftButtonDown">
+					<previews:FramesPreview x:Name="FramesView" />
+				</ContentControl>
+			</Grid>
+		</GroupBox>
+		<GroupBox Grid.Row="2"
+				  Grid.ColumnSpan="2"
+				  Header="Preview"
+				  Style="{StaticResource PanelGroupBox}"
+				  Name="GroupBoxPreview">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition  Width="Auto" />
+					<ColumnDefinition  Width="Auto" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<ContentControl HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Style="{StaticResource PanelContent}"
+								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+								Margin="2,0,2,2"
+								HorizontalContentAlignment="Stretch"
+								VerticalContentAlignment="Stretch"
+								Focusable="False"
+								IsTabStop="False">
+					<previews:AnimationPreview x:Name="AnimationPreview"
+											   Width="128"
+											   Height="128"
+											   MinWidth="16"
+											   MinHeight="16"
+											   MaxWidth="256"
+											   MaxHeight="256"
+											   ClipToBounds="True" />
+				</ContentControl>
+				<Grid Grid.Column="1"
+					  Margin="12,0,0,0">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<ToolBar Style="{StaticResource PanelToolBar}"
+							 HorizontalAlignment="Left"
+							 VerticalAlignment="Top">
+						<Button Style="{StaticResource ImageStateButtonAll}"
+								Height="Auto"
+								Name="PreviewButtonPlay"
+								Width="Auto"
+								ToolTip="Play"
+								Click="PreviewButtonPlay_Click">
+							<custom:ImageState NormalSource="{StaticResource IconPlay}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</Button>
+						<Button Style="{StaticResource ImageStateButtonAll}"
+								Height="Auto"
+								Name="PreviewButtonStop"
+								Width="Auto"
+								ToolTip="Stop"
+								Click="PreviewButtonStop_Click">
+							<custom:ImageState NormalSource="{StaticResource IconStop}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</Button>
+						<CheckBox Style="{StaticResource ImageStateButtonAll}"
+								  Height="Auto"
+								  Name="PreviewButtonPause"
+								  Width="Auto"
+								  ToolTip="Pause"
+								  Click="PreviewButtonPause_Click">
+							<custom:ImageState NormalSource="{StaticResource IconPause}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</CheckBox>
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
+						<RepeatButton Style="{StaticResource ImageStateButtonAll}"
+								Height="Auto"
+								Name="PreviewButtonSkipBack"
+								Width="Auto"
+								ToolTip="Back"
+								Click="PreviewButtonSkipBack_Click">
+							<custom:ImageState NormalSource="{StaticResource IconSkipBack}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</RepeatButton>
+						<RepeatButton Style="{StaticResource ImageStateButtonAll}"
+								Height="Auto"
+								Name="PreviewButtonSkipForward"
+								Width="Auto"
+								ToolTip="Forward"
+								Click="PreviewButtonSkipForward_Click">
+							<custom:ImageState NormalSource="{StaticResource IconSkipForward}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</RepeatButton>
+						<Separator Style="{StaticResource PanelToolBarSeparator}" />
+						<CheckBox Style="{StaticResource ImageStateButtonAll}"
+								  Height="Auto"
+								  Name="PreviewButtonRepeat"
+								  Width="Auto"
+								  ToolTip="Repeat"
+								  Click="PreviewButtonRepeat_Click">
+							<custom:ImageState NormalSource="{StaticResource IconRepeat}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</CheckBox>
+						<CheckBox Style="{StaticResource ImageStateButtonAll}"
+								  Height="Auto"
+								  Name="PreviewButtonMute"
+								  Width="Auto"
+								  ToolTip="Mute"
+								  Click="PreviewButtonMute_Click">
+							<custom:ImageState NormalSource="{StaticResource IconMute}"
+											   Style="{StaticResource ToolButtonImageLarge}" />
+						</CheckBox>
+					</ToolBar>
+					<Grid VerticalAlignment="Top"
+						  Grid.Row="1"
+						  Margin="0,20,0,0">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<Label Content="slow"
+							   HorizontalAlignment="Left"
+							   Name="LabelSlow"
+							   VerticalAlignment="Top"
+							   Style="{StaticResource PanelLabel}" />
+						<Label Content="fast"
+							   Grid.Column="1"
+							   HorizontalAlignment="Right"
+							   Name="LabelFast"
+							   VerticalAlignment="Top"
+							   Style="{StaticResource PanelLabel}" />
+						<Slider Grid.ColumnSpan="2"
+								Grid.Row="1"
+								HorizontalAlignment="Stretch"
+								Name="SliderRate"
+								VerticalAlignment="Top"
+								Interval="1"
+								IsMoveToPointEnabled="True"
+								Maximum="1"
+								Minimum="-2"
+								SmallChange="1"
+								LargeChange="1"
+								TickPlacement="TopLeft"
+								IsSnapToTickEnabled="True"
+								ValueChanged="SliderRate_ValueChanged"
+								Style="{StaticResource AnimationRateSlider}" />
+					</Grid>
+				</Grid>
+			</Grid>
+		</GroupBox>
+	</Grid>
+</panels:FilePartPanel>

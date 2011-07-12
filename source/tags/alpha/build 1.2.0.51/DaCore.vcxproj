@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Core</ProjectName>
+    <ProjectGuid>{EED5B34A-BADA-481D-BBFD-F479D1F2264B}</ProjectGuid>
+    <RootNamespace>DoubleAgent</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax86.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaRelease.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax86.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaDebug.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax64.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaRelease.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax64.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaDebug.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Da$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Da$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Da$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Da$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DACORE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DACORE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DACORE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DACORE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\AgentBalloonOptions.cpp" />
+    <ClCompile Include="Core\AgentBalloonShape.cpp" />
+    <ClCompile Include="Core\AgentBalloonWnd.cpp" />
+    <ClCompile Include="Core\AgentCharacterWnd.cpp" />
+    <ClCompile Include="Core\AgentFile.cpp" />
+    <ClCompile Include="Core\AgentFileAcf.cpp" />
+    <ClCompile Include="Core\AgentFileAcs.cpp" />
+    <ClCompile Include="Core\AgentFileBinary.cpp" />
+    <ClCompile Include="Common\AgentFileCache.cpp" />
+    <ClCompile Include="Core\AgentFileParts.cpp" />
+    <ClCompile Include="Core\AgentFiles.cpp" />
+    <ClCompile Include="Core\AgentFileV15.cpp" />
+    <ClCompile Include="Core\AgentIconMaker.cpp" />
+    <ClCompile Include="Core\AgentListeningWnd.cpp" />
+    <ClCompile Include="Core\AgentNotifyIcon.cpp" />
+    <ClCompile Include="Core\AgentPopupWnd.cpp" />
+    <ClCompile Include="Core\AgentPreviewWnd.cpp" />
+    <ClCompile Include="Core\AgentStreamInfo.cpp" />
+    <ClCompile Include="Core\AgentStreamUtils.cpp" />
+    <ClCompile Include="Core\AgentText.cpp" />
+    <ClCompile Include="Common\AgentTextObject.cpp" />
+    <ClCompile Include="Core\AgentTextParse.cpp" />
+    <ClCompile Include="Core\AgentWnd.cpp" />
+    <ClCompile Include="Core\DaCore.cpp" />
+    <ClCompile Include="Core\DaGlobalConfig.cpp" />
+    <ClCompile Include="Core\DaLocalizeMui.cpp" />
+    <ClCompile Include="Core\DirectShowClock.cpp" />
+    <ClCompile Include="Core\DirectShowEnums.cpp" />
+    <ClCompile Include="Core\DirectShowFilter.cpp" />
+    <ClCompile Include="Core\DirectShowPins.cpp" />
+    <ClCompile Include="Core\DirectShowRender.cpp" />
+    <ClCompile Include="Core\DirectShowSeeking.cpp" />
+    <ClCompile Include="Core\DirectShowSource.cpp" />
+    <ClCompile Include="Core\DirectShowTrace.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\DirectShowUtils.cpp" />
+    <ClCompile Include="Core\DirectShowWnd.cpp" />
+    <ClCompile Include="Core\DirectSoundConvert.cpp" />
+    <ClCompile Include="Core\DirectSoundLipSync.cpp" />
+    <ClCompile Include="Core\DirectSoundPinPush.cpp" />
+    <ClCompile Include="Core\FileDownload.cpp" />
+    <ClCompile Include="Core\MmSysError.cpp" />
+    <ClCompile Include="Core\NotifyObjects.cpp" />
+    <ClCompile Include="Core\PropPageCharacter.cpp" />
+    <ClCompile Include="Core\PropPageCharSel.cpp" />
+    <ClCompile Include="Core\PropPageCopyright.cpp" />
+    <ClCompile Include="Core\PropPageOutput.cpp" />
+    <ClCompile Include="Core\PropPageSpeech.cpp" />
+    <ClCompile Include="Core\QueuedAction.cpp" />
+    <ClCompile Include="Core\QueuedActions.cpp" />
+    <ClCompile Include="Core\QueuedPrepare.cpp" />
+    <ClCompile Include="Core\QueuedSpeech.cpp" />
+    <ClCompile Include="Core\Sapi4Err.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Sapi4Voice.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Sapi4Voices.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Sapi5Err.cpp" />
+    <ClCompile Include="Core\Sapi5Input.cpp" />
+    <ClCompile Include="Core\Sapi5Inputs.cpp" />
+    <ClCompile Include="Core\Sapi5Voice.cpp" />
+    <ClCompile Include="Core\Sapi5Voices.cpp" />
+    <ClCompile Include="Core\SapiInputCache.cpp" />
+    <ClCompile Include="Core\SapiLanguageMatch.cpp" />
+    <ClCompile Include="Core\SapiVoice.cpp" />
+    <ClCompile Include="Core\SapiVoiceCache.cpp" />
+    <ClCompile Include="Util\Atl\StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Core\VfwError.cpp" />
+    <ClCompile Include="Core\VoiceCommandsWnd.cpp" />
+    <ClCompile Include="Include\DaCore_i.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\DaCore.def" />
+    <None Include="Core\AgentFileDefs.inl" />
+    <None Include="Core\AgentPreviewWnd.rgs" />
+    <None Include="Resources\DaCore.rc2" />
+    <None Include="Resources\DaError.rc2" />
+    <None Include="Resources\DoubleAgent.ico" />
+    <None Include="Resources\Empty.wav" />
+    <None Include="License\License.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="License\License.lesser.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Core\GPLicenseHeader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="Core\DaCore.odl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\AgentBalloonOptions.h" />
+    <ClInclude Include="Core\AgentBalloonShape.h" />
+    <ClInclude Include="Core\AgentBalloonWnd.h" />
+    <ClInclude Include="Core\AgentCharacterWnd.h" />
+    <ClInclude Include="Core\AgentFile.h" />
+    <ClInclude Include="Core\AgentFileAcf.h" />
+    <ClInclude Include="Core\AgentFileAcs.h" />
+    <ClInclude Include="Core\AgentFileBinary.h" />
+    <ClInclude Include="Common\AgentFileCache.h" />
+    <ClInclude Include="Core\AgentFileParts.h" />
+    <ClInclude Include="Core\AgentFiles.h" />
+    <ClInclude Include="Core\AgentFileV15.h" />
+    <ClInclude Include="Core\AgentIconMaker.h" />
+    <ClInclude Include="Core\AgentListeningWnd.h" />
+    <ClInclude Include="Core\AgentNotifyIcon.h" />
+    <ClInclude Include="Core\AgentPopupWnd.h" />
+    <ClInclude Include="Core\AgentPreviewWnd.h" />
+    <ClInclude Include="Core\AgentStreamInfo.h" />
+    <ClInclude Include="Core\AgentStreamUtils.h" />
+    <ClInclude Include="Core\AgentText.h" />
+    <ClInclude Include="Common\AgentTextObject.h" />
+    <ClInclude Include="Core\AgentTextParse.h" />
+    <ClInclude Include="Core\AgentWnd.h" />
+    <ClInclude Include="Core\DaCore.h" />
+    <ClInclude Include="Core\DaCoreExp.h" />
+    <ClInclude Include="Core\DaError.h" />
+    <ClInclude Include="Core\DaGlobalConfig.h" />
+    <ClInclude Include="Include\DaGuid.h" />
+    <ClInclude Include="Include\DaVersion.h" />
+    <ClInclude Include="Core\DirectShowClock.h" />
+    <ClInclude Include="Core\DirectShowEnums.h" />
+    <ClInclude Include="Core\DirectShowFilter.h" />
+    <ClInclude Include="Core\DirectShowPins.h" />
+    <ClInclude Include="Core\DirectShowRender.h" />
+    <ClInclude Include="Core\DirectShowSeeking.h" />
+    <ClInclude Include="Core\DirectShowSource.h" />
+    <ClInclude Include="Core\DirectShowTrace.h" />
+    <ClInclude Include="Core\DirectShowUtils.h" />
+    <ClInclude Include="Core\DirectShowWnd.h" />
+    <ClInclude Include="Core\DirectSoundConvert.h" />
+    <ClInclude Include="Core\DirectSoundLipSync.h" />
+    <ClInclude Include="Core\DirectSoundPinPush.h" />
+    <ClInclude Include="Core\FileDownload.h" />
+    <ClInclude Include="Core\MmSysError.h" />
+    <ClInclude Include="Core\NotifyObjects.h" />
+    <ClInclude Include="Core\PropPageCharacter.h" />
+    <ClInclude Include="Core\PropPageCharSel.h" />
+    <ClInclude Include="Core\PropPageCopyright.h" />
+    <ClInclude Include="Core\PropPageOutput.h" />
+    <ClInclude Include="Core\PropPageSpeech.h" />
+    <ClInclude Include="Core\QueuedAction.h" />
+    <ClInclude Include="Core\QueuedActions.h" />
+    <ClInclude Include="Core\QueuedPrepare.h" />
+    <CustomBuildStep Include="Core\Sapi4Err.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Core\Sapi4Voice.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Core\Sapi4Voices.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="Core\Sapi5Err.h" />
+    <ClInclude Include="Core\Sapi5Input.h" />
+    <ClInclude Include="Core\Sapi5Inputs.h" />
+    <ClInclude Include="Core\Sapi5Voice.h" />
+    <ClInclude Include="Core\Sapi5Voices.h" />
+    <ClInclude Include="Core\SapiInputCache.h" />
+    <ClInclude Include="Core\SapiLanguageMatch.h" />
+    <ClInclude Include="Core\SapiVoice.h" />
+    <ClInclude Include="Core\SapiVoiceCache.h" />
+    <ClInclude Include="Util\Atl\StdAfx.h" />
+    <ClInclude Include="Core\VfwErr.h" />
+    <ClInclude Include="Core\VoiceCommandsWnd.h" />
+    <ClInclude Include="Core\DaCoreRes.h" />
+    <ClInclude Include="Core\DaErrorRes.h" />
+    <ClInclude Include="Include\DaCoreOdl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Core\DaCore.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="DaUtil.vcxproj">
+      <Project>{d42ca861-d64a-4dc8-9948-b3e83c300bdf}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="VsProps\FixBatchBuild.targets" />
+  </ImportGroup>
+</Project>

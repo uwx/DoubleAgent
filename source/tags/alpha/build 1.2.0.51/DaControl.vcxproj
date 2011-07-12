@@ -1,0 +1,430 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Control</ProjectName>
+    <ProjectGuid>{394447B3-9AD8-49FC-90B0-9F208F649936}</ProjectGuid>
+    <RootNamespace>DoubleAgent</RootNamespace>
+    <Keyword>AtlProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax86.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaRelease.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax86.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaDebug.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax64.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaRelease.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax64.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaDebug.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PostBuildEvent</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PostBuildEvent</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PostBuildEvent</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PostBuildEvent</CustomBuildAfterTargets>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Da$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Da$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Da$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Da$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+    </Link>
+    <CustomBuildStep>
+      <Message>Creating interop assemblies for $(TargetFileName)</Message>
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+"$(WindowsSdkDir)bin\aximp"/silent /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+aximp /silent /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+</Command>
+      <Inputs>%(Inputs)</Inputs>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <CustomBuildStep>
+      <Message>Creating interop assemblies for $(TargetFileName)</Message>
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+"$(WindowsSdkDir)bin\aximp"/silent /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+aximp /silent /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+</Command>
+      <Inputs>%(Inputs)</Inputs>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+    </Link>
+    <CustomBuildStep>
+      <Message>Creating interop assemblies for $(TargetFileName)</Message>
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+"$(WindowsSdkDir)bin\aximp"/silent /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+aximp /silent /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+</Command>
+      <Inputs>%(Inputs)</Inputs>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)$(ProjectName)\$(TargetName).def</ModuleDefinitionFile>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <CustomBuildStep>
+      <Message>Creating interop assemblies for $(TargetFileName)</Message>
+      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+"$(WindowsSdkDir)bin\aximp"/silent /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(Alt1FrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /version 1.1 /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll $(TargetPath)
+aximp /silent /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll $(TargetPath)
+"$(TargetDir)$(TargetFrameworkVersion)\tlbtoasm" /fix /save /namespace DoubleAgent.Control /keyfile "$(SolutionDir)Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /fix /save /namespace DoubleAgent.AxControl "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)\DoubleAgent.AxControl.dll"
+
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.html" /html /caverbal /nobar
+
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.il.res"
+if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.il.res"
+</Command>
+      <Inputs>%(Inputs)</Inputs>
+      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)AxDoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentCtl.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Control.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxControl.dll</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\AgentAnchor.cpp" />
+    <ClCompile Include="Common\AgentFileCache.cpp" />
+    <ClCompile Include="Core\AgentText.cpp" />
+    <ClCompile Include="Common\AgentTextObject.cpp" />
+    <ClCompile Include="Common\DaCmnAnimationNames.cpp" />
+    <ClCompile Include="Common\DaCmnBalloon.cpp" />
+    <ClCompile Include="Common\DaCmnCharacter.cpp" />
+    <ClCompile Include="Common\DaCmnCharacterFiles.cpp" />
+    <ClCompile Include="Common\DaCmnCommand.cpp" />
+    <ClCompile Include="Common\DaCmnCommands.cpp" />
+    <ClCompile Include="Common\DaCmnCommandsWindow.cpp" />
+    <ClCompile Include="Common\DaCmnFormattedText.cpp" />
+    <ClCompile Include="Common\DaCmnPropertySheet.cpp" />
+    <ClCompile Include="Common\DaCmnSettings.cpp" />
+    <ClCompile Include="Common\DaCmnSREngine.cpp" />
+    <ClCompile Include="Common\DaCmnSREngines.cpp" />
+    <ClCompile Include="Common\DaCmnTTSEngine.cpp" />
+    <ClCompile Include="Common\DaCmnTTSEngines.cpp" />
+    <ClCompile Include="Common\DaCmnUserInput.cpp" />
+    <ClCompile Include="Control\DaControl.cpp" />
+    <ClCompile Include="Control\DaControlMod.cpp" />
+    <ClCompile Include="Control\DaCtlAnimationNames.cpp" />
+    <ClCompile Include="Control\DaCtlAudioOutput.cpp" />
+    <ClCompile Include="Control\DaCtlBalloon.cpp" />
+    <ClCompile Include="Control\DaCtlCharacter.cpp" />
+    <ClCompile Include="Control\DaCtlCharacterFiles.cpp" />
+    <ClCompile Include="Control\DaCtlCharacters.cpp" />
+    <ClCompile Include="Control\DaCtlCommand.cpp" />
+    <ClCompile Include="Control\DaCtlCommands.cpp" />
+    <ClCompile Include="Control\DaCtlCommandsWindow.cpp" />
+    <ClCompile Include="Control\DaCtlEvents.cpp" />
+    <ClCompile Include="Control\DaCtlFormattedText.cpp" />
+    <ClCompile Include="Control\DaCtlPropertySheet.cpp" />
+    <ClCompile Include="Control\DaCtlRequest.cpp" />
+    <ClCompile Include="Control\DaCtlSettings.cpp" />
+    <ClCompile Include="Control\DaCtlSpeechInput.cpp" />
+    <ClCompile Include="Control\DaCtlSREngine.cpp" />
+    <ClCompile Include="Control\DaCtlSREngines.cpp" />
+    <ClCompile Include="Control\DaCtlTTSEngine.cpp" />
+    <ClCompile Include="Control\DaCtlTTSEngines.cpp" />
+    <ClCompile Include="Control\DaCtlUserInput.cpp" />
+    <ClCompile Include="Core\AgentTextParse.cpp" />
+    <ClCompile Include="Core\DaError.cpp" />
+    <ClCompile Include="Common\EventNotify.cpp" />
+    <ClCompile Include="Common\ListeningState.cpp" />
+    <ClCompile Include="Control\LocalCharacter.cpp" />
+    <ClCompile Include="Common\PropSheetOptions.cpp" />
+    <ClCompile Include="Util\Atl\StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Include\DaControl_i.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="Common\DaCommon.odl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="Control\DaControl.odl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Control\DaControl.def" />
+    <None Include="Control\DaCtlEvents1.odl.inl" />
+    <None Include="Control\DaCtlEvents2.odl.inl" />
+    <None Include="Resources\DaAgentCtl.bmp" />
+    <None Include="Resources\DaControl.rc2" />
+    <None Include="Control\DaControl.rgs" />
+    <None Include="Control\DaControlMod.rgs" />
+    <None Include="Control\DaCtlAnimationNames.rgs" />
+    <None Include="Control\DaCtlAudioOutput.rgs" />
+    <None Include="Control\DaCtlBalloon.rgs" />
+    <None Include="Control\DaCtlCharacter.rgs" />
+    <None Include="Control\DaCtlCharacterFiles.rgs" />
+    <None Include="Control\DaCtlCharacters.rgs" />
+    <None Include="Control\DaCtlCommand.rgs" />
+    <None Include="Control\DaCtlCommands.rgs" />
+    <None Include="Control\DaCtlCommandsWindow.rgs" />
+    <None Include="Control\DaCtlPropertySheet.rgs" />
+    <None Include="Control\DaCtlRequest.rgs" />
+    <None Include="Control\DaCtlSettings.rgs" />
+    <None Include="Control\DaCtlSpeechInput.rgs" />
+    <None Include="Control\DaCtlSREngine.rgs" />
+    <None Include="Control\DaCtlSREngines.rgs" />
+    <None Include="Control\DaCtlTTSEngine.rgs" />
+    <None Include="Control\DaCtlTTSEngines.rgs" />
+    <None Include="Control\DaCtlUserInput.rgs" />
+    <None Include="Resources\DaError.rc2" />
+    <None Include="Resources\DoubleAgent.ico" />
+    <None Include="Control\GPLicenseHeader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\AgentAnchor.h" />
+    <ClInclude Include="Common\AgentFileCache.h" />
+    <ClInclude Include="Common\CorEnumVariant.h" />
+    <ClInclude Include="ApiHelp\DaApiHelp.h" />
+    <ClInclude Include="Common\DaCmnAnimationNames.h" />
+    <ClInclude Include="Common\DaCmnBalloon.h" />
+    <ClInclude Include="Common\DaCmnCharacter.h" />
+    <ClInclude Include="Common\DaCmnCharacterFiles.h" />
+    <ClInclude Include="Common\DaCmnCommand.h" />
+    <ClInclude Include="Common\DaCmnCommands.h" />
+    <ClInclude Include="Common\DaCmnCommandsWindow.h" />
+    <ClInclude Include="Common\DaCmnFormattedText.h" />
+    <ClInclude Include="Common\DaCmnPropertySheet.h" />
+    <ClInclude Include="Common\DaCmnSettings.h" />
+    <ClInclude Include="Common\DaCmnSREngine.h" />
+    <ClInclude Include="Common\DaCmnSREngines.h" />
+    <ClInclude Include="Common\DaCmnTTSEngine.h" />
+    <ClInclude Include="Common\DaCmnTTSEngines.h" />
+    <ClInclude Include="Common\DaCmnUserInput.h" />
+    <ClInclude Include="Control\DaControl.h" />
+    <ClInclude Include="Include\DaControlInterface.h" />
+    <ClInclude Include="Control\DaControlMod.h" />
+    <ClInclude Include="Control\DaCtlAnimationNames.h" />
+    <ClInclude Include="Control\DaCtlAudioOutput.h" />
+    <ClInclude Include="Control\DaCtlBalloon.h" />
+    <ClInclude Include="Control\DaCtlCharacter.h" />
+    <ClInclude Include="Control\DaCtlCharacterFiles.h" />
+    <ClInclude Include="Control\DaCtlCharacters.h" />
+    <ClInclude Include="Control\DaCtlCommand.h" />
+    <ClInclude Include="Control\DaCtlCommands.h" />
+    <ClInclude Include="Control\DaCtlCommandsWindow.h" />
+    <ClInclude Include="Control\DaCtlEvents.h" />
+    <ClInclude Include="Control\DaCtlFormattedText.h" />
+    <ClInclude Include="Control\DaCtlPropertySheet.h" />
+    <ClInclude Include="Control\DaCtlRequest.h" />
+    <ClInclude Include="Control\DaCtlSettings.h" />
+    <ClInclude Include="Control\DaCtlSpeechInput.h" />
+    <ClInclude Include="Control\DaCtlSREngine.h" />
+    <ClInclude Include="Control\DaCtlSREngines.h" />
+    <ClInclude Include="Control\DaCtlTTSEngine.h" />
+    <ClInclude Include="Control\DaCtlTTSEngines.h" />
+    <ClInclude Include="Control\DaCtlUserInput.h" />
+    <ClInclude Include="Include\DaGuid.h" />
+    <ClInclude Include="Include\DaVersion.h" />
+    <ClInclude Include="Common\EventNotify.h" />
+    <ClInclude Include="Common\ListeningState.h" />
+    <ClInclude Include="Control\LocalCharacter.h" />
+    <ClInclude Include="Util\Atl\StdAfx.h" />
+    <ClInclude Include="Util\Atl\TargetVer.h" />
+    <ClInclude Include="Control\DaControlRes.h" />
+    <ClInclude Include="Core\DaErrorRes.h" />
+    <ClInclude Include="Include\DaControlOdl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Control\DaControl.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="DaCore.vcxproj">
+      <Project>{eed5b34a-bada-481d-bbfd-f479d1f2264b}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="DaServer.vcxproj">
+      <Project>{0fa66e11-c055-4cac-a56c-b2e710fedbe4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="DaUtil.vcxproj">
+      <Project>{d42ca861-d64a-4dc8-9948-b3e83c300bdf}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="VsProps\FixBatchBuild.targets" />
+  </ImportGroup>
+</Project>
