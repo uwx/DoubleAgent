@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using AgentCharacterEditor.Global;
 
@@ -35,6 +36,7 @@ namespace AgentCharacterEditor.Previews
 		public FramesPreview ()
 		{
 			InitializeComponent ();
+			Range.ListView = Frames;
 			InitializeCommon ();
 		}
 
@@ -98,6 +100,15 @@ namespace AgentCharacterEditor.Previews
 			}
 
 			Frames.Margin = lFramesMargin;
+
+			if (Range.RecalcLayout ())
+			{
+				Range.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Range.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		#endregion

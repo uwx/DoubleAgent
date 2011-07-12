@@ -106,6 +106,37 @@ namespace AgentCharacterEditor.Global
 
 	///////////////////////////////////////////////////////////////////////////////
 
+	public static partial class UIElementExtensions
+	{
+		static public System.Windows.UIElement FindChildElement (this System.Windows.UIElement pAncestor, System.Type pChildType)
+		{
+			int lCount = System.Windows.Media.VisualTreeHelper.GetChildrenCount (pAncestor);
+			for (int lNdx = 0; lNdx < lCount; lNdx++)
+			{
+				System.Windows.UIElement lChild = System.Windows.Media.VisualTreeHelper.GetChild (pAncestor, lNdx) as System.Windows.UIElement;
+
+				if (lChild != null)
+				{
+					if (pChildType.IsAssignableFrom (lChild.GetType ()))
+					{
+						return lChild;
+					}
+					else
+					{
+						lChild = FindChildElement (lChild, pChildType);
+						if (lChild != null)
+						{
+							return lChild ;
+						}
+					}
+				}
+			}
+			return null;
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
 	public static partial class ImageExtensions
 	{
 		static public System.Windows.Size ScaleToScreenResolution (this System.Windows.Size pSize)

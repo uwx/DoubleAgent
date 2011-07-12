@@ -174,17 +174,9 @@ namespace AgentCharacterEditor.Panels
 			}
 		}
 
-		private void ShowSelectedFrame ()
+		private void ShowFrameSelection ()
 		{
 			FramesView.Frames.EnsureVisible (FramesView.Frames.SelectedIndex);
-
-			ToolBarFrames.FramesPreview = IsPanelEmpty ? null : FramesView;
-			ToolBarFrames.Frame = GetSelectedFrame ();
-			ToolBarFrames.RefreshState ();
-
-			AnimationPreview.StopAnimation ();
-			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (Math.Max (FramesView.Frames.SelectedIndex, 0)), PreviewImageSize);
-			ShowPreviewState ();
 		}
 
 		private System.Drawing.Size PreviewImageSize
@@ -426,16 +418,15 @@ namespace AgentCharacterEditor.Panels
 #endif
 			try
 			{
-				if (AnimationPreview.IsPlaying)
-				{
-					ShowPreviewState ();
-					ToolStripPreview.Update ();
-				}
-				else
+				if (!AnimationPreview.IsPlaying)
 				{
 					PopSelectedFrame ();
-					ShowSelectedFrame ();
+					ShowFrameSelection ();
+					ShowFrameSelectionState ();
+					// NOT ShowFramePreview ();
 				}
+				ShowPreviewState ();
+				ToolStripPreview.Update ();
 			}
 			catch (Exception pException)
 			{

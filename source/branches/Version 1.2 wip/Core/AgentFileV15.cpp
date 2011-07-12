@@ -802,8 +802,8 @@ LPCVOID CAgentFileV15::ReadBufferTts (LPCVOID pBuffer, DWORD pBufferSize)
 #endif
 		lByte += sizeof(GUID);
 
-#ifdef	__cplusplus_cli
-		LogMessage (mLogLevel, _T("  TtsSomething [%2.2X (%hu)]"), lByte[0], lByte[0]);
+#ifdef	__cplusplus_cli_NOT
+		LogMessage (mLogLevel, _T("  TtsSomething [%2.2X (%hu)] Speed [%d] Pitch [%d]"), lByte[0], lByte[0], *(long*)(lByte+1), *(short*)(lByte+5));
 		LogDump (mLogLevel|LogHighVolume, lByte-sizeof(GUID)-sizeof(GUID), sizeof(GUID), _T("      "));
 		LogDump (mLogLevel|LogHighVolume, lByte-sizeof(GUID), sizeof(GUID), _T("      "));
 		LogDump (mLogLevel|LogHighVolume, lByte+1, sizeof(long)+sizeof(short), _T("      "));
@@ -818,8 +818,10 @@ LPCVOID CAgentFileV15::ReadBufferTts (LPCVOID pBuffer, DWORD pBufferSize)
 		lByte += sizeof (long);
 #ifdef	__cplusplus_cli
 		//mTts->mPitch = *(short*)lByte;
+		mTts->mGender = (*(short*)lByte >= 200) ? 1 : 2;
 #else
 		mTts.mPitch = *(short*)lByte;
+		mTts.mGender = (*(short*)lByte >= 200) ? 1 : 2;
 #endif
 		lByte += sizeof (short);
 

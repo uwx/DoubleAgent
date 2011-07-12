@@ -300,6 +300,63 @@ namespace AgentCharacterEditor.Panels
 
 		//=============================================================================
 
+		private void ShowFramesState ()
+		{
+			if (IsPanelEmpty)
+			{
+				ButtonShowBranching.IsChecked = true;
+				ButtonShowExitBranching.IsChecked = true;
+				ButtonShowBranching.IsEnabled = false;
+				ButtonShowExitBranching.IsEnabled = false;
+
+				ButtonViewSmall.IsChecked = false;
+				ButtonViewMedium.IsChecked = false;
+				ButtonViewLarge.IsChecked = false;
+				ButtonViewSmall.IsEnabled = false;
+				ButtonViewMedium.IsEnabled = false;
+				ButtonViewLarge.IsEnabled = false;
+			}
+			else
+			{
+				ButtonShowBranching.IsChecked = FramesView.ShowBranching;
+				ButtonShowExitBranching.IsChecked = FramesView.ShowExitBranching;
+				ButtonShowBranching.IsEnabled = true;
+				ButtonShowExitBranching.IsEnabled = true;
+
+				ButtonViewSmall.IsChecked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Small);
+				ButtonViewMedium.IsChecked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Medium);
+				ButtonViewLarge.IsChecked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Large);
+				ButtonViewSmall.IsEnabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Small).EitherLT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
+				ButtonViewMedium.IsEnabled = true;
+				ButtonViewLarge.IsEnabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Large).EitherGT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
+			}
+		}
+
+		//=============================================================================
+
+		private void ShowSelectedFrame ()
+		{
+			ShowFrameSelection ();
+			ShowFrameSelectionState ();
+			ShowFramePreview ();
+			ShowPreviewState ();
+		}
+
+		private void ShowFrameSelectionState ()
+		{
+			ToolBarFrames.FramesPreview = IsPanelEmpty ? null : FramesView;
+			ToolBarFrames.Frame = GetSelectedFrame ();
+			ToolBarFrames.RefreshState ();
+		}
+
+		private void ShowFramePreview ()
+		{
+			AnimationPreview.StopAnimation ();
+			AnimationPreview.ShowAnimationFrame (CharacterFile, GetSelectedFrame (Math.Max (FramesView.Frames.SelectedIndex, 0)), PreviewImageSize);
+		}
+
+		//=============================================================================
+
 		private FileAnimationFrame GetSelectedFrame ()
 		{
 			return GetSelectedFrame (FramesView.Frames.SelectedIndex);
@@ -332,40 +389,6 @@ namespace AgentCharacterEditor.Panels
 				}
 			}
 			mLastSelectedFrameNdx = -1;
-		}
-
-		//=============================================================================
-
-		private void ShowFramesState ()
-		{
-			if (IsPanelEmpty)
-			{
-				ButtonShowBranching.IsChecked = true;
-				ButtonShowExitBranching.IsChecked = true;
-				ButtonShowBranching.IsEnabled = false;
-				ButtonShowExitBranching.IsEnabled = false;
-
-				ButtonViewSmall.IsChecked = false;
-				ButtonViewMedium.IsChecked = false;
-				ButtonViewLarge.IsChecked = false;
-				ButtonViewSmall.IsEnabled = false;
-				ButtonViewMedium.IsEnabled = false;
-				ButtonViewLarge.IsEnabled = false;
-			}
-			else
-			{
-				ButtonShowBranching.IsChecked = FramesView.ShowBranching;
-				ButtonShowExitBranching.IsChecked = FramesView.ShowExitBranching;
-				ButtonShowBranching.IsEnabled = true;
-				ButtonShowExitBranching.IsEnabled = true;
-
-				ButtonViewSmall.IsChecked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Small);
-				ButtonViewMedium.IsChecked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Medium);
-				ButtonViewLarge.IsChecked = (FramesView.ImageScale == FramesPreview.ImageScaleType.Large);
-				ButtonViewSmall.IsEnabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Small).EitherLT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
-				ButtonViewMedium.IsEnabled = true;
-				ButtonViewLarge.IsEnabled = FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Large).EitherGT (FramesView.GetImageScaleSize (FramesPreview.ImageScaleType.Medium));
-			}
 		}
 
 		//=============================================================================
@@ -445,6 +468,7 @@ namespace AgentCharacterEditor.Panels
 			{
 				PreviewButtonPause.IsChecked = PreviewButtonPause.IsEnabled && AnimationPreview.IsPaused;
 				PreviewButtonRepeat.IsChecked = PreviewButtonPlay.IsEnabled && AnimationPreview.IsRepeating;
+				SliderRate.Value = (int)Math.Min (Math.Max (AnimationPreview.AnimationRate, SliderRate.Minimum), SliderRate.Maximum);
 			}
 			else
 			{
@@ -486,7 +510,7 @@ namespace AgentCharacterEditor.Panels
 				AnimationPreview.IsRepeating = PreviewButtonRepeat.IsChecked.Value;
 				AnimationPreview.AnimationRate = (double)SliderRate.Value;
 #if DEBUG_NOT
-				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.AnimationIsRepeating, AnimationPreview.AnimationRate);		
+				System.Diagnostics.Debug.Print ("StartAnimation Repeat [{0}] Rate [{1}]", AnimationPreview.IsRepeating, AnimationPreview.AnimationRate);
 #endif
 				PushSelectedFrame ();
 				AnimationPreview.StartAnimation ();

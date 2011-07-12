@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AgentCharacterEditor</RootNamespace>
-    <AssemblyName>AgentCharacterEditorWPF</AssemblyName>
+    <AssemblyName>DoubleACE</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -58,6 +58,29 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\BinDa\Bin\Debug%28x64%29\v4.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\..\BinDa\Bin\Release%28x64%29\v4.0\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DaCharFileCLR, Version=1.2.0.51, Culture=neutral, processorArchitecture=x86">
@@ -247,6 +270,9 @@
     <Compile Include="Previews\FramesPreview.xaml.cs">
       <DependentUpon>FramesPreview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Previews\FramesRange.xaml.cs">
+      <DependentUpon>FramesRange.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Previews\FramesToolBar.xaml.cs">
       <DependentUpon>FramesToolBar.xaml</DependentUpon>
     </Compile>
@@ -322,6 +348,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Previews\FramesPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Previews\FramesRange.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -493,34 +523,31 @@
     <Resource Include="Resources\NavigateForwardPressed.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Repeat.ico" />
+    <Resource Include="Resources\Repeat1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Stop.ico" />
+    <Resource Include="Resources\Stop1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Pause.ico" />
+    <Resource Include="Resources\Pause1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Play.ico" />
+    <Resource Include="Resources\Play1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\SkipForward.ico" />
+    <Resource Include="Resources\SkipForward1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\SkipBack.ico" />
+    <Resource Include="Resources\SkipBack1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Mute.ico" />
+    <Resource Include="Resources\Mute1.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ShowBranching.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ShowExitBranching.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Lock.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\MoveDown.ico" />
@@ -539,6 +566,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Error.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Lock1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

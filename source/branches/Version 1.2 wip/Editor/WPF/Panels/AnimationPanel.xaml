@@ -23,6 +23,102 @@
 						CanExecute="OnCanEditPaste"
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
+	<Control.Resources>
+		<Style x:Key="AnimationRateSlider"
+			   TargetType="{x:Type Slider}">
+			<Setter Property="Stylus.IsPressAndHoldEnabled"
+					Value="false" />
+			<Setter Property="Background"
+					Value="Transparent" />
+			<Setter Property="Foreground"
+					Value="{StaticResource BackgroundLightBrush}" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Slider}">
+						<Grid Background="{TemplateBinding Background}"
+							  SnapsToDevicePixels="true">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto"
+											   MinHeight="{TemplateBinding Slider.MinHeight}" />
+								<RowDefinition Height="Auto" />
+							</Grid.RowDefinitions>
+							<TickBar x:Name="TopTick"
+									 Grid.Row="0"
+									 Height="6.0"
+									 Visibility="Collapsed"
+									 Placement="Top"
+									 Fill="{TemplateBinding Foreground}" />
+							<TickBar x:Name="BottomTick"
+									 Grid.Row="2"
+									 Height="6.0"
+									 Visibility="Collapsed"
+									 Placement="Bottom"
+									 Fill="{TemplateBinding Foreground}" />
+							<Border x:Name="TrackBackground"
+									Grid.Row="1"
+									Height="6.0"
+									Margin="1,0"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									CornerRadius="3"
+									BorderThickness="0.5"
+									BorderBrush="{StaticResource BackgroundDarkBrush}"
+									Background="{StaticResource BackgroundLightBrush}"
+									Opacity="0.5">
+								<Canvas Margin="-6,-1">
+									<Rectangle x:Name="PART_SelectionRange"
+											   Visibility="Hidden"
+											   Height="0"
+											   Fill="Transparent"
+											   Stroke="Transparent"
+											   StrokeThickness="1.0" />
+								</Canvas>
+							</Border>
+							<Track Grid.Row="1"
+								   Name="PART_Track">
+								<Track.DecreaseRepeatButton>
+									<RepeatButton Style="{StaticResource SliderRepeatButton}"
+												  Command="{x:Static Slider.DecreaseLarge}" />
+								</Track.DecreaseRepeatButton>
+								<Track.IncreaseRepeatButton>
+									<RepeatButton Style="{StaticResource SliderRepeatButton}"
+												  Command="{x:Static Slider.IncreaseLarge}" />
+								</Track.IncreaseRepeatButton>
+								<Track.Thumb>
+									<Thumb x:Name="Thumb"
+										   Style="{StaticResource HorizontalSliderThumb}" />
+								</Track.Thumb>
+							</Track>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="TickPlacement"
+									 Value="TopLeft">
+								<Setter TargetName="TopTick"
+										Property="Visibility"
+										Value="Visible" />
+							</Trigger>
+							<Trigger Property="TickPlacement"
+									 Value="BottomRight">
+								<Setter TargetName="BottomTick"
+										Property="Visibility"
+										Value="Visible" />
+							</Trigger>
+							<Trigger Property="TickPlacement"
+									 Value="Both">
+								<Setter TargetName="TopTick"
+										Property="Visibility"
+										Value="Visible" />
+								<Setter TargetName="BottomTick"
+										Property="Visibility"
+										Value="Visible" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Control.Resources>
 	<Grid Name="MainGrid"
 		  Style="{StaticResource PanelMainGrid}">
 		<Grid.ColumnDefinitions>
@@ -288,7 +384,7 @@
 											   Style="{StaticResource ToolButtonImageLarge}" />
 						</CheckBox>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
-						<Button Style="{StaticResource ImageStateButtonAll}"
+						<RepeatButton Style="{StaticResource ImageStateButtonAll}"
 								Height="Auto"
 								Name="PreviewButtonSkipBack"
 								Width="Auto"
@@ -296,8 +392,8 @@
 								Click="PreviewButtonSkipBack_Click">
 							<custom:ImageState NormalSource="{StaticResource IconSkipBack}"
 											   Style="{StaticResource ToolButtonImageLarge}" />
-						</Button>
-						<Button Style="{StaticResource ImageStateButtonAll}"
+						</RepeatButton>
+						<RepeatButton Style="{StaticResource ImageStateButtonAll}"
 								Height="Auto"
 								Name="PreviewButtonSkipForward"
 								Width="Auto"
@@ -305,7 +401,7 @@
 								Click="PreviewButtonSkipForward_Click">
 							<custom:ImageState NormalSource="{StaticResource IconSkipForward}"
 											   Style="{StaticResource ToolButtonImageLarge}" />
-						</Button>
+						</RepeatButton>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<CheckBox Style="{StaticResource ImageStateButtonAll}"
 								  Height="Auto"
@@ -358,9 +454,11 @@
 								Maximum="1"
 								Minimum="-2"
 								SmallChange="1"
-								TickPlacement="Both"
+								LargeChange="1"
+								TickPlacement="TopLeft"
 								IsSnapToTickEnabled="True"
-								ValueChanged="SliderRate_ValueChanged" />
+								ValueChanged="SliderRate_ValueChanged"
+								Style="{StaticResource AnimationRateSlider}" />
 					</Grid>
 				</Grid>
 			</Grid>

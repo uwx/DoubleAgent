@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun May 01 16:03:19 2011
+/* at Mon Jul 11 14:10:06 2011
  */
 /* Compiler settings for Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 

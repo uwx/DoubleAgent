@@ -209,7 +209,7 @@ namespace AgentCharacterEditor
 		{
 			Boolean lRet = true;
 #if	!DEBUG
-			if (mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
+			if ((mCharacterFile != null) && mCharacterFile.IsDirty && !mCharacterFile.IsReadOnly)
 			{
 				String lMessage;
 
@@ -270,16 +270,20 @@ namespace AgentCharacterEditor
 
 		private void ShowFileState ()
 		{
+			String lAppTitle = Program.AssemblyTitle;
+#if DEBUG
+			lAppTitle = String.Format ("{0} (Debug)", lAppTitle);
+#endif
 			if (mCharacterFile == null)
 			{
-				this.Text = Program.AssemblyTitle;
+				this.Text = lAppTitle;
 				MenuItemFileSave.Enabled = false;
 				MenuItemFileSaveAs.Enabled = false;
 				ToolButtonFileSave.Enabled = false;
 			}
 			else
 			{
-				this.Text = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, Program.AssemblyTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? AppResources.Resources.TitleNewFile : mCharacterFile.Path);
+				this.Text = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, lAppTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? AppResources.Resources.TitleNewFile : mCharacterFile.Path);
 				MenuItemFileSave.Enabled = CanHandleFileSave;
 				MenuItemFileSaveAs.Enabled = CanHandleFileSaveAs;
 				ToolButtonFileSave.Enabled = MenuItemFileSave.Enabled;

@@ -208,37 +208,14 @@ namespace AgentCharacterEditor.Previews
 		{
 			get
 			{
-				if (MasterClock != null)
+				Double lSpeedRatio = 1.0;
+
+				if (IsPlaying)
 				{
 					try
 					{
-						return Math.Log (this.MasterClock.Controller.SpeedRatio, 2.0);
-					}
-					catch (Exception pException)
-					{
-						System.Diagnostics.Debug.Print (pException.Message);
-					}
-				}
-				else if (MasterTimeline != null)
-				{
-					try
-					{
-						return Math.Log (this.MasterTimeline.SpeedRatio, 2.0);
-					}
-					catch (Exception pException)
-					{
-						System.Diagnostics.Debug.Print (pException.Message);
-					}
-				}
-				return 0.0;
-			}
-			set
-			{
-				if (MasterClock != null)
-				{
-					try
-					{
-						this.MasterClock.Controller.SpeedRatio = Math.Pow (2.0, value);
+						lSpeedRatio *= this.MasterClock.Controller.SpeedRatio;
+						//System.Diagnostics.Debug.Print ("  GetClockRatio {0}", this.MasterClock.Controller.SpeedRatio);
 					}
 					catch (Exception pException)
 					{
@@ -249,7 +226,52 @@ namespace AgentCharacterEditor.Previews
 				{
 					try
 					{
-						this.MasterTimeline.SpeedRatio = Math.Pow (2.0, value);
+						lSpeedRatio *= this.MasterTimeline.SpeedRatio;
+						//System.Diagnostics.Debug.Print ("  GetTimelineRatio {0}", this.MasterTimeline.SpeedRatio);
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
+				}
+				//System.Diagnostics.Debug.Print ("GetRatio {0} Rate {1}", lSpeedRatio, Math.Log (lSpeedRatio, 2.0));
+				return Math.Log (lSpeedRatio, 2.0);
+			}
+			set
+			{
+				Double lSpeedRatio = Math.Pow (2.0, value);
+				//System.Diagnostics.Debug.Print ("SetRatio {0} Rate {1}", lSpeedRatio, value);
+
+				if (IsPlaying)
+				{
+					if (MasterTimeline != null)
+					{
+						try
+						{
+							//System.Diagnostics.Debug.Print ("  DivTimelineRatio {0}", this.MasterTimeline.SpeedRatio);
+							lSpeedRatio /= this.MasterTimeline.SpeedRatio;
+						}
+						catch (Exception pException)
+						{
+							System.Diagnostics.Debug.Print (pException.Message);
+						}
+					}
+					try
+					{
+						this.MasterClock.Controller.SpeedRatio = lSpeedRatio;
+						//System.Diagnostics.Debug.Print ("  SetClockRatio {0} {1}", lSpeedRatio, this.MasterClock.Controller.SpeedRatio);
+					}
+					catch (Exception pException)
+					{
+						System.Diagnostics.Debug.Print (pException.Message);
+					}
+				}
+				else if (MasterTimeline != null)
+				{
+					try
+					{
+						this.MasterTimeline.SpeedRatio = lSpeedRatio;
+						//System.Diagnostics.Debug.Print ("  SetTimelineRatio {0} {1}", lSpeedRatio, this.MasterTimeline.SpeedRatio);
 					}
 					catch (Exception pException)
 					{
@@ -352,8 +374,6 @@ namespace AgentCharacterEditor.Previews
 				{
 					MasterTimeline = new AnimationPreviewTimeline ();
 					MasterTimeline.Name = pAnimation.Name;
-					MasterTimeline.FillBehavior = FillBehavior.Stop;
-					MasterTimeline.SlipBehavior = SlipBehavior.Grow;
 
 					ImageTimeline = new AnimationPreviewFrames (pCharacterFile, pAnimation, Image);
 					MasterTimeline.Children.Add (ImageTimeline);
@@ -377,6 +397,9 @@ namespace AgentCharacterEditor.Previews
 						}
 					}
 
+					MasterTimeline.FillBehavior = FillBehavior.HoldEnd;
+					MasterTimeline.SlipBehavior = SlipBehavior.Slip;
+					MasterTimeline.Duration = Duration.Automatic;
 					lRet = true;
 				}
 				catch (Exception pException)

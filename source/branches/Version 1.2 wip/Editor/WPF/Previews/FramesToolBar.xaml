@@ -322,14 +322,16 @@
 									   NormalSource="{StaticResource IconMoveRight}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 					<custom:ImageState Visibility="{Binding Path=ShowAddKeepsBranchingTarget}"
 									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 				</Grid>
 			</Button>
 		</Expander.Header>
@@ -563,19 +565,21 @@
 									   Style="{StaticResource ToolButtonImage}"
 									   VerticalAlignment="Bottom" />
 					<custom:ImageState Visibility="{Binding Path=ShowDeleteShiftsBranchingTarget}"
-									   Grid.Row="10"
+									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconMoveLeft}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 					<custom:ImageState Visibility="{Binding Path=ShowDeleteKeepsBranchingTarget}"
 									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 					<custom:ImageState Visibility="{Binding Path=ShowDeleteMovesBranchingPrev}"
 									   Grid.Row="0"
 									   Grid.Column="1"
@@ -998,14 +1002,16 @@
 									   NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 					<custom:ImageState  Visibility="{Binding Path=ShowMovePrevKeepsBranchingTarget}"
 										Grid.Row="1"
 										Grid.Column="1"
 										NormalSource="{StaticResource IconLock}"
 										Style="{StaticResource ToolButtonImage}"
 										Width="8"
-										Height="8" />
+										Height="8"
+										Margin="0,1,0,-1" />
 				</Grid>
 			</Button>
 		</Expander.Header>
@@ -1295,14 +1301,16 @@
 									   NormalSource="{StaticResource IconSwap}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 					<custom:ImageState Visibility="{Binding Path=ShowMoveNextKeepsBranchingTarget}"
 									   Grid.Row="1"
 									   Grid.Column="1"
 									   NormalSource="{StaticResource IconLock}"
 									   Style="{StaticResource ToolButtonImage}"
 									   Width="8"
-									   Height="8" />
+									   Height="8"
+									   Margin="0,1,0,-1" />
 				</Grid>
 			</Button>
 		</Expander.Header>
