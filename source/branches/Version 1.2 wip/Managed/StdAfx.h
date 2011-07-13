@@ -1,5 +1,5 @@
 #pragma once
-#pragma warning (disable : 4068)
+#pragma warning (disable : 4068 4639)
 #ifdef	_DEBUG
 #pragma warning (disable : 4945)
 #endif
@@ -47,10 +47,12 @@ using namespace msclr::interop;
 #include "HelperTemplates.h"
 #pragma managed(pop)
 #include "HandleTemplates.h"
+#if	!(defined _M_CEE) || (defined _ATL_MIXED)
 #include <atltypes.h>
 #include <atlstr.h>
 #include <atlcom.h>
 #include "AtlCollEx.h"
+#endif
 #endif	// _M_CEE_XXXX
 
 #ifdef	ReportEvent

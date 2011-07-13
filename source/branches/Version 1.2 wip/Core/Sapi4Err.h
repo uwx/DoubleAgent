@@ -24,7 +24,7 @@
 #include "Log.h"
 #pragma warning (push)
 #pragma warning (disable: 4005)
-#include <speech.h>
+#include "speech.h"
 #pragma warning (pop)
 ////////////////////////////////////////////////////////////////////////
 EXTERN_C LPCTSTR _GetSapi4Err (HRESULT pError);
