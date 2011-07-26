@@ -3,6 +3,7 @@
 		 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		 xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
 		 xmlns:custom="clr-namespace:DoubleAgent"
 		 mc:Ignorable="d"
 		 d:DesignHeight="300"
@@ -530,7 +531,7 @@
 				</RadioButton>
 
 				<CheckBox Name="AddDefaults"
-						  Style="{StaticResource PushStyleToggleButton}"
+						  Style="{StaticResource {x:Static theme:BlueTheme.ToggleButtonPushStyleKey}}"
 						  Grid.Row="7"
 						  Grid.ColumnSpan="9"
 						  Margin="0,6,0,2"
@@ -947,7 +948,7 @@
 				</RadioButton>
 
 				<CheckBox Name="DeleteDefaults"
-						  Style="{StaticResource PushStyleToggleButton}"
+						  Style="{StaticResource {x:Static theme:BlueTheme.ToggleButtonPushStyleKey}}"
 						  Grid.Row="11"
 						  Grid.ColumnSpan="12"
 						  Margin="0,6,0,2"
@@ -1248,7 +1249,7 @@
 				</RadioButton>
 
 				<CheckBox Name="MovePrevDefaults"
-						  Style="{StaticResource PushStyleToggleButton}"
+						  Style="{StaticResource {x:Static theme:BlueTheme.ToggleButtonPushStyleKey}}"
 						  Grid.Row="12"
 						  Grid.ColumnSpan="6"
 						  Margin="0,6,0,2"
@@ -1546,7 +1547,7 @@
 				</RadioButton>
 
 				<CheckBox Name="MoveNextDefaults"
-						  Style="{StaticResource PushStyleToggleButton}"
+						  Style="{StaticResource {x:Static theme:BlueTheme.ToggleButtonPushStyleKey}}"
 						  Grid.Row="12"
 						  Grid.ColumnSpan="6"
 						  Margin="0,6,0,2"

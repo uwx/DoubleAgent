@@ -3,6 +3,7 @@
 					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
 					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
 					  xmlns:previews="clr-namespace:AgentCharacterEditor.Previews"
 					  xmlns:custom="clr-namespace:DoubleAgent"
@@ -193,7 +194,7 @@
 						  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 						  ScrollViewer.VerticalScrollBarVisibility="Auto"
 						  Height="70"
-						  ItemContainerStyle="{StaticResource ListViewItemCommon}"
+						  ItemContainerStyle="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleKey}}"
 						  MouseDoubleClick="ListViewStates_MouseDoubleClick">
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
@@ -385,20 +386,20 @@
 						</CheckBox>
 						<Separator Style="{StaticResource PanelToolBarSeparator}" />
 						<RepeatButton Style="{StaticResource ImageStateButtonAll}"
-								Height="Auto"
-								Name="PreviewButtonSkipBack"
-								Width="Auto"
-								ToolTip="Back"
-								Click="PreviewButtonSkipBack_Click">
+									  Height="Auto"
+									  Name="PreviewButtonSkipBack"
+									  Width="Auto"
+									  ToolTip="Back"
+									  Click="PreviewButtonSkipBack_Click">
 							<custom:ImageState NormalSource="{StaticResource IconSkipBack}"
 											   Style="{StaticResource ToolButtonImageLarge}" />
 						</RepeatButton>
 						<RepeatButton Style="{StaticResource ImageStateButtonAll}"
-								Height="Auto"
-								Name="PreviewButtonSkipForward"
-								Width="Auto"
-								ToolTip="Forward"
-								Click="PreviewButtonSkipForward_Click">
+									  Height="Auto"
+									  Name="PreviewButtonSkipForward"
+									  Width="Auto"
+									  ToolTip="Forward"
+									  Click="PreviewButtonSkipForward_Click">
 							<custom:ImageState NormalSource="{StaticResource IconSkipForward}"
 											   Style="{StaticResource ToolButtonImageLarge}" />
 						</RepeatButton>

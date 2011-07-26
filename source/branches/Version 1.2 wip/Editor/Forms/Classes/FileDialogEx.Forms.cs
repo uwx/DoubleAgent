@@ -104,7 +104,7 @@ namespace AgentCharacterEditor.Global
 
 		static private void ShowPaletteError (String pFilePath)
 		{
-					MessageBox.Show (String.Format (AppResources.Resources.MsgNoFilePalette, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			MessageBox.Show (String.Format (AppResources.Resources.MsgNoFilePalette, pFilePath), Program.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 		}
 	}
 }

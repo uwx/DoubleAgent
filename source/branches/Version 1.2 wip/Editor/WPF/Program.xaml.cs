@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Interop;
 using System.Reflection;
 using DoubleAgent;
+using DoubleAgent.Theme;
 
 namespace AgentCharacterEditor
 {
@@ -13,13 +15,20 @@ namespace AgentCharacterEditor
 	{
 		public Program ()
 		{
-			//RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
 #if DEBUG
-			System.IO.File.Delete ("C:\\Users\\Don\\Desktop\\DoubleACE.Log");
-			System.Diagnostics.Debug.Listeners.Add (new System.Diagnostics.TextWriterTraceListener (System.IO.Path.Combine (System.Environment.GetFolderPath (Environment.SpecialFolder.DesktopDirectory), "DoubleACE.Log")));
-			System.Diagnostics.Debug.AutoFlush = true;
+			{
+				String lLogName = System.IO.Path.Combine (System.Environment.GetFolderPath (Environment.SpecialFolder.DesktopDirectory), "DoubleACE.Log");
+				System.IO.Stream lLogStream = new System.IO.FileStream (lLogName, System.IO.FileMode.Create, System.IO.FileAccess.ReadWrite, System.IO.FileShare.ReadWrite);
+				Debug.Listeners.Add (new TextWriterTraceListener (lLogStream));
+				Debug.AutoFlush = true;
+			}
 #endif
 			Program.UndoManager = new UndoManager ();
+
+#if DEBUG_NOT
+			InitializeComponentDebug ();
+			DumpResources (Application.Current.Resources, String.Empty);
+#endif
 		}
 
 		private void Application_Startup (object sender, StartupEventArgs e)
@@ -27,6 +36,48 @@ namespace AgentCharacterEditor
 			CommandLineArgs = e.Args;
 		}
 
+		///////////////////////////////////////////////////////////////////////////////
+		#region Initialization Debugging
+#if DEBUG
+		private void InitializeComponentDebug ()
+		{
+			try
+			{
+				this.Startup += new System.Windows.StartupEventHandler (this.Application_Startup);
+				this.StartupUri = new System.Uri ("MainWindow.xaml", System.UriKind.Relative);
+				System.Uri resourceLocater = new System.Uri ("/DoubleACE;component/program.xaml", System.UriKind.Relative);
+				System.Windows.Application.LoadComponent (this, resourceLocater);
+				_contentLoaded = true;
+			}
+			catch (Exception pException)
+			{
+				Debug.Print (pException.Message);
+			}
+		}
+
+		private static void DumpResources (ResourceDictionary pDict, String pIndent)
+		{
+			try
+			{
+				Debug.Print ("{0}Resources [{1}] [{2}]", pIndent, pDict.Keys.Count, pDict.Source);
+				foreach (Object lKey in pDict.Keys)
+				{
+					Debug.Print ("{0}  Key [{1}]", pIndent, lKey);
+				}
+				Debug.Print ("{0}Merged [{1}]", pIndent, pDict.MergedDictionaries.Count);
+				foreach (ResourceDictionary lDict in pDict.MergedDictionaries)
+				{
+					DumpResources (lDict, pIndent + "  ");
+				}
+				Debug.Print ("{0}Resources Done [{1}]", pIndent, pDict.Source);
+			}
+			catch (Exception pException)
+			{
+				Debug.Print (pException.Message);
+			}
+		}
+#endif
+		#endregion
 		///////////////////////////////////////////////////////////////////////////////
 		#region Properties
 
@@ -38,7 +89,8 @@ namespace AgentCharacterEditor
 
 		static internal new MainWindow MainWindow
 		{
-			get; set;
+			get;
+			set;
 		}
 
 		static internal UndoManager UndoManager

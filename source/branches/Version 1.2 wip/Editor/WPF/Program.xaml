@@ -1,14 +1,17 @@
 ﻿<Application x:Class="AgentCharacterEditor.Program"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
 			 xmlns:custom="clr-namespace:DoubleAgent"
 			 StartupUri="MainWindow.xaml"
 			 Startup="Application_Startup">
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="StyleDefaults.xaml" />
-				<ResourceDictionary Source="StyleNamed.xaml" />
+				<theme:BlueTheme />
+				<ResourceDictionary Source="Styles/ModernMenu.xaml" />
+				<ResourceDictionary Source="Styles/NumericUpDown.xaml" />
+				<ResourceDictionary Source="Styles/PanelStyles.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
 			<!-- =========================================================================== -->

@@ -3,6 +3,7 @@
 					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
 					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
 					  xmlns:local="clr-namespace:AgentCharacterEditor"
 					  xmlns:custom="clr-namespace:DoubleAgent"
@@ -221,7 +222,7 @@
 									  Margin="0"
 									  SelectionMode="Single"
 									  ItemTemplate="{StaticResource OverlayListItem}"
-									  ItemContainerStyle="{StaticResource ListViewItemNpNm}"
+									  ItemContainerStyle="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 									  IsTextSearchEnabled="False"
 									  IsTabStop="False"
 									  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
@@ -273,43 +274,43 @@
 										<MenuItem Style="{StaticResource MenuItemDelete}" />
 									</ContextMenu>
 								</ListView.ContextMenu>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayClosed}" />
 									</ListViewItem.Content>
 								</local:ListViewItemCommon>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayWide1}" />
 									</ListViewItem.Content>
 								</local:ListViewItemCommon>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayWide2}" />
 									</ListViewItem.Content>
 								</local:ListViewItemCommon>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayWide3}" />
 									</ListViewItem.Content>
 								</local:ListViewItemCommon>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayWide4}" />
 									</ListViewItem.Content>
 								</local:ListViewItemCommon>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayMedium}" />
 									</ListViewItem.Content>
 								</local:ListViewItemCommon>
-								<local:ListViewItemCommon Style="{StaticResource ListViewItemNpNm}"
+								<local:ListViewItemCommon Style="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
 														  ContentTemplate="{StaticResource OverlayListItem}">
 									<ListViewItem.Content>
 										<panels:OverlayListItem Overlay="{StaticResource OverlayNarrow}" />
@@ -426,7 +427,7 @@
 								Grid.Row="2"
 								Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
 								Focusable="False"
-								Style="{StaticResource BorderNormal}"
+								Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
 								Padding="0"
 								UseLayoutRounding="False">
 							<ContentControl IsTabStop="False"
@@ -504,7 +505,7 @@
 					</Canvas>
 					<Border Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
 							Focusable="False"
-							Style="{StaticResource BorderNormal}"
+							Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
 							Padding="0"
 							UseLayoutRounding="False">
 						<ContentControl IsTabStop="False"

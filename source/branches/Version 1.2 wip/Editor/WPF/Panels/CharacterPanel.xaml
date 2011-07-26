@@ -3,6 +3,7 @@
 					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
 					  xmlns:local="clr-namespace:AgentCharacterEditor"
 					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
 					  xmlns:custom="clr-namespace:DoubleAgent"
@@ -88,6 +89,7 @@
 									  IsModifiedChanged="TextBoxDescription_IsModifiedChanged"
 									  DataContext="{Binding}"
 									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  VerticalAlignment="Stretch"
 									  TextWrapping="Wrap" />
 					<custom:TextBoxEx Grid.Column="1"
 									  Grid.Row="2"
@@ -96,6 +98,7 @@
 									  AcceptsReturn="True"
 									  IsModifiedChanged="TextBoxExtra_IsModifiedChanged"
 									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  VerticalAlignment="Stretch"
 									  TextWrapping="Wrap" />
 				</Grid>
 				<ListView Name="ListViewLanguage"

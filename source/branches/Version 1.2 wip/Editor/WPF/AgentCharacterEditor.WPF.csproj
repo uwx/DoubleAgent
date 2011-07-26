@@ -27,7 +27,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
     <NoWarn>1573,1591,0162,1607</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -92,6 +92,7 @@
       <HintPath>..\..\..\BinDa\Bin\Debug(x86)\v4.0\DaCharFileCLR.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\PresentationUI\v4.0_4.0.0.0__31bf3856ad364e35\PresentationUI.dll</HintPath>
@@ -359,9 +360,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Resource Include="StyleNamed.xaml">
+    <Page Include="Styles\ModernMenu.xaml">
       <SubType>Designer</SubType>
-    </Resource>
+    </Page>
+    <Page Include="Styles\NumericUpDown.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\IconImage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\PanelColors.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\PanelStyles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Panels\AnimationPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -407,13 +420,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Themes\Aero.NormalColor.xaml">
+    <None Include="Styles\Aero.NormalColor.xaml">
     </None>
-    <None Include="Themes\Royale.NormalColor.xaml">
-    </None>
-    <Resource Include="StyleDefaults.xaml">
-      <SubType>Designer</SubType>
-    </Resource>
     <Compile Include="..\..\Util\CSharp\UndoManager.Common.cs">
       <Link>Classes\UndoManager.Common.cs</Link>
       <SubType>Code</SubType>
@@ -569,6 +577,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Lock1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="BlueTheme.csproj">
+      <Project>{BE87EFB0-2F70-4AA0-831A-39C4D7B4C980}</Project>
+      <Name>BlueTheme</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

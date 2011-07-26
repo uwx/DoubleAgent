@@ -3,6 +3,7 @@
 					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
 					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
 					  xmlns:custom="clr-namespace:DoubleAgent"
 					  mc:Ignorable="d"
@@ -220,7 +221,7 @@
 							VerticalAlignment="Top"
 							Margin="2,0,10,0"
 							UseLayoutRounding="False"
-							Style="{StaticResource BorderNormal}"
+							Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
 							Padding="0">
 						<Image Height="200"
 							   Name="ImagePalette"
@@ -254,7 +255,7 @@
 							   Margin="0"
 							   Padding="2,0,2,2" />
 						<Border Name="BorderTransparencySample"
-								Style="{StaticResource BorderNormal}"
+								Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
 								Width="100"
 								Height="30"
 								Grid.Row="1"
@@ -272,7 +273,7 @@
 								   UseLayoutRounding="False" />
 						</Border>
 						<Border Name="BorderColorSample"
-								Style="{StaticResource BorderNormal}"
+								Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
 								Width="100"
 								Height="100"
 								HorizontalAlignment="Left"

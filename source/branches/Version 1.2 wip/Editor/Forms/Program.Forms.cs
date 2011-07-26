@@ -38,9 +38,12 @@ namespace AgentCharacterEditor
 			Application.SetCompatibleTextRenderingDefault (false);
 
 #if DEBUG
-			System.IO.File.Delete ("C:\\Users\\Don\\Desktop\\DoubleACE.Log");
-			System.Diagnostics.Debug.Listeners.Add (new System.Diagnostics.TextWriterTraceListener (System.IO.Path.Combine (System.Environment.GetFolderPath (Environment.SpecialFolder.DesktopDirectory), "DoubleACE.Log")));
-			System.Diagnostics.Debug.AutoFlush = true;
+			{
+				String lLogName = System.IO.Path.Combine (System.Environment.GetFolderPath (Environment.SpecialFolder.DesktopDirectory), "DoubleACE.Log");
+				System.IO.Stream lLogStream = new System.IO.FileStream (lLogName, System.IO.FileMode.Create, System.IO.FileAccess.ReadWrite, System.IO.FileShare.ReadWrite);
+				System.Diagnostics.Debug.Listeners.Add (new System.Diagnostics.TextWriterTraceListener (lLogStream));
+				System.Diagnostics.Debug.AutoFlush = true;
+			}
 #endif
 			Program.UndoManager = new UndoManager ();
 			Program.MainWindow = new MainWindow (args);
@@ -49,7 +52,7 @@ namespace AgentCharacterEditor
 			Application.Run (Program.MainWindow);
 
 #if DEBUG
-			System.Diagnostics.Debug.Flush();
+			System.Diagnostics.Debug.Flush ();
 #endif
 		}
 

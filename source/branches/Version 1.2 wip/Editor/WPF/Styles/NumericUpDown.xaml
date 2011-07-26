@@ -1,0 +1,137 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme">
+
+	<Style x:Key="NumericUpDown"
+		   BasedOn="{StaticResource {x:Type TextBox}}"
+		   TargetType="{x:Type TextBox}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TextBox}">
+					<Grid>
+						<Border x:Name="BdNormal"
+								Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
+								Background="{TemplateBinding Background}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto"
+													  MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+								</Grid.ColumnDefinitions>
+								<ScrollViewer x:Name="PART_ContentHost"
+											  Margin="{TemplateBinding Padding}"
+											  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+								<Grid Name="Buttons"
+									  Grid.Column="1"
+									  Visibility="Hidden"
+									  SnapsToDevicePixels="true">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="*" />
+										<RowDefinition Height="*" />
+									</Grid.RowDefinitions>
+									<RepeatButton Name="UpButton"
+												  Grid.Row="0"
+												  Style="{StaticResource {x:Static theme:BlueTheme.ScrollBarButtonStyleKey}}"
+												  Background="{StaticResource {x:Static theme:BlueTheme.ScrollVerticalButtonBrushKey}}"
+												  Foreground="{StaticResource {x:Static theme:BlueTheme.ScrollVerticalButtonHilitedBrushKey}}"
+												  Command="{x:Static ScrollBar.LineUpCommand}">
+										<Path Fill="{StaticResource {x:Static theme:BlueTheme.ScrollButtonGlyphBrushKey}}"
+											  Data="{StaticResource {x:Static theme:BlueTheme.ScrollButtonUpArrowKey}}" />
+									</RepeatButton>
+									<RepeatButton Name="DownButton"
+												  Grid.Row="1"
+												  Style="{StaticResource {x:Static theme:BlueTheme.ScrollBarButtonStyleKey}}"
+												  Background="{StaticResource {x:Static theme:BlueTheme.ScrollVerticalButtonBrushKey}}"
+												  Foreground="{StaticResource {x:Static theme:BlueTheme.ScrollVerticalButtonHilitedBrushKey}}"
+												  Command="{x:Static ScrollBar.LineDownCommand}">
+										<Path Fill="{StaticResource {x:Static theme:BlueTheme.ScrollButtonGlyphBrushKey}}"
+											  Data="{StaticResource {x:Static theme:BlueTheme.ScrollButtonDownArrowKey}}" />
+									</RepeatButton>
+								</Grid>
+							</Grid>
+						</Border>
+						<Border x:Name="BdFocused"
+								Style="{StaticResource {x:Static theme:BlueTheme.BorderFocusedStyleKey}}" />
+					</Grid>
+					<ControlTemplate.Triggers>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsFocused"
+										   Value="True" />
+								<Condition Property="IsEnabled"
+										   Value="True" />
+								<Condition Property="IsReadOnly"
+										   Value="false" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.BorderFocusedShowAnimationKey}}" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.BorderFocusedHideAnimationKey}}" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsFocused"
+										   Value="True" />
+								<Condition Property="IsEnabled"
+										   Value="True" />
+								<Condition Property="IsReadOnly"
+										   Value="True" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.BorderHitShowAnimationKey}}" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.BorderHitHideAnimationKey}}" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver"
+										   Value="True" />
+								<Condition Property="IsKeyboardFocusWithin"
+										   Value="false" />
+								<Condition Property="IsEnabled"
+										   Value="True" />
+								<Condition Property="IsReadOnly"
+										   Value="false" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.BorderHitShowAnimationKey}}" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.BorderHitHideAnimationKey}}" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver"
+										   Value="True" />
+								<Condition Property="IsEnabled"
+										   Value="True" />
+								<Condition Property="IsReadOnly"
+										   Value="false" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="Buttons"
+									Property="Visibility"
+									Value="Visible" />
+						</MultiTrigger>
+						<Trigger Property="IsReadOnly"
+								 Value="True">
+							<Setter TargetName="Buttons"
+									Property="Visibility"
+									Value="Collapsed" />
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="False">
+							<Setter Property="Foreground"
+									Value="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>
