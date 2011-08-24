@@ -32,7 +32,7 @@ ScriptReader::ScriptReader (System::IO::Stream^ pFileStream)
 :	StreamReader (pFileStream),
 	mSkipComments (true)
 {
-	mKeywords = gcnew ScriptKeywords;
+	mKeywords = gcnew AcdFileKeywords;
 }
 
 ScriptReader::~ScriptReader ()
@@ -51,7 +51,7 @@ void ScriptReader::SkipComments::set (bool pValue)
 	mSkipComments = pValue;
 }
 
-const ScriptKeywords^ ScriptReader::Keywords::get ()
+const AcdFileKeywords^ ScriptReader::Keywords::get ()
 {
 	return mKeywords;
 }
@@ -124,7 +124,7 @@ System::String^ ScriptReader::NextValue (System::String^ pLine)
 
 	if	(
 			(lToken = NextToken (pLine))
-		&&	(lToken = _T("="))
+		&&	(lToken == _T("="))
 		)
 	{
 		return GetText (pLine);
@@ -262,7 +262,7 @@ ScriptWriter::ScriptWriter (System::IO::Stream^ pFileStream)
 	mIndent (0),
 	mIndentString (nullptr)
 {
-	mKeywords = gcnew ScriptKeywords;
+	mKeywords = gcnew AcdFileKeywords;
 }
 
 ScriptWriter::~ScriptWriter ()
@@ -289,7 +289,7 @@ void ScriptWriter::Indent::set (int pValue)
 	}
 }
 
-const ScriptKeywords^ ScriptWriter::Keywords::get ()
+const AcdFileKeywords^ ScriptWriter::Keywords::get ()
 {
 	return mKeywords;
 }
@@ -423,7 +423,7 @@ System::String^ ScriptWriter::GetFontStyles (array <System::String^>^ pValue)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-ScriptKeywords::ScriptKeywords ()
+AcdFileKeywords::AcdFileKeywords ()
 {
 	StartHeader = Add ("DefineCharacter");
 	EndHeader = Add ("EndCharacter");

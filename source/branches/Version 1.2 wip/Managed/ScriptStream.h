@@ -28,7 +28,7 @@ namespace DoubleAgent {
 namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 
-private	ref class ScriptKeywords : public ArrayList
+private	ref class AcdFileKeywords : public ArrayList
 {
 	public:
 		int StartHeader;
@@ -118,7 +118,7 @@ private	ref class ScriptKeywords : public ArrayList
 		int OverlayTypeNarrow;
 
 	public:
-		ScriptKeywords ();
+		AcdFileKeywords ();
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ public:
 // Properties
 public:
 	property bool SkipComments {bool get(); void set (bool pValue);}
-	property const ScriptKeywords^ Keywords {const ScriptKeywords^ get ();}
+	property const AcdFileKeywords^ Keywords {const AcdFileKeywords^ get ();}
 	property System::String^ Keyword [int] {System::String^ get (int pKeyword);}
 
 // Operations
@@ -159,7 +159,7 @@ protected:
 
 protected:
 	bool				mSkipComments;
-	ScriptKeywords^		mKeywords;
+	AcdFileKeywords^		mKeywords;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -173,7 +173,7 @@ public:
 // Properties
 public:
 	property int Indent {int get(); void set (int pValue);}
-	property const ScriptKeywords^ Keywords {const ScriptKeywords^ get ();}
+	property const AcdFileKeywords^ Keywords {const AcdFileKeywords^ get ();}
 	property System::String^ Keyword [int] {System::String^ get (int pKeyword);}
 
 // Operations
@@ -199,7 +199,7 @@ protected:
 protected:
 	int					mIndent;
 	System::String^	mIndentString;
-	ScriptKeywords^	mKeywords;
+	AcdFileKeywords^	mKeywords;
 };
 
 /////////////////////////////////////////////////////////////////////////////

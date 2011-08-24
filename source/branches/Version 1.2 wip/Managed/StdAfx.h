@@ -29,9 +29,15 @@
 #include "ExceptionMacros.h"
 #else	// _M_CEE_XXXX
 #pragma managed(push,off)
+#ifdef	__cplusplus_cli
+#define	IServiceProvider IComServiceProvider
+#endif
 #include <tchar.h>
 #include <comdef.h>
 #include <windows.h>
+#ifdef	__cplusplus_cli
+#undef	IServiceProvider
+#endif
 #pragma managed(pop)
 
 #ifdef	_M_CEE

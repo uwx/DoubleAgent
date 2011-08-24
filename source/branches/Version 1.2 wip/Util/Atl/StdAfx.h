@@ -31,6 +31,10 @@
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 #define	_ATL_OLEDB_CONFORMANCE_TESTS
 
+#ifdef	__cplusplus_cli
+#define	IServiceProvider IComServiceProvider
+#endif
+
 #include <atlbase.h>
 #include <atltypes.h>
 #include <atlcom.h>
@@ -47,6 +51,7 @@ using namespace ATL;
 #include <math.h>
 #include <shlwapi.h>
 #include <shlobj.h>
+#include <shellapi.h>
 #include "Log.h"
 #include "OsVer.h"
 #include "ExceptionMacros.h"
@@ -54,6 +59,10 @@ using namespace ATL;
 #include "HandleTemplates.h"
 #include "AtlUtil.h"
 #include "AtlCollEx.h"
+
+#ifdef	__cplusplus_cli
+#undef	IServiceProvider
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #ifndef	_STRICT_COMPATIBILITY

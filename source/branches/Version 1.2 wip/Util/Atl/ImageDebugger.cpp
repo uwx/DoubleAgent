@@ -21,8 +21,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <shlwapi.h>
-#include <shellapi.h>
 #include "ImageDebugger.h"
 #include "ImageAlpha.h"
 #include "Log.h"

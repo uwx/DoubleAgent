@@ -101,11 +101,13 @@ namespace AgentCharacterEditor.Previews
 
 			Frames.Margin = lFramesMargin;
 
+#if DEBUG
 			if (Range.RecalcLayout ())
 			{
 				Range.Visibility = Visibility.Visible;
 			}
 			else
+#endif
 			{
 				Range.Visibility = Visibility.Collapsed;
 			}

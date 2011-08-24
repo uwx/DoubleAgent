@@ -246,26 +246,10 @@
 									Property="Fill"
 									Value="{StaticResource {x:Static theme:BlueTheme.ToolBarButtonPressedBrushKey}}" />
 							<Trigger.EnterActions>
-								<!--<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.ButtonGlowShowAnimationKey}}" />-->
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="0:0:0.2"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{DynamicResource {x:Static theme:BlueTheme.ButtonGlowShowAnimationKey}}" />
 							</Trigger.EnterActions>
 							<Trigger.ExitActions>
-								<!--<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.ButtonGlowHideAnimationKey}}" />-->
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="0:0:0.2"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{DynamicResource {x:Static theme:BlueTheme.ButtonGlowHideAnimationKey}}" />
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"
@@ -418,26 +402,10 @@
 									Property="Fill"
 									Value="{StaticResource {x:Static theme:BlueTheme.ToolBarButtonPressedBrushKey}}" />
 							<Trigger.EnterActions>
-								<!--<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.ButtonGlowShowAnimationKey}}" />-->
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="0:0:0.2"
-														 To="1" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{DynamicResource {x:Static theme:BlueTheme.ButtonGlowShowAnimationKey}}" />
 							</Trigger.EnterActions>
 							<Trigger.ExitActions>
-								<!--<BeginStoryboard Storyboard="{StaticResource {x:Static theme:BlueTheme.ButtonGlowHideAnimationKey}}" />-->
-								<BeginStoryboard>
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Glow"
-														 Storyboard.TargetProperty="Opacity"
-														 Duration="0:0:0.2"
-														 To="0" />
-									</Storyboard>
-								</BeginStoryboard>
+								<BeginStoryboard Storyboard="{DynamicResource {x:Static theme:BlueTheme.ButtonGlowHideAnimationKey}}" />
 							</Trigger.ExitActions>
 						</Trigger>
 						<Trigger Property="IsEnabled"

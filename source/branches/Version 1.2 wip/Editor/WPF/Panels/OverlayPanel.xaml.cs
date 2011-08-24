@@ -386,19 +386,19 @@ namespace AgentCharacterEditor.Panels
 				{
 					switch (Overlay.OverlayType)
 					{
-						case MouthOverlay.MouthOverlayClosed:
+						case MouthOverlay.Closed:
 							return Application.Current.TryFindResource ("ImgMouthClosed") as BitmapImage;
-						case MouthOverlay.MouthOverlayWide1:
+						case MouthOverlay.Wide1:
 							return Application.Current.TryFindResource ("ImgMouthWide1") as BitmapImage;
-						case MouthOverlay.MouthOverlayWide2:
+						case MouthOverlay.Wide2:
 							return Application.Current.TryFindResource ("ImgMouthWide2") as BitmapImage;
-						case MouthOverlay.MouthOverlayWide3:
+						case MouthOverlay.Wide3:
 							return Application.Current.TryFindResource ("ImgMouthWide3") as BitmapImage;
-						case MouthOverlay.MouthOverlayWide4:
+						case MouthOverlay.Wide4:
 							return Application.Current.TryFindResource ("ImgMouthWide4") as BitmapImage;
-						case MouthOverlay.MouthOverlayMedium:
+						case MouthOverlay.Medium:
 							return Application.Current.TryFindResource ("ImgMouthMedium") as BitmapImage;
-						case MouthOverlay.MouthOverlayNarrow:
+						case MouthOverlay.Narrow:
 							return Application.Current.TryFindResource ("ImgMouthNarrow") as BitmapImage;
 					}
 				}

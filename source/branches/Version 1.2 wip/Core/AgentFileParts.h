@@ -79,6 +79,13 @@ enum AgentCharStyle
 
 #ifdef	__cplusplus_cli
 #define AgentMouthOverlay MouthOverlay
+#define MouthOverlayClosed Closed
+#define MouthOverlayWide1 Wide1
+#define MouthOverlayWide2 Wide2
+#define MouthOverlayWide3 Wide3
+#define MouthOverlayWide4 Wide4
+#define MouthOverlayMedium Medium
+#define MouthOverlayNarrow Narrow
 /// <summary>
 ///	The <see cref="FileFrameOverlay.OverlayType"/> of a <see cref="FileFrameOverlay"/> instance.
 /// </summary>

@@ -88,74 +88,6 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaManagedCpp.vsprops"
-			CharacterSet="1"
-			ManagedExtensions="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine=""
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="_ATL_MIXED"
-				RuntimeLibrary="2"
-				GenerateXMLDocumentationFiles="true"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\Da$(ProjectName).dll"
-				KeyFile="Managed\CinSoft.snk"
-				DelaySign="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaManagedCpp.vsprops"
@@ -222,6 +154,74 @@
 				Name="VCPostBuildEventTool"
 				Description="Signing the code..."
 				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Managed\CinSoft.snk&quot;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			ConfigurationType="2"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaManagedCpp.vsprops"
+			CharacterSet="1"
+			ManagedExtensions="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine=""
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="_ATL_MIXED"
+				RuntimeLibrary="2"
+				GenerateXMLDocumentationFiles="true"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\Da$(ProjectName).dll"
+				KeyFile="Managed\CinSoft.snk"
+				DelaySign="true"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -427,7 +427,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -435,7 +435,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|x64"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -549,6 +549,10 @@
 			>
 			<File
 				RelativePath=".\Managed\CharFileCLR.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\Managed\CharFileCLR.rc2"
 				>
 			</File>
 			<File

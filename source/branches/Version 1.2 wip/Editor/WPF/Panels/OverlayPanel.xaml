@@ -27,19 +27,19 @@
 	</Control.CommandBindings>
 	<Control.Resources>
 		<character:FileFrameOverlay x:Key="OverlayClosed"
-									OverlayType="MouthOverlayClosed" />
+									OverlayType="Closed" />
 		<character:FileFrameOverlay x:Key="OverlayWide1"
-									OverlayType="MouthOverlayWide1" />
+									OverlayType="Wide1" />
 		<character:FileFrameOverlay x:Key="OverlayWide2"
-									OverlayType="MouthOverlayWide2" />
+									OverlayType="Wide2" />
 		<character:FileFrameOverlay x:Key="OverlayWide3"
-									OverlayType="MouthOverlayWide3" />
+									OverlayType="Wide3" />
 		<character:FileFrameOverlay x:Key="OverlayWide4"
-									OverlayType="MouthOverlayWide4" />
+									OverlayType="Wide4" />
 		<character:FileFrameOverlay x:Key="OverlayMedium"
-									OverlayType="MouthOverlayMedium" />
+									OverlayType="Medium" />
 		<character:FileFrameOverlay x:Key="OverlayNarrow"
-									OverlayType="MouthOverlayNarrow" />
+									OverlayType="Narrow" />
 		<DataTemplate x:Key="OverlayListItem">
 			<Grid Margin="{Binding ElementName=OverlaysHeaderItems, Path=Margin}"
 				  SnapsToDevicePixels="{Binding ElementName=OverlaysHeaderItems, Path=SnapsToDevicePixels}">

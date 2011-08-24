@@ -242,19 +242,19 @@ namespace AgentCharacterEditor.Properties
 		{
 			switch (pOverlayType)
 			{
-				case MouthOverlay.MouthOverlayClosed:
+				case MouthOverlay.Closed:
 					return AppResources.Resources.MouthOverlayClosed;
-				case MouthOverlay.MouthOverlayWide1:
+				case MouthOverlay.Wide1:
 					return AppResources.Resources.MouthOverlayWide1;
-				case MouthOverlay.MouthOverlayWide2:
+				case MouthOverlay.Wide2:
 					return AppResources.Resources.MouthOverlayWide2;
-				case MouthOverlay.MouthOverlayWide3:
+				case MouthOverlay.Wide3:
 					return AppResources.Resources.MouthOverlayWide3;
-				case MouthOverlay.MouthOverlayWide4:
+				case MouthOverlay.Wide4:
 					return AppResources.Resources.MouthOverlayWide4;
-				case MouthOverlay.MouthOverlayMedium:
+				case MouthOverlay.Medium:
 					return AppResources.Resources.MouthOverlayMedium;
-				case MouthOverlay.MouthOverlayNarrow:
+				case MouthOverlay.Narrow:
 					return AppResources.Resources.MouthOverlayNarrow;
 				default:
 					return AppResources.Resources.MouthOverlay;
