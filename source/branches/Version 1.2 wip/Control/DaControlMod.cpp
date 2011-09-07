@@ -72,9 +72,7 @@ CDaControlModule::CDaControlModule ()
 	LogCrash_Initialize ();
 	CListeningGlobal::Startup ();
 
-#if	ISOLATION_AWARE_ENABLED
-	IsolationAwareInit ();
-#endif
+	InitModuleTheme ();
 #ifdef	_DEBUG
 	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
 #else
@@ -165,9 +163,7 @@ void CDaControlModule::_Terminate ()
 	CListeningGlobal::Shutdown ();
 	CLocalize::FreeMuiModules ();
 
-#if	ISOLATION_AWARE_ENABLED
-	IsolationAwareCleanup ();
-#endif
+	EndModuleTheme ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

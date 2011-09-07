@@ -29,6 +29,7 @@
 #include "DaVersion.h"
 #include "AgentAnchor.h"
 #include "ListeningState.h"
+#include "ThemedModule.h"
 #ifdef	_DACORE_LOCAL
 #include "DaCoreAnchor.h"
 #endif
@@ -45,6 +46,7 @@ class CDaControlModule :
 #ifdef	_DACORE_LOCAL
 	public CDaCoreAnchor,
 #endif
+	public CThemedModule,
 	public _IEventNotify
 {
 public:

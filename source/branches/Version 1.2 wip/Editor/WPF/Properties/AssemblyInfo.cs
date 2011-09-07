@@ -30,7 +30,7 @@ using System.Windows;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion ("1.2.0.52")]
-[assembly: AssemblyFileVersion ("1.2.0.52")]
+[assembly: AssemblyVersion ("1.2.0.53")]
+[assembly: AssemblyFileVersion ("1.2.0.53")]
 
 [assembly: ThemeInfo (ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]

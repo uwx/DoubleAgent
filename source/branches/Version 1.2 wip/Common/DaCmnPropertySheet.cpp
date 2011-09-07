@@ -45,14 +45,10 @@ HWND CDaCmnPropertySheet::GetPropSheetWnd (bool pCreate)
 		&&	(pCreate)
 		)
 	{
-		try
+		if	(Create (mOwner))
 		{
-			if	(Create (mOwner))
-			{
-				LoadConfig ();
-			}
+			LoadConfig ();
 		}
-		catch AnyExceptionDebug
 	}
 	if	(IsWindow ())
 	{

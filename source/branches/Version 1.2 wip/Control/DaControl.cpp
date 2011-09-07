@@ -1797,15 +1797,22 @@ LRESULT DaControl::OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 //
 HRESULT DaControl::OnDraw(ATL_DRAWINFO& di)
 {
-	CRect			lBounds = *(RECT*)di.prcBounds;
-	COLORREF		lBkColor = GetOleColor (m_clrBackColor);
-	CBrushHandle	lBrush = CreateSolidBrush (lBkColor);
-
-	if	(!mIcon)
+	if	(mControlCharacter)
 	{
-		mIcon = (HICON) LoadImage (_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCE(IDI_DOUBLEAGENT), IMAGE_ICON, lBounds.Width(), lBounds.Height(), LR_DEFAULTCOLOR);
+		PaintWindow (di.hdcDraw);
 	}
-	::DrawIconEx (di.hdcDraw, lBounds.left, lBounds.top, mIcon, lBounds.Width(), lBounds.Height(), 0, lBrush, DI_NORMAL);
+	else
+	{
+		CRect			lBounds = *(RECT*)di.prcBounds;
+		COLORREF		lBkColor = GetOleColor (m_clrBackColor);
+		CBrushHandle	lBrush = CreateSolidBrush (lBkColor);
+
+		if	(!mIcon)
+		{
+			mIcon = (HICON) LoadImage (_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCE(FIXED_IDI_DOUBLEAGENT), IMAGE_ICON, lBounds.Width(), lBounds.Height(), LR_DEFAULTCOLOR);
+		}
+		::DrawIconEx (di.hdcDraw, lBounds.left, lBounds.top, mIcon, lBounds.Width(), lBounds.Height(), 0, lBrush, DI_NORMAL);
+	}
 	return S_OK;
 }
 
@@ -3032,35 +3039,67 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 	HRESULT										lResult = S_OK;
 	tPtr <CComObject <DaCtlCommandsWindow> >	lObject;
 	IDaCtlCommandsWindowPtr						lInterface;
+#ifndef	_DACORE_LOCAL
+	DaCtlCommandsWindow *						lCommandsWindow = NULL;
+#endif
 
 	if	(CommandsWindow == NULL)
 	{
 		lResult = E_POINTER;
 	}
+#ifndef	_DACORE_LOCAL
 	else
-#ifdef	_DACORE_LOCAL
-	{
-		lResult = E_NOTIMPL;
-	}
-#else
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
 	}
+#endif
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
-//TODO
+#ifndef	_DACORE_LOCAL
+				if	(
+						(mCommandsWindow != NULL)
+					&&	(lCommandsWindow = dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()))
+					&&	(lCommandsWindow->mServerObject != NULL)
+					)
+				{
+					SafeFreeSafePtr (mCommandsWindow);
+				}
+#endif
+				if	(
+						(mCommandsWindow == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlCommandsWindow>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mCommandsWindow = (LPDISPATCH)lObject.Detach();
+				}
+
+				lInterface = mCommandsWindow;
+				(*CommandsWindow) = lInterface.Detach();
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
 			try
 			{
+				if	(
+						(mCommandsWindow != NULL)
+					&&	(lCommandsWindow = dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()))
+					&&	(lCommandsWindow->mServerObject == NULL)
+					)
+				{
+					SafeFreeSafePtr (mCommandsWindow);
+				}
+
 				if	(
 						(mCommandsWindow == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlCommandsWindow>::CreateInstance (lObject.Free())))
@@ -3076,11 +3115,12 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
+
 #ifdef	_DEBUG_INTERFACE
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()));
 #endif
 	}
-#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS

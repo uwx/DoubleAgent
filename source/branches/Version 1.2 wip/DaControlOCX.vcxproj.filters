@@ -361,6 +361,12 @@
     <ClCompile Include="Core\DaCoreAnchor.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Util\ThemedModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DaLocalizeMui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Control\DaControl.def">
@@ -447,6 +453,15 @@
     </None>
     <None Include="Install\DaControlOCX.ddf" />
     <None Include="Install\DaControlOCX(X86).inf" />
+    <None Include="Resources\DaCoreDialogs.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\DaCoreStrings.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Control\DaControlRgs.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiHelp\DaApiHelp.h">
@@ -607,7 +622,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Control\DaControl.rc">
+    <ResourceCompile Include="Control\DaControlOCX.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

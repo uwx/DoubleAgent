@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(DOUBLE_AGENT)Managed;$(DOUBLE_AGENT)Util\Atl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DOUBLE_AGENT)\Managed;$(DOUBLE_AGENT)\Util\Atl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>

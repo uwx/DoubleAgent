@@ -252,6 +252,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Core\GPLicenseHeader.txt" />
+    <None Include="Resources\DaCoreDialogs.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\DaCoreStrings.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Core\DaCore.odl">

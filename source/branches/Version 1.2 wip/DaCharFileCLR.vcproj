@@ -84,7 +84,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Signing the code..."
-				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)Managed\CinSoft.snk&quot;"
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)\Managed\CinSoft.snk&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -153,7 +153,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Signing the code..."
-				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)Managed\CinSoft.snk&quot;"
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)\Managed\CinSoft.snk&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -221,7 +221,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)\Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -290,7 +290,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
+				CommandLine="sn -Ra &quot;$(TargetPath)&quot; &quot;$(DOUBLE_AGENT)\Managed\CinSoft.snk&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

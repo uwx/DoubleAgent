@@ -137,10 +137,12 @@
     </ClCompile>
     <CustomBuildStep>
       <Outputs>$(DOUBLE_AGENT)\Install\$(PlatformShortName)\$(TargetName).cab</Outputs>
-      <Inputs>$(DOUBLE_AGENT)\Install\DaControlOCX.ddf</Inputs>
+      <Inputs>$(TargetPath);$(DOUBLE_AGENT)\Install\DaControlOCX.ddf</Inputs>
       <Command>makecab /V1 /F "$(DOUBLE_AGENT)\Install\DaControlOCX.ddf" /D TargetDir=$(TargetDir) /D Platform=$(PlatformShortName)  /D InstallDir=$(DOUBLE_AGENT)\Install\ 
 @if exist "$(DOUBLE_AGENT)\Install\setup.inf" del "$(DOUBLE_AGENT)\Install\setup.inf"
 @if exist "$(DOUBLE_AGENT)\Install\setup.rpt" del "$(DOUBLE_AGENT)\Install\setup.rpt"
+@if exist setup.inf del setup.inf
+@if exist setup.rpt del setup.rpt
 signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authenticode "$(DOUBLE_AGENT)\Install\$(PlatformShortName)\$(TargetName).cab"</Command>
       <Message>Building $(DOUBLE_AGENT)\Install\$(TargetName).cab</Message>
     </CustomBuildStep>
@@ -228,6 +230,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     <ClCompile Include="Control\LocalCharacter.cpp" />
     <ClCompile Include="Common\PropSheetOptions.cpp" />
     <ClCompile Include="Core\DaGlobalConfig.cpp" />
+    <ClCompile Include="Core\DaLocalizeMui.cpp" />
     <ClCompile Include="Core\DirectShowClock.cpp" />
     <ClCompile Include="Core\DirectShowEnums.cpp" />
     <ClCompile Include="Core\DirectShowFilter.cpp" />
@@ -291,6 +294,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Util\ThemedModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Control\DaControl.def" />
@@ -302,6 +306,9 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     </None>
     <None Include="Resources\DaAgentCtl.bmp" />
     <None Include="Resources\DaControl.rc2" />
+    <None Include="Resources\DaCoreDialogs.rc2" />
+    <None Include="Resources\DaCoreStrings.rc2" />
+    <None Include="Control\DaControlRgs.rc2" />
     <None Include="Control\DaControl.rgs" />
     <None Include="Control\DaControlMod.rgs" />
     <None Include="Control\DaCtlAnimationNames.rgs" />
@@ -381,7 +388,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     <ClInclude Include="Include\DaControlOdl.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Control\DaControl.rc" />
+    <ResourceCompile Include="Control\DaControlOCX.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DaUtil.vcxproj">

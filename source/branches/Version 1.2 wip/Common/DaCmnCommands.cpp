@@ -91,16 +91,17 @@ bool CDaCmnCommands::SetLangID (LANGID pLangID)
 
 long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint& pPosition, CVoiceCommandsWnd* pVoiceCommandsWnd)
 {
-	long					lRet = 0;
-	CMenuHandle				lMenu;
-	CAtlString				lMenuText;
+	long				lRet = 0;
+	CMenuHandle			lMenu;
+	CAtlString			lMenuText;
 	CAgentCharacterWnd*	lOwner;
-	HINSTANCE				lResourceInstance;
 
 	if	(lMenu.Attach (::CreatePopupMenu ()))
 	{
-		lResourceInstance = _AtlBaseModule.GetResourceInstance ();
+#ifndef	_DACORE_LOCAL
+		HINSTANCE	lResourceInstance = _AtlBaseModule.GetResourceInstance ();
 		_AtlBaseModule.SetResourceInstance (GetModuleHandle (_T("DaCore")));
+#endif
 
 		try
 		{
@@ -182,7 +183,7 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint& pPosition, CVoice
 							if	(lClientNdx > 0)
 							{
 								CDaCmnCommands*	lCommands;
-								bool				lFirstCommand = true;
+								bool			lFirstCommand = true;
 
 								for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 								{
@@ -234,7 +235,9 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint& pPosition, CVoice
 		}
 		catch AnyExceptionDebug
 
+#ifndef	_DACORE_LOCAL
 		_AtlBaseModule.SetResourceInstance (lResourceInstance);
+#endif
 		::SetForegroundWindow (pOwner);
 		lRet = (long)::TrackPopupMenu (lMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD|TPM_RIGHTBUTTON, pPosition.x, pPosition.y, 0, pOwner, NULL);
 	}

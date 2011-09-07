@@ -57,6 +57,14 @@ bool CThemedModule::InitModuleTheme ()
 
 	try
 	{
+		tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
+		lInitControls.dwICC = ICC_WIN95_CLASSES|ICC_STANDARD_CLASSES|ICC_LINK_CLASS|ICC_INTERNET_CLASSES;
+		InitCommonControlsEx (&lInitControls);
+	}
+	catch AnyExceptionSilent
+
+	try
+	{
 		if	(GetCurrentActCtx (&mActCtxHandle))
 		{
 #ifdef	_DEBUG_CONTEXT

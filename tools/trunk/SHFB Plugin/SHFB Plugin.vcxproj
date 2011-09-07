@@ -78,10 +78,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DOUBLE_AGENT)Managed\CinSoft.snk</LinkKeyFile>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(DOUBLE_AGENT)Managed\CinSoft.snk</LinkKeyFile>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DOUBLE_AGENT)Managed\CinSoft.snk</LinkKeyFile>
-    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(DOUBLE_AGENT)Managed\CinSoft.snk</LinkKeyFile>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DOUBLE_AGENT)\Managed\CinSoft.snk</LinkKeyFile>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(DOUBLE_AGENT)\Managed\CinSoft.snk</LinkKeyFile>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DOUBLE_AGENT)\Managed\CinSoft.snk</LinkKeyFile>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(DOUBLE_AGENT)\Managed\CinSoft.snk</LinkKeyFile>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\</OutDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TocGrouping</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.plugins</TargetExt>

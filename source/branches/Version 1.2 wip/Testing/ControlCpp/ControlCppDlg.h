@@ -23,6 +23,7 @@ protected:
 		MESSAGE_HANDLER(WM_CLOSE, OnClose)
 		COMMAND_ID_HANDLER(IDC_SPEAK, OnSpeak)
 		COMMAND_ID_HANDLER(IDC_THINK, OnThink)
+		COMMAND_ID_HANDLER(IDC_LISTEN, OnListen)
 		COMMAND_ID_HANDLER(IDC_VISIBLE, OnVisible)
 		CHAIN_MSG_MAP(CAxDialogImpl<CControlCppDlg>)
 	END_MSG_MAP()
@@ -32,15 +33,20 @@ protected:
 	LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnSpeak(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 	LRESULT OnThink(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnListen(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 	LRESULT OnVisible(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 	BEGIN_SINK_MAP(CControlCppDlg)
 		SINK_ENTRY_EX(IDC_DACONTROL, __uuidof(_DaCtlEvents2), DISPID_AgentEvents_BalloonShow, &CControlCppDlg::OnBalloonShow)
 		SINK_ENTRY_EX(IDC_DACONTROL, __uuidof(_DaCtlEvents2), DISPID_AgentEvents_BalloonHide, &CControlCppDlg::OnBalloonHide)
+		SINK_ENTRY_EX(IDC_DACONTROL, __uuidof(_DaCtlEvents2), DISPID_AgentEvents_ListenStart, &CControlCppDlg::OnListenStart)
+		SINK_ENTRY_EX(IDC_DACONTROL, __uuidof(_DaCtlEvents2), DISPID_AgentEvents_ListenComplete, &CControlCppDlg::OnListenComplete)
 	END_SINK_MAP()
 
 	STDMETHOD (OnBalloonShow) (BSTR CharacterID);
 	STDMETHOD (OnBalloonHide) (BSTR CharacterID);
+	STDMETHOD (OnListenStart) (BSTR CharacterID);
+	STDMETHOD (OnListenComplete) (BSTR CharacterID, ListenCompleteType Cause);
 
 protected:
 	IDaControl2Ptr	mDaControl;

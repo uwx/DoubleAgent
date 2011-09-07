@@ -166,6 +166,9 @@
     <ClCompile Include="Core\AgentTextParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Util\ThemedModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Common\DaCommon.odl">
@@ -258,6 +261,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Control\GPLicenseHeader.txt" />
+    <None Include="Control\DaControlRgs.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\AgentAnchor.h">

@@ -35,6 +35,19 @@ LRESULT CControlCppDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 		if	(SUCCEEDED (LogComErr (LogNormal, mDaControl.Characters->Load (sCharName, CComVariant(), NULL))))
 		{
 			LogComErr (LogNormal, mDaControl.ControlCharacter = mDaControl.Characters.Item [sCharName]);
+
+			try
+			{
+				IDaCtlCommands2Ptr	lCommands = mDaControl.ControlCharacter.Commands;
+				IDaCtlCommand2Ptr	lCommand;
+
+				lCommands.Caption = "My Commands";
+				lCommands.VoiceCaption = "My Commands";
+				lCommands.VoiceGrammar = "my commands";
+				lCommands->Add (_bstr_t("Be Happy"), CComVariant ("Be Happy"), CComVariant("be happy"), CComVariant (VARIANT_TRUE), CComVariant (VARIANT_TRUE), &lCommand);
+			}
+			catch AnyExceptionSilent
+
 			LogComErr (LogNormal, mDaControl.ControlCharacter->Show (CComVariant(VARIANT_FALSE), NULL));
 		}
 	}
@@ -97,6 +110,29 @@ LRESULT CControlCppDlg::OnThink(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& 
 	return 0;
 }
 
+LRESULT CControlCppDlg::OnListen(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+{
+	if	(
+			(mDaControl)
+		&&	(mDaControl.ControlCharacter)
+		)
+	{
+		VARIANT_BOOL	lStartedListening = VARIANT_FALSE;
+
+		if	(Button_GetCheck (GetDlgItem (IDC_LISTEN)))
+		{
+			LogComErr (LogNormal, mDaControl.ControlCharacter->Listen (VARIANT_FALSE, &lStartedListening));
+		}
+		else
+		{
+			LogComErr (LogNormal, mDaControl.ControlCharacter->Listen (VARIANT_TRUE, &lStartedListening));
+		}
+	}
+
+	bHandled = TRUE;
+	return 0;
+}
+
 LRESULT CControlCppDlg::OnVisible(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(
@@ -132,6 +168,30 @@ HRESULT STDMETHODCALLTYPE CControlCppDlg::OnBalloonHide (BSTR CharacterID)
 		)
 	{
 		Button_SetCheck (GetDlgItem (IDC_VISIBLE), mDaControl.ControlCharacter.Balloon.Visible ? TRUE : FALSE);
+	}
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CControlCppDlg::OnListenStart (BSTR CharacterID)
+{
+	if	(
+			(mDaControl)
+		&&	(mDaControl.ControlCharacter)
+		)
+	{
+		Button_SetCheck (GetDlgItem (IDC_LISTEN), TRUE);
+	}
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CControlCppDlg::OnListenComplete (BSTR CharacterID, ListenCompleteType Cause)
+{
+	if	(
+			(mDaControl)
+		&&	(mDaControl.ControlCharacter)
+		)
+	{
+		Button_SetCheck (GetDlgItem (IDC_LISTEN), TRUE);
 	}
 	return S_OK;
 }

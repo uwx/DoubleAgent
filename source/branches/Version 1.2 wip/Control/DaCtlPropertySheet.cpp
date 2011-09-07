@@ -21,6 +21,7 @@
 #include "StdAfx.h"
 #include "DaControlMod.h"
 #include "DaCtlPropertySheet.h"
+#include "ThemedModule.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -206,7 +207,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Left (short Left)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::put_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(mLocalObject)
 	{
@@ -245,7 +246,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Left (short *Left)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Left)
 	{
@@ -300,7 +301,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Top (short Top)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::put_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(mLocalObject)
 	{
@@ -339,7 +340,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Top (short *Top)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Top)
 	{
@@ -394,7 +395,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Height (short *Height)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Height)
 	{
@@ -442,7 +443,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Width (short *Width)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Width)
 	{
@@ -492,10 +493,12 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Visible (VARIANT_BOOL Visible)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::put_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(mLocalObject)
 	{
+		ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
+
 		try
 		{
 			if	(
@@ -520,6 +523,8 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Visible (VARIANT_BOOL Visible)
 			}
 		}
 		catch AnyExceptionDebug
+
+		_AtlModule.DeactivateModuleTheme (lCookie);
 	}
 #ifndef	_DACORE_LOCAL
 	else
@@ -552,7 +557,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Visible (VARIANT_BOOL *Visible
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(mLocalObject)
 	{
@@ -593,7 +598,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Page (BSTR Page)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::put_Page"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(mLocalObject)
 	{
@@ -632,7 +637,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Page (BSTR *Page)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Page"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Page)
 	{

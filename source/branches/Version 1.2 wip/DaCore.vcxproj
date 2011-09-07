@@ -239,6 +239,12 @@
     <None Include="Core\AgentFileDefs.inl" />
     <None Include="Core\AgentPreviewWnd.rgs" />
     <None Include="Resources\DaCore.rc2" />
+    <None Include="Resources\DaCoreDialogs.rc2">
+      <FileType>RC</FileType>
+    </None>
+    <None Include="Resources\DaCoreStrings.rc2">
+      <FileType>RC</FileType>
+    </None>
     <None Include="Resources\DaError.rc2" />
     <None Include="Resources\DoubleAgent.ico" />
     <None Include="Resources\Empty.wav" />
