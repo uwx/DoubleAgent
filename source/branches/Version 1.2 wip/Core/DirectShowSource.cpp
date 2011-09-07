@@ -93,7 +93,7 @@ CDirectShowSource::CDirectShowSource()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::CDirectShowSource (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::CDirectShowSource (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -103,7 +103,7 @@ CDirectShowSource::~CDirectShowSource()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~CDirectShowSource (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~CDirectShowSource (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
@@ -121,7 +121,7 @@ void CDirectShowSource::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~FinalRelease (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~FinalRelease (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
@@ -253,7 +253,7 @@ HRESULT CDirectShowSource::OpenFile (LPCTSTR pFileName)
 			&&	(!lAgentFile)
 			)
 		{
-			if	(lAgentFile = _AtlModule.FindCachedFile (lFileName))
+			if	(lAgentFile = _CoreAnchor.FindCachedFile (lFileName))
 			{
 				CAgentStreamUtils::SetAgentFile (lAgentFile, this);
 			}

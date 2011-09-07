@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCharacterFilesPtr		mServerObject;
+#endif
 	tPtr <CDaCmnCharacterFiles>	mLocalObject;
 
 // Operations

@@ -29,6 +29,15 @@
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
+
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServerObject.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServerObject)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlAnimationNames::DaCtlAnimationNames ()
@@ -50,7 +59,7 @@ DaCtlAnimationNames::~DaCtlAnimationNames ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::~DaCtlAnimationNames (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::~DaCtlAnimationNames (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -67,7 +76,7 @@ void DaCtlAnimationNames::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	Terminate (false);
@@ -81,10 +90,11 @@ void DaCtlAnimationNames::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::Terminate [%u] [%p(%d)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::Terminate [%u] [%p(%d)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, LogServerConnected);
 		}
 #endif
 #endif
+#ifndef	_DACORE_LOCAL
 		if	(pFinal)
 		{
 			mServerObject.Detach ();
@@ -93,7 +103,7 @@ void DaCtlAnimationNames::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-
+#endif
 		SafeFreeSafePtr (mLocalObject);
 		mOwner = NULL;
 #ifdef	_DEBUG
@@ -115,6 +125,7 @@ HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		if	(mOwner->mServerObject)
 		{
 			IUnknownPtr	lEnumVariant;
@@ -130,6 +141,7 @@ HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 			}
 		}
 		else
+#endif
 		if	(mOwner->mLocalObject)
 		{
 			if	(mLocalObject = new CDaCmnAnimationNames)
@@ -149,7 +161,7 @@ HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	return lResult;
@@ -181,6 +193,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **EnumVari
 		lResult = E_POINTER;
 	}
 	else
+#ifndef	_DACORE_LOCAL
 	if	(
 			(!mLocalObject)
 		&&	(mServerObject == NULL)
@@ -189,6 +202,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **EnumVari
 		lResult = AGENTCTLERROR_SERVERINIT;
 	}
 	else
+#endif
 	{
 		(*EnumVariant) = NULL;
 
@@ -200,6 +214,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **EnumVari
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -211,6 +226,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **EnumVari
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlAnimationNames));

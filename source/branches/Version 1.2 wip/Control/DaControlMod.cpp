@@ -55,11 +55,17 @@ static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCritical
 CDaControlModule				_AtlModule;
 LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
 LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
+#ifdef	_DACORE_LOCAL
+CDaCoreAnchor&					_CoreAnchor = _AtlModule;
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
 CDaControlModule::CDaControlModule ()
 :	CListeningGlobal (*(CGlobalAnchor*)this),
+#ifdef	_DACORE_LOCAL
+	CDaCoreAnchor (*(CComModule*)this),
+#endif
 	mAppActive (false)
 {
 	mNextCharID = SHRT_MAX+1;
@@ -128,7 +134,11 @@ void CDaControlModule::_Terminate ()
 #ifdef	_DEBUG_DLL_UNLOAD
 	try
 	{
+#ifdef	_DACORE_LOCAL
+		LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule NotifyLevel [%d] Objects [%d %d]"), mNotifyLevel, _AtlModule.GetLockCount(), mComObjects.GetCount());
+#else
 		LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, _AtlModule.GetLockCount(), mComObjects.GetCount());
+#endif
 		for	(INT_PTR lNdx = 0; lNdx < (INT_PTR)mComObjects.GetCount(); lNdx++)
 		{
 			try
@@ -263,6 +273,7 @@ void CDaControlModule::DeleteAllControls ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifndef	_DACORE_LOCAL
 HRESULT CDaControlModule::PreServerCall (LPUNKNOWN pServerInterface)
 {
 	if	(!pServerInterface)
@@ -275,7 +286,9 @@ HRESULT CDaControlModule::PreServerCall (LPUNKNOWN pServerInterface)
 	mServerCallLevel++;
 	return S_OK;
 }
+#endif
 
+#ifndef	_DACORE_LOCAL
 HRESULT CDaControlModule::PostServerCall (LPUNKNOWN pServerInterface)
 {
 	if	(mServerCallLevel > 0)
@@ -290,6 +303,7 @@ HRESULT CDaControlModule::PostServerCall (LPUNKNOWN pServerInterface)
 #endif
 	return S_OK;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

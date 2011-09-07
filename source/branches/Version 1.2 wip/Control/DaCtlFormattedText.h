@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrFormattedTextPtr		mServerObject;
+#endif
 	tPtr <CDaCmnFormattedText>	mLocalObject;
 
 // Operations

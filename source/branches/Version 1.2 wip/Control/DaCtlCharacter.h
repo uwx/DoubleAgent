@@ -38,8 +38,10 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCharacter2Ptr		mServerObject;
 	long					mServerCharID;
+#endif
 	tPtr <CDaCmnCharacter>	mLocalObject;
 
 	long GetCharID () const;

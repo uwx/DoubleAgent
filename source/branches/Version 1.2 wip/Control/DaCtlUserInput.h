@@ -40,7 +40,9 @@ public:
 	CAtlString				mCharacterID;
 	long					mCommandID;
 	class DaCtlCommands *	mCommands;
+#ifndef	_DACORE_LOCAL
 	IDaSvrUserInput2Ptr		mServerObject;
+#endif
 	tPtr <CDaCmnUserInput>	mLocalObject;
 
 // Operations

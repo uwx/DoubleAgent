@@ -45,7 +45,7 @@
 CTraceSamples::CTraceSamples ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::CTraceSamples (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::CTraceSamples (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 #ifdef	_TRACE_SAMPLE_TRACER
 	// Does not work yet
@@ -59,7 +59,7 @@ CTraceSamples::CTraceSamples ()
 CTraceSamples::~CTraceSamples ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::~CTraceSamples (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::~CTraceSamples (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	Disconnect ();
 }
@@ -72,7 +72,7 @@ CTraceSamples& CTraceSamples::Initialize (LPCTSTR pFilterName)
 		mFilterName = _T("TraceSamples");
 	}
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -306,14 +306,14 @@ CTraceFilter::CTraceFilter ()
 :	mLogLevelPins (LogVerbose|LogTime)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
 CTraceFilter::~CTraceFilter ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::~CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::~CTraceFilter (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
@@ -328,7 +328,7 @@ CTraceFilter& CTraceFilter::Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName,
 	Aggregate (pUnknown);
 
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -946,14 +946,14 @@ CTracePins::CTracePins ()
 	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::CTracePins (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::CTracePins (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
 CTracePins::~CTracePins ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::~CTracePins (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::~CTracePins (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
@@ -965,7 +965,7 @@ CTracePins& CTracePins::Initialize (LPUNKNOWN pUnknown, IBaseFilter* pFilter, UI
 	mInnerEnum = pUnknown;
 
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -1038,14 +1038,14 @@ CTracePin::CTracePin ()
 	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::CTracePin (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::CTracePin (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
 CTracePin::~CTracePin ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::~CTracePin (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::~CTracePin (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
@@ -1064,7 +1064,7 @@ CTracePin& CTracePin::Initialize (LPUNKNOWN pUnknown, IBaseFilter* pFilter, UINT
 	ATLASSERT(mInnerPin != NULL);
 	mName = PinIdStr (mInnerPin);
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }

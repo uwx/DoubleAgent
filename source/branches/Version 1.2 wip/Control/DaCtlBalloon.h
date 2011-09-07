@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrBalloon2Ptr		mServerObject;
+#endif
 	tPtr <CDaCmnBalloon>	mLocalObject;
 
 // Operations

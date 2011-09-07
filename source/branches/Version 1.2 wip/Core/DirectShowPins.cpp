@@ -64,7 +64,7 @@ CDirectShowPin::CDirectShowPin (PIN_DIRECTION pDirection)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -74,7 +74,7 @@ CDirectShowPin::~CDirectShowPin ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	SafeFreeSafePtr (mAllocator);
@@ -93,7 +93,7 @@ CDirectShowPin& CDirectShowPin::Initialize (CDirectShowFilter& pFilter, PIN_DIRE
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	LogVfwErr (LogIfActive|LogTime, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
@@ -1003,7 +1003,7 @@ CDirectShowPinIn::CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1013,7 +1013,7 @@ CDirectShowPinIn::~CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	mSamples.RemoveAll ();
@@ -1030,7 +1030,7 @@ CDirectShowPinIn& CDirectShowPinIn::Initialize (CDirectShowFilter& pFilter, LPCT
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -1813,7 +1813,7 @@ CDirectShowPinOut::CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1823,7 +1823,7 @@ CDirectShowPinOut::~CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1837,7 +1837,7 @@ CDirectShowPinOut& CDirectShowPinOut::Initialize (CDirectShowFilter& pFilter, LP
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -2233,7 +2233,7 @@ CDirectShowPinPull::CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -2243,7 +2243,7 @@ CDirectShowPinPull::~CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -2255,7 +2255,7 @@ CDirectShowPinPull& CDirectShowPinPull::Initialize (CDirectShowFilter& pFilter, 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;

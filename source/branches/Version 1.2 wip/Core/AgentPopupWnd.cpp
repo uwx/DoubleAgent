@@ -85,7 +85,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 	ResetBkColor ();
@@ -96,7 +96,7 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) [%p] [%d]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) [%p] [%d]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
 
@@ -106,7 +106,7 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) Done"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) Done"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 }

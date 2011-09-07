@@ -39,7 +39,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrTTSEnginesPtr					mServerObject;
+#endif
 	tPtr <CDaCmnTTSEngines>				mLocalObject;
 	CInterfaceArray <IDaCtlTTSEngine>	mTTSEngines;
 

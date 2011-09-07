@@ -12,7 +12,7 @@
 	/>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(SolutionDir)\Include&quot;;&quot;$(SolutionDir)\Core&quot;;&quot;$(SolutionDir)\Util&quot;;&quot;$(SolutionDir)\Common&quot;;&quot;$(SolutionDir)\Resources&quot;"
+		AdditionalIncludeDirectories="&quot;$(DOUBLE_AGENT)\Include&quot;;&quot;$(DOUBLE_AGENT)\Core&quot;;&quot;$(DOUBLE_AGENT)\Util&quot;;&quot;$(DOUBLE_AGENT)\Common&quot;;&quot;$(DOUBLE_AGENT)\Resources&quot;"
 		PreprocessorDefinitions="_WINDOWS"
 		TreatWChar_tAsBuiltInType="false"
 		UsePrecompiledHeader="2"
@@ -62,5 +62,17 @@
 		Value="v$(TargetFramework)"
 		InheritsFromParent="true"
 		Delimiter=";"
+	/>
+	<UserMacro
+		Name="DOUBLE_AGENT"
+		Value="%DOUBLE_AGENT%"
+	/>
+	<UserMacro
+		Name="DOUBLE_AGENT_LIB"
+		Value="%DOUBLE_AGENT_LIB%"
+	/>
+	<UserMacro
+		Name="DOUBLE_AGENT_BIN"
+		Value="%DOUBLE_AGENT_BIN%"
 	/>
 </VisualStudioPropertySheet>

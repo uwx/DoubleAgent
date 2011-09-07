@@ -88,7 +88,7 @@ CAgentBalloonWnd::CAgentBalloonWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::CAgentBalloonWnd (%d)"), this, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::CAgentBalloonWnd (%d)"), this, _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 }
@@ -98,7 +98,7 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::~CAgentBalloonWnd (%d)"), this, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::~CAgentBalloonWnd (%d)"), this, _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 	if	(IsWindow ())

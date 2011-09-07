@@ -1221,6 +1221,7 @@ CServerNotifySink::~CServerNotifySink ()
 #ifdef	_DEBUG
 	_AtlModule.mComObjects.Remove (this);
 #endif
+#ifndef	_DACORE_LOCAL
 	try
 	{
 		if	(
@@ -1232,6 +1233,7 @@ CServerNotifySink::~CServerNotifySink ()
 		}
 	}
 	catch AnyExceptionSilent
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1242,23 +1244,25 @@ HRESULT CServerNotifySink::Initialize (DaControl * pOwner)
 
 	if	(this)
 	{
-		if	(
-				(mOwner = pOwner)
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mOwner->mServer)))
-			)
+		if	(mOwner = pOwner)
 		{
-			try
+#ifndef	_DACORE_LOCAL
+			if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mOwner->mServer)))
 			{
-				if	(
-						(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult = mOwner->mServer->Register (this, &mServerNotifyId), _T("Register Server [%p]"), mOwner->mServer.GetInterfacePtr())))
-					&&	(mServerNotifyId)
-					)
+				try
 				{
-					mOwner->mServer->AddRef ();
+					if	(
+							(SUCCEEDED (LogComErr (LogNormal|LogTime, lResult = mOwner->mServer->Register (this, &mServerNotifyId), _T("Register Server [%p]"), mOwner->mServer.GetInterfacePtr())))
+						&&	(mServerNotifyId)
+						)
+					{
+						mOwner->mServer->AddRef ();
+					}
 				}
+				catch AnyExceptionDebug
+				_AtlModule.PostServerCall (mOwner->mServer);
 			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mOwner->mServer);
+#endif
 		}
 	}
 	return lResult;
@@ -1276,6 +1280,7 @@ HRESULT CServerNotifySink::Terminate ()
 		mOwner = NULL;
 		mServerNotifyId = 0;
 
+#ifndef	_DACORE_LOCAL
 		if	(
 				(lOwner)
 			&&	(lOwner->mServer != NULL)
@@ -1302,6 +1307,7 @@ HRESULT CServerNotifySink::Terminate ()
 			}
 			catch AnyExceptionSilent
 		}
+#endif
 	}
 	return lResult;
 }
@@ -1339,7 +1345,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Command (long CommandID, IDaSvrUser
 
 		lUserInput->mCharacterID = lActiveCharacterID;
 		lUserInput->mCommandID = CommandID;
+#ifndef	_DACORE_LOCAL
 		lUserInput->mServerObject = UserInput;
+#endif
 		lInterface = (LPDISPATCH) lUserInput;
 	}
 
@@ -1613,7 +1621,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechStart (long CharacterID, IDaS
 		{
 			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
 			{
+#ifndef	_DACORE_LOCAL
 				lObject->mServerObject = FormattedText;
+#endif
 				if	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
 				{
 					lFormattedText = lObject.Detach ();
@@ -1651,7 +1661,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechEnd (long CharacterID, IDaSvr
 		{
 			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
 			{
+#ifndef	_DACORE_LOCAL
 				lObject->mServerObject = FormattedText;
+#endif
 				if	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
 				{
 					lFormattedText = lObject.Detach ();
@@ -1689,7 +1701,9 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::SpeechWord (long CharacterID, IDaSv
 		{
 			if	(SUCCEEDED (lResult = CComObject <DaCtlFormattedText>::CreateInstance (lObject.Free())))
 			{
+#ifndef	_DACORE_LOCAL
 				lObject->mServerObject = FormattedText;
+#endif
 				if	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
 				{
 					lFormattedText = lObject.Detach ();

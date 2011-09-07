@@ -64,7 +64,10 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaServer2Ptr			mServer;
+	USHORT					mAutoConnect;
+#endif
 	IDispatchPtr			mCharacters;
 	IDispatchPtr			mSettings;
 	IDispatchPtr			mAudioOutput;
@@ -75,7 +78,6 @@ public:
 	IDispatchPtr			mTTSEngines;
 	IDispatchPtr			mSREngines;
 	bool					mRaiseRequestErrors;
-	USHORT					mAutoConnect;
 	CEventNotifyReflect		mLocalEventNotify;
 	DWORD					mLocalCharacterStyle;
 
@@ -98,8 +100,10 @@ public:
 	void CompleteRequests (bool pIdleTime = false);
 	void TerminateRequests (bool pFinal);
 
+#ifndef	_DACORE_LOCAL
 	HRESULT ConnectServer ();
 	HRESULT DisconnectServer (bool pForce);
+#endif
 	void DisconnectNotify (bool pForce);
 
 // Overrides
@@ -369,7 +373,9 @@ protected:
 protected:
 	friend class CServerNotifySink;
 
+#ifndef	_DACORE_LOCAL
 	tPtr <CComObject <CServerNotifySink> >	mServerNotifySink;
+#endif
 	IDaCtlCharacter2Ptr						mControlCharacter;
 	CAtlMap <long, DaCtlRequest *>			mActiveRequests;
 	CAtlPtrTypeArray <DaCtlRequest>			mCompletedRequests;

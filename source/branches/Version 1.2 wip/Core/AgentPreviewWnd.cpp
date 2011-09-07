@@ -51,7 +51,7 @@ CAgentPreviewWnd::CAgentPreviewWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::CAgentPreviewWnd (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::CAgentPreviewWnd (%d)"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 	mAlphaSmoothing = 0;
@@ -63,7 +63,7 @@ CAgentPreviewWnd::~CAgentPreviewWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::~CAgentPreviewWnd (%d) [%p] [%d]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::~CAgentPreviewWnd (%d) [%p] [%d]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
 }
@@ -643,7 +643,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameSize (BSTR pCharact
 			tPtr <CAgentFile>	lLocalFile;
 
 			if	(
-					(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
+					(lAgentFile = _CoreAnchor.FindCachedFile (lCharacterPath))
 				||	(
 						(lLocalFile = CAgentFile::CreateInstance (pCharacterPath))
 					&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
@@ -741,7 +741,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameFormat (BSTR pChara
 			tMallocPtr <BYTE>	lFormat;
 
 			if	(
-					(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
+					(lAgentFile = _CoreAnchor.FindCachedFile (lCharacterPath))
 				||	(
 						(lLocalFile = CAgentFile::CreateInstance (pCharacterPath))
 					&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
@@ -838,7 +838,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::RenderCharacterFrame (BSTR pCharacte
 		tPtr <CAgentFile>	lLocalFile;
 
 		if	(
-				(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
+				(lAgentFile = _CoreAnchor.FindCachedFile (lCharacterPath))
 			||	(
 					(lLocalFile = CAgentFile::CreateInstance (pCharacterPath))
 				&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))

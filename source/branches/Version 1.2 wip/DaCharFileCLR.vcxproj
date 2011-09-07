@@ -101,7 +101,7 @@
     <PostBuildEvent />
     <CustomBuildStep />
     <PostBuildEvent>
-      <Command>sn -Ra "$(TargetPath)" "$(SolutionDir)Managed\CinSoft.snk"</Command>
+      <Command>sn -Ra "$(TargetPath)" "$(DOUBLE_AGENT)Managed\CinSoft.snk"</Command>
       <Message>Signing the code...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -118,7 +118,7 @@
     <PostBuildEvent />
     <CustomBuildStep />
     <PostBuildEvent>
-      <Command>sn -Ra "$(TargetPath)" "$(SolutionDir)Managed\CinSoft.snk"</Command>
+      <Command>sn -Ra "$(TargetPath)" "$(DOUBLE_AGENT)Managed\CinSoft.snk"</Command>
       <Message>Signing the code...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -131,7 +131,7 @@
     <Link />
     <CustomBuildStep />
     <PostBuildEvent>
-      <Command>sn -Ra "$(TargetPath)" "$(SolutionDir)Managed\CinSoft.snk"
+      <Command>sn -Ra "$(TargetPath)" "$(DOUBLE_AGENT)Managed\CinSoft.snk"
 signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authenticode "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -144,7 +144,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     <Link />
     <CustomBuildStep />
     <PostBuildEvent>
-      <Command>sn -Ra "$(TargetPath)" "$(SolutionDir)Managed\CinSoft.snk"
+      <Command>sn -Ra "$(TargetPath)" "$(DOUBLE_AGENT)Managed\CinSoft.snk"
 signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authenticode "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

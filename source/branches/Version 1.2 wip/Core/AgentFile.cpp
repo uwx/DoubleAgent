@@ -1328,7 +1328,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame* pFrame,
 	if	(pFrame->ImageCount > 0)
 	{
 #ifdef	__cplusplus_cli
-		lRet = GetImageBits (NULL, nullptr, p32Bit);
+		lRet = GetImageBits (nullptr, nullptr, p32Bit);
 #else
 		lRet = GetImageBits (NULL, NULL, p32Bit);
 #endif
@@ -1706,7 +1706,7 @@ System::Drawing::Bitmap^ CAgentFile::GetFrameBitmap (CAgentFileFrame^ pFrame, bo
 
 	if	(
 			(pFrame)
-		&&	(lBitsSize = GetFrameBits (NULL, pFrame, p32Bit))
+		&&	(lBitsSize = GetFrameBits (nullptr, pFrame, p32Bit))
 		&&	(lBits = gcnew array <BYTE> (lBitsSize))
 		&&	(lImageBits = &lBits[0])
 		&&	(GetFrameBits (lImageBits, pFrame, p32Bit, pBkColor, pOverlayType))

@@ -18,30 +18,18 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#pragma once
-#include "DaCoreRes.h"
-#include "DaCoreExp.h"
+#include "StdAfx.h"
 #include "DaCoreAnchor.h"
-#include "DaGuid.h"
-#include "DaVersion.h"
-#include "AgtErr.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaCoreModule :
-	public CAtlDllModuleT <CDaCoreModule>
-#ifndef	_DACORE_LOCAL
-	, public CDaCoreAnchor
-#endif
+IMPLEMENT_DLL_OBJECT(CDaCoreAnchor)
+
+CDaCoreAnchor::CDaCoreAnchor (class CComModule & pModule)
+:	Module (pModule)
 {
-	DECLARE_DLL_OBJECT(CDaCoreModule)
-public:
-	CDaCoreModule ();
-	virtual ~CDaCoreModule ();
-	DECLARE_LIBID(GUID_NULL)
-};
+}
 
-extern CDaCoreModule _AtlModule;
-extern CDaCoreAnchor& _CoreAnchor;
-
-/////////////////////////////////////////////////////////////////////////////
+CDaCoreAnchor::~CDaCoreAnchor ()
+{
+}

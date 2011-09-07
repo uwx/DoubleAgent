@@ -52,7 +52,7 @@ CDirectSoundLipSync::CDirectSoundLipSync ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -62,7 +62,7 @@ CDirectSoundLipSync::~CDirectSoundLipSync ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Disconnect ();
@@ -73,7 +73,7 @@ void CDirectSoundLipSync::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Disconnect ();

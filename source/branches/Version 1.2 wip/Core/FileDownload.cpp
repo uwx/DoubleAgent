@@ -62,7 +62,7 @@ CFileDownload::CFileDownload ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::CFileDownload (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::CFileDownload (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	m_dwRef = 1;
@@ -73,7 +73,7 @@ CFileDownload::~CFileDownload ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::~CFileDownload (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::~CFileDownload (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	CancelDownload ();

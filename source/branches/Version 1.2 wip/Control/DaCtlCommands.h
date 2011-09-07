@@ -39,7 +39,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCommands2Ptr														mServerObject;
+#endif
 	tPtr <CDaCmnCommands>													mLocalObject;
 	CAtlMap <CAtlString, IDispatchPtr, CStringElementTraitsI <CAtlString> >	mCommands;
 

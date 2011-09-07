@@ -68,12 +68,12 @@ void CSapiInputCache::Terminate ()
 
 CSapiInputCache * CSapiInputCache::GetStaticInstance ()
 {
-	return &_AtlModule;
+	return &_CoreAnchor;
 }
 
 void CSapiInputCache::TerminateStaticInstance ()
 {
-	return _AtlModule.CSapiInputCache::Terminate ();
+	return _CoreAnchor.CSapiInputCache::Terminate ();
 }
 
 CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()

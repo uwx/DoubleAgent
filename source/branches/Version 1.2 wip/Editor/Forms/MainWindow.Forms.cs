@@ -283,7 +283,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				this.Text = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, lAppTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? AppResources.Resources.TitleNewFile : mCharacterFile.Path);
+				this.Text = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, lAppTitle, String.IsNullOrEmpty (mCharacterFile.FileName) ? AppResources.Resources.TitleNewFile : mCharacterFile.FileName);
 				MenuItemFileSave.Enabled = CanHandleFileSave;
 				MenuItemFileSaveAs.Enabled = CanHandleFileSaveAs;
 				ToolButtonFileSave.Enabled = MenuItemFileSave.Enabled;

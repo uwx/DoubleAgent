@@ -126,7 +126,7 @@ private	ref class AcdFileKeywords : public ArrayList
 private ref class ScriptReader : public System::IO::StreamReader
 {
 public:
-	ScriptReader (System::IO::Stream^ pFileStream);
+	ScriptReader (System::IO::Stream^ pStream);
 	virtual ~ScriptReader ();
 
 // Properties
@@ -167,7 +167,7 @@ protected:
 private ref class ScriptWriter : public System::IO::StreamWriter
 {
 public:
-	ScriptWriter (System::IO::Stream^ pFileStream);
+	ScriptWriter (System::IO::Stream^ pStream);
 	virtual ~ScriptWriter ();
 
 // Properties

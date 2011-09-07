@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrSettingsPtr		mServerObject;
+#endif
 	tPtr <CDaCmnSettings>	mLocalObject;
 
 // Operations

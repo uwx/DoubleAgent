@@ -70,14 +70,14 @@ CSapiVoiceCache::~CSapiVoiceCache ()
 
 CSapiVoiceCache * CSapiVoiceCache::GetStaticInstance ()
 {
-	return &_AtlModule;
+	return &_CoreAnchor;
 }
 
 void CSapiVoiceCache::TerminateStaticInstance (DWORD pWaitForCompletion)
 {
 	try
 	{
-		_AtlModule.CSapiVoiceCache::Terminate (pWaitForCompletion);
+		_CoreAnchor.CSapiVoiceCache::Terminate (pWaitForCompletion);
 	}
 	catch AnyExceptionSilent
 }
@@ -86,7 +86,7 @@ void CSapiVoiceCache::CleanupStaticInstance ()
 {
 	try
 	{
-		_AtlModule.CSapiVoiceCache::DeleteUnusedVoices ();
+		_CoreAnchor.CSapiVoiceCache::DeleteUnusedVoices ();
 	}
 	catch AnyExceptionSilent
 }

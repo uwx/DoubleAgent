@@ -37,7 +37,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IEnumVARIANTPtr				mServerObject;
+#endif
 	tPtr <CDaCmnAnimationNames>	mLocalObject;
 
 // Operations

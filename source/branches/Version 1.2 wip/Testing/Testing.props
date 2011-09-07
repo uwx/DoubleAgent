@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Include;$(SolutionDir)\Util;$(SolutionDir)\Util\Atl;$(SolutionDir)\Util\Mfc;$(SolutionDir)\Core;$(SolutionDir)\Common;$(SolutionDir)\Server;$(SolutionDir)\Resources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DOUBLE_AGENT)\Include;$(DOUBLE_AGENT)\Util;$(DOUBLE_AGENT)\Util\Atl;$(DOUBLE_AGENT)\Util\Mfc;$(DOUBLE_AGENT)\Core;$(DOUBLE_AGENT)\Common;$(DOUBLE_AGENT)\Server;$(DOUBLE_AGENT)\Resources</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <DelayLoadDLLs>$(StopEvaluating);%(DelayLoadDLLs)</DelayLoadDLLs>

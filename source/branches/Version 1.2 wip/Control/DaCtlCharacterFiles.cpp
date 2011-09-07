@@ -29,6 +29,13 @@
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
+
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr	(void*)NULL
+#else
+#define	LogServerPtr	mServerObject.GetInterfacePtr()
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlCharacterFiles::DaCtlCharacterFiles ()
@@ -37,7 +44,7 @@ DaCtlCharacterFiles::DaCtlCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::DaCtlCharacterFiles (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::DaCtlCharacterFiles (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,7 +57,7 @@ DaCtlCharacterFiles::~DaCtlCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::~DaCtlCharacterFiles (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::~DaCtlCharacterFiles (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	Terminate (true);
@@ -66,7 +73,7 @@ void DaCtlCharacterFiles::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::FinalRelease [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::FinalRelease [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -80,7 +87,7 @@ void DaCtlCharacterFiles::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::Terminate [%u] [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::Terminate [%u] [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -92,7 +99,7 @@ void DaCtlCharacterFiles::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::Terminate [%u] [%p] [%p] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::Terminate [%u] [%p] [%p] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -101,6 +108,7 @@ void DaCtlCharacterFiles::Terminate (bool pFinal)
 
 void DaCtlCharacterFiles::Disconnect (bool pFinal)
 {
+#ifndef	_DACORE_LOCAL
 	if	(pFinal)
 	{
 		mServerObject.Detach ();
@@ -109,6 +117,7 @@ void DaCtlCharacterFiles::Disconnect (bool pFinal)
 	{
 		SafeFreeSafePtr (mServerObject);
 	}
+#endif
 	SafeFreeSafePtr (mLocalObject);
 }
 
@@ -119,11 +128,13 @@ HRESULT DaCtlCharacterFiles::SetOwner (DaControl * pOwner)
 	HRESULT	lResult = S_OK;
 
 	mOwner = pOwner;
+#ifndef	_DACORE_LOCAL
 	if	(mOwner->mServer != NULL)
 	{
 		LogComErr (LogNormal|LogTime, lResult = pOwner->mServer->get_CharacterFiles (&mServerObject));
 	}
 	else
+#endif
 	if	(mLocalObject = new CDaCmnCharacterFiles)
 	{
 		mLocalObject->Initialize ();
@@ -135,7 +146,7 @@ HRESULT DaCtlCharacterFiles::SetOwner (DaControl * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::SetOwner (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::SetOwner (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	return lResult;
@@ -190,6 +201,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_FilePaths (SAFEARRAY**FilePat
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -200,6 +212,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_FilePaths (SAFEARRAY**FilePat
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
@@ -236,6 +249,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SearchPath (BSTR *SearchPath)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -246,6 +260,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SearchPath (BSTR *SearchPath)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
@@ -274,6 +289,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_SearchPath (BSTR SearchPath)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -284,6 +300,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_SearchPath (BSTR SearchPath)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -319,6 +336,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultSearchPath (BSTR *Defa
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -329,6 +347,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultSearchPath (BSTR *Defa
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
@@ -368,6 +387,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DoubleAgentFiles (VARIANT_BOO
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -378,7 +398,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DoubleAgentFiles (VARIANT_BOO
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*DoubleAgentFiles) = (lFilter & FilesFilter_PathDoubleAgent) ? VARIANT_TRUE : VARIANT_FALSE;
@@ -423,6 +443,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_DoubleAgentFiles (VARIANT_BOO
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -444,6 +465,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_DoubleAgentFiles (VARIANT_BOO
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
+
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -481,6 +504,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsAgentFiles (VARIANT_BOOL *M
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -491,7 +515,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsAgentFiles (VARIANT_BOOL *M
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*MsAgentFiles) = (lFilter & FilesFilter_PathMsAgent) ? VARIANT_TRUE : VARIANT_FALSE;
@@ -536,6 +560,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsAgentFiles (VARIANT_BOOL Ms
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -557,6 +582,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsAgentFiles (VARIANT_BOOL Ms
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -593,6 +619,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsOfficeFiles (VARIANT_BOOL *
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -603,7 +630,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsOfficeFiles (VARIANT_BOOL *
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*MsOfficeFiles) = (lFilter & FilesFilter_PathMsOffice) ? VARIANT_TRUE : VARIANT_FALSE;
@@ -648,6 +675,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsOfficeFiles (VARIANT_BOOL M
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -669,6 +697,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsOfficeFiles (VARIANT_BOOL M
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -707,6 +736,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_CompliantCharacters (VARIANT_
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -717,7 +747,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_CompliantCharacters (VARIANT_
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*CompliantCharacters) = (lFilter & FilesFilter_ExcludeCompliant) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -763,6 +793,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_CompliantCharacters (VARIANT_
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -785,6 +816,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_CompliantCharacters (VARIANT_
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -821,6 +853,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_NonCompliantCharacters (VARIA
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -831,7 +864,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_NonCompliantCharacters (VARIA
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*NonCompliantCharacters) = (lFilter & FilesFilter_ExcludeNonCompliant) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -877,6 +910,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonCompliantCharacters (VARIA
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -899,6 +933,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonCompliantCharacters (VARIA
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -937,6 +972,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SpeakingCharacters (VARIANT_B
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -947,7 +983,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SpeakingCharacters (VARIANT_B
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*SpeakingCharacters) = (lFilter & FilesFilter_ExcludeSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -993,6 +1029,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_SpeakingCharacters (VARIANT_B
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1015,6 +1052,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_SpeakingCharacters (VARIANT_B
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -1051,6 +1089,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_NonSpeakingCharacters (VARIAN
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1061,7 +1100,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_NonSpeakingCharacters (VARIAN
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*NonSpeakingCharacters) = (lFilter & FilesFilter_ExcludeNonSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -1107,6 +1146,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonSpeakingCharacters (VARIAN
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1129,6 +1169,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonSpeakingCharacters (VARIAN
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -1167,6 +1208,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_VerifyVersion (VARIANT_BOOL *
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1177,7 +1219,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_VerifyVersion (VARIANT_BOOL *
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			(*VerifyVersion) = (lFilter & FilesFilter_NoValidateVersion) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -1224,6 +1266,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_VerifyVersion (VARIANT_BOOL V
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1247,6 +1290,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_VerifyVersion (VARIANT_BOOL V
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
@@ -1284,6 +1328,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultFilePath (BSTR *Defaul
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1294,6 +1339,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultFilePath (BSTR *Defaul
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
@@ -1330,6 +1376,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultFileName (BSTR *Defaul
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1340,6 +1387,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultFileName (BSTR *Defaul
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));

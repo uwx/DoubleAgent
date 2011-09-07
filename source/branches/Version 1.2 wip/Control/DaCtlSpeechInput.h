@@ -82,9 +82,11 @@ public:
 
 // Implementation
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrSpeechInputPtr	mServerObject;
+#endif
 private:
-	DaControl *					mOwner;
+	DaControl *				mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

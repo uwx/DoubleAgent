@@ -514,10 +514,12 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		lResult = AGENTERR_CHARACTERALREADYLOADED;
 	}
 	else
+#ifndef	_DACORE_LOCAL
 	if	(
 			(!mOwner->mAutoConnect)
 		&&	(mOwner->mServer == NULL)
 		)
+#endif
 	{
 		try
 		{
@@ -570,6 +572,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mOwner->mServer)))
 	{
@@ -599,7 +602,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mOwner->mServer);
 	}
-
+#endif
 	if	(lReqID)
 	{
 		lRequest.Attach (mOwner->PutRequest (DaRequestLoad, lReqID, lResult)); // Create request even if not returned - load requests are handled specially.

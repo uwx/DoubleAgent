@@ -43,7 +43,7 @@ CEnumPins::CEnumPins ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -53,7 +53,7 @@ CEnumPins::~CEnumPins ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::~CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::~CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -69,7 +69,7 @@ void CEnumPins::Initialize (CDirectShowPins& pInputPins, CDirectShowPins& pOutpu
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -84,7 +84,7 @@ CEnumPins& CEnumPins::operator= (const CEnumPins& pSource)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -213,7 +213,7 @@ CEnumMediaTypes::CEnumMediaTypes ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -223,7 +223,7 @@ CEnumMediaTypes::~CEnumMediaTypes ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::~CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::~CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -238,7 +238,7 @@ void CEnumMediaTypes::Initialize (CMediaTypes& pMediaTypes, LPUNKNOWN pOwnerRef)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -252,7 +252,7 @@ CEnumMediaTypes& CEnumMediaTypes::operator= (const CEnumMediaTypes& pSource)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;

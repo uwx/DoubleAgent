@@ -29,6 +29,15 @@
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
+
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServerObject.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServerObject)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlSpeechInput::DaCtlSpeechInput ()
@@ -37,7 +46,7 @@ DaCtlSpeechInput::DaCtlSpeechInput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::DaCtlSpeechInput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::DaCtlSpeechInput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,7 +59,7 @@ DaCtlSpeechInput::~DaCtlSpeechInput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::~DaCtlSpeechInput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::~DaCtlSpeechInput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -79,7 +88,7 @@ void DaCtlSpeechInput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), LogServerPtr);
 	}
 #endif
 	Terminate (false);
@@ -93,7 +102,7 @@ void DaCtlSpeechInput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::Terminate [%u] [%p(%d)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::Terminate [%u] [%p(%d)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, LogServerConnected);
 		}
 #endif
 #endif
@@ -114,6 +123,7 @@ void DaCtlSpeechInput::Terminate (bool pFinal)
 
 void DaCtlSpeechInput::Disconnect (bool pFinal)
 {
+#ifndef	_DACORE_LOCAL
 	if	(pFinal)
 	{
 		mServerObject.Detach ();
@@ -122,6 +132,7 @@ void DaCtlSpeechInput::Disconnect (bool pFinal)
 	{
 		SafeFreeSafePtr (mServerObject);
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -132,16 +143,18 @@ HRESULT DaCtlSpeechInput::SetOwner (DaControl * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		mServerObject = mOwner->mServer;
 		if	(!mServerObject)
 		{
 			lResult = E_FAIL;
 		}
+#endif
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	return lResult;
@@ -184,6 +197,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::get_Enabled (VARIANT_BOOL *VoiceEnab
 	HRESULT	lResult = S_OK;
 	long	lEnabled = 0;
 
+#ifndef	_DACORE_LOCAL
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -193,6 +207,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::get_Enabled (VARIANT_BOOL *VoiceEnab
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 	if	(VoiceEnabled)
 	{
 		(*VoiceEnabled) = lEnabled ? VARIANT_TRUE : VARIANT_FALSE;
@@ -245,7 +260,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::get_HotKey (BSTR *HotKey)
 	else
 	{
 		(*HotKey) = NULL;
-
+#ifndef	_DACORE_LOCAL
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -255,6 +270,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::get_HotKey (BSTR *HotKey)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlSpeechInput));
@@ -319,6 +335,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::put_Engine (BSTR Engine)
 #endif
 	HRESULT	lResult = S_OK;
 
+#ifndef	_DACORE_LOCAL
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -328,6 +345,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::put_Engine (BSTR Engine)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSpeechInput));
 #ifdef	_LOG_RESULTS
@@ -348,6 +366,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::get_ListeningTip (VARIANT_BOOL *List
 	HRESULT	lResult = S_OK;
 	long	lListeningTip = 0;
 
+#ifndef	_DACORE_LOCAL
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -357,6 +376,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechInput::get_ListeningTip (VARIANT_BOOL *List
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 	if	(ListeningTip)
 	{
 		(*ListeningTip) = lListeningTip ? VARIANT_TRUE : VARIANT_FALSE;

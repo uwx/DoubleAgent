@@ -19,29 +19,25 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaCoreRes.h"
 #include "DaCoreExp.h"
-#include "DaCoreAnchor.h"
-#include "DaGuid.h"
-#include "DaVersion.h"
-#include "AgtErr.h"
+#include "AgentFileCache.h"
+#include "SapiVoiceCache.h"
+#include "SapiInputCache.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaCoreModule :
-	public CAtlDllModuleT <CDaCoreModule>
-#ifndef	_DACORE_LOCAL
-	, public CDaCoreAnchor
-#endif
+class CDaCoreAnchor :
+	public CAgentFileCache,
+	public CSapiVoiceCache,
+	public CSapiInputCache
 {
-	DECLARE_DLL_OBJECT(CDaCoreModule)
+	DECLARE_DLL_OBJECT_EX(CDaCoreAnchor, _DACORE_IMPEXP)
+protected:
+	_DACORE_IMPEXP CDaCoreAnchor (class CComModule & pModule);
 public:
-	CDaCoreModule ();
-	virtual ~CDaCoreModule ();
-	DECLARE_LIBID(GUID_NULL)
-};
+	_DACORE_IMPEXP virtual ~CDaCoreAnchor ();
 
-extern CDaCoreModule _AtlModule;
-extern CDaCoreAnchor& _CoreAnchor;
+	class CComModule & Module;
+};
 
 /////////////////////////////////////////////////////////////////////////////

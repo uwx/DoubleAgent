@@ -29,6 +29,12 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr	(void*)NULL
+#else
+#define	LogServerPtr	mServerObject.GetInterfacePtr()
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlFormattedText::DaCtlFormattedText ()
@@ -37,7 +43,7 @@ DaCtlFormattedText::DaCtlFormattedText ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::DaCtlFormattedText (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::DaCtlFormattedText (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,7 +56,7 @@ DaCtlFormattedText::~DaCtlFormattedText ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::~DaCtlFormattedText (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::~DaCtlFormattedText (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -66,7 +72,7 @@ void DaCtlFormattedText::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -80,25 +86,30 @@ void DaCtlFormattedText::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr());
 		}
 #endif
 #endif
 		if	(pFinal)
 		{
 			mOwner = NULL;
+		}
+		SafeFreeSafePtr (mLocalObject);
+#ifndef	_DACORE_LOCAL
+		if	(pFinal)
+		{
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-		SafeFreeSafePtr (mLocalObject);
+#endif
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -113,13 +124,17 @@ HRESULT DaCtlFormattedText::SetOwner (DaControl * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		if	(mOwner->mServer == NULL)
+#endif
 		{
+#ifndef	_DACORE_LOCAL
 			if	(mServerObject != NULL)
 			{
 				lResult = E_FAIL;
 			}
 			else
+#endif
 			if	(mLocalObject = new CDaCmnFormattedText ())
 			{
 				lResult = S_OK;
@@ -129,6 +144,7 @@ HRESULT DaCtlFormattedText::SetOwner (DaControl * pOwner)
 				lResult = E_OUTOFMEMORY;
 			}
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		{
 			if	(mServerObject == NULL)
@@ -140,11 +156,12 @@ HRESULT DaCtlFormattedText::SetOwner (DaControl * pOwner)
 				lResult = S_OK;
 			}
 		}
+#endif
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel (_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogComErrAnon (MinLogLevel (_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlFormattedText::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	return lResult;
@@ -199,6 +216,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_RawText (BSTR *RawText)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -209,6 +227,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_RawText (BSTR *RawText)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -237,6 +256,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::put_RawText (BSTR RawText)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -247,6 +267,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::put_RawText (BSTR RawText)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
 #ifdef	_LOG_RESULTS
@@ -282,6 +303,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_ParsedText(BSTR *ParsedText)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -292,6 +314,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_ParsedText(BSTR *ParsedText)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -328,6 +351,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_SpeechText(BSTR *SpeechText)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -338,6 +362,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_SpeechText(BSTR *SpeechText)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -374,6 +399,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_WordCount (long *WordCount)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -384,6 +410,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_WordCount (long *WordCount)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -420,6 +447,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_DisplayWord (long WordIndex, B
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -430,6 +458,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_DisplayWord (long WordIndex, B
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -466,6 +495,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_WordIndex (long *WordIndex)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -476,6 +506,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_WordIndex (long *WordIndex)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -512,6 +543,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_DisplayText (BSTR *DisplayText
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -522,6 +554,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::get_DisplayText (BSTR *DisplayText
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
@@ -553,6 +586,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::Parse (BSTR RawText)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -563,6 +597,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::Parse (BSTR RawText)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));
 #ifdef	_LOG_RESULTS
@@ -602,6 +637,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::Append (IDaCtlFormattedText *Forma
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(
 				(lFormattedText->mServerObject)
@@ -615,6 +651,7 @@ HRESULT STDMETHODCALLTYPE DaCtlFormattedText::Append (IDaCtlFormattedText *Forma
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlFormattedText));

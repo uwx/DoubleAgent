@@ -62,7 +62,7 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile* pAgentFile, CAgentFileClient* 
 		{
 			try
 			{
-				_AtlModule.RemoveFileClient (mAgentFile, pClient);
+				_CoreAnchor.RemoveFileClient (mAgentFile, pClient);
 			}
 			catch AnyExceptionSilent
 		}
@@ -74,7 +74,7 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile* pAgentFile, CAgentFileClient* 
 			&&	(pClient)
 			)
 		{
-			_AtlModule.AddFileClient (mAgentFile, pClient);
+			_CoreAnchor.AddFileClient (mAgentFile, pClient);
 		}
 	}
 	catch AnyExceptionSilent

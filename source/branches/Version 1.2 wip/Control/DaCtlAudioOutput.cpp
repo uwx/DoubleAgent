@@ -30,6 +30,14 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServerObject.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServerObject)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlAudioOutput::DaCtlAudioOutput ()
@@ -38,7 +46,7 @@ DaCtlAudioOutput::DaCtlAudioOutput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::DaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::DaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -51,7 +59,7 @@ DaCtlAudioOutput::~DaCtlAudioOutput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::~DaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::~DaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -81,7 +89,7 @@ void DaCtlAudioOutput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), LogServerPtr);
 	}
 #endif
 	Terminate (false);
@@ -95,7 +103,7 @@ void DaCtlAudioOutput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::Terminate [%u] [%p(%d)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::Terminate [%u] [%p(%d)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, LogServerConnected);
 		}
 #endif
 #endif
@@ -116,6 +124,7 @@ void DaCtlAudioOutput::Terminate (bool pFinal)
 
 void DaCtlAudioOutput::Disconnect (bool pFinal)
 {
+#ifndef	_DACORE_LOCAL
 	if	(pFinal)
 	{
 		mServerObject.Detach ();
@@ -124,6 +133,7 @@ void DaCtlAudioOutput::Disconnect (bool pFinal)
 	{
 		SafeFreeSafePtr (mServerObject);
 	}
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -134,16 +144,18 @@ HRESULT DaCtlAudioOutput::SetOwner (DaControl * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		mServerObject = mOwner->mServer;
 		if	(!mServerObject)
 		{
 			lResult = E_FAIL;
 		}
+#endif
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	return lResult;
@@ -187,6 +199,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Enabled (VARIANT_BOOL *AudioEnab
 	HRESULT	lResult = S_OK;
 	long	lEnabled = 0;
 
+#ifndef	_DACORE_LOCAL
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -196,6 +209,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Enabled (VARIANT_BOOL *AudioEnab
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 	if	(AudioEnabled)
 	{
 		(*AudioEnabled) = lEnabled ? VARIANT_TRUE : VARIANT_FALSE;
@@ -220,6 +234,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_SoundEffects (VARIANT_BOOL *Soun
 	HRESULT	lResult = S_OK;
 	long	lSoundEffects = 0;
 
+#ifndef	_DACORE_LOCAL
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -229,6 +244,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_SoundEffects (VARIANT_BOOL *Soun
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 	if	(SoundEffects)
 	{
 		(*SoundEffects) = lSoundEffects ? VARIANT_TRUE : VARIANT_FALSE;
@@ -259,6 +275,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Status (short *Available)
 	}
 	else
 	{
+#ifndef	_DACORE_LOCAL
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -268,7 +285,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Status (short *Available)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		(*Available) = (short)Status;
 	}
 

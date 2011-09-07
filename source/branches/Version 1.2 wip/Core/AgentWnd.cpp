@@ -142,7 +142,7 @@ bool CAgentWnd::Open (CAgentFile* pAgentFile)
 
 	if	(pAgentFile)
 	{
-		if	(lAgentFile = _AtlModule.FindCachedFile (pAgentFile->Header.Guid))
+		if	(lAgentFile = _CoreAnchor.FindCachedFile (pAgentFile->Header.Guid))
 		{
 			SetAgentFile (lAgentFile, this);
 		}
@@ -150,7 +150,7 @@ bool CAgentWnd::Open (CAgentFile* pAgentFile)
 		if	(lAgentFile = CAgentFile::CreateInstance (pAgentFile->Path))
 		{
 			SetAgentFile (lAgentFile, NULL);
-			_AtlModule.CacheFile (lAgentFile, this);
+			_CoreAnchor.CacheFile (lAgentFile, this);
 
 			if	(lAgentFileAcf = dynamic_cast <CAgentFileAcf*> (lAgentFile))
 			{
@@ -191,7 +191,7 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 
 	if	(!lFileName.IsEmpty ())
 	{
-		if	(lAgentFile = _AtlModule.FindCachedFile (lFileName))
+		if	(lAgentFile = _CoreAnchor.FindCachedFile (lFileName))
 		{
 			SetAgentFile (lAgentFile, this);
 		}
@@ -202,7 +202,7 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 			)
 		{
 			SetAgentFile (lAgentFile, NULL);
-			_AtlModule.CacheFile (lAgentFile, this);
+			_CoreAnchor.CacheFile (lAgentFile, this);
 		}
 		else
 		if	(lAgentFile)

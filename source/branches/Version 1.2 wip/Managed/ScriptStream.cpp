@@ -28,8 +28,8 @@ namespace DoubleAgent {
 namespace Character {
 /////////////////////////////////////////////////////////////////////////////
 
-ScriptReader::ScriptReader (System::IO::Stream^ pFileStream)
-:	StreamReader (pFileStream),
+ScriptReader::ScriptReader (System::IO::Stream^ pStream)
+:	StreamReader (pStream),
 	mSkipComments (true)
 {
 	mKeywords = gcnew AcdFileKeywords;
@@ -257,8 +257,8 @@ bool ScriptReader::IsKeyword (System::String^ pToken, int pKeyword)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-ScriptWriter::ScriptWriter (System::IO::Stream^ pFileStream)
-:	StreamWriter (pFileStream),
+ScriptWriter::ScriptWriter (System::IO::Stream^ pStream)
+:	StreamWriter (pStream),
 	mIndent (0),
 	mIndentString (nullptr)
 {
@@ -384,7 +384,7 @@ System::String^ ScriptWriter::FormatHex (unsigned int pValue)
 
 System::String^ ScriptWriter::FormatColor (COLORREF pValue)
 {
-	return String::Format ("{0:x8}", pValue & 0x00FFFFFF);
+	return String::Format ("{0:X8}", pValue & 0x00FFFFFF);
 }
 
 System::String^ ScriptWriter::FormatGuid (System::Guid pValue)

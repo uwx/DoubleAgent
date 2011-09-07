@@ -30,6 +30,14 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServerObject.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServerObject)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlCommand::DaCtlCommand ()
@@ -39,7 +47,7 @@ DaCtlCommand::DaCtlCommand ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::DaCtlCommand (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::DaCtlCommand (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -52,7 +60,7 @@ DaCtlCommand::~DaCtlCommand ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::~DaCtlCommand (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::~DaCtlCommand (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -69,7 +77,7 @@ void DaCtlCommand::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	Terminate (false);
@@ -83,10 +91,11 @@ void DaCtlCommand::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::Terminate [%u] [%p(%d)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::Terminate [%u] [%p(%d)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, LogServerConnected);
 		}
 #endif
 #endif
+#ifndef	_DACORE_LOCAL
 		if	(pFinal)
 		{
 			mServerObject.Detach ();
@@ -95,7 +104,7 @@ void DaCtlCommand::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-
+#endif
 		SafeFreeSafePtr (mLocalObject);
 		mOwner = NULL;
 #ifdef	_DEBUG
@@ -117,6 +126,7 @@ HRESULT DaCtlCommand::SetOwner (DaCtlCharacter * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		if	(mOwner->mServerObject)
 		{
 			if	(
@@ -128,6 +138,7 @@ HRESULT DaCtlCommand::SetOwner (DaCtlCharacter * pOwner)
 			}
 		}
 		else
+#endif
 		{
 			mLocalObject = new CDaCmnCommand;
 			if	(!mLocalObject)
@@ -139,7 +150,7 @@ HRESULT DaCtlCommand::SetOwner (DaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	return lResult;
@@ -209,6 +220,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Caption (BSTR *Caption)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -219,6 +231,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Caption (BSTR *Caption)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -247,6 +260,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_Caption (BSTR Caption)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -257,6 +271,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_Caption (BSTR Caption)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -294,6 +309,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Enabled (VARIANT_BOOL *Enabled)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -304,6 +320,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Enabled (VARIANT_BOOL *Enabled)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -332,6 +349,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_Enabled (VARIANT_BOOL Enabled)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -342,6 +360,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_Enabled (VARIANT_BOOL Enabled)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -379,6 +398,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Visible (VARIANT_BOOL *Visible)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -389,6 +409,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Visible (VARIANT_BOOL *Visible)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -417,6 +438,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_Visible (VARIANT_BOOL Visible)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -427,6 +449,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_Visible (VARIANT_BOOL Visible)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -474,6 +497,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_ConfidenceText (BSTR *Text)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -484,6 +508,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_ConfidenceText (BSTR *Text)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -512,6 +537,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_ConfidenceText (BSTR Text)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -522,6 +548,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_ConfidenceText (BSTR Text)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -602,6 +629,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_VoiceCaption (BSTR *VoiceCaption)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -612,6 +640,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_VoiceCaption (BSTR *VoiceCaption)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -640,6 +669,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_VoiceCaption (BSTR VoiceCaption)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -650,6 +680,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_VoiceCaption (BSTR VoiceCaption)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -689,6 +720,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_VoiceGrammar (BSTR *VoiceGrammar)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -699,6 +731,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_VoiceGrammar (BSTR *VoiceGrammar)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -727,6 +760,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_VoiceGrammar (BSTR VoiceGrammar)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -737,6 +771,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_VoiceGrammar (BSTR VoiceGrammar)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -774,6 +809,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_ConfidenceThreshold (long *Confidenc
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -784,6 +820,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_ConfidenceThreshold (long *Confidenc
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
@@ -812,6 +849,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_ConfidenceThreshold (long Confidence
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -822,6 +860,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::put_ConfidenceThreshold (long Confidence
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));
 #ifdef	_LOG_RESULTS
@@ -868,6 +907,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Name (BSTR *Name)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -887,6 +927,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Name (BSTR *Name)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommand2));

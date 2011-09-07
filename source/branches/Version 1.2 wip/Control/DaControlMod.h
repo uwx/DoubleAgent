@@ -22,11 +22,16 @@
 #include "DaControlRes.h"
 #include "DaGuid.h"
 #include "DaControlOdl.h"
+#ifndef	_DACORE_LOCAL
 #include "DaServerOdl.h"
+#endif
 #include "DaError.h"
 #include "DaVersion.h"
 #include "AgentAnchor.h"
 #include "ListeningState.h"
+#ifdef	_DACORE_LOCAL
+#include "DaCoreAnchor.h"
+#endif
 
 #pragma warning (push)
 #pragma warning (disable: 4250 4584)
@@ -37,6 +42,9 @@ class CDaControlModule :
 	public CGlobalAnchor,		// For local characters only
 	public CEventGlobal,		// For local characters only
 	public CListeningGlobal,	// For local characters only
+#ifdef	_DACORE_LOCAL
+	public CDaCoreAnchor,
+#endif
 	public _IEventNotify
 {
 public:
@@ -59,8 +67,10 @@ public:
 	void OnControlCreated (class DaControl * pControl);
 	void OnControlDeleted (class DaControl * pControl);
 
+#ifndef	_DACORE_LOCAL
 	HRESULT PreServerCall (LPUNKNOWN pServerInterface);
 	HRESULT PostServerCall (LPUNKNOWN pServerInterface);
+#endif
 	bool PreNotify ();
 	void PostNotify ();
 
@@ -88,7 +98,9 @@ protected:
 private:
 	bool								mAppActive;
 	CAtlOwnPtrArray <class DaControl>	mControls;
+#ifndef	_DACORE_LOCAL
 	int									mServerCallLevel;
+#endif
 	int									mNotifyLevel;
 	tPtr <class CComMessageFilter>		mMessageFilter;
 };

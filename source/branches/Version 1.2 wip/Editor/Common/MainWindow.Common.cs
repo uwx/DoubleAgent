@@ -73,9 +73,9 @@ namespace AgentCharacterEditor
 		{
 			try
 			{
-				SaveConfig (this, EventArgs.Empty);
 				SaveWindowState ();
 				SaveRecentFiles ();
+				SaveConfig (this, EventArgs.Empty);
 			}
 			catch
 			{

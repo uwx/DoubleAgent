@@ -39,7 +39,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrSREnginesPtr					mServerObject;
+#endif
 	tPtr <CDaCmnSREngines>				mLocalObject;
 	CInterfaceArray <IDaCtlSREngine>	mSREngines;
 

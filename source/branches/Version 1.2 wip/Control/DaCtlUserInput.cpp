@@ -31,6 +31,14 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServerObject.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServerObject)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlUserInput::DaCtlUserInput()
@@ -53,7 +61,7 @@ DaCtlUserInput::~DaCtlUserInput()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::~DaCtlUserInput (%d) [%p]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::~DaCtlUserInput (%d) [%p]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -69,7 +77,7 @@ void DaCtlUserInput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::FinalRelease [%p]"), this, max(m_dwRef,-1), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::FinalRelease [%p]"), this, max(m_dwRef,-1), LogServerPtr);
 	}
 #endif
 	Terminate (false);
@@ -83,10 +91,11 @@ void DaCtlUserInput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::Terminate [%u] [%p(%d)]"), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::Terminate [%u] [%p(%d)]"), this, max(m_dwRef,-1), pFinal, LogServerPtr, LogServerConnected);
 		}
 #endif
 #endif
+#ifndef	_DACORE_LOCAL
 		if	(pFinal)
 		{
 			mServerObject.Detach ();
@@ -95,6 +104,7 @@ void DaCtlUserInput::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+#endif
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -147,6 +157,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *Count)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -157,7 +168,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *Count)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		(*Count) = (short)lCount;
 	}
 
@@ -195,6 +206,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *Name)
 			(*Name) = mCommands->GetCommandName (mCommandID).AllocSysString();
 			lResult = S_OK;
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(
 				(mCommands != NULL)
@@ -213,6 +225,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *Name)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -278,6 +291,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *Confidence)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -288,6 +302,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *Confidence)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -324,6 +339,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *Voice)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -334,6 +350,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *Voice)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -364,6 +381,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *Alt1Name)
 	{
 		(*Alt1Name) = NULL;
 
+#ifndef	_DACORE_LOCAL
 		if	(
 				(mCommands != NULL)
 			&&	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
@@ -381,6 +399,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *Alt1Name)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -417,6 +436,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *Alt1Confiden
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -427,6 +447,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *Alt1Confiden
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 		else
 		{
 			lResult = S_FALSE;
@@ -467,6 +488,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *Alt1Voice)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -477,6 +499,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *Alt1Voice)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 		else
 		{
 			lResult = S_FALSE;
@@ -511,6 +534,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *Alt2Name)
 	{
 		(*Alt2Name) = NULL;
 
+#ifndef	_DACORE_LOCAL
 		if	(
 				(mCommands != NULL)
 			&&	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
@@ -528,6 +552,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *Alt2Name)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -564,6 +589,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *Alt2Confiden
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -574,6 +600,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *Alt2Confiden
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 		else
 		{
 			lResult = S_FALSE;
@@ -614,6 +641,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *Alt2Voice)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -624,6 +652,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *Alt2Voice)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 		else
 		{
 			lResult = S_FALSE;

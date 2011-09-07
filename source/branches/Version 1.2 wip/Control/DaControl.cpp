@@ -58,6 +58,14 @@
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServer.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServer)
+#endif
+
 #define	_PROP_DATA_VER			0x0101
 
 /////////////////////////////////////////////////////////////////////////////
@@ -73,11 +81,13 @@ DaControl::DaControl()
 	CListeningAnchor (_AtlModule),
 	mPropDataVer (_PROP_DATA_VER),
 	mRaiseRequestErrors (true),
-	mAutoConnect (1),
 	mLocalEventNotify (this),
 	mLocalCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
 	mFinalReleased (false)
 {
+#ifndef	_DACORE_LOCAL
+	mAutoConnect = 1;
+#endif
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -90,11 +100,12 @@ DaControl::DaControl()
 	{
 		mRaiseRequestErrors = false;
 	}
+#ifndef	_DACORE_LOCAL
 	if	(GetProfileDebugInt(_T("ForceStandAlone")) > 0)
 	{
 		mAutoConnect = 0;
 	}
-
+#endif
 	if	(GetProfileDebugInt(_T("ForceSuspendPause")) > 0)
 	{
 		mLocalCharacterStyle |= CharacterStyle_SuspendPause;
@@ -212,15 +223,16 @@ void DaControl::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::Terminate [%u] [%p]"), this, max(m_dwRef,-1), pFinal, mServer.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::Terminate [%u] [%p]"), this, max(m_dwRef,-1), pFinal, LogServerPtr);
 		}
 #endif
 		try
 		{
 			ClearNotifySources ();
+#ifndef	_DACORE_LOCAL
 			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
-
+#endif
 			DisconnectObjects (true, pFinal);
 
 			if	(pFinal)
@@ -236,8 +248,9 @@ void DaControl::Terminate (bool pFinal)
 				SafeFreeSafePtr (mSREngines);
 			}
 
+#ifndef	_DACORE_LOCAL
 			DisconnectServer (pFinal);
-
+#endif
 			if	(IsWindow ())
 			{
 				DestroyWindow ();
@@ -394,6 +407,7 @@ HRESULT WINAPI DaControl::UpdateRegistryOverride (BOOL bRegister)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+#ifndef	_DACORE_LOCAL
 HRESULT DaControl::ConnectServer ()
 {
 	HRESULT	lResult = S_FALSE;
@@ -491,7 +505,7 @@ HRESULT DaControl::ConnectServer ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p]"), this, max(m_dwRef,-1), LogServerPtr);
 		}
 #endif
 
@@ -514,7 +528,7 @@ HRESULT DaControl::ConnectServer ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p] Sink [%d]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr(), (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p] Sink [%d]"), this, max(m_dwRef,-1), LogServerPtr, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 		}
 #endif
 	}
@@ -524,9 +538,11 @@ HRESULT DaControl::ConnectServer ()
 	}
 	return lResult;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifndef	_DACORE_LOCAL
 HRESULT DaControl::DisconnectServer (bool pForce)
 {
 	HRESULT	lResult = (mServer != NULL) ? S_OK : S_FALSE;
@@ -537,7 +553,7 @@ HRESULT DaControl::DisconnectServer (bool pForce)
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectServer [%p(%d)] Force [%u] Sink [%u]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr(), CoIsHandlerConnected(mServer), pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectServer [%p(%d)] Force [%u] Sink [%u]"), this, max(m_dwRef,-1), LogServerPtr, LogServerConnected, pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 	}
 #endif
 	DisconnectNotify (pForce);
@@ -551,6 +567,7 @@ HRESULT DaControl::DisconnectServer (bool pForce)
 	}
 	return lResult;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -558,12 +575,13 @@ void DaControl::DisconnectNotify (bool pForce)
 {
 	if	(this)
 	{
+#ifndef	_DACORE_LOCAL
 		try
 		{
 #ifdef	_LOG_INSTANCE
 			if	(LogIsActive())
 			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectNotify [%u] [%p]"), this, max(m_dwRef,-1), pForce, mServer.GetInterfacePtr());
+				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectNotify [%u] [%p]"), this, max(m_dwRef,-1), pForce, LogServerPtr);
 			}
 #endif
 			if	(mServerNotifySink)
@@ -580,6 +598,7 @@ void DaControl::DisconnectNotify (bool pForce)
 			}
 		}
 		catch AnyExceptionDebug
+#endif
 
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
@@ -1081,7 +1100,9 @@ void DaControl::CharacterLoaded (int pCharacterCount, DaCtlCharacter * pCharacte
 {
 	if	(
 			(pCharacterCount > 0)
+#ifndef	_DACORE_LOCAL
 		&&	(!mServer)
+#endif
 		&&	(!CListeningAnchor::IsStarted ())
 		)
 	{
@@ -2376,13 +2397,23 @@ STDMETHODIMP DaControl::get_Connected (VARIANT_BOOL *Connected)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Connected"), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = (mServer == NULL) ? S_FALSE : S_OK;
+	HRESULT	lResult = S_FALSE;
 
+#ifdef	_DACORE_LOCAL
+	if	(Connected)
+	{
+		(*Connected) = VARIANT_FALSE;
+	}
+#else
+	if	(mServer)
+	{
+		lResult = S_OK;
+	}
 	if	(Connected)
 	{
 		(*Connected) = (mServer == NULL) ? VARIANT_FALSE : VARIANT_TRUE;
 	}
-
+#endif
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -2401,12 +2432,14 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 #endif
 	HRESULT	lResult = S_OK;
 
+#ifdef	_DACORE_LOCAL
+	lResult = S_FALSE;
+#else
 	if	((Connected == VARIANT_FALSE) != (mServer == NULL))
 	{
 		DisconnectObjects (false, false);
 		DisconnectObjects (false, true);
 	}
-
 	if	(Connected)
 	{
 		lResult = ConnectServer ();
@@ -2415,11 +2448,11 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 	{
 		lResult = DisconnectServer (false);
 	}
-
 	if	(lResult == S_OK)
 	{
 		ConnectObjects ();
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -2439,8 +2472,18 @@ STDMETHODIMP DaControl::get_AutoConnect (short *AutoConnect)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AutoConnect"), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = mAutoConnect ? S_OK : S_FALSE;
+	HRESULT	lResult = S_FALSE;
 
+#ifdef	_DACORE_LOCAL
+	if	(AutoConnect)
+	{
+		(*AutoConnect) = 0;	
+	}
+#else
+	if	(mAutoConnect)
+	{
+		lResult = S_OK;
+	}
 	if	(AutoConnect)
 	{
 #ifdef	_WIN64
@@ -2449,6 +2492,7 @@ STDMETHODIMP DaControl::get_AutoConnect (short *AutoConnect)
 		(*AutoConnect) = (mAutoConnect==64) ? 64 : (mAutoConnect) ? 32 : 0;
 #endif
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -2468,7 +2512,11 @@ STDMETHODIMP DaControl::put_AutoConnect (short AutoConnect)
 #endif
 	HRESULT	lResult = S_OK;
 
+#ifdef	_DACORE_LOCAL
+	lResult = S_FALSE;
+#else	
 	mAutoConnect = (AutoConnect==32) ? 32 : (AutoConnect==64) ? 64 : (AutoConnect) ? 1 : 0;
+#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -2568,13 +2616,16 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 	{
 		lResult = E_POINTER;
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
 	}
+#endif
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(mAutoConnect)
 			||	(mServer != NULL)
@@ -2582,6 +2633,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 		{
 			lResult = _AtlModule.PreServerCall (mServer);
 		}
+#endif
 		if	(SUCCEEDED (lResult))
 		{
 			try
@@ -2608,6 +2660,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 			}
 			catch AnyExceptionDebug
 
+#ifndef	_DACORE_LOCAL
 			if	(
 					(mAutoConnect)
 				||	(mServer != NULL)
@@ -2615,6 +2668,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 			{
 				_AtlModule.PostServerCall (mServer);
 			}
+#endif
 
 #ifdef	_DEBUG_INTERFACE
 			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()));
@@ -2639,28 +2693,35 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
-	DaCtlSettings *						lSettings;
 	tPtr <CComObject <DaCtlSettings> >	lObject;
 	IDaCtlSettingsPtr					lInterface;
+#ifndef	_DACORE_LOCAL
+	DaCtlSettings *						lSettings = NULL;
+#endif
 
 	if	(Settings == NULL)
 	{
 		lResult = E_POINTER;
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
 	}
+#endif
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
+#ifndef	_DACORE_LOCAL
 				if	(
 						(mSettings != NULL)
 					&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
@@ -2669,7 +2730,7 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 				{
 					SafeFreeSafePtr (mSettings);
 				}
-
+#endif
 				if	(
 						(mSettings == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlSettings>::CreateInstance (lObject.Free())))
@@ -2684,6 +2745,7 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -2713,6 +2775,7 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 #ifdef	_DEBUG_INTERFACE
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()));
 #endif
@@ -2743,6 +2806,11 @@ STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
 		lResult = E_POINTER;
 	}
 	else
+#ifdef	_DACORE_LOCAL
+	{
+		lResult = E_NOTIMPL;
+	}
+#else
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
@@ -2774,6 +2842,7 @@ STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()));
 #endif
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -2799,6 +2868,11 @@ STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
 	{
 		lResult = E_POINTER;
 	}
+#ifdef	_DACORE_LOCAL
+	{
+		lResult = E_NOTIMPL;
+	}
+#else
 	else
 	if	(mAutoConnect)
 	{
@@ -2831,6 +2905,7 @@ STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()));
 #endif
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -2849,28 +2924,35 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
-	DaCtlPropertySheet *					lPropertySheet;
 	tPtr <CComObject <DaCtlPropertySheet> >	lObject = NULL;
 	IDaCtlPropertySheet2Ptr					lInterface;
+#ifndef	_DACORE_LOCAL
+	DaCtlPropertySheet *					lPropertySheet = NULL;
+#endif
 
 	if	(PropSheet == NULL)
 	{
 		lResult = E_POINTER;
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
 	}
+#endif
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
+#ifndef	_DACORE_LOCAL
 				if	(
 						(mPropertySheet != NULL)
 					&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
@@ -2879,7 +2961,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 				{
 					SafeFreeSafePtr (mPropertySheet);
 				}
-
+#endif
 				if	(
 						(mPropertySheet == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlPropertySheet>::CreateInstance (lObject.Free())))
@@ -2894,6 +2976,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -2924,6 +3007,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 #ifdef	_DEBUG_INTERFACE
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()));
 #endif
@@ -2954,6 +3038,11 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 		lResult = E_POINTER;
 	}
 	else
+#ifdef	_DACORE_LOCAL
+	{
+		lResult = E_NOTIMPL;
+	}
+#else
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
@@ -2991,6 +3080,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()));
 #endif
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
@@ -3012,10 +3102,12 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT X, VARIANT Y)
 #endif
 	HRESULT	lResult = S_OK;
 
+#ifndef	_DACORE_LOCAL
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
 	}
+#endif
 	if	(SUCCEEDED (lResult))
 	{
 		_variant_t	lXPos (X);
@@ -3040,10 +3132,12 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT X, VARIANT Y)
 		}
 		catch AnyExceptionSilent
 
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			IDaCtlPropertySheet2Ptr	lPropertySheet;
 
@@ -3067,6 +3161,7 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT X, VARIANT Y)
 				lResult = lPropertySheet->put_Visible (VARIANT_TRUE);
 			}
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3093,6 +3188,7 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT X, VARIANT Y)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));
@@ -3116,29 +3212,35 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles"), this, max(m_dwRef,-1));
 #endif
 	HRESULT										lResult = S_OK;
-	DaCtlCharacterFiles *						lCharacterFiles;
 	tPtr <CComObject <DaCtlCharacterFiles> >	lObject;
 	IDaCtlCharacterFilesPtr						lInterface;
+#ifndef	_DACORE_LOCAL
+	DaCtlCharacterFiles *						lCharacterFiles = NULL;
+#endif
 
 	if	(CharacterFiles == NULL)
 	{
 		lResult = E_POINTER;
 	}
 	else
+#ifndef	_DACORE_LOCAL
 	if	(mAutoConnect)
 	{
 		lResult = ConnectServer ();
 	}
-
+#endif
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
+#ifndef	_DACORE_LOCAL
 				if	(
 						(mCharacterFiles != NULL)
 					&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
@@ -3147,7 +3249,7 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 				{
 					SafeFreeSafePtr (mCharacterFiles);
 				}
-
+#endif
 				if	(
 						(mCharacterFiles == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlCharacterFiles>::CreateInstance (lObject.Free())))
@@ -3162,6 +3264,7 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3191,6 +3294,7 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 #ifdef	_DEBUG_INTERFACE
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()));
 #endif
@@ -3228,6 +3332,7 @@ STDMETHODIMP DaControl::get_CharacterStyle (long *CharacterStyle)
 	{
 		(*CharacterStyle) = (long)mLocalCharacterStyle;
 
+#ifndef	_DACORE_LOCAL
 		if	(
 				(mServer != NULL)
 			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
@@ -3240,6 +3345,7 @@ STDMETHODIMP DaControl::get_CharacterStyle (long *CharacterStyle)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3264,6 +3370,7 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 	{
 		mLocalCharacterStyle = (DWORD)CharacterStyle;
 
+#ifndef	_DACORE_LOCAL
 		if	(
 				(mServer)
 			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
@@ -3276,6 +3383,7 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3299,9 +3407,11 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_TTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
-	DaCtlTTSEngines *						lTTSEngines;
 	tPtr <CComObject <DaCtlTTSEngines> >	lObject;
 	IDaCtlTTSEnginesPtr						lInterface;
+#ifndef	_DACORE_LOCAL
+	DaCtlTTSEngines *						lTTSEngines = NULL;
+#endif
 
 	if	(!TTSEngines)
 	{
@@ -3310,21 +3420,25 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 	else
 	{
 		(*TTSEngines) = NULL;
-
+#ifndef	_DACORE_LOCAL
 		if	(mAutoConnect)
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
+#ifndef	_DACORE_LOCAL
 				if	(
 						(mTTSEngines != NULL)
 					&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
@@ -3333,7 +3447,7 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 				{
 					SafeFreeSafePtr (mTTSEngines);
 				}
-
+#endif
 				if	(
 						(mTTSEngines == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
@@ -3349,6 +3463,7 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3379,6 +3494,7 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3443,7 +3559,7 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 				lResult = E_INVALIDARG;
 			}
 		}
-
+#ifndef	_DACORE_LOCAL
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(mAutoConnect)
@@ -3451,13 +3567,16 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
@@ -3483,6 +3602,7 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3502,6 +3622,7 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3533,18 +3654,21 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT Provider, IDaCtlTTSEngine
 	else
 	{
 		(*TTSEngine) = NULL;
-
+#ifndef	_DACORE_LOCAL
 		if	(mAutoConnect)
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
@@ -3574,6 +3698,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT Provider, IDaCtlTTSEngine
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3592,6 +3717,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT Provider, IDaCtlTTSEngine
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3637,7 +3763,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT Provider, VARIANT Langu
 		{
 			lResult = E_INVALIDARG;
 		}
-
+#ifndef	_DACORE_LOCAL
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(mAutoConnect)
@@ -3645,13 +3771,16 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT Provider, VARIANT Langu
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
@@ -3682,6 +3811,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT Provider, VARIANT Langu
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3701,6 +3831,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT Provider, VARIANT Langu
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3722,9 +3853,11 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
-	DaCtlSREngines *					lSREngines;
 	tPtr <CComObject <DaCtlSREngines> >	lObject;
 	IDaCtlSREnginesPtr					lInterface;
+#ifndef	_DACORE_LOCAL
+	DaCtlSREngines *					lSREngines = NULL;
+#endif
 
 	if	(!SREngines)
 	{
@@ -3733,7 +3866,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 	else
 	{
 		(*SREngines) = NULL;
-
+#ifndef	_DACORE_LOCAL
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(mAutoConnect)
@@ -3741,16 +3874,20 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
+#ifndef	_DACORE_LOCAL
 				if	(
 						(mSREngines != NULL)
 					&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
@@ -3759,7 +3896,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 				{
 					SafeFreeSafePtr (mSREngines);
 				}
-
+#endif
 				if	(
 						(mSREngines == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
@@ -3775,6 +3912,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3805,6 +3943,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3850,7 +3989,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 		{
 			lResult = E_INVALIDARG;
 		}
-
+#ifndef	_DACORE_LOCAL
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(mAutoConnect)
@@ -3858,13 +3997,16 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
@@ -3890,6 +4032,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -3909,6 +4052,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -3939,7 +4083,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT Provider, IDaCtlSREngine *
 	else
 	{
 		(*SREngine) = NULL;
-
+#ifndef	_DACORE_LOCAL
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(mAutoConnect)
@@ -3947,13 +4091,16 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT Provider, IDaCtlSREngine *
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
@@ -3983,6 +4130,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT Provider, IDaCtlSREngine *
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -4001,6 +4149,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT Provider, IDaCtlSREngine *
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -4046,7 +4195,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT Provider, VARIANT Langua
 		{
 			lResult = E_INVALIDARG;
 		}
-
+#ifndef	_DACORE_LOCAL
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(mAutoConnect)
@@ -4054,13 +4203,16 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT Provider, VARIANT Langua
 		{
 			lResult = ConnectServer ();
 		}
+#endif
 	}
 	if	(SUCCEEDED (lResult))
 	{
+#ifndef	_DACORE_LOCAL
 		if	(
 				(!mAutoConnect)
 			&&	(mServer == NULL)
 			)
+#endif
 		{
 			try
 			{
@@ -4091,6 +4243,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT Provider, VARIANT Langua
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
@@ -4110,6 +4263,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT Provider, VARIANT Langua
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));

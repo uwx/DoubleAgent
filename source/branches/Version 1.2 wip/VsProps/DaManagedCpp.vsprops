@@ -8,7 +8,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(SolutionDir)Managed&quot;;&quot;$(SolutionDir)Util\Atl&quot;"
+		AdditionalIncludeDirectories="&quot;$(DOUBLE_AGENT)Managed&quot;;&quot;$(DOUBLE_AGENT)Util\Atl&quot;"
 		MinimalRebuild="false"
 		BasicRuntimeChecks="0"
 		TreatWChar_tAsBuiltInType="true"

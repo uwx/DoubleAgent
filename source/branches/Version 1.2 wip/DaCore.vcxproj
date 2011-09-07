@@ -163,6 +163,7 @@
     <ClCompile Include="Core\AgentTextParse.cpp" />
     <ClCompile Include="Core\AgentWnd.cpp" />
     <ClCompile Include="Core\DaCore.cpp" />
+    <ClCompile Include="Core\DaCoreAnchor.cpp" />
     <ClCompile Include="Core\DaGlobalConfig.cpp" />
     <ClCompile Include="Core\DaLocalizeMui.cpp" />
     <ClCompile Include="Core\DirectShowClock.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Core\AgentTextParse.h" />
     <ClInclude Include="Core\AgentWnd.h" />
     <ClInclude Include="Core\DaCore.h" />
+    <ClInclude Include="Core\DaCoreAnchor.h" />
     <ClInclude Include="Core\DaCoreExp.h" />
     <ClInclude Include="Core\DaError.h" />
     <ClInclude Include="Core\DaGlobalConfig.h" />

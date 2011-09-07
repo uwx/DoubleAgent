@@ -226,7 +226,7 @@ namespace AgentCharacterEditor
 			}
 			else
 			{
-				this.Title = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, lAppTitle, String.IsNullOrEmpty (mCharacterFile.Path) ? AppResources.Resources.TitleNewFile : mCharacterFile.Path);
+				this.Title = String.Format (mCharacterFile.IsDirty ? AppResources.Resources.TitleDirtyFile : AppResources.Resources.TitleOpenFile, lAppTitle, String.IsNullOrEmpty (mCharacterFile.FileName) ? AppResources.Resources.TitleNewFile : mCharacterFile.FileName);
 			}
 			CommandManager.InvalidateRequerySuggested ();
 		}

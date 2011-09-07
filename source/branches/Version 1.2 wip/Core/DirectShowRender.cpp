@@ -96,7 +96,7 @@ CDirectShowRender::CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -106,7 +106,7 @@ CDirectShowRender::~CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }

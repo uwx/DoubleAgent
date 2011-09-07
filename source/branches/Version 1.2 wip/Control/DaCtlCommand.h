@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCommand2Ptr		mServerObject;
+#endif
 	long					mServerId;
 	tPtr <CDaCmnCommand>	mLocalObject;
 

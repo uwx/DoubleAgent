@@ -80,9 +80,11 @@ public:
 
 // Implementation
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrAudioOutputPtr	mServerObject;
+#endif
 private:
-	DaControl *					mOwner;
+	DaControl *				mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
