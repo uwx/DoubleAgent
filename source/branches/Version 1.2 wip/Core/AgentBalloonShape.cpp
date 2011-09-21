@@ -40,7 +40,7 @@ using namespace System::Drawing::Drawing2D;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_LAYOUT		LogDebug
+#define	_DEBUG_LAYOUT		LogDebug
 //#define	_TRACE_LAYOUT		LogDebug
 //#define	_DEBUG_DRAW			LogDebug
 #endif
@@ -452,19 +452,23 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 		if	(Math::Abs (lAngle) <= pMinAngle)
 		{
 			lAngle = 0.0;
+			lRefPoint.X = pRectCenter.X - lLength;
+			lRefPoint.Y = pRectCenter.Y;
 		}
 		else
 		if	(Math::Abs (Math::PI/2.0*Math::Sign(lAngle) - lAngle) <= pMinAngle)
 		{
 			lAngle = (Single)(Math::PI/2.0*Math::Sign(lAngle));
+			lRefPoint.X = pRectCenter.X;
+			lRefPoint.Y = pRectCenter.Y - lLength * Math::Sign(lAngle);
 		}
+		else
 		if	(Math::Abs (Math::PI*Math::Sign(lAngle) - lAngle) <= pMinAngle)
 		{
 			lAngle = (Single)(Math::PI*Math::Sign(lAngle));
+			lRefPoint.X = pRectCenter.X + lLength;
+			lRefPoint.Y = pRectCenter.Y;
 		}
-
-		lRefPoint.X = pRectCenter.X - (Single)Math::Cos (lAngle) * lLength;
-		lRefPoint.Y = pRectCenter.Y - (Single)Math::Sin (lAngle) * lLength;
 #ifdef	_TRACE_LAYOUT
 		try
 		{
@@ -478,19 +482,23 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 		if	(fabs (lAngle) <= pMinAngle)
 		{
 			lAngle = 0.0;
+			lRefPoint.x = pRectCenter.x - lLength;
+			lRefPoint.y = pRectCenter.y;
 		}
 		else
 		if	(fabs (_copysign (PI/2.0, lAngle) - lAngle) <= pMinAngle)
 		{
 			lAngle = _copysign (PI/2.0, lAngle);
+			lRefPoint.x = pRectCenter.x;
+			lRefPoint.y = pRectCenter.y - _copysign (lLength, lAngle);
 		}
+		else
 		if	(fabs (_copysign (PI, lAngle) - lAngle) <= pMinAngle)
 		{
 			lAngle = _copysign (PI, lAngle);
+			lRefPoint.x = pRectCenter.x + lLength;
+			lRefPoint.y = pRectCenter.y;
 		}
-
-		lRefPoint.x = pRectCenter.x - cos (lAngle) * lLength;
-		lRefPoint.y = pRectCenter.y - sin (lAngle) * lLength;
 #ifdef	_TRACE_LAYOUT
 		try
 		{
@@ -605,7 +613,7 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 #ifdef	__cplusplus_cli
 	lRefRect.Inflate (mCalloutSize.Width, mCalloutSize.Height);
 	lRefRect.Inflate (pBalloonRect.Width, pBalloonRect.Height);
-	lBounds.Intersect (lBounds, lRefRect);
+	lBounds.Intersect (lRefRect);
 	lRefRect.Inflate (-pBalloonRect.Width, -pBalloonRect.Height);
 #else
 	lRefRect.InflateRect (mCalloutSize.cy, mCalloutSize.cy);
@@ -630,9 +638,9 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 		pBalloonRect.Offset (lBounds.Left - pBalloonRect.Left, 0);
 		lRet = true;
 	}
-	if	(pBalloonRect.Left < lBounds.Left)
+	if	(pBalloonRect.Top < lBounds.Top)
 	{
-		pBalloonRect.Offset (0, lBounds.Left - pBalloonRect.Left);
+		pBalloonRect.Offset (0, lBounds.Top - pBalloonRect.Top);
 		lRet = true;
 	}
 #else
@@ -659,8 +667,8 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 #endif	
 
 #ifdef	__cplusplus_cli
-	lIntersect.Intersect (pBalloonRect, lRefRect);
-	if	(!lIntersect.IsEmpty)
+#if 0
+	if	(!lIntersect.Intersect (pBalloonRect, lRefRect).IsEmpty)
 	{
 		bool	lOffsetVertical = (Math::Abs (lCenter.X - lRefCenter.X) <= Math::Abs (lCenter.Y - lRefCenter.Y));
 		bool	lDidVertical = lOffsetVertical;
@@ -740,6 +748,7 @@ bool CAgentBalloonShape::ValidateBalloonRect (CRect& pBalloonRect, const CRect& 
 			lRet = true;
 		}
 	}
+#endif	
 #else
 	if	(lIntersect.IntersectRect (&pBalloonRect, &lRefRect))
 	{

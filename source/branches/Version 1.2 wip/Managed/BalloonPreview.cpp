@@ -871,7 +871,7 @@ System::Drawing::RectangleF BalloonPreview::CalcShapeRect ()
 	{
 		System::Drawing::SizeF		lTextSize = GetTextSize();
 		System::Drawing::RectangleF	lTextRect (0, 0, lTextSize.Width, lTextSize.Height);
-		System::Drawing::RectangleF	lOwnerRect (0, lTextRect.Bottom+mShape->LayoutMargin.Height*2, lTextSize.Width, mShape->LayoutMargin.Height*4);
+		System::Drawing::RectangleF	lOwnerRect (0, lTextRect.Bottom+mShape->LayoutMargin.Height*5, lTextSize.Width, mShape->LayoutMargin.Height*6);
 		System::Drawing::RectangleF	lBounds (0, 0, Single::MaxValue, Single::MaxValue);
 		System::Drawing::RectangleF	lShapeRect;
 		CAgentTextDrawForms^		lTextDrawForms;

@@ -429,14 +429,20 @@ static void ReplaceAll (array<System::String^>^ pWords, wchar_t pOldChar, wchar_
 {
 	for (int lNdx = 0; lNdx < pWords->Length; lNdx++)
 	{
-		pWords[lNdx] = pWords[lNdx]->Replace (pOldChar, pNewChar);
+		if	(!String::IsNullOrEmpty (pWords[lNdx]))
+		{
+			pWords[lNdx] = pWords[lNdx]->Replace (pOldChar, pNewChar);
+		}
 	}
 }
 static void ReplaceAll (array<System::String^>^ pWords, String^ pOldString, String^ pNewString)
 {
 	for (int lNdx = 0; lNdx < pWords->Length; lNdx++)
 	{
-		pWords[lNdx] = pWords[lNdx]->Replace (pOldString, pNewString);
+		if	(!String::IsNullOrEmpty (pWords[lNdx]))
+		{
+			pWords[lNdx] = pWords[lNdx]->Replace (pOldString, pNewString);
+		}
 	}
 }
 #endif
@@ -1372,10 +1378,13 @@ void CAgentTextParse::AppendWords (const CAtlStringArray& pAppend, CAtlStringArr
 #ifdef	__cplusplus_cli
 	if	(pAppend->Length > 0)
 	{
+		int	lEnd = pWords->Length;
+		int	lNdx;
+		
 		Array::Resize (pWords, pWords->Length + pAppend->Length);
-		for	(int lNdx = 0; lNdx < pAppend->Length; lNdx++)
+		for	(lNdx = 0; lNdx < pAppend->Length; lNdx++)
 		{
-			pWords[pWords->Length + lNdx] = pAppend[lNdx];
+			pWords[lEnd+lNdx] = pAppend[lNdx];
 		}
 		PadWords (pWords, pSapiVersion);
 	}
