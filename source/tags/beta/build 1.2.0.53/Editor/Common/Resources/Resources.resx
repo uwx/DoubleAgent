@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="EditAdd" xml:space="preserve">
+    <value>&amp;Add</value>
+  </data>
+  <data name="EditAddAnimation" xml:space="preserve">
+    <value>Add new animation</value>
+  </data>
+  <data name="EditAddAnimation0" xml:space="preserve">
+    <value>To add an animation a new animation name is required</value>
+  </data>
+  <data name="EditAddAnimation1" xml:space="preserve">
+    <value>Add animation "{0}"</value>
+  </data>
+  <data name="EditAddThis" xml:space="preserve">
+    <value>Add {0}</value>
+  </data>
+  <data name="EditChooseFile" xml:space="preserve">
+    <value>Choose image file</value>
+  </data>
+  <data name="EditChooseThisFile" xml:space="preserve">
+    <value>Choose {0} image file</value>
+  </data>
+  <data name="EditCopy" xml:space="preserve">
+    <value>&amp;Copy</value>
+  </data>
+  <data name="EditCopyText" xml:space="preserve">
+    <value>&amp;Copy selected text</value>
+  </data>
+  <data name="EditCopyThis" xml:space="preserve">
+    <value>&amp;Copy {0}</value>
+  </data>
+  <data name="EditCut" xml:space="preserve">
+    <value>Cu&amp;t</value>
+  </data>
+  <data name="EditCutText" xml:space="preserve">
+    <value>&amp;Cut selected text</value>
+  </data>
+  <data name="EditCutThis" xml:space="preserve">
+    <value>Cu&amp;t {0}</value>
+  </data>
+  <data name="EditDelete" xml:space="preserve">
+    <value>&amp;Delete</value>
+  </data>
+  <data name="EditDeleteText" xml:space="preserve">
+    <value>&amp;Delete selected text</value>
+  </data>
+  <data name="EditDeleteThis" xml:space="preserve">
+    <value>&amp;Delete {0}</value>
+  </data>
+  <data name="EditMoveFrameNext" xml:space="preserve">
+    <value>Make {0} later</value>
+  </data>
+  <data name="EditMoveFramePrev" xml:space="preserve">
+    <value>Make {0} earlier</value>
+  </data>
+  <data name="EditMoveImageDown" xml:space="preserve">
+    <value>Bring {0} forward</value>
+  </data>
+  <data name="EditMoveImageUp" xml:space="preserve">
+    <value>Send {0} back</value>
+  </data>
+  <data name="EditPaste" xml:space="preserve">
+    <value>&amp;Paste</value>
+  </data>
+  <data name="EditPasteAdd" xml:space="preserve">
+    <value>(add) {0}</value>
+  </data>
+  <data name="EditPasteAnimation0" xml:space="preserve">
+    <value>To paste (add) an animation a new animation name is required</value>
+  </data>
+  <data name="EditPasteAs" xml:space="preserve">
+    <value>(add) {1} from {0}</value>
+  </data>
+  <data name="EditPasteFrameSource" xml:space="preserve">
+    <value>the copied frame</value>
+  </data>
+  <data name="EditPasteImageSource" xml:space="preserve">
+    <value>the copied image</value>
+  </data>
+  <data name="EditPasteOver" xml:space="preserve">
+    <value>(replace) {1} with {0}</value>
+  </data>
+  <data name="EditPasteReplace" xml:space="preserve">
+    <value>(replace) {0}</value>
+  </data>
+  <data name="EditPasteText" xml:space="preserve">
+    <value>&amp;Paste text</value>
+  </data>
+  <data name="EditPasteThis" xml:space="preserve">
+    <value>&amp;Paste {0}</value>
+  </data>
+  <data name="EditRedo" xml:space="preserve">
+    <value>&amp;Redo</value>
+  </data>
+  <data name="EditRedoText" xml:space="preserve">
+    <value>&amp;Redo typing</value>
+  </data>
+  <data name="EditRedoThis" xml:space="preserve">
+    <value>&amp;Redo {0}</value>
+  </data>
+  <data name="EditUndo" xml:space="preserve">
+    <value>&amp;Undo</value>
+  </data>
+  <data name="EditUndoText" xml:space="preserve">
+    <value>&amp;Undo typing</value>
+  </data>
+  <data name="EditUndoThis" xml:space="preserve">
+    <value>&amp;Undo {0}</value>
+  </data>
+  <data name="FrameAddKeepsBranchingTarget" xml:space="preserve">
+    <value>Maintain the current branching destinations regardless of the new Frame positions</value>
+  </data>
+  <data name="FrameAddShiftsBranchingTarget" xml:space="preserve">
+    <value>Change branching destinations to the new Frame positions</value>
+  </data>
+  <data name="FrameDeleteDeletesBranching" xml:space="preserve">
+    <value>Delete {0}'s branching with it</value>
+  </data>
+  <data name="FrameDeleteDeletesBranching0" xml:space="preserve">
+    <value>Delete the frame's branching with it</value>
+  </data>
+  <data name="FrameDeleteKeepsBranchingTarget" xml:space="preserve">
+    <value>Maintain the current branching destinations regardless of the new Frame positions</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingNext" xml:space="preserve">
+    <value>Merge {0}'s branching with Frame {1}</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingNext0" xml:space="preserve">
+    <value>Merge the frame's branching with the next frame</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingPrev" xml:space="preserve">
+    <value>Merge {0}'s branching with Frame {1}</value>
+  </data>
+  <data name="FrameDeleteMovesBranchingPrev0" xml:space="preserve">
+    <value>Merge the frame's branching with the previous frame</value>
+  </data>
+  <data name="FrameDeleteShiftsBranchingTarget" xml:space="preserve">
+    <value>Change branching destinations to the new Frame positions</value>
+  </data>
+  <data name="FrameMoveBranchingSourceNone" xml:space="preserve">
+    <value>{0} has no branching</value>
+  </data>
+  <data name="FrameMoveBranchingTargetNone" xml:space="preserve">
+    <value>{0} is not a branching destination</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingSource" xml:space="preserve">
+    <value>Move {0}'s branching with it</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingSource0" xml:space="preserve">
+    <value>Move the Frame's branching with it</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingTarget" xml:space="preserve">
+    <value>Don't change any branching destinations when {0} is moved</value>
+  </data>
+  <data name="FrameMoveKeepsBranchingTarget0" xml:space="preserve">
+    <value>Keep branching destinations at the Frame's original position</value>
+  </data>
+  <data name="FrameMoveMovesBranchingSource" xml:space="preserve">
+    <value>Swap {0}'s branching with Frame {1}</value>
+  </data>
+  <data name="FrameMoveMovesBranchingSource0" xml:space="preserve">
+    <value>Keep the Frame's branching at its original position</value>
+  </data>
+  <data name="FrameMoveMovesBranchingTarget" xml:space="preserve">
+    <value>Swap branching destinations for Frames {0} and {1}</value>
+  </data>
+  <data name="FrameMoveMovesBranchingTarget0" xml:space="preserve">
+    <value>Change branching destinations to the Frame's new position</value>
+  </data>
+  <data name="MouthOverlay" xml:space="preserve">
+    <value>Mouth</value>
+  </data>
+  <data name="MouthOverlayClosed" xml:space="preserve">
+    <value>Mouth-closed</value>
+  </data>
+  <data name="MouthOverlayMedium" xml:space="preserve">
+    <value>Mouth-medium</value>
+  </data>
+  <data name="MouthOverlayNarrow" xml:space="preserve">
+    <value>Mouth-narrow</value>
+  </data>
+  <data name="MouthOverlayWide1" xml:space="preserve">
+    <value>Mouth-wide-1</value>
+  </data>
+  <data name="MouthOverlayWide2" xml:space="preserve">
+    <value>Mouth-wide-2</value>
+  </data>
+  <data name="MouthOverlayWide3" xml:space="preserve">
+    <value>Mouth-wide-3</value>
+  </data>
+  <data name="MouthOverlayWide4" xml:space="preserve">
+    <value>Mouth-wide-4</value>
+  </data>
+  <data name="MsgDuplicateAnimation" xml:space="preserve">
+    <value>Animation "{0}" already exists.</value>
+  </data>
+  <data name="MsgFailedSaveAs" xml:space="preserve">
+    <value>Save as {0} failed.</value>
+  </data>
+  <data name="MsgInvalidFile" xml:space="preserve">
+    <value>{0} is not a valid character file.</value>
+  </data>
+  <data name="MsgInvalidSaveAs" xml:space="preserve">
+    <value>You cannot use "Save As" with the same file name.</value>
+  </data>
+  <data name="MsgNoFilePalette" xml:space="preserve">
+    <value>{0} does not contain a valid palette.</value>
+  </data>
+  <data name="MsgSaveFile" xml:space="preserve">
+    <value>Save changes to {0}?</value>
+  </data>
+  <data name="MsgSaveNew" xml:space="preserve">
+    <value>Save changes to "{0}"?</value>
+  </data>
+  <data name="TitleAnimation" xml:space="preserve">
+    <value>animation {0}</value>
+  </data>
+  <data name="TitleBalloon" xml:space="preserve">
+    <value>Word Balloon</value>
+  </data>
+  <data name="TitleCharacterName" xml:space="preserve">
+    <value>{0} name {1}</value>
+  </data>
+  <data name="TitleDirtyFile" xml:space="preserve">
+    <value>{0} [{1} *]</value>
+  </data>
+  <data name="TitleFrame" xml:space="preserve">
+    <value>Frame {0}</value>
+  </data>
+  <data name="TitleFrameAnimation" xml:space="preserve">
+    <value>{1} - {0}</value>
+  </data>
+  <data name="TitleImage" xml:space="preserve">
+    <value>Image {0}</value>
+  </data>
+  <data name="TitleImageFrame" xml:space="preserve">
+    <value>{1} - {0}</value>
+  </data>
+  <data name="TitleNewFile" xml:space="preserve">
+    <value>new character</value>
+  </data>
+  <data name="TitleOpenFile" xml:space="preserve">
+    <value>{0} [{1}]</value>
+  </data>
+  <data name="TitleOverlay" xml:space="preserve">
+    <value>Overlay</value>
+  </data>
+  <data name="TitleOverlayFrame" xml:space="preserve">
+    <value>{1} - {0}</value>
+  </data>
+  <data name="TitleOverlayType" xml:space="preserve">
+    <value>{0} overlay</value>
+  </data>
+  <data name="TitleState" xml:space="preserve">
+    <value>state {0}</value>
+  </data>
+  <data name="TitleTts" xml:space="preserve">
+    <value>Text-to-Speech</value>
+  </data>
+  <data name="UndoActionAdd" xml:space="preserve">
+    <value>add</value>
+  </data>
+  <data name="UndoActionChange" xml:space="preserve">
+    <value>change</value>
+  </data>
+  <data name="UndoActionCut" xml:space="preserve">
+    <value>cut</value>
+  </data>
+  <data name="UndoActionDelete" xml:space="preserve">
+    <value>delete</value>
+  </data>
+  <data name="UndoActionPaste" xml:space="preserve">
+    <value>paste</value>
+  </data>
+  <data name="UndoAnimationName" xml:space="preserve">
+    <value>change {0}</value>
+  </data>
+  <data name="UndoAnimationNames" xml:space="preserve">
+    <value>{0} to {1}</value>
+  </data>
+  <data name="UndoAnimationSize" xml:space="preserve">
+    <value>size</value>
+  </data>
+  <data name="UndoBalloonColor" xml:space="preserve">
+    <value>color</value>
+  </data>
+  <data name="UndoBalloonFont" xml:space="preserve">
+    <value>font</value>
+  </data>
+  <data name="UndoBalloonSize" xml:space="preserve">
+    <value>size</value>
+  </data>
+  <data name="UndoBalloonStyle" xml:space="preserve">
+    <value>style</value>
+  </data>
+  <data name="UndoDescription" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+  </data>
+  <data name="UndoFrameBranching" xml:space="preserve">
+    <value>branching</value>
+  </data>
+  <data name="UndoFrameDuration" xml:space="preserve">
+    <value>duration</value>
+  </data>
+  <data name="UndoFrameExit" xml:space="preserve">
+    <value>exit branching</value>
+  </data>
+  <data name="UndoFrameOrder" xml:space="preserve">
+    <value>frame order</value>
+  </data>
+  <data name="UndoFrameSoundPath" xml:space="preserve">
+    <value>sound</value>
+  </data>
+  <data name="UndoGuid" xml:space="preserve">
+    <value>unique identifier</value>
+  </data>
+  <data name="UndoIcon" xml:space="preserve">
+    <value>icon</value>
+  </data>
+  <data name="UndoImageFilePath" xml:space="preserve">
+    <value>path</value>
+  </data>
+  <data name="UndoImageOffset" xml:space="preserve">
+    <value>offset</value>
+  </data>
+  <data name="UndoImageOrder" xml:space="preserve">
+    <value>image order</value>
+  </data>
+  <data name="UndoNewFrameDuration" xml:space="preserve">
+    <value>new frame duration</value>
+  </data>
+  <data name="UndoOverlayImagePath" xml:space="preserve">
+    <value>image</value>
+  </data>
+  <data name="UndoOverlayOffset" xml:space="preserve">
+    <value>offset</value>
+  </data>
+  <data name="UndoOverlayReplaceFlag" xml:space="preserve">
+    <value>replace</value>
+  </data>
+  <data name="UndoPalette" xml:space="preserve">
+    <value>palette</value>
+  </data>
+  <data name="UndoPaletteTransparency" xml:space="preserve">
+    <value>palette transparency</value>
+  </data>
+  <data name="UndoReturnAnimation" xml:space="preserve">
+    <value>return animation</value>
+  </data>
+  <data name="UndoStateAnimation" xml:space="preserve">
+    <value>uses {0}</value>
+  </data>
+</root>
