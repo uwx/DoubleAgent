@@ -514,7 +514,7 @@
     <HtmlHelp2xCompilerPath>%ProgramFiles(x86)%\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <HelpTitle>Double Agent SDK</HelpTitle>
     <NamingMethod>MemberName</NamingMethod>
-    <HelpFileVersion>1.1.0.0</HelpFileVersion>
+    <HelpFileVersion>1.2.0.0</HelpFileVersion>
     <PlugInConfigurations>
       <PlugInConfig id="Table Of Contents Type Grouping" enabled="True">
         <configuration />
@@ -644,7 +644,8 @@
     <Content Include="Programming\Ctl_Objects.htm" />
     <Content Include="Programming\Ctl_Control_Name.htm" />
     <Content Include="Reference\Version_1_1_New.htm" />
-    <Content Include="Reference\UI_Rendering.htm" />
+      <Content Include="Reference\Version_1_2_New.htm" />
+      <Content Include="Reference\UI_Rendering.htm" />
     <Content Include="Reference\UI_PropSheet.htm" />
     <Content Include="Reference\UI_ControlPanel.htm" />
     <Content Include="Reference\UI_Intro.htm" />
@@ -775,7 +776,8 @@
     <None Include="Programming\.svn\entries" />
     <None Include="Programming\.svn\all-wcprops" />
     <None Include="Reference\.svn\text-base\Version_1_1_New.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\UI_Rendering.htm.svn-base" />
+      <None Include="Reference\.svn\text-base\Version_1_2_New.htm.svn-base" />
+      <None Include="Reference\.svn\text-base\UI_Rendering.htm.svn-base" />
     <None Include="Reference\.svn\text-base\UI_PropSheet.htm.svn-base" />
     <None Include="Reference\.svn\text-base\UI_Intro.htm.svn-base" />
     <None Include="Reference\.svn\text-base\Licensing.htm.svn-base" />

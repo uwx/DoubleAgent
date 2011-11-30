@@ -3178,6 +3178,27 @@
 				<param name="ImageNumber" value="11">
 				</OBJECT>
 		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="What's New for Version 1.2">
+			<param name="Local" value="Reference/Version_1_2_New.htm">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The Double Agent control for web pages">
+				<param name="Local" value="Reference/Version_1_2_New.htm#CAB">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Version 1.5 Character Files">
+				<param name="Local" value="Reference/Version_1_2_New.htm#Characters">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="The Programming Interfaces">
+				<param name="Local" value="Reference/Version_1_2_New.htm#API">
+				<param name="ImageNumber" value="11">
+				</OBJECT>
+		</UL>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Microsoft Agent">

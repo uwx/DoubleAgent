@@ -33,7 +33,14 @@ using namespace System::Drawing::Drawing2D;
 #ifdef	_DEBUG
 #include "ImageDebugger.h"
 #endif
+#endif
 
+#ifdef	__cplusplus_cli
+static inline Single CopySign (Single pValue, Single pSign)
+{
+	return	Math::Abs (pValue) * Math::Sign (pSign);
+}
+#else
 #ifndef	PI
 #define	PI 3.141592
 #endif
@@ -456,16 +463,16 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 			lRefPoint.Y = pRectCenter.Y;
 		}
 		else
-		if	(Math::Abs (Math::PI/2.0*Math::Sign(lAngle) - lAngle) <= pMinAngle)
+		if	(Math::Abs (CopySign ((Single)(Math::PI/2.0), lAngle) - lAngle) <= pMinAngle)
 		{
-			lAngle = (Single)(Math::PI/2.0*Math::Sign(lAngle));
+			lAngle = CopySign ((Single)Math::PI/2.0, lAngle);
 			lRefPoint.X = pRectCenter.X;
-			lRefPoint.Y = pRectCenter.Y - lLength * Math::Sign(lAngle);
+			lRefPoint.Y = pRectCenter.Y - CopySign (lLength, lAngle);
 		}
 		else
-		if	(Math::Abs (Math::PI*Math::Sign(lAngle) - lAngle) <= pMinAngle)
+		if	(Math::Abs (CopySign ((Single)Math::PI, lAngle) - lAngle) <= pMinAngle)
 		{
-			lAngle = (Single)(Math::PI*Math::Sign(lAngle));
+			lAngle = CopySign ((Single)Math::PI, lAngle);
 			lRefPoint.X = pRectCenter.X + lLength;
 			lRefPoint.Y = pRectCenter.Y;
 		}
@@ -513,27 +520,27 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 	if	(Math::Round (lRefPoint.X) == Math::Round (pRectCenter.X))
 	{
 		pRectIntersect.X = 0.0;
-		pRectIntersect.Y = lRectHalf.Y * Math::Sign(lRefPoint.Y - pRectCenter.Y);
+		pRectIntersect.Y = CopySign (lRectHalf.Y, lRefPoint.Y - pRectCenter.Y);
 	}
 	else
 	if	(Math::Round (lRefPoint.Y) == Math::Round (pRectCenter.Y))
 	{
-		pRectIntersect.X = lRectHalf.X * Math::Sign(lRefPoint.X - pRectCenter.X);
+		pRectIntersect.X = CopySign (lRectHalf.X, lRefPoint.X - pRectCenter.X);
 		pRectIntersect.Y = 0.0;
 	}
 	else
 	{
-		pRectIntersect.X = (float)((lRectHalf.Y / Math::Tan (lAngle)) * Math::Sign(lRefPoint.X - pRectCenter.X));
-		pRectIntersect.Y = (float)((Math::Tan (lAngle) * lRectHalf.X) * Math::Sign(lRefPoint.Y - pRectCenter.Y));
+		pRectIntersect.X = CopySign (lRectHalf.Y / (Single)Math::Tan (lAngle), lRefPoint.X - pRectCenter.X);
+		pRectIntersect.Y = CopySign (lRectHalf.X * (Single)Math::Tan (lAngle), lRefPoint.Y - pRectCenter.Y);
 	}
 
 	if	(Math::Abs (pRectIntersect.X) > lRectHalf.X)
 	{
-		pRectIntersect.X = lRectHalf.X * Math::Sign(pRectIntersect.X);
+		pRectIntersect.X = CopySign (lRectHalf.X, pRectIntersect.X);
 	}
 	if	(Math::Abs (pRectIntersect.Y) > lRectHalf.Y)
 	{
-		pRectIntersect.Y = lRectHalf.Y * Math::Sign(pRectIntersect.Y);
+		pRectIntersect.Y = CopySign (lRectHalf.Y, pRectIntersect.Y);
 	}
 
 	pRectIntersect.X += pRectCenter.X;
@@ -553,7 +560,7 @@ void CAgentBalloonShape::CalcRectIntersect (const _complex& pRefPoint, const _co
 	else
 	{
 		pRectIntersect.x = _copysign (lRectHalf.y / tan (lAngle), lRefPoint.x - pRectCenter.x);
-		pRectIntersect.y = _copysign (tan (lAngle) * lRectHalf.x, lRefPoint.y - pRectCenter.y);
+		pRectIntersect.y = _copysign (lRectHalf.x * tan (lAngle), lRefPoint.y - pRectCenter.y);
 	}
 
 	if	(fabs (pRectIntersect.x) > lRectHalf.x)

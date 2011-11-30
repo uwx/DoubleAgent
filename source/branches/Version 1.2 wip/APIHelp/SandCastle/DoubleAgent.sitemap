@@ -103,6 +103,11 @@
 			<siteMapNode title="The Programming Interfaces" url="Reference/Version_1_1_New.htm" href="#API" />
 			<siteMapNode title="Refactoring" url="Reference/Version_1_1_New.htm" href="#Refactoring" />
 			<siteMapNode title="Speech Text" url="Reference/Version_1_1_New.htm" href="#SpeechText" />
+        </siteMapNode>
+            <siteMapNode title="What's New for Version 1.2" url="Reference/Version_1_2_New.htm">
+			<siteMapNode title="The Double Agent control for web pages" url="Reference/Version_1_2_New.htm" href="#CAB" />
+			<siteMapNode title="Version 1.5 Character Files" url="Reference/Version_1_2_New.htm" href="#Characters" />
+			<siteMapNode title="The Programming Interfaces" url="Reference/Version_1_2_New.htm" href="#API" />
+			</siteMapNode>
 		</siteMapNode>
-	</siteMapNode>
 </siteMap>

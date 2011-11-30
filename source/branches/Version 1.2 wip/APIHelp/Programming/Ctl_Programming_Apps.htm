@@ -27,75 +27,107 @@
 <body>
 	<table class="pagetable" cellspacing="0" cellpadding="0">
 		<tr>
-			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+			<td class="runninghead">
+				Double&nbsp;Agent&nbsp;API
+			</td>
 		</tr>
 		<tr>
 			<td class="pagehead">
-				<h3>Using the Control in Applications</h3>
+				<h3>
+					Using the Control in Applications</h3>
 			</td>
 		</tr>
 		<tr>
 			<td class="page">
-				<p>You can access the Double Agent server from any programming environment that supports the <em class="glossary">
-					COM</em> standard or the <em class="glossary">.NET</em> standard. This includes Visual Basic 6, Visual
-					Basic .NET, Visual C#, Visual C++, JScript, VBScript, and many other programming languages.</p>
+				<p>
+					You can access the Double Agent server from any programming environment that supports
+					the <em class="glossary">COM</em> standard or the <em class="glossary">.NET</em>
+					standard. This includes Visual Basic 6, Visual Basic .NET, Visual C#, Visual C++,
+					JScript, VBScript, and many other programming languages.</p>
 				<hr />
-				<p>For programming languages that support native Windows programming, use Double Agent's native ActiveX<sup>®</sup>
-					control.</p>
+				<p>
+					For programming languages that support native Windows programming, use Double Agent's
+					native ActiveX<sup>®</sup> control.</p>
 				<ul class="close">
-					<li>To include the control in a form, make sure the language fully supports the <em class="glossary">ActiveX<sup>®</sup>
-						Control Interface</em>, and follow its conventions for adding and accessing ActiveX<sup>®</sup> controls.</li>
-					<li>If the language supports it, you can also use the <em class="keyword">New</em> operator with the &quot;DoubleAgent.Control&quot;
-						or &quot;DoubleAgent.Control.1.1&quot; <em class="keyword">ProgID</em>, or the &quot;{1147E530-A208-11DE-ABF2-002421116FB2}&quot;
+					<li>To include the control in a form, make sure the language fully supports the <em
+						class="glossary">ActiveX<sup>®</sup> Control Interface</em>, and follow its conventions
+						for adding and accessing ActiveX<sup>®</sup> controls.</li>
+					<li>If the language supports it, you can also use the <em class="keyword">New</em> operator
+						with the &quot;DoubleAgent.Control&quot; or &quot;DoubleAgent.Control.1.1&quot;
+						<em class="keyword">ProgID</em>, or the &quot;{1147E530-A208-11DE-ABF2-002421116FB2}&quot;
 						<em class="keyword">ClassID</em>.</li>
 				</ul>
-				<p>The programming environment may require a declared reference to the control's <em class="glossary">COM</em>
-					type library:</p>
+				<p>
+					The programming environment may require a declared reference to the control's <em
+						class="glossary">COM</em> type library:</p>
 				<ul class="close">
-					<li>The native control is registered as an <em class="glossary">ActiveX<sup>®</sup> Control</em> object.
-						If the programming environment provides a list of registered <em class="glossary">ActiveX<sup>®</sup> Control</em>
-						or <em class="glossary">COM Automation</em> objects, it will appear in the list.</li>
-					<li>A <em>reference copy</em> of the control's <em class="glossary">COM</em> type library is installed with
-						the <a href="Ctl_Programming_Overview.htm#DevFiles">Double Agent SDK</a> in folder <em class="filename">
-							C:\Program Files\Double Agent\Dev</em>.</li>
-					<li>For programming environments that prefer to retrieve type information from the actual run-time, a <em>
-						copy</em> of the control's <em class="glossary">COM</em> type library is also included in the control's
-						run-time (<em class="filename">DaControl.dll</em>) as an embedded resource.</li>
+					<li>The native control is registered as an <em class="glossary">ActiveX<sup>®</sup>
+						Control</em> object. If the programming environment provides a list of registered
+						<em class="glossary">ActiveX<sup>®</sup> Control</em> or <em class="glossary">COM Automation</em>
+						objects, it will appear in the list.</li>
+					<li>A <em>reference copy</em> of the control's <em class="glossary">COM</em> type library
+						is installed with the <a href="Ctl_Programming_Overview.htm#DevFiles">Double Agent SDK</a>
+						in folder <em class="filename">C:\Program Files\Double Agent\Dev</em>.</li>
+					<li>For programming environments that prefer to retrieve type information from the actual
+						run-time, a <em>copy</em> of the control's <em class="glossary">COM</em> type library
+						is also included in the control's run-time (<em class="filename">DaControl.dll</em>)
+						as an embedded resource.</li>
 				</ul>
 				<hr />
-				<p>For programming languages that support the <em class="glossary">.NET</em> <em class="glossary">Common
-					Language Runtime (CLR)</em>, there are two options:</p>
+				<p>
+					For programming languages that support the <em class="glossary">.NET</em> <em class="glossary">
+						Common Language Runtime (CLR)</em>, there are two options:</p>
 				<ol>
 					<li>You can use Double Agent's Control <em class="glossary">Primary Interop Assembly</em>.
 						<ul>
-							<li>It provides the Double Agent Control as simple a <em class="glossary">.NET</em> object (a subclass of
-								System.Object) that you can instantiate using the <em class="keyword">New</em> operator (no form required).</li>
-							<li>Use the <em class="keyword">Control</em> class in the <em class="keyword">DoubleAgent.Control</em> namespace.</li></ul>
+							<li>It provides the Double Agent Control as simple a <em class="glossary">.NET</em>
+								object (a subclass of System.Object) that you can instantiate using the <em class="keyword">
+									New</em> operator (no form required).</li>
+							<li>Use the <em class="keyword">Control</em> class in the <em class="keyword">DoubleAgent.Control</em>
+								namespace.</li></ul>
 					</li>
-					<li>If the language supports the <em class="keyword">System.Windows.Forms</em> namespace, you can use Double
-						Agent's ActiveX<sup>®</sup> Control <em class="glossary">Primary Interop Assembly</em>.
+					<li>If the language supports the <em class="keyword">System.Windows.Forms</em> namespace,
+						you can use Double Agent's ActiveX<sup>®</sup> Control <em class="glossary">Primary
+							Interop Assembly</em>.
 						<ul>
-							<li>It provides the Double Agent Control as a <em class="glossary">Windows Forms Control</em> (a subclass
-								of <em class="keyword">System.Windows.Forms.Control</em>) that you can drop in any form.</li>
+							<li>It provides the Double Agent Control as a <em class="glossary">Windows Forms Control</em>
+								(a subclass of <em class="keyword">System.Windows.Forms.Control</em>) that you can
+								drop in any form.</li>
 							<li>Use the <em class="keyword">AxControl</em> class in the <em class="keyword">DoubleAgent.AxControl</em>
 								namespace.</li>
 						</ul>
 					</li>
 				</ol>
-				<p>The programming environment may require a declared reference to these assemblies:</p>
+				<p>
+					The programming environment may require a declared reference to these assemblies:</p>
 				<ul class="close">
-					<li>For a programming environment that retrieves references from the <em class="glossary">Global Assembly Cache</em>,
-						these assemblies are added to the <em class="glossary">GAC</em> when Double Agent is installed.</li>
-					<li>If an assembly file is required, a <em>reference copy</em> of these assemblies is installed with the
-						<a href="Ctl_Programming_Overview.htm#DevFiles">Double Agent SDK</a> in folder <em class="filename">C:\Program
-							Files\Double Agent\Dev</em>.</li>
-					<li>You can use a reference to a specific assembly's full path, or add the SDK install location to the programming
-						environment's reference search path.</li>
+					<li>
+						<p>
+							For a programming environment that retrieves references from the <em class="glossary">
+								Global Assembly Cache</em>, this assembly is added to the <em class="glossary">GAC</em>
+							when Double Agent is installed.</p>
+						<p>
+							There are different versions of the <em class="glossary">Primary Interop Assembly</em>
+							for <em class="glossary">.NET</em> 3.5 or earlier and <em class="glossary">.NET</em>
+							4.0 or later.&nbsp; If you move from <em class="glossary">.NET</em> 3.5 to <em class="glossary">
+								.NET</em> 4.0 you should reinstall the <a href="Ctl_Programming_Overview.htm#DevFiles">
+									Double Agent SDK</a> to get the correct <em class="glossary">Primary Interop Assembly</em>
+							version installed in the the <em class="glossary">GAC</em>.</p>
+					</li>
+					<li>If an assembly file is required, a <em>reference copy</em> of these assemblies is
+						installed with the <a href="Ctl_Programming_Overview.htm#DevFiles">Double Agent SDK</a>
+						in folder <em class="filename">C:\Program Files\Double Agent\Dev\v3.5</em> (for
+						<em class="glossary">.NET</em> 3.5 or earlier) or <em class="filename">C:\Program Files\Double
+							Agent\Dev\v4.0</em> (for <em class="glossary">.NET</em> 4.0 or later).</li>
+					<li>You can use a reference to a specific assembly's full path, or add the SDK install
+						location to the programming environment's reference search path.</li>
 				</ul>
-				<h4 class="seealso">See Also</h4>
+				<h4 class="seealso">
+					See Also</h4>
 				<a href="Ctl_Programming_Instance.htm">Creating an Instance of the Control</a><br />
 				<a href="Ctl_Programming_Members.htm">Using the Control's Methods, Properties, and Events</a><br>
-				<a href="Ctl_Programming_Overview.htm">Control Programming Overview</a> </td>
+				<a href="Ctl_Programming_Overview.htm">Control Programming Overview</a>
+			</td>
 		</tr>
 	</table>
 </body>

@@ -414,7 +414,7 @@ namespace AgentCharacterEditor.Previews
 			}
 		}
 
-		void OnCurrentGlobalSpeedInvalidated (object sender, EventArgs e)
+		private void OnCurrentGlobalSpeedInvalidated (object sender, EventArgs e)
 		{
 #if DEBUG
 			try
@@ -465,7 +465,7 @@ namespace AgentCharacterEditor.Previews
 #endif
 		}
 
-		void OnRemoveRequested (object sender, EventArgs e)
+		private void OnRemoveRequested (object sender, EventArgs e)
 		{
 #if DEBUG
 			System.Diagnostics.Debug.Print ("{0}(I{2}) Remove", Name, mInstanceNum);
