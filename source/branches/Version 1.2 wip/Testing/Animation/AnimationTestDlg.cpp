@@ -95,6 +95,7 @@ BEGIN_MESSAGE_MAP(CAnimationTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_ICON_GENERATE, OnIconGenerated)
 	ON_BN_CLICKED(IDC_ICON_IDENTITY, OnIconIdentified)
 	ON_BN_CLICKED(IDC_USE_MSAGENT, OnUseMsAgent)
+	ON_BN_CLICKED(IDC_SIZE_TEST, OnSizeTest)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -116,6 +117,7 @@ CAnimationTestDlg::CAnimationTestDlg(CWnd* pParent)
 	mRepeatTimer (0),
 	mAllGesturesTimer (0),
 	mAllStatesTimer (0),
+	mSizeTestTimer (0),
 	mTimerCount (0),
 	mLoadReqID (0),
 	mHideReqID (0),
@@ -165,6 +167,7 @@ void CAnimationTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ICON_GENERATE_CLIP, mIconClipped);
 	DDX_Control(pDX, IDC_ICON_IDENTITY, mIconIdentified);
 	DDX_Control(pDX, IDC_USE_MSAGENT, mUseMsAgent);
+	DDX_Control(pDX, IDC_SIZE_TEST, mSizeTest);
 	//}}AFX_DATA_MAP
 }
 
@@ -1003,6 +1006,8 @@ bool CAnimationTestDlg::Stop ()
 	bool	lRet = false;
 	long	lReqID = 0;
 
+	StopSizeTest ();
+
 	if	(mRepeatTimer)
 	{
 		KillTimer (mRepeatTimer);
@@ -1047,6 +1052,60 @@ bool CAnimationTestDlg::Stop ()
 	mTimerCount = 0;
 	mLastAnimationReqID = 0;
 	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CAnimationTestDlg::StartSizeTest ()
+{
+	StopSizeTest ();
+	if	(mDaCharacter)
+	{
+		mSizeTestCycle = 30;
+		mSizeTestTimer = SetTimer ((UINT_PTR)&mSizeTestTimer, 1, NULL);
+	}
+}
+
+void CAnimationTestDlg::StopSizeTest ()
+{
+	if	(mSizeTestTimer)
+	{
+		KillTimer (mSizeTestTimer);
+		mSizeTestTimer = 0;
+	}
+	if	(mDaCharacter)
+	{
+		CSize	lSize;
+
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetOriginalSize (&lSize.cx, &lSize.cy), _T("[%d] GetSize"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->SetSize (lSize.cx, lSize.cx), _T("[%d] SetSize"), mCharacterId);
+	}
+}
+
+void CAnimationTestDlg::SizeTestCycle ()
+{
+	if	(
+			(mSizeTestCycle-- >= -30)
+		&&	(mDaCharacter)
+		)
+	{
+		try
+		{
+			CSize	lSize;
+	
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->GetOriginalSize (&lSize.cx, &lSize.cy), _T("[%d] GetSize"), mCharacterId);
+			lSize.cx += (30 - labs(mSizeTestCycle)) * 5;
+			lSize.cy += (30 - labs(mSizeTestCycle)) * 5;
+			LogComErr (_LOG_CHAR_CALLS_EX, mDaCharacter->SetSize (lSize.cx, lSize.cx), _T("[%d] SetSize"), mCharacterId);
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	{
+		StopSizeTest ();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1516,6 +1575,7 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		mSmoothNone.EnableWindow (FALSE);
 		mSmoothEdges.EnableWindow (FALSE);
 		mSmoothFull.EnableWindow (FALSE);
+		mSizeTest.EnableWindow (TRUE);
 	}
 	else
 	if	(mMsCharacter != NULL)
@@ -1543,6 +1603,7 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		mSmoothNone.EnableWindow (FALSE);
 		mSmoothEdges.EnableWindow (FALSE);
 		mSmoothFull.EnableWindow (FALSE);
+		mSizeTest.EnableWindow (FALSE);
 	}
 	else
 	if	(mDaServer)
@@ -1566,6 +1627,7 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		mSmoothNone.EnableWindow (TRUE);
 		mSmoothEdges.EnableWindow (TRUE);
 		mSmoothFull.EnableWindow (TRUE);
+		mSizeTest.EnableWindow (FALSE);
 	}
 	else
 	{
@@ -1582,6 +1644,7 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		mSmoothNone.EnableWindow (FALSE);
 		mSmoothEdges.EnableWindow (FALSE);
 		mSmoothFull.EnableWindow (FALSE);
+		mSizeTest.EnableWindow (FALSE);
 	}
 }
 
@@ -2092,6 +2155,11 @@ void CAnimationTestDlg::OnUseMsAgent()
 	ShowCharacterState ();
 }
 
+void CAnimationTestDlg::OnSizeTest()
+{
+	StartSizeTest ();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 void CAnimationTestDlg::OnAgentProps()
@@ -2214,6 +2282,14 @@ void CAnimationTestDlg::OnTimer(UINT_PTR nIDEvent)
 				Stop ();
 			}
 		}
+	}
+	else
+	if	(
+			(mSizeTestTimer)
+		&&	(nIDEvent == mSizeTestTimer)
+		)
+	{
+		SizeTestCycle ();
 	}
 	CDialog::OnTimer(nIDEvent);
 }

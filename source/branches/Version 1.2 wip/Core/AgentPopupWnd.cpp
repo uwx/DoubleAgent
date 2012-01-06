@@ -954,9 +954,34 @@ bool CAgentPopupWnd::SizePopup (const CSize& pSize, long pForCharID, bool pAlway
 			||	(pSize.cy != lWinRect.Height())
 			)
 		{
+			bool	lWindowMoved = false;
+
 			lWinRect.right = lWinRect.left + pSize.cx;
 			lWinRect.bottom = lWinRect.top + pSize.cy;
-			MoveWindow (&lWinRect);
+
+			if	(
+					(IsWindowVisible ())
+				&&	(GetAlphaSmoothing())
+				&&	(mRenderFilter)
+				)
+			{
+				CImageBuffer	lImageBuffer;
+				BLENDFUNCTION	lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+
+				if	(
+						(lImageBuffer.CreateBuffer (lWinRect.Size(), true))
+					&&	(mRenderFilter->DrawSampleImage (lImageBuffer.GetDC(), &CRect (CPoint (0,0), lWinRect.Size())) == S_OK)
+					&&	(::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), lImageBuffer.GetDC(), &CPoint(0,0), 0, &lBlend, ULW_ALPHA))
+					)
+				{
+					lWindowMoved = true;
+				}
+			}
+
+			if	(!lWindowMoved)
+			{
+				MoveWindow (&lWinRect);
+			}
 			AutoSizeVideo (false);
 			if	(IsWindowVisible ())
 			{

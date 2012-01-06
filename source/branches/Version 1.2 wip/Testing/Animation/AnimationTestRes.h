@@ -32,9 +32,11 @@
 #define IDC_SMOOTH_FULL                 1026
 #define IDC_CHECK1                      1027
 #define IDC_USE_MSAGENT                 1027
+#define IDC_POPUP2                      1028
+#define IDC_SIZE_TEST                   1028
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

@@ -56,6 +56,7 @@ public:
 	CButton	mIconClipped;
 	CButton	mIconIdentified;
 	CButton	mUseMsAgent;
+	CButton	mSizeTest;
 	//}}AFX_DATA
 
 	//{{AFX_VIRTUAL(CAnimationTestDlg)
@@ -97,6 +98,7 @@ protected:
 	afx_msg void OnIconGenerated();
 	afx_msg void OnIconIdentified();
 	afx_msg void OnUseMsAgent();
+	afx_msg void OnSizeTest();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -146,6 +148,10 @@ protected:
 	bool ShowAllGestures ();
 	bool ShowAllStates ();
 
+	void StartSizeTest ();
+	void StopSizeTest ();
+	void SizeTestCycle ();
+
 	bool IsAnimating ();
 	bool Stop ();
 
@@ -181,6 +187,8 @@ protected:
 	long					mLoadReqID;
 	long					mHideReqID;
 	long					mLastAnimationReqID;
+	UINT_PTR				mSizeTestTimer;
+	long					mSizeTestCycle;
 };
 
 /////////////////////////////////////////////////////////////////////////////
