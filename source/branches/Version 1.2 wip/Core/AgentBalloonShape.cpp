@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -47,7 +47,7 @@ static inline Single CopySign (Single pValue, Single pSign)
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_LAYOUT		LogDebug
+//#define	_DEBUG_LAYOUT		LogDebug
 //#define	_TRACE_LAYOUT		LogDebug
 //#define	_DEBUG_DRAW			LogDebug
 #endif

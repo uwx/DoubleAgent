@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("Cinnamon Software Inc.")]
 [assembly: AssemblyProduct ("Double Agent")]
-[assembly: AssemblyCopyright ("Copyright © Cinnamon Software Inc. 2011")]
+[assembly: AssemblyCopyright ("Copyright © Cinnamon Software Inc. 2011-2012")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -84,7 +84,7 @@ protected:
 	CInstanceAnchor*			mAnchor;
 	long						mCharID;
 	LANGID						mLangID;
-	CAgentFile*				mFile;
+	CAgentFile*					mFile;
 	class CAgentCharacterWnd*	mOwnerWnd;
 	CDaBalloonConfig			mGlobalConfig;
 	tPtr <CAgentFileBalloon>	mCustomConfig;

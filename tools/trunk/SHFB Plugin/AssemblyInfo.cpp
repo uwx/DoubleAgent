@@ -16,7 +16,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Cinnamon Software Inc.")];
 [assembly:AssemblyProductAttribute("SHFBPlugin")];
-[assembly:AssemblyCopyrightAttribute("Copyright © Cinnamon Software Inc. 2010-2011")];
+[assembly:AssemblyCopyrightAttribute("Copyright © Cinnamon Software Inc. 2010-2012")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 

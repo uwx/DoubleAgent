@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -263,9 +263,9 @@ CAtlString CQueuedSpeak::GetSpeechText ()
 
 bool CQueuedSpeak::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
+	bool				lRet = false;
 	CAgentCharacterWnd*	lCharacterWnd;
-	HRESULT					lResult = S_OK;
+	HRESULT				lResult = S_OK;
 
 	if	(mPaused)
 	{
@@ -875,7 +875,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	HRESULT					lResult = S_FALSE;
 	bool					lBalloonShown = false;
-	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentCharacterWnd*		lCharacterWnd;
 	CAgentBalloonWnd*		lBalloonWnd = NULL;
 	CDirectSoundLipSync *	lLipSync;
 
@@ -895,22 +895,40 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 
 		if	(
 				(pQueue.GetNextAction (QueueActionSpeak) == this)
-			&&	(ShowBalloon())
 			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
-			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
-			&&	(lBalloonWnd->IsWindow ())
 			)
 		{
-			lBalloonWnd->ApplyOptions (mBalloonOptions);
-			if	(mText)
+			if	(ShowBalloon())
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText, true);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->ApplyOptions (mBalloonOptions);
+					if	(mText)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText, true);
+					}
+					else
+					if	(mTextObject)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText, true);
+					}
+				}
 			}
+#ifdef	_STRICT_COMPATIBILITY
 			else
-			if	(mTextObject)
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText, true);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->HideBalloon (true);
+				}
 			}
+#endif
 		}
 
 		if	(pQueue.GetNextAction (QueueActionSpeak) == this)
@@ -949,23 +967,41 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 
 		if	(
 				(pQueue.GetNextAction (QueueActionSpeak) == this)
-			&&	(ShowBalloon())
 			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
-			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
-			&&	(lBalloonWnd->IsWindow ())
 			)
 		{
-			mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd, lBalloonWnd);
-			lBalloonWnd->ApplyOptions (mBalloonOptions);
-			if	(mText)
+			if	(ShowBalloon())
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd, lBalloonWnd);
+					lBalloonWnd->ApplyOptions (mBalloonOptions);
+					if	(mText)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText);
+					}
+					else
+					if	(mTextObject)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText);
+					}
+				}
 			}
+#ifdef	_STRICT_COMPATIBILITY
 			else
-			if	(mTextObject)
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->HideBalloon (true);
+				}
 			}
+#endif
 		}
 
 		if	(pQueue.GetNextAction (QueueActionSpeak) == this)

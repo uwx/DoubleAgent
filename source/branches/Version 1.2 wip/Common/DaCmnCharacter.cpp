@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -3680,7 +3680,7 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject* pTextObject, 
 		tPtr <CAgentBalloonOptions>	lBalloonOptions;
 		CAtlString					lText (Text);
 		CAtlString					lSoundUrl (Url);
-		CSapiVoice*				lVoice = NULL;
+		CSapiVoice*					lVoice = NULL;
 //
 //	MS Agent shows the speech balloon silently when the character is listening.
 //	For now, we'll just stop listening.
@@ -3733,6 +3733,13 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, class CAgentTextObject* pTextObject, 
 
 		if	(SUCCEEDED (lResult))
 		{
+			if	(
+					(lBalloonOptions)
+				&&	(!lBalloonOptions->IsEnabled ())
+				)
+			{
+				lBalloonOptions = NULL;
+			}
 			if	(lBalloonOptions)
 			{
 				GetBalloonWnd (true);
