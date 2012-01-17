@@ -85,14 +85,23 @@ DaControl::DaControl()
 	mLocalCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
 	mFinalReleased (false)
 {
-#ifndef	_DACORE_LOCAL
-	mAutoConnect = 1;
-#endif
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DaControl"), this, max(m_dwRef,-1));
 	}
+#endif
+
+#ifndef	_DACORE_LOCAL
+#ifdef	_WIN64
+#ifdef	_STRICT_COMPATIBILITY
+	mAutoConnect = 32;	// Version 1.2 changes the default 64-bit control connection to the 32-bit server (for MS Agent compatibility).
+#else
+	mAutoConnect = 1;
+#endif
+#else
+	mAutoConnect = 1;
+#endif
 #endif
 
 #ifdef	_DEBUG

@@ -1866,6 +1866,10 @@
 								<param name="Local" value="html/M_DoubleAgent_Control_Character_Prepare.htm">
 								</OBJECT>
 							<LI> <OBJECT type="text/sitemap">
+								<param name="Name" value="The SetSize Method">
+								<param name="Local" value="html/M_DoubleAgent_Control_Character_SetSize.htm">
+								</OBJECT>
+							<LI> <OBJECT type="text/sitemap">
 								<param name="Name" value="The Show Method">
 								<param name="Local" value="html/M_DoubleAgent_Control_Character_Show.htm">
 								</OBJECT>

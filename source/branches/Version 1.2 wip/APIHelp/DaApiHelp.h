@@ -521,6 +521,7 @@
 #define	APIHELP_Ctl_Character_SuspendHide					0x0104004C
 #define	APIHELP_Ctl_Character_Animations					0x0104004D
 #define	APIHELP_Ctl_Character_States						0x0104004E
+#define	APIHELP_Ctl_Character_SetSize						0x0104004F
 
 #define	APIHELP_Ctl_Request									0x01050000
 #define	APIHELP_Ctl_Request_ID								0x01050001

@@ -197,6 +197,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get_SuspendStop (VARIANT_BOOL *Enabled);
 	HRESULT STDMETHODCALLTYPE put_SuspendHide (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get_SuspendHide (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE SetSize (short Width, short Height);
 
 // Implementation
 public:

@@ -1734,7 +1734,9 @@
 					</item>
 					<item>
 						<term width="150ex">Any non-zero value</term>
-						<description>The control will automatically connect to the server.</description>
+						<description>
+							The control will automatically connect to the server.<br/>This is the default value.
+						</description>
 					</item>
 				</list>
 				<para>
@@ -1751,14 +1753,14 @@
 						<term width="150ex">32</term>
 						<description>
 							The control will automatically connect to the 32-bit server. If the 32-bit server is
-							not installed, the 64-bit server will be used.
+							not installed, the 64-bit server will be used.<br/>This the default value for Double Agent Version 1.2 or later.
 						</description>
 					</item>
 					<item>
 						<term width="150ex">64</term>
 						<description>
 							The control will automatically connect to the 64-bit server. If the 64-bit server is
-							not installed, the 32-bit server will be used.
+							not installed, the 32-bit server will be used.<br/>This the default value for Double Agent Version 1.1.
 						</description>
 					</item>
 					<item>
@@ -1777,9 +1779,28 @@
 					mode, you must set this property to <keyword>zero</keyword>.
 				</para>
 				<para>
-					For compatibility with Microsoft<sup>®</sup> Agent, the default value for this property is <keyword>True</keyword>.
+					This property is only used the <em>first time</em> a server connection is required.  After that, any change to this property will be ignored.
 				</para>
+				<note>
+					The <a class="see" href="..\Programming\Ctl_Programming_Web.htm#ControlOCX">downloadable stand-alone</a> control always runs in
+					<a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.  Therefore, when using <filename>DaControl.OCX</filename>, this
+					property is always <keyword>zero</keyword>.
+				</note>
 			</remarks>
+			<details>
+				<h4 class="details">Details</h4>
+				<para>
+					For compatibility with Microsoft<sup>®</sup> Agent, the default value for this property is <keyword>1</keyword> for the
+					32-bit control and <keyword>32</keyword> for the 64-bit control.
+				</para>
+				<para>
+					On 64-bit systems, this provides compatibility
+					with 32-bit Microsoft<sup>®</sup> Agent for <em>Windows XP</em>, rather than 64-bit Microsoft<sup>®</sup> Agent.
+					Connecting by default to the 32-bit server (if installed) allows
+					applications to use 32-bit <a class="see" href="..\Programming\Ctl_Programming_Speech.htm">SAPI4</a> voices
+					consistently across all platforms.
+				</para>
+			</details>
 			<seealso cref="P:&darootobj;.Connected" suffix="Property" prefix="The" />
 		</member>
 
@@ -2264,14 +2285,17 @@
 					you still have references to any objects except the control itself, any attempt to access the objects'
 					properties or methods will fail.
 				</para>
+				<note>
+					The <a class="see" href="..\Programming\Ctl_Programming_Web.htm#ControlOCX">downloadable stand-alone</a> control always runs in
+					<a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.  Therefore, when using <filename>DaControl.OCX</filename>, this
+					property is always <keyword>false</keyword>.
+				</note>
 			</remarks>
 			<details>
 				<h4 class="details">Details</h4>
 				<para>
 					In many situations, using the control automatically creates a connection with the Double Agent server
-					(depending on the <see cref="P:&darootobj;.AutoConnect" /> property setting). For example, using the Double
-					Agent control's CLSID in the &lt;OBJECT&gt; tag in a Web page automatically opens a server connection and
-					exiting the page closes the connection. Similarly, for Visual Basic or other languages that enable
+					(depending on the <see cref="P:&darootobj;.AutoConnect" /> property setting). For Visual Basic or other languages that enable
 					you to drop a control on a form, running the program automatically opens a connection and exiting
 					the program closes the connection. If the server isn't currently running, it automatically starts.
 				</para>
@@ -5643,6 +5667,52 @@
 
 		<!--=============================================================================================-->
 
+		<member name="M:&dans;.Character.SetSize">
+			<summary>
+				<para>
+					Sets the <see cref="P:&dans;.Character.Width" /> and <see cref="P:&dans;.Character.Height" /> of the character's image.
+				</para>
+			</summary>
+			<syntax xml:space="preserve">
+<cpp>
+<para><token>character</token>-&gt;<keyword>SetSize</keyword> (<token>Width</token>, <token>Height</token>)</para>
+</cpp>
+<csharp>
+<para>&dacharref_csharp;.<keyword>SetSize</keyword> (<token>Width</token>, <token>Height</token>)</para>
+</csharp>
+<vbnet>
+<para>&dacharref_vb;.<keyword>SetSize</keyword> (<token>Width</token>, <token>Height</token>)</para>
+</vbnet>
+<vb>
+<para>&dacharref_vb;.<keyword>SetSize</keyword>[ <token>Width</token>, <token>Height</token>]</para>
+</vb>
+</syntax>
+			<param name="Width">
+				A <typename>numeric</typename> value that specifies the width of the character's image.
+			</param>
+			<param name="Height">
+				A <typename>numeric</typename> value that specifies the height of the character's image.
+			</param>
+			<remarks>
+				<para>
+					Setting the <see cref="P:&dans;.Character.Width" /> and <see cref="P:&dans;.Character.Height" /> properties
+					separately can cause an appearance of jerkiness as each property change is reflected on the screen.  This
+					is simply a convenience method that allows you to change both properties at once.
+				</para>
+				<note>
+					For more details, see the <see cref="P:&dans;.Character.Width" /> and <see cref="P:&dans;.Character.Height" /> properties.
+				</note>
+				<note>
+					This method is new for Double Agent Version 1.2.
+				</note>
+			</remarks>
+			<seealso cref="P:&dans;.Character.Width" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Character.Height" prefix="The" suffix="Property" />
+			<seealso cref="E:&darootobj;.Size" prefix="The" suffix="Event" />
+		</member>
+
+		<!--=============================================================================================-->
+
 		<member name="M:&dans;.Character.Show">
 			<summary>
 				<para>
@@ -6706,6 +6776,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
+			<seealso cref="M:&dans;.Character.SetSize" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.Size" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -8049,6 +8121,8 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
+			<seealso cref="M:&dans;.Character.SetSize" prefix="The" suffix="Method" />
+			<seealso cref="E:&darootobj;.Size" prefix="The" suffix="Event" />
 		</member>
 
 		<!--=============================================================================================-->

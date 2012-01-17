@@ -786,8 +786,9 @@ System::Void ControlClrForm::CharResizeFast_Timer(System::Object^  sender, Syste
 
 			if	(lCharacter = CharacterPageData->Character)
 			{
-				lCharacter->Width = lCharacter->OriginalWidth + (30 - Math::Abs(CharResizeCycle)) * 5;
-				lCharacter->Height = lCharacter->OriginalHeight + (30 - Math::Abs(CharResizeCycle)) * 5;
+				//lCharacter->Width = lCharacter->OriginalWidth + (30 - Math::Abs(CharResizeCycle)) * 5;
+				//lCharacter->Height = lCharacter->OriginalHeight + (30 - Math::Abs(CharResizeCycle)) * 5;
+				lCharacter->SetSize (lCharacter->OriginalWidth + (30 - Math::Abs(CharResizeCycle)) * 5, lCharacter->OriginalHeight + (30 - Math::Abs(CharResizeCycle)) * 5);
 			}
 		}
 		catch AnyExceptionDebug
@@ -816,8 +817,9 @@ System::Void ControlClrForm::CharResizeFast_Stop ()
 
 		if	(lCharacter = CharacterPageData->Character)
 		{
-			lCharacter->Width = lCharacter->OriginalWidth;
-			lCharacter->Height = lCharacter->OriginalHeight;
+			//lCharacter->Width = lCharacter->OriginalWidth;
+			//lCharacter->Height = lCharacter->OriginalHeight;
+			lCharacter->SetSize (lCharacter->OriginalWidth, lCharacter->OriginalHeight);
 		}
 	}
 	catch AnyExceptionDebug

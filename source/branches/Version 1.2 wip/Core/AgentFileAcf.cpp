@@ -837,7 +837,7 @@ LPCVOID CAgentFileAcf::ReadBufferHeader (LPCVOID pBuffer, DWORD pBufferSize)
 		lByte += sizeof (WORD);
 		mVersionMajor = *(LPCWORD)lByte;
 		lByte += sizeof (WORD);
-		lAnimationCount = *(LPWORD)lByte;
+		lAnimationCount = *(LPCWORD)lByte;
 		lByte += sizeof (WORD);
 
 		while (lAnimationCount > 0)

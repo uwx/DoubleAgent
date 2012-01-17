@@ -953,6 +953,45 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Width (short *Width)
 	return lResult;
 }
 
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::SetSize (short Width, short Height)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::SetSize"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT	lResult = S_FALSE;
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->SetSize (Width, Height);
+		}
+		catch AnyExceptionDebug
+	}
+#ifndef	_DACORE_LOCAL
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->SetSize (Width, Height);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+#endif
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::SetSize"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Speed (long *Speed)

@@ -579,6 +579,7 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaCtlCharacter2_SuspendPause = 89;
 	const DISPID DISPID_IDaCtlCharacter2_SuspendStop = 90;
 	const DISPID DISPID_IDaCtlCharacter2_SuspendHide = 91;
+	const DISPID DISPID_IDaCtlCharacter2_SetSize = 92;
 
 	[
 		odl,
@@ -669,6 +670,8 @@ cpp_quote("#endif")
 		[helpstring("Are all windows hidden when the client is not foreground?"), helpcontext(APIHELP_Ctl_Character_SuspendHide),
 			id(DISPID_IDaCtlCharacter2_SuspendHide), propput, bindable, displaybind] HRESULT SuspendHide ([in] VARIANT_BOOL SuspendHide);
 			[id(DISPID_IDaCtlCharacter2_SuspendHide), propget, bindable, displaybind] HRESULT SuspendHide ([out, retval] VARIANT_BOOL* SuspendHide);
+		[helpstring("Set the character size (width/height together)"), helpcontext(APIHELP_Ctl_Character_SetSize),
+			id(DISPID_IDaCtlCharacter2_SetSize)] HRESULT SetSize ([in] short Width, [in] short Height);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

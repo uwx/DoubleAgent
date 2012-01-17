@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu Jan 05 17:43:19 2012
+/* at Fri Jan 06 16:13:47 2012
  */
 /* Compiler settings for Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -912,6 +912,8 @@ enum RequestStatus
 #define	DISPID_IDaCtlCharacter2_SuspendStop	( 90 )
 
 #define	DISPID_IDaCtlCharacter2_SuspendHide	( 91 )
+
+#define	DISPID_IDaCtlCharacter2_SetSize	( 92 )
 
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
@@ -6487,6 +6489,10 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_SuspendHide( 
             /* [retval][out] */ VARIANT_BOOL *SuspendHide) = 0;
         
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetSize( 
+            /* [in] */ short Width,
+            /* [in] */ short Height) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -6980,6 +6986,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *SuspendHide);
         
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short Width,
+            /* [in] */ short Height);
+        
         END_INTERFACE
     } IDaCtlCharacter2Vtbl;
 
@@ -7325,6 +7336,9 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 
 #define IDaCtlCharacter2_get_SuspendHide(This,SuspendHide)	\
     ( (This)->lpVtbl -> get_SuspendHide(This,SuspendHide) ) 
+
+#define IDaCtlCharacter2_SetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> SetSize(This,Width,Height) ) 
 
 #endif /* COBJMACROS */
 

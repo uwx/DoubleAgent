@@ -620,7 +620,7 @@
 </item>
 <item>
 <term width="150ex">Any non-zero value</term>
-<description>The control will automatically connect to the server.</description>
+<description>The control will automatically connect to the server.<br />This is the default value.</description>
 </item>
 </list>
 <para>On a 64-bit system:
@@ -632,11 +632,11 @@
 </item>
 <item>
 <term width="150ex">32</term>
-<description>The control will automatically connect to the 32-bit server. If the 32-bit server is not installed, the 64-bit server will be used.</description>
+<description>The control will automatically connect to the 32-bit server. If the 32-bit server is not installed, the 64-bit server will be used.<br />This the default value for Double Agent Version 1.2 or later.</description>
 </item>
 <item>
 <term width="150ex">64</term>
-<description>The control will automatically connect to the 64-bit server. If the 64-bit server is not installed, the 32-bit server will be used.</description>
+<description>The control will automatically connect to the 64-bit server. If the 64-bit server is not installed, the 32-bit server will be used.<br />This the default value for Double Agent Version 1.1.</description>
 </item>
 <item>
 <term width="150ex">Any other non-zero value</term>
@@ -647,8 +647,9 @@
 <remarks>
 <para>If this property is non-zero, then the control will automatically establish a connection with the server the first time it's required. To use the control in <a href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode, you must set this property to zero.
 </para>
-<para>For compatibility with Microsoft<sup>®</sup> Agent, the default value for this property is True.
+<para>This property is only used the <em>first time</em> a server connection is required.  After that, any change to this property will be ignored.
 </para>
+<note>The <a href="..\Programming\Ctl_Programming_Web.htm#ControlOCX">downloadable stand-alone</a> control always runs in <a href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.  Therefore, when using DaControl.OCX, this property is always zero.</note>
 </remarks>
 <seealso cref="P:DoubleAgent.Control.Control.Connected" />
 </member>
@@ -848,6 +849,7 @@
 <remarks>
 <para>You can manually open or close the connection to the server by changing the Connected property. When the connection state changes, any characters you've loaded are automatically unloaded. If you still have references to any objects except the control itself, any attempt to access the objects' properties or methods will fail.
 </para>
+<note>The <a href="..\Programming\Ctl_Programming_Web.htm#ControlOCX">downloadable stand-alone</a> control always runs in <a href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.  Therefore, when using DaControl.OCX, this property is always false.</note>
 </remarks>
 <seealso cref="P:DoubleAgent.Control.Control.AutoConnect" />
 </member>
@@ -1856,6 +1858,21 @@ End Sub</code></example></remarks>
 <seealso cref="E:DoubleAgent.Control.Control.RequestComplete" />
 </member>
 
+<member name="M:DoubleAgent.Control.Character.SetSize(System.Int16,System.Int16)">
+<summary> Sets the <see cref="P:DoubleAgent.Control.Character.Width" /> and <see cref="P:DoubleAgent.Control.Character.Height" /> of the character's image.</summary>
+<param name="Width">A numeric value that specifies the width of the character's image.</param>
+<param name="Height">A numeric value that specifies the height of the character's image.</param>
+<remarks>
+<para>Setting the <see cref="P:DoubleAgent.Control.Character.Width" /> and <see cref="P:DoubleAgent.Control.Character.Height" /> properties separately can cause an appearance of jerkiness as each property change is reflected on the screen.  This is simply a convenience method that allows you to change both properties at once.
+</para>
+<note>For more details, see the <see cref="P:DoubleAgent.Control.Character.Width" /> and <see cref="P:DoubleAgent.Control.Character.Height" /> properties.</note>
+<note>This method is new for Double Agent Version 1.2.</note>
+</remarks>
+<seealso cref="P:DoubleAgent.Control.Character.Width" />
+<seealso cref="P:DoubleAgent.Control.Character.Height" />
+<seealso cref="E:DoubleAgent.Control.Control.Size" />
+</member>
+
 <member name="M:DoubleAgent.Control.Character.Show(System.Object)">
 <summary> Shows the character and optionally plays its associated Showing animation.</summary>
 <param name="Fast">A boolean value specifying whether or not the Showing state animation is played.</param>
@@ -2230,6 +2247,8 @@ End Sub</code></example></remarks>
 </para>
 <note name="AllClients">This property applies to all clients of the character.</note>
 </remarks>
+<seealso cref="M:DoubleAgent.Control.Character.SetSize(System.Int16,System.Int16)" />
+<seealso cref="E:DoubleAgent.Control.Control.Size" />
 </member>
 
 <member name="P:DoubleAgent.Control.Character.HelpContextID">
@@ -2801,6 +2820,8 @@ End Sub</code></example></remarks>
 </para>
 <note name="AllClients">This property applies to all clients of the character.</note>
 </remarks>
+<seealso cref="M:DoubleAgent.Control.Character.SetSize(System.Int16,System.Int16)" />
+<seealso cref="E:DoubleAgent.Control.Control.Size" />
 </member>
 
 <member name="M:DoubleAgent.Control.Character.NewFormattedText">

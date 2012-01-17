@@ -230,6 +230,7 @@ void CAnimationTestDlg::ShowCharacters ()
 /**/	mCharacterList.InsertItem (0, _T("C:\\DoubleAgent\\_Test\\Chars\\Empty.acs"));
 /**/	mCharacterList.InsertItem (0, _T("file://C:/DoubleAgent/_Test/Chars/TestChar1.acf"));
 /**/	mCharacterList.InsertItem (0, _T("http://www.careforme.ca/jess/agent/Jess.acf"));
+/**/	mCharacterList.InsertItem (0, _T("http://doubleagent.sourceforge.net/chars/Merlin.acf"));
 		mCharacterList.InsertItem (0, _T("<default>"));
 	}
 
