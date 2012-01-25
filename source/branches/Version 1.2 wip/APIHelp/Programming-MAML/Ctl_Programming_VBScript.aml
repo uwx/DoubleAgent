@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846737-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				VBScript is a programming language included with <token>MSIE</token>. For other browsers,
+				contact your vendor about support.
+			</para>
+			<para>
+				To program Double Agent from VBScript, use the HTML &lt;SCRIPT&gt; tags. To access the programming interface,
+				use the name of control you assign in the &lt;OBJECT&gt; tag, followed by the sub object (if any), the
+				name of the method or property, and any parameters or values supported by the method or property:
+			</para>
+
+			<code xml:space="preserve" language="vbs">control.object.Method (parameter1, parameter2)
+control.object.Property = value</code>
+
+			<para>For events, include the name of the control followed by the name of the event and any parameters:</para>
+
+			<code xml:space="preserve" language="vbs">Sub control_event (ByVal parameter1, ByVal parameter2)
+statements…
+End Sub</code>
+
+			<para>
+				You can also specify an event handler using the &lt;SCRIPT&gt; tag's <languageKeyword>For…Event</languageKeyword>
+				syntax:
+			</para>
+
+			<code xml:space="preserve" language="none" title="HTML">&lt;SCRIPT LANGUAGE=VBScript For=control Event=event (parameter1, parameter2)&gt;
+statements…
+&lt;/SCRIPT&gt;</code>
+
+			<para>
+				Although <token>MSIE</token> supports this latter syntax, not all browsers do. For
+				compatibility, use only the former syntax for events.
+			</para>
+			<para>
+				You can verify whether Double Agent is installed by trying to create the object and checking to see if
+				it exists. The following sample demonstrates how to check for the Double Agent control without triggering
+				an error (as would happen if you included an &lt;OBJECT&gt; tag for the control on the page):
+			</para>
+
+			<code xml:space="preserve" language="vbs">&lt;SCRIPT LANGUAGE=VBSCRIPT&gt;
+If HaveDoubleAgent() Then
+    ' Double Agent control was found.
+    document.write "&lt;H2 align=center&gt;Found&lt;/H2&gt;"
+Else
+    ' Double Agent control was not found.
+    document.write "&lt;H2 align=center&gt;Not Found&lt;/H2&gt;"
+End If
+
+Function HaveDoubleAgent()
+    ' This procedure attempts to create a Double Agent control object.
+    ' If it succeeds, it returns True.
+    '    This means the control is available on the client.
+    ' If it fails, it returns False.
+    '    This means the control hasn't been installed on the client.
+
+    Dim agentcontrol
+    HaveDoubleAgent = False
+    On Error Resume Next
+    Set agentcontrol = CreateObject("DoubleAgent.Control")
+    HaveDoubleAgent = IsObject(agentcontrol)
+End Function
+&lt;/SCRIPT&gt;</code>
+		</introduction>
+
+		<relatedTopics>
+			<link xlink:href="e0846736-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

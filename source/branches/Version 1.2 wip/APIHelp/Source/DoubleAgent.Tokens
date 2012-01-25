@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<content xml:space="preserve"
+  xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<item id="DA">Double Agent</item>
+	<item id="MsAgent">Microsoft<ddue:superscript>®</ddue:superscript>&#160;Agent</item>
+	<item id="Windows">Microsoft<ddue:superscript>®</ddue:superscript>&#160;Windows</item>
+	<item id="WindowsXP">Windows XP</item>
+	<item id="WindowsVista">Windows Vista™</item>
+	<item id="Windows7">Windows 7</item>
+	<item id="MSIE">Windows&#160;Internet&#160;Explorer<ddue:superscript>®</ddue:superscript></item>
+
+	<item id="COM">COM</item>
+	<item id="COMname"><ddue:newTerm>Component&#160;Object&#160;Model</ddue:newTerm></item>
+	<item id="COMauto">COM&#160;Automation</item>
+	<item id="dotNET">.NET</item>
+	<item id="dotNETframework">.NET&#160;Framework</item>
+	<item id="dotNETassembly">.NET&#160;Assembly</item>
+	<item id="PIA"><ddue:newTerm>Primary&#160;Interop&#160;Assembly</ddue:newTerm></item>
+	<item id="PIAs"><ddue:newTerm>Primary&#160;Interop&#160;Assemblies</ddue:newTerm></item>
+	<item id="IA"><ddue:newTerm>Interop&#160;Assembly</ddue:newTerm></item>
+	<item id="IAs"><ddue:newTerm>Interop&#160;Assemblies</ddue:newTerm></item>
+	<item id="CLRname"><ddue:newTerm>Common&#160;Language&#160;Runtime</ddue:newTerm></item>
+	<item id="CLR"><ddue:newTerm>CLR</ddue:newTerm></item>
+	<item id="GACname"><ddue:newTerm>Global&#160;Assembly&#160;Cache</ddue:newTerm></item>
+	<item id="GAC"><ddue:newTerm>GAC</ddue:newTerm></item>
+
+	<item id="WinForms">Windows Forms</item>
+	<item id="WinFormsCtl">Windows Forms Control</item>
+	<item id="ActiveX">ActiveX<ddue:superscript>®</ddue:superscript></item>
+	<item id="ActiveXCtl">ActiveX<ddue:superscript>®</ddue:superscript>&#160;Control</item>
+	<item id="ActiveXCtls">ActiveX<ddue:superscript>®</ddue:superscript>&#160;Controls</item>
+	<item id="ActiveXInt">ActiveX<ddue:superscript>®</ddue:superscript>&#160;Control&#160;Interface</item>
+	<item id="VB">Visual Basic<ddue:superscript>®</ddue:superscript></item>
+	
+	<item id="SAPI"><ddue:newTerm>SAPI</ddue:newTerm></item>
+	<item id="SAPIname"><ddue:newTerm>Microsoft<ddue:superscript>®</ddue:superscript> Speech API</ddue:newTerm></item>
+	<item id="SAPI4"><ddue:newTerm>SAPI4</ddue:newTerm></item>
+	<item id="SAPI4name"><ddue:newTerm>Microsoft<ddue:superscript>®</ddue:superscript> Speech Version 4</ddue:newTerm></item>
+	<item id="SAPI5"><ddue:newTerm>SAPI5</ddue:newTerm></item>
+	<item id="SAPI5name"><ddue:newTerm>Microsoft<ddue:superscript>®</ddue:superscript> Speech Version 5</ddue:newTerm></item>
+
+	<item id="AdvancedCharacterOptions"><ddue:ui>Advanced Character Options</ddue:ui></item>
+	<item id="OutputPage"><ddue:ui>Output Page</ddue:ui></item>
+	<item id="InputPage"><ddue:ui>Speech Input Page</ddue:ui></item>
+	<item id="GalleryPage"><ddue:ui>Gallery Page</ddue:ui></item>
+	<item id="DefaultCharacterProperties"><ddue:ui>Default Character Properties</ddue:ui></item>
+	<item id="DaControlPanel"><ddue:ui>Double Agent Control Panel</ddue:ui></item>
+	<item id="VoiceCommands"><ddue:ui>Voice Commands</ddue:ui></item>
+	<item id="WordBalloon"><ddue:ui>word balloon</ddue:ui></item>
+	<item id="WordBalloonUc"><ddue:ui>Word Balloon</ddue:ui></item>
+	<item id="WordBalloonUc1"><ddue:ui>Word balloon</ddue:ui></item>
+	<item id="NotificationIcon"><ddue:ui>notification icon</ddue:ui></item>
+	<item id="NotificationIconUc"><ddue:ui>Notification Icon</ddue:ui></item>
+	<item id="Popup">pop-up</item>
+	<item id="PopupMenu"><ddue:ui>pop-up menu</ddue:ui></item>
+	<item id="PopupMenuUc"><ddue:ui>Pop-up Menu</ddue:ui></item>
+	<item id="ListeningTip"><ddue:ui>listening tip</ddue:ui></item>
+	<item id="ListeningTipUc"><ddue:ui>Listening Tip</ddue:ui></item>
+	<item id="ListeningKey"><ddue:ui>listening key</ddue:ui></item>
+	<item id="ListeningKeyUc"><ddue:ui>Listening Key</ddue:ui></item>
+	<item id="ListeningMode"><ddue:ui>listening mode</ddue:ui></item>
+	<item id="ListeningModeUc"><ddue:ui>Listening Mode</ddue:ui></item>
+	<item id="InputActive"><ddue:newTerm>input-active</ddue:newTerm></item>
+	<item id="InputActiveUc"><ddue:newTerm>Input-Active</ddue:newTerm></item>
+
+	<item id="standalone"></item>
+	<item id="connected"></item>
+	<item id="contained"></item>
+
+	<item id="FSF">
+		<ddue:externalLink>
+			<ddue:linkText>Free Software Foundation</ddue:linkText>
+			<ddue:linkUri>http://www.fsf.org/</ddue:linkUri>
+		</ddue:externalLink>
+	</item>
+
+	<item id="GPL3">
+		<ddue:externalLink>
+			<ddue:linkText>GNU General Public License version 3.0</ddue:linkText>
+			<ddue:linkUri>http://www.gnu.org/licenses/gpl.html</ddue:linkUri>
+		</ddue:externalLink>
+	</item>
+
+	<item id="LGPL3">
+		<ddue:externalLink>
+			<ddue:linkText>GNU Lesser General Public License version 3.0</ddue:linkText>
+			<ddue:linkUri>http://www.gnu.org/licenses/lgpl.html</ddue:linkUri>
+		</ddue:externalLink>
+	</item>
+
+	<item id="KB969168">
+		<ddue:externalLink>
+			<ddue:linkText>KB969168 hotfix</ddue:linkText>
+			<ddue:linkUri>http://support.microsoft.com/Default.aspx?kbid=969168</ddue:linkUri>
+		</ddue:externalLink>
+	</item>
+
+</content>

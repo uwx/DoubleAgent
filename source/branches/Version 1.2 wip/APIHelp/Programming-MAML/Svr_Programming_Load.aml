@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846754-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				Once you have a pointer to the <unmanagedCodeEntityReference>IDaServer2</unmanagedCodeEntityReference> interface,
+				you can use the <codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Load</codeEntityReference> method to
+				load a character and retrieve its <unmanagedCodeEntityReference>IDaCharacter2</unmanagedCodeEntityReference> interface.
+				There are three different possibilities for the
+				<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Load</codeEntityReference>&#160;<parameterReference>Provider</parameterReference> parameter. The first
+				to specify the full path and filename of a character file. The second possibility is to specify the
+				filename only, in which case Double Agent searches its <legacyItalic>Chars</legacyItalic> directory and
+				the <token>MsAgent</token>&#160;<legacyItalic>Chars</legacyItalic> directory. The last possibility is to
+				supply an empty <unmanagedCodeEntityReference>VARIANT</unmanagedCodeEntityReference> parameter that causes
+				the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2#Gallery">default character</link> to be loaded.
+			</para>
+			<code xml:space="preserve" language="cpp">const LPWSTR FileName = L"merlin.acs";
+VARIANT Path;
+
+// Create a variant to store the file name of the character to load
+
+VariantInit (&amp;Path);
+Path.vt = VT_BSTR;
+Path.bstrVal = SysAllocString (FileName);
+
+// Load the character
+
+Result = server-&gt;Load (Path, &amp;CharacterID, &amp;RequestID);
+
+// Get its IDaCharacter2 interface
+
+Result = server-&gt;get_Character (CharacterID, &amp;character);
+
+VariantClear (&amp;Path);</code>
+			<para>You can use this interface to access the character's methods:</para>
+			<code xml:space="preserve" language="cpp">// Show the character (the first parameter tells Double Agent to play the "Showing" animation)
+
+Result = character-&gt;Show (FALSE, &amp;RequestID);
+
+// Make the character speak
+
+Speech = SysAllocString (L"Hello World!");
+Result = character-&gt;Speak (Speech, NULL, &amp;RequestID);
+SysFreeString (Speech);</code>
+			<para>
+				When you no longer need Double Agent, such as when your client application shuts down, release its interfaces.
+				Note that releasing the character interface does not unload the character. Call the
+				<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Unload</codeEntityReference> method to do this
+				before releasing the <unmanagedCodeEntityReference>IDaServer2</unmanagedCodeEntityReference> interface:
+			</para>
+			<code xml:space="preserve" language="cpp">// Clean up
+
+if (character)
+{
+   // Release the character interface
+
+   character-&gt;Release ();
+
+   // Unload the character. NOTE: releasing the character interface
+   // does NOT make the character go away. You must call Unload.
+
+   server-&gt;Unload (CharacterID);
+}
+   
+// Release the Server
+
+server-&gt;Release ();</code>
+
+		</introduction>
+
+		<relatedTopics>
+			<link xlink:href="e0846753-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

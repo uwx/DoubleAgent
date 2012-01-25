@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846753-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				You can access the Double Agent server from any programming environment that supports
+				the <token>COM</token> standard or the <token>dotNET</token>
+				standard. This includes <token>VB</token> 6, <token>VB</token> .NET, Visual C#, Visual C++,
+				JScript, VBScript, and many other programming languages.
+			</para>
+		</introduction>
+		<section>
+			<content>
+				<para>
+					For programming languages that support <token>COM</token> interfaces,
+					use the native Double Agent server directly.
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							Create an instance of the server and request a pointer to a specific interface using
+							the standard <token>COM</token> convention. In particular,
+							the <token>COM</token> library provides an API function, <unmanagedCodeEntityReference>CoCreateInstance</unmanagedCodeEntityReference>,
+							that creates an instance of an object and returns a pointer to the requested interface.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							Request a pointer to the <unmanagedCodeEntityReference>IDaServer2</unmanagedCodeEntityReference> interface
+							in your <unmanagedCodeEntityReference>CoCreateInstance</unmanagedCodeEntityReference> call
+							or in a subsequent call to <unmanagedCodeEntityReference>QueryInterface</unmanagedCodeEntityReference>.
+							The following code illustrates this in C/C++:
+						</para>
+						<code xml:space="preserve" language="cpp">Result = CoCreateInstance (CLSID_DaServer, NULL, CLSCTX_SERVER, IID_IDaServer2, (void**)&amp; interface_pointer);</code>
+					</listItem>
+					<listItem>
+						<para>
+							If the Double Agent server is running, this call connects to the server; otherwise,
+							it starts the server.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							For programming languages that use a different mechanism to instantiate <token>COM</token> classes
+							(such as the <languageKeyword>New</languageKeyword> operator), use the &quot;DoubleAgent.Server&quot;
+							or &quot;DoubleAgent.Server.1.1&quot; <languageKeyword>ProgID</languageKeyword>, or the &quot;{1147E500-A208-11DE-ABF2-002421116FB2}&quot;
+							<languageKeyword>ClassID</languageKeyword>.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							Note that as Double Agent evolves, new interfaces are defined with numeric suffixes.
+							Each new interface is derived from, and therefore includes all the functionality
+							of, the interface it supersedes. For example, the <unmanagedCodeEntityReference>IDaServer2</unmanagedCodeEntityReference>
+							interface supersedes the <unmanagedCodeEntityReference>IDaServer</unmanagedCodeEntityReference> interface. If you want
+							to use the latest features, always use the interface with the highest suffix.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							Note also that functions that take pointers to a <unmanagedCodeEntityReference>BSTR</unmanagedCodeEntityReference> allocate
+							memory using <unmanagedCodeEntityReference>SysAllocString</unmanagedCodeEntityReference>. It is the caller's responsibility
+							to free this memory using <unmanagedCodeEntityReference>SysFreeString</unmanagedCodeEntityReference>.
+						</para>
+					</listItem>
+				</list>
+				<para>
+					The programming environment may require a declared reference to the server's <token>COM</token> type library:
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							The native server is registered as a programmable <token>COM</token>
+							object. If the programming environment provides a list of registered <token>COMauto</token> objects, it will appear in the list.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							A <legacyItalic>reference copy</legacyItalic> of the server's <token>COM</token> type library
+							is installed with the <link xlink:href="e0846751-419c-11e1-9d4f-002421116fb2#DevFiles">Double Agent SDK</link>
+							in folder <localUri>C:\Program Files\Double&#160;Agent\Dev</localUri>.
+						</para>
+					</listItem>
+				</list>
+			</content>
+		</section>
+		<section>
+			<content>
+				<para>
+					For programming languages that support the <token>dotNET</token>&#160;
+					<token>CLRname</token> (<token>CLR</token>),
+					use the Double Agent Server <token>PIA</token>.
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							Use the <languageKeyword>New</languageKeyword> operator to create an instance of the
+							<codeEntityReference qualifyHint="true">T:DoubleAgent.Server.Server</codeEntityReference> class.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							The <token>IA</token> takes care of all translations between
+							<token>dotNET</token> and <token>COM</token>, so all of the
+							server's functionality is available as <token>dotNET</token> classes, delegates,
+							and enumerations.
+						</para>
+					</listItem>
+				</list>
+				<para>
+					The programming environment may require a declared reference to this assembly:
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							For a programming environment that retrieves references from the <token>GACname</token> (<token>GAC</token>),
+							this assembly is added to the <token>GAC</token> when Double Agent is installed.
+						</para>
+						<para>
+							There are different versions of the <token>PIA</token>
+							for <token>dotNET</token> 3.5 or earlier and <token>dotNET</token>
+							4.0 or later.&#160; If you move from <token>dotNET</token> 3.5 to <token>dotNET</token> 4.0 you should
+							reinstall the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles"> 									Double Agent SDK</link> to get the correct <token>PIA</token>
+							version installed in the the <token>GAC</token>.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							If an assembly file is required, a <legacyItalic>reference copy</legacyItalic> of the assembly is installed
+							with the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">Double Agent SDK</link> in
+							folder <localUri>C:\Program Files\Double&#160;Agent\Dev\v3.5</localUri> (for <token>dotNET</token> 3.5 or earlier)
+							or <localUri>C:\Program Files\Double&#160;Agent\Dev\v4.0</localUri> (for <token>dotNET</token> 4.0 or later).
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							You can use a reference to the assembly's full path, or add the SDK install location
+							to the programming environment's reference search path.
+						</para>
+					</listItem>
+				</list>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846754-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846755-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846751-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

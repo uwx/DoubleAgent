@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846730-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerOrientationDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				Double Agent includes an <token>ActiveXCtl</token>
+				that can be used with any language that supports the <token>ActiveXInt</token>.
+				It provides for easy programming using an interpreted language such as <token>VB</token>,
+				or a scripting language such as <token>VB</token> Scripting Edition (VBScript).
+			</para>
+			<para>
+				The Double Agent control can be used as a simple programming object, either <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2"> 				stand-alone</link> or <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">connected</link> to the Double
+				Agent server. As an <token>ActiveXCtl</token>, it can provide character animations within a form or
+				Web page.
+			</para>
+		</introduction>
+
+		<inThisSection>
+			<content>
+				<list class="bullet">
+					<listItem>
+						<link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+					<listItem>
+						<link xlink:href="e0846732-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+					<listItem>
+						<link xlink:href="e0846733-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+					<list class="bullet">
+						<listItem>
+							<link xlink:href="e0846734-419c-11e1-9d4f-002421116fb2" />
+						</listItem>
+						<listItem>
+							<link xlink:href="e0846735-419c-11e1-9d4f-002421116fb2" />
+						</listItem>
+					</list>
+					<listItem>
+						<link xlink:href="e0846736-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+					<list class="bullet">
+						<listItem>
+							<link xlink:href="e0846737-419c-11e1-9d4f-002421116fb2" />
+						</listItem>
+						<listItem>
+							<link xlink:href="e0846738-419c-11e1-9d4f-002421116fb2" />
+						</listItem>
+					</list>
+					<listItem>
+						<link xlink:href="e0846739-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+					<listItem>
+						<link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+					<listItem>
+						<link xlink:href="e084673b-419c-11e1-9d4f-002421116fb2" />
+					</listItem>
+				</list>
+			</content>
+		</inThisSection>
+
+		<section>
+			<title>Classes</title>
+			<content>
+				<para>
+					The Double Agent <token>ActiveXCtl</token> implements the following object classes:
+				</para>
+			</content>
+			<sections>
+				<section>
+					<title>User Interface Objects</title>
+					<content>
+						<list class="nobullet">
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Control</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Characters</codeEntityReference> (collection)
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Character</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Balloon</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Commands</codeEntityReference> (collection)
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Command</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.CommandsWindow</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.PropertySheet</codeEntityReference>
+							</listItem>
+						</list>
+					</content>
+				</section>
+
+				<section>
+					<title>Operational Objects</title>
+					<content>
+						<list class="nobullet">
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Request</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.UserInput</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.FormattedText</codeEntityReference>
+							</listItem>
+						</list>
+					</content>
+				</section>
+
+				<section>
+					<title>Information Objects</title>
+					<content>
+						<list class="nobullet">
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Settings</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.CharacterFiles</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.TTSEngines</codeEntityReference> (collection)
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.TTSEngine</codeEntityReference>
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.SREngines</codeEntityReference> (collection)
+							</listItem>
+							<listItem>
+								<codeEntityReference qualifyHint="false">T:DoubleAgent.Control.SREngine</codeEntityReference>
+							</listItem>
+						</list>
+					</content>
+				</section>
+			</sections>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846750-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerOrientationDocument>
+</topic>

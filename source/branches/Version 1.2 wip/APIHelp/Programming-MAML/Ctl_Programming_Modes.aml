@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e084673a-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				The Double Agent control can operate in three different modes: <legacyItalic>connected</legacyItalic>, <legacyItalic>stand-alone</legacyItalic>, and <legacyItalic>contained</legacyItalic>. The mode a developer chooses
+				depends on the application&#39;s requirements.
+			</para>
+		</introduction>
+
+
+		<section address="connected">
+			<!--h4-->
+			<title>Connected Mode</title>
+			<content>
+				<para>
+					<legacyItalic>Connected</legacyItalic> mode is the control's default mode, and is compatible with <token>MsAgent</token>. In this mode, the Double Agent control acts as a gateway to the Double Agent server. The control
+					provides all of its services through it's connection with the server. It automatically connects to the
+					server as required, and releases the connection when it's no longer needed.
+				</para>
+				<para>
+					When operating in <legacyItalic>connected</legacyItalic> mode, all of the control's characters belong to
+					the <legacyItalic>server</legacyItalic>. This means that all client applications share a <legacyItalic>single</legacyItalic> copy of the character's
+					<link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Character">window</link>,
+					<link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
+						<token>PopupMenu</token>
+					</link>, <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
+						<token>NotificationIcon</token>
+					</link>, <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>, <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
+						<token>ListeningTip</token>
+					</link>, speech engines, etc.
+				</para>
+				<para>
+					Other server resources such as the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+						<token>AdvancedCharacterOptions</token>
+					</link> window and the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
+						<token>VoiceCommands</token>
+					</link> window
+					are also shared by all client applications.
+				</para>
+				<para>
+					If the control is contained in a form, it will <legacyItalic>not</legacyItalic> be visible at run-time.
+				</para>
+				<para>
+					A character window floats on top of all application windows and is <legacyItalic>not</legacyItalic> visually associated with
+					a specific client application. It can produce Text-to-Speech output and receive mouse, keyboard, and
+					Speech Recognition input even if the client application's window is inactive (not in the foreground)
+					or disabled. It can even be used by a client application that has no visible window.
+				</para>
+				<para>
+					The <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
+						<token>ListeningTip</token>
+					</link>, and the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
+						<token>VoiceCommands</token>
+					</link> window
+					are also <legacyItalic>topmost</legacyItalic> windows, and the <token>ListeningKey</token>
+					is always available.
+				</para>
+
+			</content>
+		</section>
+
+		<section address="standalone">
+			<!--h4-->
+			<title>Stand-alone Mode</title>
+			<content>
+
+				<para>
+					In <legacyItalic>stand-alone</legacyItalic> mode, the Double Agent control is <legacyItalic>not</legacyItalic> connected to
+					the Double Agent server. It provides the server's functionality directly.
+				</para>
+				<para>
+					When operating in <legacyItalic>stand-alone</legacyItalic> mode, all of the control's characters belong
+					to the <legacyItalic>control</legacyItalic>. Since the control runs in the same process as the client application, this
+					means that the client application has it's own private copy of its characters and all of their resources.
+					The control also has its own copy of the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+						<token>AdvancedCharacterOptions</token>
+					</link> window and the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
+						<token>VoiceCommands</token>
+					</link> window.
+				</para>
+				<para>
+					If the control is contained in a form, it will <legacyItalic>not</legacyItalic> be visible at run-time.
+				</para>
+				<para>
+					A character window floats on top of the application window containing the Double Agent control, but <legacyItalic>
+						not
+					</legacyItalic> other application windows. It is visually associated with your client application as an <legacyItalic>
+						owned <token>Popup</token>
+					</legacyItalic> of the control's parent window - that is, it's hidden when the
+					control's parent window is minimized. However, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
+						<token>NotificationIcon</token>
+					</link> remains visible.
+				</para>
+				<para>
+					The <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
+						<token>ListeningTip</token>
+					</link>, and the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
+						<token>VoiceCommands</token>
+					</link> window
+					are also <legacyItalic>
+						owned <token>Popup</token>s
+					</legacyItalic> of the control's parent window, and the
+					<token>ListeningKey</token> is available only when your application is in the foreground.
+				</para>
+
+			</content>
+		</section>
+
+		<section address="contained">
+			<!--h4-->
+			<title>Contained Mode</title>
+			<content>
+
+				<para>
+					In <legacyItalic>contained</legacyItalic> mode, the Double Agent control is a <legacyItalic>visible</legacyItalic> child window
+					of it's containing form. Like <legacyItalic>stand-alone</legacyItalic> mode, the control is not connected
+					to the server and it's characters are owned by the client application. Unlike <legacyItalic>stand-alone</legacyItalic>
+					mode, the character is not a floating window; it's displayed within the control's child window.
+				</para>
+				<para>
+					<legacyItalic>Contained</legacyItalic> mode applies to a <legacyItalic>single</legacyItalic> character of a control that's operating
+					in <legacyItalic>stand-alone</legacyItalic> mode. The control can load multiple characters, but only one
+					can be contained. When there is a <legacyItalic>contained</legacyItalic> character, the control will be
+					visible. If there is no <legacyItalic>contained</legacyItalic> character, the control will <legacyItalic>not</legacyItalic>
+					be visible.
+				</para>
+				<para>
+					The <legacyItalic>contained</legacyItalic> character is set by the client application at run-time, so the
+					control can dynamically change to and from <legacyItalic>contained</legacyItalic> mode. Also, even when
+					there's a <legacyItalic>contained</legacyItalic> character, other characters can be shown as floating (uncontained)
+					windows.
+				</para>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

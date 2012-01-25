@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e08466be-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				Double Agent maintains preference settings that allow a user to control interaction with all characters.
+				The <token>AdvancedCharacterOptions</token> window displays these options and their current
+				settings, and can be shown by any hosting application using the Double Agent programming interface.
+				Double Agent remembers the last page viewed and displays that page when the property sheet appears.
+			</para>
+		</introduction>
+
+		<section address="Output">
+			<title>
+				The <token>OutputPage</token>
+			</title>
+			<content>
+				<para>
+					This page includes properties that control character output. For example, the user can decide whether
+					to display output in the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>,
+					decide how the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>
+					output should appear, play spoken output as audio, play
+					character sound effects, and adjust the speaking speed.
+				</para>
+				<mediaLink>
+					<image xlink:href="Options_Output" />
+				</mediaLink>
+			</content>
+		</section>
+
+		<section address="SpeechInput">
+			<title>
+				The <token>InputPage</token>
+			</title>
+			<content>
+				<para>
+					A user can adjust speech input options on this property page. The user can disable speech input, set
+					the <token>ListeningKey</token>, choose whether to display the <token>ListeningTip</token>, and choose to play
+					a tone to indicate when speech input is available.
+				</para>
+				<mediaLink>
+					<image xlink:href="Options_SpeechInput" />
+				</mediaLink>
+			</content>
+		</section>
+
+		<section address="Gallery">
+			<title>The <token>GalleryPage</token>
+		</title>
+			<content>
+				<para>
+					As an alternative to loading a specific character, applications can load a character that is a shared
+					resource for the user, known as the <newTerm>default character</newTerm>. The <newTerm>default character</newTerm> is available
+					to any application, but only the user can select it. The <token>GalleryPage</token> allows the
+					user to select the <newTerm>default character</newTerm>.
+				</para>
+				<mediaLink>
+					<image xlink:href="Options_Gallery" />
+				</mediaLink>
+				<alert class="note">
+					<para>
+						The <token>GalleryPage</token> used to be in the
+						<token>DefaultCharacterProperties</token> window, which no longer exists as of Double Agent
+						version 1.1.
+					</para>
+				</alert>
+			</content>
+		</section>
+
+		<section address="Copyright">
+			<title>The Copyright Page</title>
+			<content>
+				<para>
+					This page displays the copyright and version information for Double Agent and <token>MsAgent</token>.
+				</para>
+				<mediaLink>
+					<image xlink:href="Options_Copyright" />
+				</mediaLink>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

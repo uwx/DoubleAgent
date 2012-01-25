@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846755-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				To be notified of events by Double Agent, you must create and register an object that implements either
+				the <unmanagedCodeEntityReference>IDaSvrNotifySink2</unmanagedCodeEntityReference> or
+				<unmanagedCodeEntityReference>_DaSvrEvents2</unmanagedCodeEntityReference> interface.
+			</para>
+			<list class="bullet">
+				<listItem>
+					<para>
+						The <unmanagedCodeEntityReference>IDaSvrNotifySink2</unmanagedCodeEntityReference> interface derives from
+						<unmanagedCodeEntityReference>IUnknown</unmanagedCodeEntityReference> and is intended for C/C++ programming:
+					</para>
+					<code xml:space="preserve" language="cpp">// Create a notification sink
+MyNotifySink = new ServerNotifySink;
+MyNotifySink-&gt;AddRef ();
+
+// And register it with Double Agent
+Result = server-&gt;Register ((IUnknown*)MyNotifySink, &amp;MyNotifySinkID);</code>
+					<para>
+						Remember to unregister your notification sink when your application shuts down and releases Double Agent's
+						interfaces.
+					</para>
+					<code xml:space="preserve" language="cpp">server-&gt;Unregister (MyNotifySinkID);</code>
+				</listItem>
+				<listItem>
+					<para>
+						If you're using a class library that implements <token>COM</token> connection points (such
+						as <newTerm>MFC</newTerm> or <newTerm>ATL</newTerm>), you can use the
+						<unmanagedCodeEntityReference>IConnectionPoint</unmanagedCodeEntityReference> mechanism instead of the
+						<unmanagedCodeEntityReference>Register</unmanagedCodeEntityReference> and
+						<unmanagedCodeEntityReference>Unregister</unmanagedCodeEntityReference> methods.
+					</para>
+					<alert class="note">
+						Double Agent also supports the <unmanagedCodeEntityReference>IDaSvrNotifySink</unmanagedCodeEntityReference>,
+						<unmanagedCodeEntityReference>IAgentNotifySink</unmanagedCodeEntityReference> and <unmanagedCodeEntityReference>IAgentNotifySinkEx</unmanagedCodeEntityReference> interfaces.
+					</alert>
+				</listItem>
+				<listItem>
+					<para>
+						The <unmanagedCodeEntityReference>_DaSvrEvents2</unmanagedCodeEntityReference> interface is a an <unmanagedCodeEntityReference>IDispatch</unmanagedCodeEntityReference> version
+						of <unmanagedCodeEntityReference>IDaSvrNotifySink2</unmanagedCodeEntityReference> that is intended for other programming and scripting languages.
+						It's declared as the server object's default outgoing interface, so the standard <token>COM</token>
+						event sink protocol can be used:
+					</para>
+					<code xml:space="preserve" language="vb">Dim WithEvents MyServer as DoubleAgentSvr.DaServer
+MyServer = NewDoubleAgentSvr.DaServer</code>
+				</listItem>
+				<listItem>
+					<para>
+						For <token>dotNET</token> (managed) lanaguages, the server's <token>IA</token>
+						supports event delegates. Each event is separately registered and unregistered:
+					</para>
+					<code xml:space="preserve" language="c#">MyServer.Show += new DoubleAgent.Server.ShowEventHandler (MyServer_Show);
+MyServer.Show -= new DoubleAgent.Server.ShowEventHandler (MyServer_Show);</code>
+				</listItem>
+			</list>
+		</introduction>
+
+		<relatedTopics>
+			<link xlink:href="e0846753-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>
