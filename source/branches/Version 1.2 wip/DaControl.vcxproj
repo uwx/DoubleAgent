@@ -360,7 +360,7 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     <ClInclude Include="Common\AgentAnchor.h" />
     <ClInclude Include="Common\AgentFileCache.h" />
     <ClInclude Include="Common\CorEnumVariant.h" />
-    <ClInclude Include="ApiHelp\DaApiHelp.h" />
+    <ClInclude Include="ApiHelp\Source\DaApiHelp.h" />
     <ClInclude Include="Common\DaCmnAnimationNames.h" />
     <ClInclude Include="Common\DaCmnBalloon.h" />
     <ClInclude Include="Common\DaCmnCharacter.h" />

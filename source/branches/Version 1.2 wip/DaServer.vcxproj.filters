@@ -188,7 +188,7 @@
     <ClInclude Include="Server\DaActionTrace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ApiHelp\DaApiHelp.h">
+    <ClInclude Include="ApiHelp\Source\DaApiHelp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\DaCmnAnimationNames.h">

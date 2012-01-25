@@ -2,18 +2,18 @@
 Binary Index=No
 Compatibility=1.1 or later
 Compiled file=..\..\BinDa\Bin\DoubleAgent.chm
-Contents file=DoubleAgent.hhc
+Contents file=Source\DoubleAgent.hhc
 Default Font=Verdana,8,0
 Default Window=MainWin
 Default topic=Reference\Intro.htm
 Display compile progress=Yes
-Index file=DoubleAgent.hhk
+Index file=Source\DoubleAgent.hhk
 Language=0x1009 English (Canada)
 Title=Double Agent SDK
 
 [WINDOWS]
-MainWin=,"DoubleAgent.hhc",,"Reference\Intro.htm","Reference\Intro.htm",,,,,0x41020,,0x284e,[20,20,820,620],0x160f0000,,,,,,0
-MainWinI=,"DoubleAgent.hhc","DoubleAgent.hhk","Reference\Intro.htm","Reference\Intro.htm",,,,,0x41020,,0x284e,[20,20,820,620],0x160f0000,,,,,,0
+MainWin=,"Source\DoubleAgent.hhc",,"Reference\Intro.htm","Reference\Intro.htm",,,,,0x41020,,0x284e,[20,20,820,620],0x160f0000,,,,,,0
+MainWinI=,"Source\DoubleAgent.hhc","Source\DoubleAgent.hhk","Reference\Intro.htm","Reference\Intro.htm",,,,,0x41020,,0x284e,[20,20,820,620],0x160f0000,,,,,,0
 
 
 [FILES]
@@ -1072,7 +1072,7 @@ APIHELP_Ctl_Control_RaiseRequestErrors=html\P_DoubleAgent_Control_Control_RaiseR
 APIHELP_Svr_Server_Load=html\M_DoubleAgent_Server_Server_Load.htm
 
 [MAP]
-#include DaApiHelp.h
+#include Source\DaApiHelp.h
 
 [MERGE FILES]
 MsAgent.chm

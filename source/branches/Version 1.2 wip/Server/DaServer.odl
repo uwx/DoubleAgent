@@ -1,5 +1,5 @@
 #include "..\Include\DaVersion.h"
-#include "..\ApiHelp\DaApiHelp.h"
+#include "..\ApiHelp\Source\DaApiHelp.h"
 
 [
 	uuid(1147E501-A208-11DE-ABF2-002421116FB2),

@@ -464,7 +464,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ApiHelp\DaApiHelp.h">
+    <ClInclude Include="ApiHelp\Source\DaApiHelp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Control\DaControl.h">

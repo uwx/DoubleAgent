@@ -150,6 +150,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Users\Don\Desktop\XmlToHtml.log" />
+    <None Include="..\..\APIHelp\Templates\EventTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\APIHelp\Templates\FieldTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\APIHelp\Templates\MethodTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\APIHelp\Templates\PropertyTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\APIHelp\Templates\TypeTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

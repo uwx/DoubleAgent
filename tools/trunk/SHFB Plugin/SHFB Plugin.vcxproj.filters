@@ -45,7 +45,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\..\..\BinDa\Bin\Help2\Working\_ConceptualTOC_.xml" />
-    <None Include="..\..\APIHelp\SandCastle\DoubleAgent.sitemap" />
+    <None Include="..\..\APIHelp\Source\DoubleAgent.sitemap" />
     <None Include="..\..\..\BinDa\Bin\Help2\LastBuild.log" />
     <None Include="..\..\..\Users\Don\Desktop\SHFB.log" />
     <None Include="..\..\..\BinDa\Bin\Help2\Working\toc.xml" />

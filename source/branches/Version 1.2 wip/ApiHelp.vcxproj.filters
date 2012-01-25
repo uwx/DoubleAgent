@@ -14,29 +14,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ApiHelp\DoubleAgent.hhc">
+    <None Include="ApiHelp\Source\DoubleAgent.hhc">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="APIHelp\DoubleAgent.hhk">
+    <None Include="APIHelp\Source\DoubleAgent.hhk">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ApiHelp\DaApiHelp.h">
+    <ClInclude Include="ApiHelp\Source\DaApiHelp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="APIHelp\DoubleAgent.AxControl.xml">
+    <CustomBuild Include="APIHelp\Source\DoubleAgent.AxControl.xml">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ApiHelp\DoubleAgent.Control.xml">
+    <CustomBuild Include="ApiHelp\Source\DoubleAgent.Control.xml">
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ApiHelp\DoubleAgent.hhp">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ApiHelp\DoubleAgent.Server.xml">
+    <CustomBuild Include="ApiHelp\Source\DoubleAgent.Server.xml">
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ApiHelp\MsAgent.chm">

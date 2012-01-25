@@ -15,20 +15,21 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <OutputPath>\BinDa\Bin\Help2\</OutputPath>
+    <OutputPath>\BinDa\Bin\Help\</OutputPath>
     <HtmlHelpName>DoubleAgent</HtmlHelpName>
     <DocumentationSources>
       <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.AxControl.dll" />
-<DocumentationSource sourceFile="Sandcastle\DoubleAgent.AxControl.xml" />
-<DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.Control.dll" />
-<DocumentationSource sourceFile="Sandcastle\DoubleAgent.Control.xml" />
-<DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.Server.dll" />
-<DocumentationSource sourceFile="Sandcastle\DoubleAgent.Server.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="Sandcastle\DoubleAgent.AxControl.xml" />
+      <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.Control.dll" />
+      <DocumentationSource sourceFile="Sandcastle\DoubleAgent.Control.xml" />
+      <DocumentationSource sourceFile="%DOUBLE_AGENT_BIN%Bin\Debug(x86)\v3.5\Interop\DoubleAgent.Server.dll" />
+      <DocumentationSource sourceFile="Sandcastle\DoubleAgent.Server.xml" />
+    </DocumentationSources>
     <HtmlHelp1xCompilerPath>%ProgramFiles(x86)%\HTML Help Workshop\</HtmlHelp1xCompilerPath>
     <SandcastlePath>%ProgramFiles(x86)%\Sandcastle\</SandcastlePath>
     <MissingTags>Parameter, Returns, Value, Namespace, TypeParameter</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers</VisibleItems>
-    <SyntaxFilters>CSharp, VisualBasic, JavaScript</SyntaxFilters>
+    <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, JavaScript</SyntaxFilters>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FrameworkVersion>.NET 3.5</FrameworkVersion>
     <BinaryTOC>False</BinaryTOC>
@@ -529,7 +530,7 @@
     <HeaderText>
     </HeaderText>
     <CleanIntermediates>False</CleanIntermediates>
-    <WorkingPath>%DOUBLE_AGENT_BIN%Bin\Help2\Working\</WorkingPath>
+    <WorkingPath>\BinDa\Bin\Help2\Working\</WorkingPath>
     <ComponentConfigurations>
       <ComponentConfig id="Cached MSDN URL References" enabled="True">
         <component id="Cached MSDN URL References" type="SandcastleBuilder.Components.CachedResolveReferenceLinksComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll" locale="{@Locale}" linkTarget="{@SdkLinkTarget}">
@@ -563,6 +564,12 @@
 					</index>
           <copy name="comments" source="*" target="/document/comments" />
         </component>
+      </ComponentConfig>
+      <ComponentConfig id="API Token Resolution" enabled="True">
+        <component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
+
+        {@TokenFiles}
+        <replace elements="/*//token" item="string(.)" /></component>
       </ComponentConfig>
     </ComponentConfigurations>
     <ProductTitle>Double Agent SDK</ProductTitle>
@@ -644,8 +651,8 @@
     <Content Include="Programming\Ctl_Objects.htm" />
     <Content Include="Programming\Ctl_Control_Name.htm" />
     <Content Include="Reference\Version_1_1_New.htm" />
-      <Content Include="Reference\Version_1_2_New.htm" />
-      <Content Include="Reference\UI_Rendering.htm" />
+    <Content Include="Reference\Version_1_2_New.htm" />
+    <Content Include="Reference\UI_Rendering.htm" />
     <Content Include="Reference\UI_PropSheet.htm" />
     <Content Include="Reference\UI_ControlPanel.htm" />
     <Content Include="Reference\UI_Intro.htm" />
@@ -715,76 +722,14 @@
     <Content Include="images\WordBalloon.Png" />
   </ItemGroup>
   <ItemGroup>
-    <SiteMap Include="SandCastle\DoubleAgent.sitemap" />
+    <SiteMap Include="Source\DoubleAgent.sitemap" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Programming\.svn\tmp\text-base\" />
-    <Folder Include="Programming\.svn\tmp\props\" />
-    <Folder Include="Programming\.svn\tmp\prop-base\" />
-    <Folder Include="Programming\.svn\tmp\" />
-    <Folder Include="Programming\.svn\text-base\" />
-    <Folder Include="Programming\.svn\props\" />
-    <Folder Include="Programming\.svn\prop-base\" />
-    <Folder Include="Programming\.svn\" />
     <Folder Include="Programming\" />
-    <Folder Include="Reference\.svn\tmp\text-base\" />
-    <Folder Include="Reference\.svn\tmp\props\" />
-    <Folder Include="Reference\.svn\tmp\prop-base\" />
-    <Folder Include="Reference\.svn\tmp\" />
-    <Folder Include="Reference\.svn\text-base\" />
-    <Folder Include="Reference\.svn\props\" />
-    <Folder Include="Reference\.svn\prop-base\" />
-    <Folder Include="Reference\.svn\" />
     <Folder Include="Reference\" />
-    <Folder Include="SandCastle\" />
+    <Folder Include="Source\" />
     <Folder Include="css\" />
     <Folder Include="images\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Programming\.svn\text-base\Svr_Programming_Upgrade.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_Programming_Speech.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_Programming_Sink.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_Programming_Overview.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_Programming_Load.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_Programming_Apps.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_Programming.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Svr_DocumentationConventions.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_VoiceCommands.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_Overview.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_Output.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_ListeningTip.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_Intro.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_InputSpeech.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_Input.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_Config.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_Animation.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Gen_AnimateCharacter.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Web.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_VBScript.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Upgrade.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Speech.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Overview.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Modes.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Members.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_JScript.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Instance.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming_Apps.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Programming.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Objects.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_DocumentationConventions.htm.svn-base" />
-    <None Include="Programming\.svn\text-base\Ctl_Control_Name.htm.svn-base" />
-    <None Include="Programming\.svn\entries" />
-    <None Include="Programming\.svn\all-wcprops" />
-    <None Include="Reference\.svn\text-base\Version_1_1_New.htm.svn-base" />
-      <None Include="Reference\.svn\text-base\Version_1_2_New.htm.svn-base" />
-      <None Include="Reference\.svn\text-base\UI_Rendering.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\UI_PropSheet.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\UI_Intro.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\Licensing.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\License.lesser.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\License.htm.svn-base" />
-    <None Include="Reference\.svn\text-base\Intro.htm.svn-base" />
-    <None Include="Reference\.svn\entries" />
   </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />

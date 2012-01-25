@@ -13,6 +13,9 @@
       <UniqueIdentifier>{411BF2F1-0F28-43ad-9088-B604E80BFFC5}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{4b16caf3-cd36-4b1d-a0eb-5c0fbb14474e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Managed\StdAfx.cpp">
@@ -52,5 +55,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Users\Don\Desktop\XmlToHtml.log" />
+    <None Include="..\..\APIHelp\Templates\EventTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="..\..\APIHelp\Templates\FieldTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="..\..\APIHelp\Templates\MethodTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="..\..\APIHelp\Templates\PropertyTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="..\..\APIHelp\Templates\TypeTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

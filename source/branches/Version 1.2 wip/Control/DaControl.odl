@@ -1,7 +1,7 @@
 #include <olectl.h>
 #include <idispids.h>
 #include "..\Include\DaVersion.h"
-#include "..\ApiHelp\DaApiHelp.h"
+#include "..\ApiHelp\Source\DaApiHelp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
