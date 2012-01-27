@@ -7,22 +7,31 @@
 								xmlns:xlink="http://www.w3.org/1999/xlink"
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 >
+	<!-- ======================================================================================== -->
 
 	<xsl:import href="../../shared/transforms/utilities_bibliography.xsl"/>
-	<xsl:param name="bibliographyData"
-						 select="'../data/bibliography.xml'"/>
-
 	<xsl:output method="xml"
 							indent="no"
 							encoding="utf-8" />
 
+	<xsl:param name="bibliographyData"
+						 select="'../data/bibliography.xml'"/>
 	<xsl:param name="changeHistoryOptions" />
+	<!-- key parameter is the api identifier string -->
+	<xsl:param name="key" />
+	<xsl:param name="metadata">false</xsl:param>
+	<xsl:param name="languages">false</xsl:param>
+
 	<xsl:include href="htmlBody.xsl" />
 	<xsl:include href="utilities_dduexml.xsl" />
 	<xsl:include href="seeAlsoSection.xsl" />
 	<xsl:include href="conceptualMetadataHelp30.xsl"/>
 	<!-- Still required for MSHCComponent -->
 	<xsl:include href="conceptualMetadataHelp20.xsl"/>
+
+	<!-- ============================================================================================
+	Global Variables
+	============================================================================================= -->
 
 	<xsl:variable name="hasSeeAlsoSection"
 								select="boolean(count(/document/topic/*/ddue:relatedTopics/*[local-name()!='sampleRef']) > 0)"/>
@@ -40,10 +49,8 @@
 								select="/document/reference/apidata/@subsubgroup" />
 	<xsl:variable name="pseudo"
 								select="boolean(/document/reference/apidata[@pseudo='true'])"/>
-	<!-- key parameter is the api identifier string -->
-	<xsl:param name="key" />
-	<xsl:param name="metadata">false</xsl:param>
-	<xsl:param name="languages">false</xsl:param>
+
+	<!-- ======================================================================================== -->
 
 	<xsl:template match="/document">
 		<html xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -65,7 +72,7 @@
 				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
 				<xsl:call-template name="bodyHeader"/>
 				<xsl:call-template name="main"/>
-				<xsl:call-template name="foot" />
+				<xsl:call-template name="t_footer" />
 			</body>
 		</html>
 	</xsl:template>
@@ -116,6 +123,11 @@
 			<xsl:text>, </xsl:text>
 			<xsl:value-of select="text()"/>
 		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="t_isCodeLangValid">
+		<xsl:param name="p_codeLang" />
+		<xsl:value-of select="true()"/>
 	</xsl:template>
 
 	<!-- document body -->
@@ -187,7 +199,7 @@
 
 	<xsl:template match="ddue:parameters">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'parameters'"/>
 				<xsl:with-param name="title">
@@ -204,7 +216,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:choose>
 				<xsl:when test="(normalize-space(ddue:content)='') and ddue:sections/ddue:section[ddue:title='Property Value']">
-					<xsl:call-template name="section">
+					<xsl:call-template name="t_section">
 						<xsl:with-param name="toggleSwitch"
 														select="'returnValue'"/>
 						<xsl:with-param name="title">
@@ -216,7 +228,7 @@
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:call-template name="section">
+					<xsl:call-template name="t_section">
 						<xsl:with-param name="toggleSwitch"
 														select="'returnValue'"/>
 						<xsl:with-param name="title">
@@ -233,7 +245,7 @@
 
 	<xsl:template match="ddue:exceptions">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'ddueExceptions'"/>
 				<xsl:with-param name="title">
@@ -248,7 +260,7 @@
 
 	<xsl:template match="ddue:relatedSections">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'relatedSections'"/>
 				<xsl:with-param name="title">
@@ -263,7 +275,7 @@
 
 	<xsl:template match="ddue:relatedTopics">
 		<xsl:if test="$hasSeeAlsoSection">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'seeAlso'"/>
 				<xsl:with-param name="title">
@@ -280,7 +292,7 @@
 	<xsl:template match="ddue:codeExample">
 		<!-- create Example section for the first codeExample node -->
 		<xsl:if test="not(preceding-sibling::ddue:codeExample) and ../ddue:codeExample[normalize-space(.)!='']">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'example'"/>
 				<xsl:with-param name="title">
@@ -308,30 +320,10 @@
 		<include item="{$runningHeaderText}" />
 	</xsl:template>
 
-	<!-- Footer stuff -->
-
-	<xsl:template name="foot">
-		<div class="OH_footer"
-				 id="footer">
-			<include item="footer">
-				<parameter>
-					<xsl:value-of select="$key"/>
-				</parameter>
-				<parameter>
-					<xsl:call-template name="topicTitlePlain"/>
-				</parameter>
-				<parameter>
-					<xsl:value-of select="/document/metadata/item[@id='PBM_FileVersion']" />
-				</parameter>
-				<parameter>
-					<xsl:value-of select="/document/metadata/attribute[@name='TopicVersion']" />
-				</parameter>
-			</include>
-		</div>
-	</xsl:template>
-
-	<!-- <autoOutline /> or <autoOutline>[#]</autoOutline>
-  Inserts a bullet list of links to the topic's sections or a section's
+	<!-- ============================================================================================
+	<autoOutline /> or <autoOutline>[#]</autoOutline>
+  
+	Inserts a bullet list of links to the topic's sections or a section's
   sub-sections with optional support for limiting the expansion down to a
   specific level.  Authors can use the tag directly or specify a token
   (defined in a token file) in a topic's introduction to get a bullet list of
@@ -343,7 +335,8 @@
 
   <autoOutline/>                Show only top-level topic titles
   <autoOutline>1</autoOutline>  Show top-level titles and titles for one level down
-  <autoOutline>3</autoOutline>  Show titles from the top down to three levels -->
+  <autoOutline>3</autoOutline>  Show titles from the top down to three levels
+	============================================================================================= -->
 
 	<xsl:template match="autoOutline|ddue:autoOutline">
 		<xsl:variable name="maxDepth">
@@ -490,7 +483,9 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- Bibliography -->
+	<!-- ============================================================================================
+	Bibliography
+	============================================================================================= -->
 	<xsl:key name="citations"
 					 match="//ddue:cite"
 					 use="text()" />
@@ -524,7 +519,7 @@
 
 	<xsl:template match="ddue:bibliography">
 		<xsl:if test="$hasCitations">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'cite'" />
 				<xsl:with-param name="title">

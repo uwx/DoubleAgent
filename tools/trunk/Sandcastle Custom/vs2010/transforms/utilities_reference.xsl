@@ -46,7 +46,7 @@
 				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
 				<xsl:call-template name="bodyHeader"/>
 				<xsl:call-template name="main"/>
-				<xsl:call-template name="foot" />
+				<xsl:call-template name="t_footer" />
 			</body>
 		</html>
 	</xsl:template>
@@ -119,7 +119,7 @@
 
 	<xsl:template match="parameters">
 		<div id="parameters">
-			<xsl:call-template name="subSection">
+			<xsl:call-template name="t_subSection">
 				<xsl:with-param name="title">
 					<include item="parametersTitle"/>
 				</xsl:with-param>
@@ -156,11 +156,13 @@
 										</xsl:apply-templates>
 									</parameter>
 								</include>
-								<br />
-								<xsl:call-template name="getParameterDescription">
-									<xsl:with-param name="name"
-																	select="$paramName" />
-								</xsl:call-template>
+								<br/>
+								<span>
+									<xsl:call-template name="getParameterDescription">
+										<xsl:with-param name="name"
+																		select="$paramName" />
+									</xsl:call-template>
+								</span>
 							</dd>
 						</dl>
 					</xsl:for-each>
@@ -171,7 +173,7 @@
 
 	<xsl:template match="implements">
 		<xsl:if test="member">
-			<xsl:call-template name="subSection">
+			<xsl:call-template name="t_subSection">
 				<xsl:with-param name="title">
 					<include item="implementsTitle" />
 				</xsl:with-param>
@@ -740,52 +742,44 @@
 
 	<xsl:template name="syntaxBlocks">
 
-		<xsl:for-each select="/document/syntax/div[@codeLanguage]">
-			<xsl:choose>
-				<xsl:when test="@codeLanguage='VisualBasic'">
-					<xsl:call-template name="languageSyntaxBlock">
-						<xsl:with-param name="language">VisualBasicDeclaration</xsl:with-param>
-					</xsl:call-template>
-				</xsl:when>
-				<xsl:when test="@codeLanguage='JSharp'">
-					<xsl:if test="not(/document/reference/versions) or boolean(/document/reference/versions/versions[@name='netfw']//version[not(@name='netfw35')])">
-						<xsl:call-template name="languageSyntaxBlock" />
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="@codeLanguage='XAML'">
-					<xsl:call-template name="XamlSyntaxBlock"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="languageSyntaxBlock" />
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:for-each>
+		<xsl:call-template name="t_codeSections">
+			<xsl:with-param name="p_codeNodes"
+											select="/document/syntax/div[@codeLanguage]" />
+			<xsl:with-param name="p_nodeCount"
+											select="count(/document/syntax/div[@codeLanguage])" />
+			<xsl:with-param name="p_codeLangAttr"
+											select="'codeLanguage'" />
+			<xsl:with-param name="p_formatCode"
+											select="false()" />
+		</xsl:call-template>
 	</xsl:template>
 
-	<xsl:template name="languageSyntaxBlock">
-		<xsl:param name="language"
-							 select="@codeLanguage"/>
-		<span codeLanguage="{$language}">
-			<table>
-				<tr>
-					<th>
-						<include item="{$language}" />
-					</th>
-				</tr>
-				<tr>
-					<td>
-						<pre xml:space="preserve"><xsl:text/><xsl:copy-of select="node()"/><xsl:text/></pre>
-					</td>
-				</tr>
-			</table>
-		</span>
+	<xsl:template name="t_isCodeLangValid">
+		<xsl:param name="p_codeLang" />
+		<xsl:value-of select="true()"/>
+
+		<xsl:choose>
+			<xsl:when test="$p_codeLang='JSharp'">
+				<xsl:choose>
+					<xsl:when test="not(/document/reference/versions) or boolean(/document/reference/versions/versions[@name='netfw']//version[not(@name='netfw35')])">
+						<xsl:value-of select="false()"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="true()"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="true()"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="elements"
 								mode="root">
 		<xsl:if test="count(element) > 0">
 
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'namespaces'"/>
 				<xsl:with-param name="title">
@@ -818,7 +812,7 @@
 		<xsl:param name="listSubgroup" />
 		<xsl:variable name="header"
 									select="concat($listSubgroup, 'TypesFilterLabel')"/>
-		<xsl:call-template name="section">
+		<xsl:call-template name="t_section">
 			<xsl:with-param name="toggleSwitch"
 											select="$listSubgroup"/>
 			<xsl:with-param name="title">
@@ -904,7 +898,7 @@
 								mode="enumeration">
 		<div id="enumerationSection">
 			<xsl:if test="count(element) > 0">
-				<xsl:call-template name="section">
+				<xsl:call-template name="t_section">
 					<xsl:with-param name="toggleSwitch"
 													select="'members'"/>
 					<xsl:with-param name="title">
@@ -1096,7 +1090,7 @@
 			<xsl:value-of select="concat($headerGroup, 'Table')"/>
 		</xsl:variable>
 
-		<xsl:call-template name="section">
+		<xsl:call-template name="t_section">
 			<xsl:with-param name="toggleSwitch"
 											select="$header" />
 			<xsl:with-param name="title">
@@ -1588,6 +1582,9 @@
 														<xsl:value-of select="@*[local-name()=$secondaryFramework]"/>
 													</parameter>
 													<parameter>
+														<xsl:call-template name="decoratedNameSep"/>
+													</parameter>
+													<parameter>
 														<xsl:apply-templates select="containers/type"
 																								 mode="link" />
 													</parameter>
@@ -1626,7 +1623,7 @@
 	<xsl:template match="elements"
 								mode="derivedType">
 		<xsl:if test="count(element) > 0">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'DerivedClasses'"/>
 				<xsl:with-param name="title">
@@ -1835,7 +1832,9 @@
 
 	</xsl:template>
 
-	<!-- Assembly information -->
+	<!-- ============================================================================================
+	Assembly information
+	============================================================================================= -->
 
 	<xsl:template name="requirementsInfo">
 		<p/>
@@ -1897,10 +1896,12 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- Platform information -->
+	<!-- ============================================================================================
+	Platform information
+	============================================================================================= -->
 
 	<xsl:template match="platforms[platform]">
-		<xsl:call-template name="section">
+		<xsl:call-template name="t_section">
 			<xsl:with-param name="toggleSwitch"
 											select="'platformsTitle'"/>
 			<xsl:with-param name="title">
@@ -1933,11 +1934,13 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<!-- Version information -->
+	<!-- ============================================================================================
+	Version information
+	============================================================================================= -->
 
 	<xsl:template match="versions">
 		<xsl:if test="$omitVersionInformation != 'true'">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'versionsTitle'"/>
 				<xsl:with-param name="title">
@@ -2022,11 +2025,13 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- Inheritance hierarchy -->
+	<!-- ============================================================================================
+	Inheritance hierarchy
+	============================================================================================= -->
 
 	<xsl:template match="family">
 
-		<xsl:call-template name="section">
+		<xsl:call-template name="t_section">
 			<xsl:with-param name="toggleSwitch"
 											select="'family'"/>
 			<xsl:with-param name="title">
@@ -2117,19 +2122,28 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!--<xsl:template name="shortName">
+	<!-- ============================================================================================
+	Decorated names
+	============================================================================================= -->
+
+	<xsl:template name="typeNameDecorated">
+		<xsl:if test="type|(containers/type)">
+			<xsl:apply-templates select="type|(containers/type)"
+													 mode="decorated" />
+			<xsl:call-template name="decoratedNameSep"/>
+		</xsl:if>
+		<xsl:value-of select="apidata/@name" />
 		<xsl:choose>
-			<xsl:when test="$api-subgroup='constructor'">
-				<xsl:value-of select="/document/reference/containers/type/apidata/@name" />
+			<xsl:when test="specialization">
+				<xsl:apply-templates select="specialization"
+														 mode="decorated" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="/document/reference/apidata/@name" />
+				<xsl:apply-templates select="templates"
+														 mode="decorated" />
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>-->
-
-
-	<!-- decorated names -->
+	</xsl:template>
 
 	<xsl:template name="shortNameDecorated">
 		<xsl:choose>
@@ -2150,24 +2164,12 @@
 				<xsl:for-each select="/document/reference/containers/type[1]">
 					<xsl:call-template name="typeNameDecorated" />
 				</xsl:for-each>
-				<span class="languageSpecificText">
-					<span class="cs">.</span>
-					<span class="vb">.</span>
-					<span class="cpp">::</span>
-					<span class="nu">.</span>
-					<span class="fs">.</span>
-				</span>
+				<xsl:call-template name="decoratedNameSep"/>
 				<xsl:for-each select="/document/reference/implements/member">
 					<xsl:for-each select="type">
 						<xsl:call-template name="typeNameDecorated" />
 					</xsl:for-each>
-					<span class="languageSpecificText">
-						<span class="cs">.</span>
-						<span class="vb">.</span>
-						<span class="cpp">::</span>
-						<span class="nu">.</span>
-						<span class="fs">.</span>
-					</span>
+					<xsl:call-template name="decoratedNameSep"/>
 					<xsl:value-of select="apidata/@name" />
 					<xsl:apply-templates select="templates"
 															 mode="decorated" />
@@ -2178,13 +2180,7 @@
 				<xsl:for-each select="/document/reference/containers/type[1]">
 					<xsl:call-template name="typeNameDecorated" />
 				</xsl:for-each>
-				<span class="languageSpecificText">
-					<span class="cs">.</span>
-					<span class="vb">.</span>
-					<span class="cpp">::</span>
-					<span class="nu">.</span>
-					<span class="fs">.</span>
-				</span>
+				<xsl:call-template name="decoratedNameSep"/>
 				<xsl:value-of select="/document/reference/apidata/@name" />
 			</xsl:when>
 			<!-- normal member pages use the qualified member name -->
@@ -2193,13 +2189,7 @@
 					<xsl:call-template name="typeNameDecorated" />
 				</xsl:for-each>
 				<xsl:if test="not($api-subsubgroup='operator'and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit'))">
-					<span class="languageSpecificText">
-						<span class="cs">.</span>
-						<span class="vb">.</span>
-						<span class="cpp">::</span>
-						<span class="nu">.</span>
-						<span class="fs">.</span>
-					</span>
+					<xsl:call-template name="decoratedNameSep"/>
 				</xsl:if>
 				<xsl:for-each select="/document/reference[1]">
 					<xsl:choose>
@@ -2251,7 +2241,9 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- plain names -->
+	<!-- ============================================================================================
+	Plain names
+	============================================================================================= -->
 
 	<xsl:template name="shortNamePlain">
 		<xsl:param name="qualifyMembers"

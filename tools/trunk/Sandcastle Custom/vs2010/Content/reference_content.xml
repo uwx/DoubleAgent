@@ -559,7 +559,7 @@
   <item id="unmappedXamlXmlns">Not mapped to an xmlns.</item>
 
   <item id="secondaryFrameworkOverride"><br/><br/>In <include item="{0}"/>, this member is overridden by {1}.</item>
-  <item id="secondaryFrameworkInherited"><br/><br/>In <include item="{0}"/>&#160;<include item="{1}"/>, this member is inherited from {2}<span class="languageSpecificText"><span class="cs">.</span><span class="vb">.</span><span class="cpp">::</span><span class="nu">.</span><span class="fs">.</span></span>{3}.</item>
+  <item id="secondaryFrameworkInherited"><br/><br/>In <include item="{0}"/>&#160;<include item="{1}"/>, this member is inherited from {2}{3}{4}.</item>
   <item id="secondaryFrameworkMember"><br/><br/>In <include item="{0}"/>&#160;<include item="{1}"/>, this member is {2}.</item>
   
   <item id="useBaseSummary">This member overrides {0}.</item>

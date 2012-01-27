@@ -537,8 +537,8 @@
   <xsl:template name="languagesList">
     <xsl:for-each select="$languages/language">
       <xsl:variable name="devlang">
-        <xsl:call-template name="codeLangName">
-          <xsl:with-param name="codeLang" select="@name"/>
+        <xsl:call-template name="t_codeLangName">
+          <xsl:with-param name="p_codeLang" select="@name"/>
         </xsl:call-template>
       </xsl:variable>
       <xsl:if test="normalize-space($devlang)!=''">
@@ -551,8 +551,8 @@
     <!-- first insert a DevLang attr for each language in the $languages arg passed to the transform -->
     <xsl:for-each select="$languages/language">
       <xsl:variable name="devlang">
-        <xsl:call-template name="codeLangName">
-          <xsl:with-param name="codeLang" select="@name"/>
+        <xsl:call-template name="t_codeLangName">
+          <xsl:with-param name="p_codeLang" select="@name"/>
         </xsl:call-template>
       </xsl:variable>
       <xsl:choose>
@@ -582,8 +582,8 @@
     <xsl:for-each select="//*[@language]">
       <xsl:if test="not(@language=preceding::*/@language)">
         <xsl:variable name="devlang">
-          <xsl:call-template name="codeLangName">
-            <xsl:with-param name="codeLang" select="@language"/>
+          <xsl:call-template name="t_codeLangName">
+            <xsl:with-param name="p_codeLang" select="@language"/>
           </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
@@ -601,8 +601,8 @@
       <xsl:value-of select="$languagesList"/>
       <xsl:for-each select="//*[@language]">
         <xsl:variable name="devlang">
-          <xsl:call-template name="codeLangName">
-            <xsl:with-param name="codeLang" select="@language"/>
+          <xsl:call-template name="t_codeLangName">
+            <xsl:with-param name="p_codeLang" select="@language"/>
           </xsl:call-template>
         </xsl:variable>
         <xsl:if test="normalize-space($devlang)!=''">
@@ -615,8 +615,8 @@
     <xsl:for-each select="/document/syntax/div[@codeLanguage and not(div[@class='nonXamlAssemblyBoilerplate'])]">
       <xsl:if test="not(@codeLanguage=preceding::*/@codeLanguage)">
         <xsl:variable name="devlang">
-          <xsl:call-template name="codeLangName">
-            <xsl:with-param name="codeLang" select="@codeLanguage"/>
+          <xsl:call-template name="t_codeLangName">
+            <xsl:with-param name="p_codeLang" select="@codeLanguage"/>
           </xsl:call-template>
         </xsl:variable>
         <xsl:choose>

@@ -396,7 +396,7 @@
     <xsl:for-each select="//ddue:section[starts-with(@address,'xamlValues')]">
       <div id="xamlValues">
         <p/>
-        <xsl:call-template name="subSection">
+        <xsl:call-template name="t_subSection">
           <xsl:with-param name="title">
             <include item="xamlValuesSectionHeading" />
           </xsl:with-param>
@@ -420,7 +420,7 @@
 
   <!-- the authored dependency Property Information section -->
   <xsl:template match="ddue:section[starts-with(@address,'dependencyPropertyInfo')]" mode="section">
-    <xsl:call-template name="section">
+    <xsl:call-template name="t_section">
       <xsl:with-param name="toggleSwitch" select="'dependencyPropertyInfo'"/>
       <xsl:with-param name="title">
         <include item="dependencyPropertyInfoHeading" />
@@ -433,7 +433,7 @@
 
   <!-- the authored routed event Information section -->
   <xsl:template match="ddue:section[starts-with(@address,'routedEventInfo')]" mode="section">
-    <xsl:call-template name="section">
+    <xsl:call-template name="t_section">
       <xsl:with-param name="toggleSwitch" select="'routedEventInfo'"/>
       <xsl:with-param name="title">
         <include item="routedEventInfoHeading" />

@@ -149,7 +149,7 @@
     <xsl:param name="headerGroup" />
     <xsl:param name="members" />
     <xsl:param name="autoGenerateLinks" />
-    <xsl:call-template name="subSection">
+    <xsl:call-template name="t_subSection">
       <xsl:with-param name="title">
         <include item="{$headerGroup}"/>
       </xsl:with-param>

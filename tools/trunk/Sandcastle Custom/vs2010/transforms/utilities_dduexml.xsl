@@ -45,7 +45,7 @@
 
 	<xsl:template match="ddue:codeExamples">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'example'"/>
 				<xsl:with-param name="title">
@@ -128,7 +128,7 @@
 	</xsl:template>
 
 	<xsl:template name="threadSafety">
-		<xsl:call-template name="section">
+		<xsl:call-template name="t_section">
 			<xsl:with-param name="toggleSwitch"
 											select="'threadSafety'"/>
 			<xsl:with-param name="title">
@@ -213,7 +213,7 @@
 			<div id="syntaxCodeBlocks"
 					 class="code">
 				<xsl:for-each select="ddue:legacySyntax">
-					<xsl:variable name="codeLang">
+					<xsl:variable name="v_codeLang">
 						<xsl:choose>
 							<xsl:when test="@language = 'vbs'">
 								<xsl:text>VBScript</xsl:text>
@@ -257,13 +257,13 @@
 						</xsl:choose>
 					</xsl:variable>
 
-					<span codeLanguage="{$codeLang}">
+					<span codeLanguage="{$v_codeLang}">
 						<table width="100%"
 									 cellspacing="0"
 									 cellpadding="0">
 							<tr>
 								<th align="left">
-									<include item="{$codeLang}"/>
+									<include item="{$v_codeLang}"/>
 								</th>
 							</tr>
 							<tr>
@@ -455,16 +455,16 @@
 					<xsl:when test="local-name(../*[$currentPos + 1]) != $currentName">
 						<xsl:choose>
 							<xsl:when test="normalize-space(@language) = 'none' and normalize-space(@title) != ''">
-								<xsl:call-template name="codeSection">
-									<xsl:with-param name="codeLang"
+								<xsl:call-template name="t_codeSection">
+									<xsl:with-param name="p_codeLang"
 																	select="@language" />
-									<xsl:with-param name="codeTitle"
+									<xsl:with-param name="p_CodeTitle"
 																	select="@title" />
 								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:call-template name="codeSection">
-									<xsl:with-param name="codeLang"
+								<xsl:call-template name="t_codeSection">
+									<xsl:with-param name="p_codeLang"
 																	select="@language" />
 								</xsl:call-template>
 							</xsl:otherwise>
@@ -488,13 +488,13 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:variable name="codeNodes"
+						<xsl:variable name="v_codeNodes"
 													select="../*[not(position() &lt; $currentPos) and (position() &lt; ($currentPos + $codeCount))]"/>
 
-						<xsl:call-template name="codeSections">
-							<xsl:with-param name="codeNodes"
-															select="$codeNodes" />
-							<xsl:with-param name="nodeCount"
+						<xsl:call-template name="t_codeSections">
+							<xsl:with-param name="p_codeNodes"
+															select="$v_codeNodes" />
+							<xsl:with-param name="p_nodeCount"
 															select="$codeCount" />
 						</xsl:call-template>
 					</xsl:otherwise>
@@ -864,7 +864,7 @@
 
 
 	<xsl:template match="ddue:inThisSection">
-		<xsl:call-template name="section">
+		<xsl:call-template name="t_section">
 			<xsl:with-param name="toggleSwitch"
 											select="'inThisSection'"/>
 			<xsl:with-param name="title">
@@ -878,7 +878,7 @@
 
 	<xsl:template match="ddue:buildInstructions">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'buildInstructions'"/>
 				<xsl:with-param name="title">
@@ -893,7 +893,7 @@
 
 	<xsl:template match="ddue:nextSteps">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'nextSteps'"/>
 				<xsl:with-param name="title">
@@ -908,7 +908,7 @@
 
 	<xsl:template match="ddue:requirements">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'requirementsTitle'"/>
 				<xsl:with-param name="title">
@@ -1168,7 +1168,7 @@
 
 	<xsl:template match="ddue:languageReferenceRemarks">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'languageReferenceRemarks'"/>
 				<xsl:with-param name="title">
@@ -1183,7 +1183,7 @@
 
 	<xsl:template match="ddue:attributesandElements">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'attributesAndElements'"/>
 				<xsl:with-param name="title">
@@ -1235,7 +1235,7 @@
 
 	<xsl:template match="ddue:textValue">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'textValue'"/>
 				<xsl:with-param name="title">
@@ -1250,7 +1250,7 @@
 
 	<xsl:template match="ddue:elementInformation">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'elementInformation'"/>
 				<xsl:with-param name="title">
@@ -1265,7 +1265,7 @@
 
 	<xsl:template match="ddue:dotNetFrameworkEquivalent">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'dotNetFrameworkEquivalent'"/>
 				<xsl:with-param name="title">
@@ -1280,7 +1280,7 @@
 
 	<xsl:template match="ddue:prerequisites">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'prerequisites'"/>
 				<xsl:with-param name="title">
@@ -1299,7 +1299,7 @@
 
 	<xsl:template match="ddue:robustProgramming">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'robustProgramming'"/>
 				<xsl:with-param name="title">
@@ -1314,7 +1314,7 @@
 
 	<xsl:template match="ddue:security">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'security'"/>
 				<xsl:with-param name="title">
@@ -1329,7 +1329,7 @@
 
 	<xsl:template match="ddue:externalResources">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'externalResources'"/>
 				<xsl:with-param name="title">
@@ -1344,7 +1344,7 @@
 
 	<xsl:template match="ddue:demonstrates">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'demonstrates'"/>
 				<xsl:with-param name="title">
@@ -1359,7 +1359,7 @@
 
 	<xsl:template match="ddue:appliesTo">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'appliesTo'"/>
 				<xsl:with-param name="title">
@@ -1378,7 +1378,7 @@
 
 	<xsl:template match="ddue:background">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'background'"/>
 				<xsl:with-param name="title">
@@ -1393,7 +1393,7 @@
 
 	<xsl:template match="ddue:whatsNew">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'whatsNew'"/>
 				<xsl:with-param name="title">
@@ -1408,7 +1408,7 @@
 
 	<xsl:template match="ddue:reference">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="section">
+			<xsl:call-template name="t_section">
 				<xsl:with-param name="toggleSwitch"
 												select="'reference'"/>
 				<xsl:with-param name="title">
@@ -1477,69 +1477,17 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="createReferenceLink">
-		<xsl:param name="id" />
-		<xsl:param name="qualified"
-							 select="false()" />
-		<referenceLink class="mtps-internal-link"
-									 target="{$id}"
-									 qualified="{$qualified}" />
-	</xsl:template>
-
 	<xsl:template match="ddue:snippets">
 		<xsl:if test="ddue:snippet">
 			<div name="snippetGroup">
 				<xsl:for-each select="ddue:snippet">
-					<xsl:call-template name="codeSection">
-						<xsl:with-param name="codeLang"
+					<xsl:call-template name="t_codeSection">
+						<xsl:with-param name="p_codeLang"
 														select="@language" />
 					</xsl:call-template>
 				</xsl:for-each>
 			</div>
 		</xsl:if>
-	</xsl:template>
-
-	<xsl:template name="section">
-		<xsl:param name="toggleSwitch" />
-		<xsl:param name="title" />
-		<xsl:param name="content" />
-		<xsl:param name="toplink"
-							 select="false()" />
-
-		<xsl:variable name="toggleSection"
-									select="concat($toggleSwitch,'Section')" />
-
-		<div class="OH_CollapsibleAreaRegion">
-			<div class="OH_regiontitle">
-				<xsl:copy-of select="$title" />
-			</div>
-			<div class="OH_CollapsibleArea_HrDiv">
-				<hr class="OH_CollapsibleArea_Hr"
-						xmlns="" />
-			</div>
-		</div>
-		<div class="OH_clear">
-		</div>
-		<a id="{$toggleSection}">
-			<!---->
-			<!---->
-		</a>
-		<xsl:copy-of select="$content" />
-		<xsl:if test="boolean($toplink)">
-			<a href="#mainBody">
-				<include item="top"/>
-			</a>
-		</xsl:if>
-	</xsl:template>
-
-	<xsl:template name="subSection">
-		<xsl:param name="title" />
-		<xsl:param name="content" />
-
-		<h4 class="subHeading">
-			<xsl:copy-of select="$title" />
-		</h4>
-		<xsl:copy-of select="$content" />
 	</xsl:template>
 
 	<xsl:template match="ddue:developerSampleDocument">
@@ -1668,7 +1616,7 @@
 					</xsl:choose>
 				</xsl:variable>
 				<xsl:if test="normalize-space($changeHistoryContent)">
-					<xsl:call-template name="section">
+					<xsl:call-template name="t_section">
 						<xsl:with-param name="toggleSwitch"
 														select="'changeHistory'"/>
 						<xsl:with-param name="title">
@@ -1716,7 +1664,7 @@
 		<xsl:if test="$hasRemarks='true'">
 			<xsl:choose>
 				<xsl:when test="not($group = 'namespace')">
-					<xsl:call-template name="section">
+					<xsl:call-template name="t_section">
 						<xsl:with-param name="toggleSwitch"
 														select="'remarks'"/>
 						<xsl:with-param name="title">

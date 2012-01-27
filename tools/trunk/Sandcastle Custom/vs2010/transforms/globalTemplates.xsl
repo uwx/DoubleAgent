@@ -7,6 +7,8 @@
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
         >
 
+	<!-- ======================================================================================== -->
+
 	<xsl:template name="autogenSeeAlsoLinks">
 
 		<!-- a link to the containing type on all list and member topics -->
@@ -93,6 +95,10 @@
 
 	</xsl:template>
 
+	<!-- ============================================================================================
+	String formatting
+	============================================================================================= -->
+
 	<xsl:variable name="typeId">
 		<xsl:choose>
 			<xsl:when test="/document/reference/topicdata[@group='api'] and /document/reference/apidata[@group='type']">
@@ -137,57 +143,171 @@
 
 	</xsl:template>
 
-	<!-- Code -->
+	<xsl:template name="trimAtPeriod">
+		<xsl:param name="string" />
 
-	<xsl:template name="codeSection">
-		<xsl:param name="codeLang" />
-		<xsl:param name="codeTitle" />
+		<xsl:variable name="trimmedString"
+									select="substring(normalize-space($string), 1, 256)" />
+		<xsl:choose>
+			<xsl:when test="normalize-space($string) != $trimmedString">
+				<xsl:choose>
+					<xsl:when test="not(contains($trimmedString, '.'))">
+						<xsl:value-of select="$trimmedString"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="substringAndLastPeriod">
+							<xsl:with-param name="string"
+															select="$trimmedString" />
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="normalize-space($string)"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="substringAndLastPeriod">
+		<xsl:param name="string" />
+
+		<xsl:if test="contains($string, '.')">
+			<xsl:variable name="after"
+										select="substring-after($string, '.')" />
+			<xsl:value-of select="concat(substring-before($string, '.'),'.')" />
+			<xsl:if test="contains($after, '.')">
+				<xsl:call-template name="substringAndLastPeriod">
+					<xsl:with-param name="string"
+													select="$after" />
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Reference links
+	============================================================================================= -->
+
+	<xsl:template name="createReferenceLink">
+		<xsl:param name="id" />
+		<xsl:param name="qualified"
+							 select="false()" />
+		<referenceLink class="mtps-internal-link"
+									 target="{$id}"
+									 qualified="{$qualified}" />
+	</xsl:template>
+
+	<xsl:template name="decoratedNameSep">
+		<xsl:variable name="v_LangSpecId">
+			<xsl:value-of select="generate-id()"/>
+		</xsl:variable>
+		<xsl:variable name="v_ScriptText">
+			<xsl:value-of disable-output-escaping="yes"
+										select="concat('addToLanSpecTextIdSet(&quot;',$v_LangSpecId,'?cs=.|vb=.|cpp=::|nu=.&quot;);')"/>
+		</xsl:variable>
+		<span id="{$v_LangSpecId}"></span>
+		<script type="text/javascript">
+			<xsl:value-of select="$v_ScriptText"/>
+		</script>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Section headers
+	============================================================================================= -->
+
+	<xsl:template name="t_section">
+		<xsl:param name="toggleSwitch" />
+		<xsl:param name="title" />
+		<xsl:param name="content" />
+		<xsl:param name="toplink"
+							 select="false()" />
+
+		<xsl:variable name="toggleSection"
+									select="concat($toggleSwitch,'Section')" />
+
+		<div class="OH_CollapsibleAreaRegion">
+			<div class="OH_regiontitle">
+				<xsl:copy-of select="$title" />
+			</div>
+			<div class="OH_CollapsibleArea_HrDiv">
+				<hr class="OH_CollapsibleArea_Hr"
+						xmlns="" />
+			</div>
+		</div>
+		<div class="OH_clear">
+		</div>
+		<a id="{$toggleSection}">
+			<!---->
+			<!---->
+		</a>
+		<xsl:copy-of select="$content" />
+		<xsl:if test="boolean($toplink)">
+			<a href="#mainBody">
+				<include item="top"/>
+			</a>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="t_subSection">
+		<xsl:param name="title" />
+		<xsl:param name="content" />
+
+		<h4 class="subHeading">
+			<xsl:copy-of select="$title" />
+		</h4>
+		<xsl:copy-of select="$content" />
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Code formatting
+	============================================================================================= -->
+
+	<xsl:template name="t_codeSection">
+		<xsl:param name="p_codeLang" />
+		<xsl:param name="p_CodeTitle" />
+		<xsl:param name="p_formatCode"
+							 select="false()" />
+		<xsl:param name="p_enableCopyCode"
+							 select="'true'" />
 
 		<xsl:variable name="sectionId">
 			<xsl:value-of select="generate-id()"/>
 		</xsl:variable>
-		<xsl:variable name="nameLang">
-			<xsl:choose>
-				<xsl:when test="($codeLang = 'none') and (normalize-space($codeTitle) != '')">
-					<xsl:value-of select="$codeTitle"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="codeLangName">
-						<xsl:with-param name="codeLang"
-														select="$codeLang"/>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
+		<xsl:variable name="v_codeLangUnique">
+			<xsl:call-template name="t_codeLang">
+				<xsl:with-param name="p_codeLang"
+												select="$p_codeLang"/>
+			</xsl:call-template>
 		</xsl:variable>
-		<xsl:variable name="labelLang">
+		<xsl:variable name="v_codeLangName">
 			<xsl:choose>
-				<xsl:when test="($codeLang = 'none') and (normalize-space($codeTitle) != '')">
-					<xsl:value-of select="$codeTitle"/>
+				<xsl:when test="($v_codeLangUnique = 'none') and (normalize-space($p_CodeTitle) != '')">
+					<xsl:value-of select="$p_CodeTitle"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:call-template name="codeLangLabel">
-						<xsl:with-param name="codeLang"
-														select="$codeLang"/>
+					<xsl:call-template name="t_codeLangName">
+						<xsl:with-param name="p_codeLang"
+														select="$v_codeLangUnique"/>
 					</xsl:call-template>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<div class="OH_clear"></div>
-		<a id="syntaxToggle">
+		<a id="{$sectionId}_syntaxToggle">
 			<!---->
 			<!---->
 		</a>
 		<div id="{$sectionId}"
 				 class="OH_CodeSnippetContainer">
 
-			<xsl:call-template name="codeTabsSolo">
+			<xsl:call-template name="t_codeTabsSolo">
 				<xsl:with-param name="sectionId"
 												select="$sectionId"/>
-				<xsl:with-param name="nameLang"
-												select="$nameLang"/>
-				<xsl:with-param name="labelLang"
-												select="$labelLang"/>
+				<xsl:with-param name="p_codeLangName"
+												select="$v_codeLangName"/>
+				<xsl:with-param name="p_enableCopyCode"
+												select="$p_enableCopyCode"/>
 			</xsl:call-template>
 
 			<div id="{$sectionId}_codecollection"
@@ -204,24 +324,34 @@
 					</div>
 				</div>
 
-				<xsl:call-template name="codeDiv">
+				<xsl:call-template name="t_codeDiv">
 					<xsl:with-param name="sectionId"
 													select="$sectionId"/>
+					<xsl:with-param name="p_codeLang"
+													select="$v_codeLangUnique"/>
+					<xsl:with-param name="p_formatCode"
+													select="$p_formatCode"/>
 				</xsl:call-template>
 			</div>
 		</div>
 	</xsl:template>
 
-	<xsl:template name="codeSections">
-		<xsl:param name="codeNodes" />
-		<xsl:param name="nodeCount" />
+	<xsl:template name="t_codeSections">
+		<xsl:param name="p_codeNodes" />
+		<xsl:param name="p_nodeCount" />
+		<xsl:param name="p_codeLangAttr"
+							 select="'language'" />
+		<xsl:param name="p_formatCode"
+							 select="true()" />
+		<xsl:param name="p_enableCopyCode"
+							 select="'true'"/>
 
 		<xsl:variable name="sectionId">
 			<xsl:value-of select="generate-id()"/>
 		</xsl:variable>
 
 		<div class="OH_clear"></div>
-		<a id="syntaxToggle">
+		<a id="{$sectionId}_syntaxToggle">
 			<!---->
 			<!---->
 		</a>
@@ -233,13 +363,17 @@
 				<div class="OH_CodeSnippetContainerTabLeftActive"
 						 id="{$sectionId}_tabimgleft"></div>
 
-				<xsl:call-template name="codeTabs">
+				<xsl:call-template name="t_codeTabs">
 					<xsl:with-param name="sectionId"
 													select="$sectionId"/>
-					<xsl:with-param name="codeNodes"
-													select="$codeNodes"/>
-					<xsl:with-param name="nodeCount"
-													select="$nodeCount"/>
+					<xsl:with-param name="p_codeNodes"
+													select="$p_codeNodes"/>
+					<xsl:with-param name="p_nodeCount"
+													select="$p_nodeCount"/>
+					<xsl:with-param name="p_codeLangAttr"
+													select="$p_codeLangAttr"/>
+					<xsl:with-param name="p_enableCopyCode"
+													select="$p_enableCopyCode"/>
 				</xsl:call-template>
 				<!--<div id="{$sectionId}_tab1"
 						 class="OH_CodeSnippetContainerTabActive"
@@ -276,33 +410,36 @@
 				<div class="OH_CodeSnippetToolBar">
 					<div class="OH_CodeSnippetToolBarText">
 						<a id="{$sectionId}_copycode"
-							 href="javascript:CopyToClipboard('{$sectionId}','{$nodeCount}')"
+							 href="javascript:CopyToClipboard('{$sectionId}','{$p_nodeCount}')"
 							 title="Copy to Clipboard"
 							 style="display: none">Copy to Clipboard</a>
 						<a id="{$sectionId}_PrintText"
 							 class="OH_PrintText"
-							 href="javascript:Print('{$sectionId}','{$nodeCount}')"
+							 href="javascript:Print('{$sectionId}','{$p_nodeCount}')"
 							 title="Print">Print</a>
 					</div>
 				</div>
 
-				<xsl:call-template name="codeDivs">
+				<xsl:call-template name="t_codeDivs">
 					<xsl:with-param name="sectionId"
 													select="$sectionId"/>
-					<xsl:with-param name="codeNodes"
-													select="$codeNodes"/>
-					<xsl:with-param name="nodeCount"
-													select="$nodeCount"/>
+					<xsl:with-param name="p_codeNodes"
+													select="$p_codeNodes"/>
+					<xsl:with-param name="p_nodeCount"
+													select="$p_nodeCount"/>
+					<xsl:with-param name="p_codeLangAttr"
+													select="$p_codeLangAttr"/>
+					<xsl:with-param name="p_formatCode"
+													select="$p_formatCode"/>
 				</xsl:call-template>
 			</div>
 		</div>
 	</xsl:template>
 
-	<xsl:template name="codeTabsSolo">
+	<xsl:template name="t_codeTabsSolo">
 		<xsl:param name="sectionId" />
-		<xsl:param name="nameLang" />
-		<xsl:param name="labelLang" />
-		<xsl:param name="enableCopyCode"
+		<xsl:param name="p_codeLangName" />
+		<xsl:param name="p_enableCopyCode"
 							 select="'true'" />
 
 		<div class="OH_CodeSnippetContainerTabs"
@@ -311,13 +448,9 @@
 					 id="{$sectionId}_tabimgleft"></div>
 			<div id="{$sectionId}_tab1"
 					 class="OH_CodeSnippetContainerTabSolo"
-					 EnableCopyCode="{$enableCopyCode}">
-				<!--<a href="#"
-					 title="{$labelLang}">
-					<xsl:value-of select="$nameLang"/>
-				</a>-->
+					 EnableCopyCode="{$p_enableCopyCode}">
 				<a href="#">
-					<xsl:value-of select="$nameLang"/>
+					<xsl:value-of select="$p_codeLangName"/>
 				</a>
 			</div>
 			<div class="OH_CodeSnippetContainerTabRightActive"
@@ -325,46 +458,60 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template name="codeTabs">
+	<xsl:template name="t_codeTabs">
 		<xsl:param name="sectionId" />
-		<xsl:param name="codeNodes" />
-		<xsl:param name="nodeCount" />
-		<xsl:param name="enableCopyCode"
+		<xsl:param name="p_codeNodes" />
+		<xsl:param name="p_nodeCount" />
+		<xsl:param name="p_codeLangAttr"
+							 select="'language'" />
+		<xsl:param name="p_enableCopyCode"
 							 select="'true'" />
 
-		<xsl:for-each select="msxsl:node-set($codeNodes)">
+		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
 			<xsl:variable name="nodeIndex"
 										select="position()"/>
-			<xsl:variable name="codeLang">
-				<xsl:call-template name="codeLang">
-					<xsl:with-param name="codeLang"
-													select="@language"/>
+			<xsl:variable name="v_codeLang">
+				<xsl:call-template name="t_codeLang">
+					<xsl:with-param name="p_codeLang">
+						<xsl:for-each select="@*">
+							<xsl:if test="name() = $p_codeLangAttr">
+								<xsl:value-of select="."/>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
-			<xsl:variable name="codeTitle"
+
+			<xsl:variable name="t_isCodeLangValid">
+				<xsl:call-template name="t_isCodeLangValid">
+					<xsl:with-param name="p_codeLang"
+													select="$v_codeLang"/>
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:variable name="p_CodeTitle"
 										select="@title"/>
-			<xsl:variable name="nameLang">
+			<xsl:variable name="v_codeLangName">
 				<xsl:choose>
-					<xsl:when test="($codeLang = 'none') and (normalize-space($codeTitle) != '')">
-						<xsl:value-of select="$codeTitle"/>
+					<xsl:when test="($v_codeLang = 'none') and (normalize-space($p_CodeTitle) != '')">
+						<xsl:value-of select="$p_CodeTitle"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:call-template name="codeLangName">
-							<xsl:with-param name="codeLang"
-															select="$codeLang"/>
+						<xsl:call-template name="t_codeLangName">
+							<xsl:with-param name="p_codeLang"
+															select="$v_codeLang"/>
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:variable name="labelLang">
 				<xsl:choose>
-					<xsl:when test="($codeLang = 'none') and (normalize-space($codeTitle) != '')">
-						<xsl:value-of select="$codeTitle"/>
+					<xsl:when test="($v_codeLang = 'none') and (normalize-space($p_CodeTitle) != '')">
+						<xsl:value-of select="$p_CodeTitle"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:call-template name="codeLangLabel">
-							<xsl:with-param name="codeLang"
-															select="$codeLang"/>
+						<xsl:call-template name="t_codeLangLabel">
+							<xsl:with-param name="t_codeLang"
+															select="$v_codeLang"/>
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -383,115 +530,152 @@
 
 			<div id="{$sectionId}_tab{$nodeIndex}"
 					 class="{$tabClass}"
-					 EnableCopyCode="{$enableCopyCode}">
-				<a href="javascript:ChangeTab('{$sectionId}','{$labelLang}','{$nodeIndex}','{$nodeCount}')">
-					<xsl:value-of select="$nameLang"/>
+					 EnableCopyCode="{$p_enableCopyCode}">
+				<a href="javascript:ChangeTab('{$sectionId}','{$labelLang}','{$nodeIndex}','{$p_nodeCount}')">
+					<xsl:value-of select="$v_codeLangName"/>
 				</a>
 			</div>
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="codeDiv">
+	<xsl:template name="t_codeDiv">
 		<xsl:param name="sectionId" />
-		<xsl:param name="divIndex"
+		<xsl:param name="p_codeLang" />
+		<xsl:param name="p_codeDivIndex"
 							 select="1" />
+		<xsl:param name="p_formatCode"
+							 select="true()" />
 
-		<div id="{$sectionId}_code_Div{$divIndex}"
+		<xsl:variable name="t_isCodeLangValid">
+			<xsl:call-template name="t_isCodeLangValid">
+				<xsl:with-param name="p_codeLang"
+												select="$p_codeLang"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="v_codeHidden">
+			<xsl:if test="$p_codeDivIndex &gt; 1">
+				<xsl:value-of select="'display: none'"/>
+			</xsl:if>
+		</xsl:variable>
+
+		<div id="{$sectionId}_code_Div{$p_codeDivIndex}"
 				 class="OH_CodeSnippetContainerCode"
-				 style="">
+				 style="{$v_codeHidden}">
 			<div class="code">
 				<xsl:choose>
 					<xsl:when test="substring(normalize-space(.),1,8)='@@_SHFB_'">
-						<!-- MS Help Viewer has code to show the code colorized or plain.  We'll ignore their colorizer and insert our colorized text -->
+						<!-- MS Help Viewer has code to show the code colorized or plain.  We'll ignore their colorizer and insert our own colorized text -->
 						<pre xml:space="preserve"><xsl:text/><xsl:value-of select="."/><xsl:text/></pre>
 					</xsl:when>
+					<xsl:when test="boolean($p_formatCode)">
+						<pre xml:space="preserve"><xsl:text/><xsl:apply-templates/><xsl:text/></pre>
+					</xsl:when>
 					<xsl:otherwise>
-						<pre xml:space="preserve"><xsl:text/><xsl:apply-templates select="."/><xsl:text/></pre>
+						<pre xml:space="preserve"><xsl:text/><xsl:copy-of select="."/><xsl:text/></pre>
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
 		</div>
-		<div id="{$sectionId}_code_Plain_Div{$divIndex}"
+		<!-- The hidden plain (uncolorized) text is for copying to the clipboard and printing -->
+		<div id="{$sectionId}_code_Plain_Div{$p_codeDivIndex}"
 				 class="OH_CodeSnippetContainerCode"
 				 style="display: none">
 			<div class="code">
-				<xsl:choose>
-					<xsl:when test="substring(normalize-space(.),1,8)='@@_SHFB_'">
-						<!-- The hidden plain (uncolorized) text is for copying to the clipboard and printing -->
-						<pre xml:space="preserve"><xsl:text/>@@_ORIGINAL_<xsl:value-of select="."/><xsl:text/></pre>
-					</xsl:when>
-					<xsl:otherwise>
-						<pre xml:space="preserve"><xsl:text/><xsl:apply-templates select="."/><xsl:text/></pre>
-					</xsl:otherwise>
-				</xsl:choose>
+				<!-- Leave it empty - it is filled in by the MSHCComponent -->
+				<pre xml:space="preserve"><xsl:text/></pre>
 			</div>
 		</div>
 
 	</xsl:template>
 
-	<xsl:template name="codeDivs">
+	<xsl:template name="t_codeDivs">
 		<xsl:param name="sectionId" />
-		<xsl:param name="codeNodes" />
-		<xsl:param name="nodeCount" />
+		<xsl:param name="p_codeNodes" />
+		<xsl:param name="p_nodeCount" />
+		<xsl:param name="p_codeLangAttr"
+							 select="'language'" />
+		<xsl:param name="p_formatCode"
+							 select="true()" />
 
-		<xsl:for-each select="msxsl:node-set($codeNodes)">
-			<xsl:call-template name="codeDiv">
+		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
+			<xsl:variable name="v_codeLang">
+				<xsl:call-template name="t_codeLang">
+					<xsl:with-param name="p_codeLang">
+						<xsl:for-each select="@*">
+							<xsl:if test="name() = $p_codeLangAttr">
+								<xsl:value-of select="."/>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+
+			<xsl:call-template name="t_codeDiv">
 				<xsl:with-param name="sectionId"
 												select="$sectionId"/>
-				<xsl:with-param name="divIndex"
+				<xsl:with-param name="p_codeLang"
+												select="$v_codeLang"/>
+				<xsl:with-param name="p_formatCode"
+												select="$p_formatCode"/>
+				<xsl:with-param name="p_codeDivIndex"
 												select="position()"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
 
-	<!-- Code Language -->
+	<!-- ============================================================================================
+	Code languages
+	============================================================================================= -->
 
-	<xsl:template name="codeLang">
-		<xsl:param name="codeLang"/>
-		<xsl:variable name="codeLangLC"
-									select="translate($codeLang,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz ')"/>
+	<xsl:template name="t_codeLang">
+		<xsl:param name="p_codeLang"/>
+		<xsl:variable name="v_codeLangLC"
+									select="translate($p_codeLang,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
 		<xsl:choose>
-			<xsl:when test="$codeLangLC = 'vbs' or $codeLangLC = 'vbscript'">
+			<xsl:when test="$v_codeLangLC = 'vbs' or $v_codeLangLC = 'vbscript'">
 				<xsl:text>VBScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'vb' or $codeLangLC = 'vb#' or $codeLangLC = 'kblangvb' or $codeLangLC = 'visualbasic'" >
+			<xsl:when test="$v_codeLangLC = 'vb' or $v_codeLangLC = 'vb#' or $v_codeLangLC = 'kblangvb' or $v_codeLangLC = 'visualbasicdeclaration' or $v_codeLangLC = 'visualbasic'" >
 				<xsl:text>VisualBasic</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'visualbasicusage'" >
+			<xsl:when test="$v_codeLangLC = 'vb6' or $v_codeLangLC = 'visualbasic6'" >
+				<xsl:text>VisualBasic6</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangLC = 'visualbasicusage'" >
 				<xsl:text>VisualBasicUsage</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'c#' or $codeLangLC = 'cs' or $codeLangLC = 'csharp'" >
+			<xsl:when test="$v_codeLangLC = 'c#' or $v_codeLangLC = 'cs' or $v_codeLangLC = 'csharp'" >
 				<xsl:text>CSharp</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'cpp' or $codeLangLC = 'cpp#' or $codeLangLC = 'c' or $codeLangLC = 'c++' or $codeLangLC = 'kblangcpp' or $codeLangLC = 'managedcplusplus'" >
+			<xsl:when test="$v_codeLangLC = 'cpp' or $v_codeLangLC = 'cpp#' or $v_codeLangLC = 'c' or $v_codeLangLC = 'c++' or $v_codeLangLC = 'kblangcpp' or $v_codeLangLC = 'managedcplusplus'" >
 				<xsl:text>ManagedCPlusPlus</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'j#' or $codeLangLC = 'jsharp'">
+			<xsl:when test="$v_codeLangLC = 'j#' or $v_codeLangLC = 'jsharp'">
 				<xsl:text>JSharp</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'f#' or $codeLangLC = 'fs' or $codeLangLC = 'fsharp'">
+			<xsl:when test="$v_codeLangLC = 'f#' or $v_codeLangLC = 'fs' or $v_codeLangLC = 'fsharp'">
 				<xsl:text>FSharp</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'js' or $codeLangLC = 'jscript#' or $codeLangLC = 'jscript' or $codeLangLC = 'kbjscript'">
+			<xsl:when test="$v_codeLangLC = 'js' or $v_codeLangLC = 'jscript#' or $v_codeLangLC = 'jscript' or $v_codeLangLC = 'kbjscript'">
 				<xsl:text>JScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'javascript'">
+			<xsl:when test="$v_codeLangLC = 'javascript'">
 				<xsl:text>JavaScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'xml' or $codeLangLC = 'xmlLang'">
+			<xsl:when test="$v_codeLangLC = 'xml' or $v_codeLangLC = 'xmlLang'">
 				<xsl:text>xmlLang</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'html'">
+			<xsl:when test="$v_codeLangLC = 'html'">
 				<xsl:text>html</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'xaml'">
+			<xsl:when test="$v_codeLangLC = 'xaml'">
 				<xsl:text>XAML</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'vb-c#' or $codeLangLC = 'visualbasicandcsharp'">
+			<xsl:when test="$v_codeLangLC = 'vb-c#' or $v_codeLangLC = 'visualbasicandcsharp'">
 				<xsl:text>visualbasicANDcsharp</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangLC = 'none'">
-				<xsl:text>{$codeLangLC}</xsl:text>
+			<xsl:when test="$v_codeLangLC = 'none'">
+				<xsl:value-of select="$v_codeLangLC"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:text>other</xsl:text>
@@ -499,113 +683,121 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="codeLangLabel">
-		<xsl:param name="codeLang"/>
-		<xsl:variable name="codeLangUnique">
-			<xsl:call-template name="codeLang">
-				<xsl:with-param name="codeLang"
-												select="$codeLang"/>
+	<xsl:template name="t_codeLangName">
+		<xsl:param name="p_codeLang"/>
+		<xsl:variable name="v_codeLangUnique">
+			<xsl:call-template name="t_codeLang">
+				<xsl:with-param name="p_codeLang"
+												select="$p_codeLang"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="$codeLangUnique = 'VBScript'">
-				<xsl:text>Visual Basic Script</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VBScript'">
+				<xsl:text>VBScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'VisualBasic'" >
-				<xsl:text>Visual Basic</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic' or $v_codeLangUnique = 'VisualBasicUsage'" >
+				<xsl:text>VB</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'VisualBasicUsage'" >
-				<xsl:text>Visual Basic Usage</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic6'" >
+				<xsl:text>VB6</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'CSharp'" >
-				<xsl:text>Visual C#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
+				<xsl:text>C#</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'visualbasicANDcsharp'" >
-				<xsl:text>Visual Basic and C#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'visualbasicANDcsharp'" >
+				<xsl:text>VB and C#</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'ManagedCPlusPlus'" >
-				<xsl:text>Visual C++</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'ManagedCPlusPlus'" >
+				<xsl:text>C++</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'JSharp'">
-				<xsl:text>Visual J#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'JSharp'">
+				<xsl:text>VJ#</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'FSharp'" >
-				<xsl:text>Visual F#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'FSharp'" >
+				<xsl:text>F#</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'JScript'">
+			<xsl:when test="$v_codeLangUnique = 'JScript'">
 				<xsl:text>JScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'JavaScript'">
+			<xsl:when test="$v_codeLangUnique = 'JavaScript'">
 				<xsl:text>JavaScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'xaml'">
+			<xsl:when test="$v_codeLangUnique = 'xaml'">
 				<xsl:text>XAML</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'xmlLang'">
+			<xsl:when test="$v_codeLangUnique = 'xmlLang'">
 				<xsl:text>XML</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'html'">
+			<xsl:when test="$v_codeLangUnique = 'html'">
 				<xsl:text>HTML</xsl:text>
 			</xsl:when>
 			<xsl:otherwise/>
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="codeLangName">
-		<xsl:param name="codeLang"/>
-		<xsl:variable name="codeLangUnique">
-			<xsl:call-template name="codeLang">
-				<xsl:with-param name="codeLang"
-												select="$codeLang"/>
+	<xsl:template name="t_codeLangLabel">
+		<xsl:param name="p_codeLang"/>
+		<xsl:variable name="v_codeLangUnique">
+			<xsl:call-template name="t_codeLang">
+				<xsl:with-param name="p_codeLang"
+												select="$p_codeLang"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="$codeLangUnique = 'VBScript'">
-				<xsl:text>VBScript</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VBScript'">
+				<xsl:text>Visual Basic Script</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'VisualBasic' or $codeLangUnique = 'VisualBasicUsage'" >
-				<xsl:text>VB</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic'" >
+				<xsl:text>Visual Basic</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'CSharp'" >
-				<xsl:text>C#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic6'" >
+				<xsl:text>Visual Basic 6</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'visualbasicANDcsharp'" >
-				<xsl:text>VB and C#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasicUsage'" >
+				<xsl:text>Visual Basic Usage</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'ManagedCPlusPlus'" >
-				<xsl:text>C++</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
+				<xsl:text>Visual C#</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'JSharp'">
-				<xsl:text>VJ#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'visualbasicANDcsharp'" >
+				<xsl:text>Visual Basic and C#</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'FSharp'" >
-				<xsl:text>F#</xsl:text>
+			<xsl:when test="$v_codeLangUnique = 'ManagedCPlusPlus'" >
+				<xsl:text>Visual C++</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'JScript'">
+			<xsl:when test="$v_codeLangUnique = 'JSharp'">
+				<xsl:text>Visual J#</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'FSharp'" >
+				<xsl:text>Visual F#</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'JScript'">
 				<xsl:text>JScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'JavaScript'">
+			<xsl:when test="$v_codeLangUnique = 'JavaScript'">
 				<xsl:text>JavaScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'xaml'">
+			<xsl:when test="$v_codeLangUnique = 'xaml'">
 				<xsl:text>XAML</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'xmlLang'">
+			<xsl:when test="$v_codeLangUnique = 'xmlLang'">
 				<xsl:text>XML</xsl:text>
 			</xsl:when>
-			<xsl:when test="$codeLangUnique = 'html'">
+			<xsl:when test="$v_codeLangUnique = 'html'">
 				<xsl:text>HTML</xsl:text>
 			</xsl:when>
 			<xsl:otherwise/>
 		</xsl:choose>
 	</xsl:template>
+
+	<!-- ======================================================================================== -->
 
 	<xsl:template name="mshelpCodelangAttributes">
 		<xsl:param name="snippets" />
 		<xsl:for-each select="$snippets">
 
 			<xsl:if test="not(@language=preceding::*/@language)">
-				<xsl:variable name="codeLang">
+				<xsl:variable name="v_codeLang">
 					<xsl:choose>
 						<xsl:when test="@language = 'VBScript' or @language = 'vbs'">
 							<xsl:text>VBScript</xsl:text>
@@ -646,13 +838,13 @@
 					</xsl:choose>
 				</xsl:variable>
 				<xsl:choose>
-					<xsl:when test="$codeLang='other'" />
-					<!-- If $codeLang is already authored, then do nothing -->
-					<xsl:when test="/document/metadata/attribute[@name='codelang']/text() = $codeLang" />
+					<xsl:when test="$v_codeLang='other'" />
+					<!-- If $v_codeLang is already authored, then do nothing -->
+					<xsl:when test="/document/metadata/attribute[@name='codelang']/text() = $v_codeLang" />
 					<xsl:otherwise>
-						<xsl:call-template name="codeLangAttr">
-							<xsl:with-param name="codeLang"
-															select="$codeLang" />
+						<xsl:call-template name="t_codeLangAttr">
+							<xsl:with-param name="p_codeLang"
+															select="$v_codeLang" />
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -661,53 +853,33 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="codeLangAttr">
-		<xsl:param name="codeLang" />
-		<MSHelp:Attr Name="codelang"
-								 Value="{$codeLang}" />
+	<xsl:template name="t_codeLangAttr">
+		<xsl:param name="p_codeLang" />
+		<MSHelp:Attr Name="p_codelang"
+								 Value="{$p_codeLang}" />
 	</xsl:template>
 
-	<!-- String -->
-
-	<xsl:template name="trimAtPeriod">
-		<xsl:param name="string" />
-
-		<xsl:variable name="trimmedString"
-									select="substring(normalize-space($string), 1, 256)" />
-		<xsl:choose>
-			<xsl:when test="normalize-space($string) != $trimmedString">
-				<xsl:choose>
-					<xsl:when test="not(contains($trimmedString, '.'))">
-						<xsl:value-of select="$trimmedString"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="substringAndLastPeriod">
-							<xsl:with-param name="string"
-															select="$trimmedString" />
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="normalize-space($string)"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template name="substringAndLastPeriod">
-		<xsl:param name="string" />
-
-		<xsl:if test="contains($string, '.')">
-			<xsl:variable name="after"
-										select="substring-after($string, '.')" />
-			<xsl:value-of select="concat(substring-before($string, '.'),'.')" />
-			<xsl:if test="contains($after, '.')">
-				<xsl:call-template name="substringAndLastPeriod">
-					<xsl:with-param name="string"
-													select="$after" />
-				</xsl:call-template>
-			</xsl:if>
-		</xsl:if>
+	<!-- ============================================================================================
+	Footer
+	============================================================================================= -->
+	<xsl:template name="t_footer">
+		<div class="OH_footer"
+				 id="footer">
+			<include item="footer">
+				<parameter>
+					<xsl:value-of select="$key"/>
+				</parameter>
+				<parameter>
+					<xsl:call-template name="topicTitlePlain"/>
+				</parameter>
+				<parameter>
+					<xsl:value-of select="/document/metadata/item[@id='PBM_FileVersion']" />
+				</parameter>
+				<parameter>
+					<xsl:value-of select="/document/metadata/attribute[@name='TopicVersion']" />
+				</parameter>
+			</include>
+		</div>
 	</xsl:template>
 
 </xsl:stylesheet>

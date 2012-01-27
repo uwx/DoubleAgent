@@ -98,6 +98,7 @@ protected:
 	void FixMethodSignatures (System::Xml::XmlDocument^ pXmlDocument);
 	void FixMemberReferences (System::Xml::XmlDocument^ pXmlDocument);
 	void FixListFormats (System::Xml::XmlDocument^ pXmlDocument);
+	void MoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument);
 	void RemoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument);
 	void RemoveCompositeMembers (System::Xml::XmlDocument^ pXmlDocument);
 	void AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument);

@@ -275,7 +275,7 @@ int XmlToHtml::ProcessCmdLine (array <String^>^ pCmdArgs)
 					Console::WriteLine ("Convert {0} to {1} for {2}", lXmlPath, mHtmlPath, lAssemblyPath);
 
 					mOutputHtml = true;
-					mTemplatePath = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (lXmlPath), "Templates");
+					mTemplatePath = System::IO::Path::Combine (System::IO::Path::GetDirectoryName (lXmlPath), "..\\Templates");
 					ResolveEntities (lXmlDocument);
 					if	(!LoadXmlIncludes (lXmlDocument, lXmlPath, true))
 					{
@@ -1447,7 +1447,7 @@ String^ XmlToHtml::PutMethodMember (String^ pMemberName, XmlNode^ pMemberNode, M
 	{
 		PutMemberName (lTargetRoot, pMemberNode, pAssemblyMethod);
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
-		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns | ./value")), FormatExamples (pMemberNode->SelectNodes ("./example")));
+		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns | ./value")), FormatExamples (pMemberNode->SelectNodes ("./codeSample")));
 		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
@@ -1485,7 +1485,7 @@ String^ XmlToHtml::PutPropertyMember (String^ pMemberName, XmlNode^ pMemberNode,
 			lFileName = AllPropertiesFileName (pMemberName);
 		}
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
-		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns | ./value")), FormatExamples (pMemberNode->SelectNodes ("./example")));
+		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns | ./value")), FormatExamples (pMemberNode->SelectNodes ("./codeSample")));
 		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
@@ -1507,7 +1507,7 @@ String^ XmlToHtml::PutEventMember (String^ pMemberName, XmlNode^ pMemberNode, Ev
 	{
 		PutMemberName (lTargetRoot, pMemberNode, pAssemblyEvent);
 		PutMemberSummary (lTargetRoot, FormatSummary (pMemberNode ["summary"]));
-		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns")), FormatExamples (pMemberNode->SelectNodes ("./example")));
+		PutMemberSyntax (lTargetRoot, FormatSyntax (pMemberNode ["syntax"]), FormatParameters (pMemberNode->SelectNodes ("./param | ./returns")), FormatExamples (pMemberNode->SelectNodes ("./codeSample")));
 		PutMemberRemarks (lTargetRoot, FormatRemarks (pMemberNode ["remarks"]), FormatDetails (pMemberNode->SelectNodes ("./detail | ./details")));
 		PutMemberSeeAlso (lTargetRoot, FormatSeeAlso (pMemberNode->SelectNodes ("seealso")));
 
@@ -1635,36 +1635,32 @@ void XmlToHtml::PutMemberRemarks (XmlElement^ pRootElement, XmlNode^ pMemberRema
 	Generic::List<XmlNode^>^	lNodeList;
 	XmlNode^					lNode;
 
-	if	(lNodeList = NodeList (pRootElement->SelectNodes (".//detail | .//details")))
-	{
-		for each (lNode in lNodeList)
-		{
-			if	(pMemberDetails)
-			{
-				if	(!String::IsNullOrEmpty (lNode->InnerText))
-				{
-					lNode->ParentNode->InsertBefore (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
-				}
-				lNode->ParentNode->ReplaceChild (CopyNodeInnerXml (pMemberDetails, lNode->OwnerDocument), lNode);
-			}
-			else
-			{
-				lNode->ParentNode->RemoveChild (lNode);
-			}
-		}
-	}
-
 	if	(lNodeList = NodeList (pRootElement->GetElementsByTagName ("remarks")))
 	{
 		for each (lNode in lNodeList)
 		{
-			if	(pMemberRemarks)
+			if	(
+					(pMemberRemarks)
+				||	(pMemberDetails)
+				)
 			{
 				if	(!String::IsNullOrEmpty (lNode->InnerText))
 				{
 					lNode->ParentNode->InsertBefore (CopyNodeInnerXml (lNode, lNode->OwnerDocument), lNode);
 				}
-				lNode->ParentNode->ReplaceChild (CopyNodeInnerXml (pMemberRemarks, lNode->OwnerDocument), lNode);
+				if	(pMemberRemarks)
+				{
+					if	(pMemberDetails)
+					{
+						lNode->ParentNode->InsertAfter (CopyNodeInnerXml (pMemberDetails, lNode->OwnerDocument), lNode);
+					}
+					lNode->ParentNode->ReplaceChild (CopyNodeInnerXml (pMemberRemarks, lNode->OwnerDocument), lNode);
+				}
+				else
+				if	(pMemberDetails)
+				{
+					lNode->ParentNode->ReplaceChild (CopyNodeInnerXml (pMemberDetails, lNode->OwnerDocument), lNode);
+				}
 			}
 			else
 			{
@@ -1965,7 +1961,7 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 				}
 			}
 		}
-		if	(lNodeList = NodeList (lRet->SelectNodes (".//example")))
+		if	(lNodeList = NodeList (lRet->SelectNodes (".//codeSample")))
 		{
 			for each (lNode in lNodeList)
 			{
@@ -2914,6 +2910,7 @@ bool XmlToHtml::CopyXmlToXml (XmlDocument^ pXmlDocument, System::Reflection::Ass
 	pXmlDocument->Normalize ();
 	LoadAssemblyMembers (pAssembly);
 
+	MoveMemberDetails (pXmlDocument);
 	RemoveMemberDetails (pXmlDocument);
 	FixListFormats (pXmlDocument);
 	RemoveCompositeMembers (pXmlDocument);
@@ -3226,23 +3223,68 @@ void XmlToHtml::FixListFormats (System::Xml::XmlDocument^ pXmlDocument)
 
 /////////////////////////////////////////////////////////////////////////////
 
+void XmlToHtml::MoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument)
+{
+	if	(mOutputSandcastle)
+	{
+		try
+		{
+			Generic::List<XmlNode^>^	lRemarksNodes;
+			XmlNode^					lRemarksNode;
+			Generic::List<XmlNode^>^	lDetailsNodes;
+			XmlNode^					lDetailsNode;
+
+			if	(
+					(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//detail | .//details")))
+				&&	(lDetailsNodes->Count > 0)
+				)
+			{
+				for each (lDetailsNode in lDetailsNodes)
+				{
+					if	(
+							(lRemarksNodes = NodeList (lDetailsNode->SelectNodes ("ancestor::member/remarks")))
+						&&	(lRemarksNodes->Count > 0)
+						&&	(lRemarksNode =	lRemarksNodes[0])
+						)
+					{
+						lDetailsNode->ParentNode->RemoveChild (lDetailsNode);
+						lRemarksNode->AppendChild (lDetailsNode);
+					}
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+}
+
 void XmlToHtml::RemoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument)
 {
-	if	(
-			(mOutputIntellisense)
-		||	(mOutputSandcastle)
-		)
+	if	(mOutputIntellisense)
 	{
 		try
 		{
 			Generic::List<XmlNode^>^	lDetailsNodes;
 			XmlNode^					lDetailsNode;
 
-			if	(
-					(mOutputIntellisense)
-				?	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax | .//detail | .//details | .//example | .//seealso")))
-				:	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax | .//detail | .//details")))
-				)
+			if	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax | .//detail | .//details | .//example | .//seealso")))
+			{
+				for each (lDetailsNode in lDetailsNodes)
+				{
+					lDetailsNode->ParentNode->RemoveChild (lDetailsNode);
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(mOutputSandcastle)
+	{
+		try
+		{
+			Generic::List<XmlNode^>^	lDetailsNodes;
+			XmlNode^					lDetailsNode;
+
+			if	(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//syntax")))
 			{
 				for each (lDetailsNode in lDetailsNodes)
 				{
