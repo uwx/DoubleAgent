@@ -530,7 +530,7 @@
     <HeaderText>
     </HeaderText>
     <CleanIntermediates>False</CleanIntermediates>
-    <WorkingPath>\BinDa\Bin\Help2\Working\</WorkingPath>
+    <WorkingPath>\BinDa\Bin\Help\Working\</WorkingPath>
     <ComponentConfigurations>
       <ComponentConfig id="Cached MSDN URL References" enabled="True">
         <component id="Cached MSDN URL References" type="SandcastleBuilder.Components.CachedResolveReferenceLinksComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll" locale="{@Locale}" linkTarget="{@SdkLinkTarget}">
@@ -595,6 +595,11 @@
     <HtmlSdkLinkType>None</HtmlSdkLinkType>
     <CollectionTocStyle>Flat</CollectionTocStyle>
     <MSHelp2SdkLinkType>Index</MSHelp2SdkLinkType>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="DoubleAgent.AxControl" isDocumented="True" xmlns="">The Double Agent Control for Windows Forms</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="DoubleAgent.Control" isDocumented="True" xmlns="">The Double Agent Control</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="DoubleAgent.Server" isDocumented="True" xmlns="">The Double Agent Server</NamespaceSummaryItem>
+    </NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional

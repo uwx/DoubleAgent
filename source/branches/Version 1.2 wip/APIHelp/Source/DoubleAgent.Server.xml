@@ -710,26 +710,26 @@
 					You can load characters from the default location(s) by specifying only a file name. For example, specifying
 					the following would search for Genie.acs using the <see class="see" cref="P:&dans;.CharacterFiles.SearchPath" text="search path"/>.
 				</para>
-				<example>
-					<code xml:space="preserve">&darootref;-&gt;<keyword>Load</keyword> ("Genie.acs", &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)</code>
+				<codeSample>
+					<code xml:space="preserve" language="cpp">&darootref;-&gt;<keyword>Load</keyword> ("Genie.acs", &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)</code>
 					<para>
 						You can also specify an absolute location,
 					</para>
-					<code xml:space="preserve">&darootref;-&gt;<keyword>Load</keyword> ("C:\\MyCharacters\\Genie.acs", &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)</code>
+					<code xml:space="preserve" language="cpp">&darootref;-&gt;<keyword>Load</keyword> ("C:\\MyCharacters\\Genie.acs", &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)</code>
 					<para>
 						or specify your own subdirectory by using a relative path.
 					</para>
-					<code xml:space="preserve">&darootref;-&gt;<keyword>Load</keyword> ("MyCharacters\\Genie.acs, &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)"</code>
-				</example>
+					<code xml:space="preserve" language="cpp">&darootref;-&gt;<keyword>Load</keyword> ("MyCharacters\\Genie.acs", &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)"</code>
+				</codeSample>
 				<para>
 					You can load the default character by passing an empty <keyword>VARIANT</keyword> for the <token>Provider</token>
 					parameter. This will load the <a class="see" href="&dapsref;#Gallery">default character</a> from the <see class="see" cref="P:&dans;.CharacterFiles.DefaultFilePath" text="default file path" />.
 				</para>
-				<example>
-					<code xml:space="preserve">VARIANT EmptyProvider;
+				<codeSample>
+					<code xml:space="preserve" language="cpp">VARIANT EmptyProvider;
 VariantInit (&amp;EmptyProvider);
 &darootref;-&gt;<keyword>Load</keyword> (EmptyProvider, &amp;<token>CharacterID</token>, &amp;<token>RequestID</token>)</code>
-				</example>
+				</codeSample>
 				<para>
 					You <strong>cannot</strong> load the same character (a character having the same <see cref="P:&dans;.Character.UniqueID" />)
 					more than once from a single instance of the <see cref="T:&darootobj;" suffix="Object" />. Similarly, you
@@ -4846,7 +4846,6 @@ VariantInit (&amp;EmptyProvider);
 				</list>
 			</syntax>
 			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.Character']/remarks" />
-			<details></details>
 		</member>
 
 		<!--=============================================================================================-->
@@ -7531,7 +7530,6 @@ VariantInit (&amp;EmptyProvider);
 					</item>
 				</list>
 			</syntax>
-			<details></details>
 			<include file="&dactlxml;" path="/doc/members/member[@name='T:&dactlns;.UserInput']/remarks" />
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 			<seealso cref="T:&dans;.Command" prefix="The" suffix="Object" />

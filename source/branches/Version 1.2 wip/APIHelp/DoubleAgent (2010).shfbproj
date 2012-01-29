@@ -601,7 +601,7 @@
                     Stylesheet file (required)
                     Script file (required)
                     "Copy" image file (required) -->
-          <colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="" copyImage="" />
+          <colorizer stylesheet="" scriptFile="" copyImage="" />
           <!-- Base output paths for the files (required).  These should match
                  the parent folder of the output path of the HTML files (see
                  each of the SaveComponent instances below). -->
@@ -650,6 +650,12 @@
     <RootNamespaceTitle>The Double Agent Class Library</RootNamespaceTitle>
     <SelfBranded>True</SelfBranded>
     <IncludeFavorites>True</IncludeFavorites>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="DoubleAgent.AxControl" isDocumented="True" xmlns="">The Double Agent Control for Windows Forms</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="DoubleAgent.Control" isDocumented="True" xmlns="">The Double Agent Control</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="DoubleAgent.Server" isDocumented="True" xmlns="">The Double Agent Server</NamespaceSummaryItem>
+    </NamespaceSummaries>
+    <IndentHtml>True</IndentHtml>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
@@ -741,6 +747,10 @@
     <Tokens Include="Source\DoubleAgent.Tokens" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="images\SvrObjectModelSmall.png">
+      <ImageId>SvrObjectModelSmall</ImageId>
+      <AlternateText>Server Object Model</AlternateText>
+    </Image>
     <Image Include="images\CtlObjectModelSmall.png">
       <ImageId>CtlObjectModelSmall</ImageId>
       <AlternateText>Control Object Model</AlternateText>
@@ -767,7 +777,7 @@
     </Image>
     <Image Include="images\SvrObjectModel.png">
       <ImageId>SvrObjectModel</ImageId>
-      <AlternateText>Svr Object Model</AlternateText>
+      <AlternateText>Server Object Model</AlternateText>
     </Image>
     <Image Include="images\Robby Smoothed.Png">
       <ImageId>Robby_Smoothed</ImageId>

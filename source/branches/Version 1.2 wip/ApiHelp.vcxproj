@@ -201,6 +201,22 @@ del  $(OutDir)%(Filename).log
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(BinDir)%(Filename)%(Extension);%(Outputs)</Outputs>
     </CustomBuild>
+    <None Include="APIHelp\Source\DoubleAgent.Include.xml" />
+    <None Include="APIHelp\Templates\EventTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="APIHelp\Templates\FieldTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="APIHelp\Templates\MethodTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="APIHelp\Templates\PropertyTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="APIHelp\Templates\TypeTemplate.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiHelp\Source\DaApiHelp.h" />

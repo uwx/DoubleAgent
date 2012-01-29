@@ -12,6 +12,9 @@
     <Filter Include="Binary Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{68063771-487a-4de5-8d3c-252be1d20e1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ApiHelp\Source\DoubleAgent.hhc">
@@ -19,6 +22,24 @@
     </None>
     <None Include="APIHelp\Source\DoubleAgent.hhk">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="APIHelp\Source\DoubleAgent.Include.xml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="APIHelp\Templates\EventTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="APIHelp\Templates\TypeTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="APIHelp\Templates\FieldTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="APIHelp\Templates\MethodTemplate.htm">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="APIHelp\Templates\PropertyTemplate.htm">
+      <Filter>Template Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

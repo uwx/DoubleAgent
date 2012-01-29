@@ -1388,7 +1388,7 @@
 				match, or <keyword>zero</keyword> to match any language.
 			</param>
 			<returns name="SREngines">
-				A <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" />
+				An <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" />
 				that matches the character's text-to-speech requirements and the specified <paramref name="LanguageID" />
 				(if any).
 			</returns>
@@ -1480,7 +1480,7 @@
 				<keyword>zero</keyword> for any language.
 			</param>
 			<returns name="SREngines">
-				A <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" />
+				An <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" />
 				that matches the the specified <paramref name="LanguageID" />.
 			</returns>
 			<remarks>
@@ -2306,8 +2306,10 @@
 					Visual Basic, you can release a reference to an object by setting its variable to <keyword>Nothing</keyword>.
 					If you have loaded characters, your should unload them before releasing the <see cref="T:&dans;.Character" suffix="Object" />.
 				</para>
+			</details>
+			<details>
 				<h4 class="details">Example</h4>
-				<code xml:space="preserve"><keyword>Dim</keyword> <keyword>WithEvents</keyword> MyAgent <keyword>as</keyword> <keyword>DoubleAgentCtl</keyword>
+				<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> <keyword>WithEvents</keyword> MyAgent <keyword>as</keyword> <keyword>DoubleAgentCtl</keyword>
 <keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>DaCtlCharacter</keyword>
 
 <keyword>Sub</keyword> Form_Load
@@ -2527,7 +2529,7 @@
 </vb>
 </syntax>
 			<value name="SREngines">
-				A <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" /> that
+				An <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" /> that
 				includes all available speech recognition engines.
 			</value>
 			<remarks>
@@ -3611,8 +3613,8 @@
 					the event only to the client that created the reference to the <see cref="T:&dans;.Request" suffix="Object" />,
 					and only if you defined a global variable for the request reference.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Dim</keyword> MyRequest 
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> MyRequest 
 <keyword>Dim</keyword> Genie
 
 <keyword>Sub</keyword> <token>window</token>_<keyword>Onload</keyword>
@@ -3630,22 +3632,20 @@
     <keyword>If</keyword> Request <keyword>Is</keyword> MyRequest <keyword>Then</keyword>
         <token>status</token> = "Genie was shown"
 <keyword>End Sub</keyword></code>
-				</example>
 				<para>
 					Because animation <see cref="T:&dans;.Request" suffix="Objects" /> don't get assigned until Double Agent
 					has queued the request, make sure that the <see cref="T:&dans;.Request" suffix="Object" /> exists before you
 					attempt to evaluate it. For example, in Visual Basic, if you use a conditional to test whether a
 					specific request was completed, you can use the <keyword>Nothing</keyword> keyword.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Sub</keyword> &darootref;_<keyword>RequestComplete</keyword> (<keyword>ByVal</keyword> Request)
+					<code xml:space="preserve" language="vbscript"><keyword>Sub</keyword> &darootref;_<keyword>RequestComplete</keyword> (<keyword>ByVal</keyword> Request)
     <keyword>If</keyword> <keyword>Not</keyword> (MyRequest <keyword>Is</keyword> Nothing) <keyword>Then</keyword>
         <keyword>If</keyword> Request <keyword>Is</keyword> MyRequest <keyword>Then</keyword>
             '-- Do whatever
         <keyword>End If</keyword>
     <keyword>End If</keyword>
 <keyword>End Sub</keyword></code>
-				</example>
+				</codeSample>
 			</remarks>
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 		</member>
@@ -3696,8 +3696,8 @@
 					sent only to the client that created the reference to the <see cref="T:&dans;.Request" suffix="Object" />,
 					and only if you defined a global variable for the request reference.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Dim</keyword> MyRequest 
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> MyRequest 
 <keyword>Dim</keyword> Genie 
 
 <keyword>Sub</keyword> <token>window</token>_<keyword>Onload</keyword>
@@ -3716,7 +3716,6 @@
     <keyword>If</keyword> Request <keyword>Is</keyword> MyRequest <keyword>Then</keyword>
         <token>status</token> = "Genie is showing"
 <keyword>End Sub</keyword></code>
-				</example>
 				<para>
 					The <see cref="P:&dans;.Request.Status" text="Request.Status" /> property is 4 (InProgress) for the
 					<see cref="T:&dans;.Request" suffix="Object" />.
@@ -3727,15 +3726,14 @@
 					attempt to evaluate it. For example, in Visual Basic, if you use a conditional to test whether a
 					specific request was completed, you can use the <keyword>Nothing</keyword> keyword.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Sub</keyword> &darootref;_<keyword>RequestStart</keyword> (<keyword>ByVal</keyword> Request)
+					<code xml:space="preserve" language="vbscript"><keyword>Sub</keyword> &darootref;_<keyword>RequestStart</keyword> (<keyword>ByVal</keyword> Request)
     <keyword>If</keyword> <keyword>Not</keyword> (MyRequest <keyword>Is</keyword> <keyword>Nothing</keyword>) <keyword>Then</keyword>
         <keyword>If</keyword> Request <keyword>Is</keyword> MyRequest <keyword>Then</keyword>
             '-- Do whatever
         <keyword>End If</keyword>
     <keyword>End If</keyword>
 <keyword>End Sub</keyword></code>
-				</example>
+				</codeSample>
 			</remarks>
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
 		</member>
@@ -4608,25 +4606,6 @@
 					You can load characters from the default location(s) by specifying only a file name. For example, specifying
 					the following would search for Genie.acs using the <see class="see" cref="P:&dans;.CharacterFiles.SearchPath" text="search path" />.
 				</para>
-				<example>
-					<code xml:space="preserve">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "Genie.acs"</code>
-					<para>
-						You can also specify an absolute location,
-					</para>
-					<code xml:space="preserve">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "C:\MyCharacters\Genie.acs"</code>
-					<para>
-						or specify your own subdirectory by using a relative path.
-					</para>
-					<code xml:space="preserve">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "MyCharacters\Genie.acs"</code>
-				</example>
-				<para>
-					You can load the default character by omitting the second parameter of the <self>Load</self> method, or
-					passing an empty string. This will load the <a class="see" href="&dapsref;#Gallery">default character</a>
-					from the <see class="see" cref="P:&dans;.CharacterFiles.DefaultFilePath" text="default file path" />.
-				</para>
-				<example>
-					<code xml:space="preserve">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "DefChar"</code>
-				</example>
 				<para>
 					You <strong>cannot</strong> load the same character (a character having the same <see cref="P:&dans;.Character.UniqueID" />)
 					more than once from a single instance of the control. Similarly, you cannot load the default character and
@@ -4638,6 +4617,23 @@
 					Loading a character does not automatically display the character. Use the <see cref="M:&dans;.Character.Show" />
 					method first to make the character visible.
 				</para>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "Genie.acs"</code>
+					<para>
+						You can also specify an absolute location,
+					</para>
+					<code xml:space="preserve" language="vbscript">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "C:\MyCharacters\Genie.acs"</code>
+					<para>
+						or specify your own subdirectory by using a relative path.
+					</para>
+					<code xml:space="preserve" language="vbscript">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "MyCharacters\Genie.acs"</code>
+				<para>
+					You can load the default character by omitting the second parameter of the <self>Load</self> method, or
+					passing an empty string. This will load the <a class="see" href="&dapsref;#Gallery">default character</a>
+					from the <see class="see" cref="P:&dans;.CharacterFiles.DefaultFilePath" text="default file path" />.
+				</para>
+					<code xml:space="preserve" language="vbscript">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "DefChar"</code>
+				</codeSample>
 			</remarks>
 			<details name="Providers">
 				<h4 class="details">Data Providers</h4>
@@ -4666,8 +4662,8 @@
 					is set to <keyword>True</keyword>, you should provide an error handling routine to catch and process the
 					error.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
     <keyword>On Error GoTo</keyword> ErrorHandler
     &darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "MyChar", "Genie.acs"
     ' Successful load
@@ -4678,14 +4674,14 @@
     . . .
     <keyword>Resume Next</keyword>
 <keyword>End Sub</keyword></code>
-				</example>
+				</codeSample>
 				<para>
 					You can also handle the error by setting <see cref="P:&darootobj;.RaiseRequestErrors" /> to <keyword>False</keyword>,
 					declaring an object, and assigning the <self>Load</self> request to it. Then follow the <self>Load</self>
 					call with a statement that checks the status of the <see cref="T:&dans;.Request" suffix="Object" />.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Dim</keyword> LoadRequest <keyword>as</keyword> <keyword>Object</keyword>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> LoadRequest <keyword>as</keyword> <keyword>Object</keyword>
 
 <keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
     &darootref;.<keyword>RaiseRequestErrors</keyword> = False
@@ -4699,7 +4695,7 @@
         . . .
     <keyword>End If</keyword>
 <keyword>End Sub</keyword></code>
-				</example>
+				</codeSample>
 				<para>
 					If you load a character using the <glossary>HTTP</glossary> protocol, you can also check for a <self>Load</self>
 					failure by assigning a <see cref="T:&dans;.Request" suffix="Object" /> to the <self>Load</self> method. However,
@@ -5012,8 +5008,6 @@
 					becomes <glossary>input-active</glossary>, by setting <paramref name="State" /> to <keyword xml:space="preserve"><copy path="/doc/members/member[@name='F:&dans;.ActiveStateType.Inactive']/value" /></keyword>
 					(<see class="see" cref="F:&dans;.ActiveStateType.Inactive" />).
 				</para>
-			</details>
-			<details name="Example">
 				<para>
 					If you call this method as a function, it returns a boolean value that indicates whether the method succeeded.
 					Attempting to call this method with the <paramref name="State" /> parameter set to <keyword xml:space="preserve"><copy path="/doc/members/member[@name='F:&dans;.ActiveStateType.InputActive']/value" /></keyword>
@@ -5022,8 +5016,9 @@
 					(<see class="see" cref="F:&dans;.ActiveStateType.Inactive" />) and your application is the only client, this
 					call fails because a character must always have a <glossary>input-active</glossary> client.
 				</para>
-				<h4 class="details">Example</h4>
-				<code xml:space="preserve"><keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>Object</keyword>
+			</details>
+			<example>
+				<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>Object</keyword>
 
 <keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>()
     &darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "Genie.acs"
@@ -5036,7 +5031,7 @@
       ' I must be hidden or something
     <keyword>End If</keyword> 
 <keyword>End Sub</keyword></code>
-			</details>
+			</example>
 			<remarks>
 				<para>
 					Avoid calling this method directly after a <see cref="M:&dans;.Character.Show" /> method. <see cref="M:&dans;.Character.Show" />
@@ -5081,7 +5076,7 @@
 				<keyword>zero</keyword> for any language.
 			</param>
 			<returns name="SREngines">
-				A <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" />
+				An <see class="typename" cref="T:&dans;.SREngines" suffix="Collection" />
 				that matches the character's text-to-speech requirements and the specified <paramref name="LanguageID" />.
 			</returns>
 			<seealso cref="T:&dans;.SREngines" suffix="Collection" prefix="The" />
@@ -5334,12 +5329,11 @@
 					queue.
 				</para>
 			</remarks>
-			<details name="Example">
-				<h4 class="details">Example</h4>
+			<example>
 				<para>
 					To specify the request parameter, create a variable for the animation request you want to interrupt:
 				</para>
-				<code xml:space="preserve"><keyword>Dim</keyword> GenieRequest <keyword>as</keyword> <keyword>Object</keyword>
+				<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> GenieRequest <keyword>as</keyword> <keyword>Object</keyword>
 <keyword>Dim</keyword> RobbyRequest <keyword>as</keyword> <keyword>Object</keyword>
 <keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>Object</keyword>
 <keyword>Dim</keyword> Robby <keyword>as</keyword> <keyword>Object</keyword>
@@ -5362,7 +5356,7 @@
 
     Genie.<keyword>Speak</keyword> "I was just checking on something."
 <keyword>End Sub</keyword></code>
-			</details>
+			</example>
 			<details name="Details">
 				<h4 class="details">Details</h4>
 				<para>
@@ -5425,20 +5419,20 @@
 					the user's interaction with the <glossary>Listening key</glossary>.
 				</para>
 			</remarks>
-			<details name="Example">
+			<example>
 				<para>
 					This method succeeds only when called by the <glossary>input-active</glossary> client and only if
 					speech services are available. To detect the success of this method, call it as a function and it
 					will return a boolean value indicating whether the method succeeded.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>If</keyword> Genie.<keyword>Listen</keyword>(True) <keyword>Then</keyword>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>If</keyword> Genie.<keyword>Listen</keyword>(True) <keyword>Then</keyword>
     ' The method succeeded
 <keyword>Else</keyword>
     ' The method failed
 <keyword>End If</keyword></code>
-				</example>
-			</details>
+				</codeSample>
+			</example>
 			<details name="Details">
 				<h4 class="details">Details</h4>
 				<para>
@@ -5803,13 +5797,13 @@
 				</para>
 			</remarks>
 			<details>
-				<example>
-					<code xml:space="preserve"><keyword>If</keyword> Genie.<keyword>ShowPopupMenu</keyword> (10,10) = True <keyword>Then</keyword>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>If</keyword> Genie.<keyword>ShowPopupMenu</keyword> (10,10) = True <keyword>Then</keyword>
     ' The menu was displayed
 <keyword>Else</keyword>
     ' The menu was not displayed
 <keyword>End If</keyword></code>
-				</example>
+				</codeSample>
 			</details>
 			<seealso cref="P:&dans;.Character.AutoPopupMenu" prefix="The" suffix="Property" />
 		</member>
@@ -5877,11 +5871,11 @@
 					You can vary parameters of the speech output with special tags that you include in the <paramref name="Text" />
 					parameter. For more information, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
 				</para>
-				<example>
+				<codeSample>
 					<para>
 						You can also include bookmark speech tags in your <self>Speak</self> text to synchronize your code:
 					</para>
-					<code xml:space="preserve"><keyword>Dim</keyword> SpeakRequest <keyword>as</keyword> <keyword>Object</keyword>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> SpeakRequest <keyword>as</keyword> <keyword>Object</keyword>
 ...
 <keyword>Set</keyword> SpeakRequest = Genie.<keyword>Speak</keyword> ("And here \mrk=100\it is.")
 ...
@@ -5892,7 +5886,7 @@
     <keyword>End If</keyword>
 <keyword>End Sub</keyword></code>
 					For more information on the bookmark speech tag, see <a href="../Reference/Ref_SpeechTags.htm#Mrk">Speech Output Tags</a>.
-				</example>
+				</codeSample>
 				<para>
 					Agent's automatic word breaking in the <a class="see" href="&dawbref;">&dawbname;</a> breaks words using
 					<glossary>white-space</glossary> characters (for example, Space or Tab). However, if it cannot, it may break
@@ -5900,6 +5894,8 @@
 					Thai, where spaces are not used to break words, insert a Unicode zero-width space character (0x200B)
 					between characters to define logical word breaks.
 				</para>
+			</details>
+			<details>
 				<h4 class="details">Sound Files</h4>
 				<para>
 					If you use recorded sound file (.WAV format only) output for the character, specify the file's location
@@ -5917,6 +5913,8 @@
 					If you call <self>Speak</self> and the audio channel is busy, the character's audio output will not
 					be heard, but the text will display in the <a class="see" href="&dawbref;">&dawbname;</a>.
 				</para>
+			</details>
+			<details>
 				<h4 class="details">Animation</h4>
 				<para>
 					The <self>Speak</self> method uses the last action played to determine which speaking animation to
@@ -5988,12 +5986,12 @@
 				</note>
 			</remarks>
 			<details>
-				<example>
+				<codeSample>
 					<para>
 						To stop a specific animation or <see cref="M:&dans;.Character.Prepare" /> call, declare an object variable
 						and assign your animation request to that variable:
 					</para>
-					<code xml:space="preserve"><keyword>Dim</keyword> MyRequest
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> MyRequest
 <keyword>Dim</keyword> Genie
 
 &darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "Genie.acs"
@@ -6005,7 +6003,7 @@ Genie.<keyword>Show</keyword>
 <keyword>Set</keyword> MyRequest = Genie.<keyword>Play</keyword> ("Greet")
 
 Genie.<keyword>Stop</keyword> MyRequest</code>
-				</example>
+				</codeSample>
 			</details>
 			<seealso cref="M:&dans;.Character.StopAll" prefix="The" suffix="Method" />
 		</member>
@@ -6191,11 +6189,11 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 				</para>
 			</remarks>
 			<details>
-				<example>
+				<codeSample>
 					<para>
 						To specify the request parameter, create a variable for the animation request you want to wait for:
 					</para>
-					<code xml:space="preserve"><keyword>Dim</keyword> GenieRequest
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> GenieRequest
 <keyword>Dim</keyword> RobbyRequest
 <keyword>Dim</keyword> Genie
 <keyword>Dim</keyword> Robby
@@ -6228,19 +6226,18 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
     Robby.<glossary>Play</glossary> "Sad"
     Robby.<keyword>Speak</keyword> "I never should have asked."
 <keyword>End Sub</keyword></code>
-				</example>
-				<example>
+				</codeSample>
+				<codeSample>
 					<para>
 						You can also streamline your code by just calling <self>Wait</self> directly, using a specific animation
 						request.
 					</para>
-					<code xml:space="preserve">
-Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
+					<code xml:space="preserve" language="vbscript">Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 </code>
 					<para>
 						This avoids having to explicitly declare a <see cref="T:&dans;.Request" suffix="Object" />.
 					</para>
-				</example>
+				</codeSample>
 			</details>
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
@@ -9074,7 +9071,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 							loaded the character:
 						</term>
 						<description>
-							<code xml:space="preserve"><keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
+							<code xml:space="preserve" language="vbscript"><keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
     'Load the genie character into the Characters collection
     &darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "Genie.acs"
 
@@ -9095,7 +9092,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 							do this using the Visual Basic <keyword>Set</keyword> statement:
 						</term>
 						<description>
-							<code xml:space="preserve">'Define a global object variable
+							<code xml:space="preserve" language="vbscript">'Define a global object variable
 <keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>Object</keyword>
 
 <keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
@@ -9121,7 +9118,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 							</self>:
 						</term>
 						<description>
-							<code xml:space="preserve"><keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCharacter</keyword>
+							<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Genie <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCharacter</keyword>
 
 <keyword>Sub</keyword> <token>form</token>_<keyword>Load</keyword>
     'Load the genie character into the Characters collection
@@ -9145,7 +9142,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 							the variable reference:
 						</term>
 						<description>
-							<code xml:space="preserve">&lt;SCRIPT LANGUAGE = "VBScript"&gt;
+							<code xml:space="preserve" language="vbscript">&lt;SCRIPT LANGUAGE = "VBScript"&gt;
 &lt;!--
 <keyword>Dim</keyword> Genie
 
@@ -9172,7 +9169,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 							methods with the <see cref="M:&dans;.Characters.Character" /> method:
 						</term>
 						<description>
-							<code xml:space="preserve">
+							<code xml:space="preserve" language="vbscript">
 &darootref;.<keyword>Characters</keyword>.<keyword>Character</keyword>("<token>CharacterID</token>").<token>method</token></code>
 						</description>
 					</item>
@@ -9182,7 +9179,7 @@ Robby.<keyword>Wait</keyword> Genie.<keyword>Play</keyword> "GestureRight"
 							code easier to follow:
 						</term>
 						<description>
-							<code xml:space="preserve">&lt;SCRIPT LANGUAGE="JScript" FOR="window" EVENT="onLoad()"&gt;
+							<code xml:space="preserve" language="jscript">&lt;SCRIPT LANGUAGE="JScript" FOR="window" EVENT="onLoad()"&gt;
 &lt;!--
 //Load the character's data
 &darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> ("Genie", "http://agent.microsoft.com/characters/v2/genie/genie.acf");
@@ -9269,11 +9266,11 @@ Genie.<keyword>Show</keyword>();
 					This method returns a <see cref="T:&dans;.Command" suffix="Object" />. This allows you to declare an
 					object and assign a <see cref="T:&dans;.Command" /> to it when you call the <self>Add</self> method.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
 <keyword>Set</keyword> Command1 = Genie.<keyword>Commands</keyword>.<keyword>Add</keyword> ("my first command", "Test", "Test", True, True)
 Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
-				</example>
+				</codeSample>
 			</remarks>
 			<seealso cref="M:&dans;.Commands.Insert" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
@@ -9394,11 +9391,11 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 					This method returns a <see cref="T:&dans;.Command" suffix="Object" />. This allows you to declare an
 					object and assign a <see cref="T:&dans;.Command" /> to it when you call the <self>Insert</self> method.
 				</para>
-				<example>
-					<code xml:space="preserve"><keyword>Dim</keyword> Command2 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
+				<codeSample>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command2 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
 <keyword>Set</keyword> Command2 = Genie.<keyword>Commands</keyword>.<keyword>Insert</keyword> ("my second command", "my first command", True, "Test", "Test", True, True)
 Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
-				</example>
+				</codeSample>
 			</remarks>
 			<seealso cref="M:&dans;.Commands.Add" prefix="The" suffix="Method" />
 			<seealso cref="M:&dans;.Commands.Remove" prefix="The" suffix="Method" />
@@ -10548,7 +10545,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 							property directly:
 						</term>
 						<description>
-							<code xml:space="preserve">
+							<code xml:space="preserve" language="vbscript">
 &darootref;.<keyword>Characters</keyword>("<token>CharacterID</token>").<keyword>Commands</keyword>("<token>Name</token>&gt;").<token>property</token>[ = <token>value</token>]
 </code>
 						</description>
@@ -10559,7 +10556,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 							method:
 						</term>
 						<description>
-							<code xml:space="preserve">
+							<code xml:space="preserve" language="jscript">
 &darootref;.<keyword>Characters</keyword>("<token>CharacterID</token>").<keyword>Commands</keyword>.<keyword>Command</keyword>("<token>Name</token>").<token>property</token>[ = <token>value</token>]
 </code>
 						</description>
@@ -10570,7 +10567,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 							declare an object variable and use the <keyword>Set</keyword> statement to create the reference:
 						</term>
 						<description>
-							<code xml:space="preserve"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>Object</keyword>
+							<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>Object</keyword>
 ...
 <keyword>Set</keyword> Command1 = &darootref;.<keyword>Characters</keyword>("MyCharacterID").<keyword>Commands</keyword>("SampleCommand")
 ...
@@ -10583,7 +10580,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 							convention enables early syntax checking and binding, which results in better performance:
 						</term>
 						<description>
-							<code xml:space="preserve"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
+							<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
 ...
 <keyword>Set</keyword> Command1 = &darootref;.<keyword>Characters</keyword>("MyCharacterID").<keyword>Commands</keyword>("SampleCommand")
 ...
@@ -10596,7 +10593,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 							variable and set it to the <self>Command</self> in the collection:
 						</term>
 						<description>
-							<code xml:space="preserve"><keyword>Dim</keyword> Command1
+							<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command1
 ...
 <keyword>Set</keyword> Command1 = &darootref;.<keyword>Characters</keyword>("MyCharacterID").<keyword>Commands</keyword>("SampleCommand")
 ...
@@ -12067,7 +12064,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</summary>
 			<details>
 				<h4 class="details">Example</h4>
-				<code xml:space="preserve"><keyword>Dim</keyword> MyRequest
+				<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> MyRequest
 
 <keyword>Set</keyword> MyRequest = &darootref;.<keyword>Characters</keyword>("Genie").<keyword>Play</keyword> ("GetAttention")
 
@@ -12176,20 +12173,20 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</remarks>
 			<details>
 				<h4 class="details">Examples</h4>
-				<example>
+				<codeSample>
 					<para>
 						In Visual Basic, first declare an object variable:
 					</para>
-					<code xml:space="preserve"><keyword>Dim</keyword> MyRequest <keyword>as</keyword> <keyword>Object</keyword></code>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> MyRequest <keyword>as</keyword> <keyword>Object</keyword></code>
 					<para>
 						In VBScript, you don't include the variable type in your declaration:
 					</para>
-					<code xml:space="preserve"><keyword>Dim</keyword> MyRequest</code>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> MyRequest</code>
 					<para>
 						And use Visual Basic's <keyword>Set</keyword> statement to assign the variable to the return value of
 						the method call:
 					</para>
-					<code xml:space="preserve"><keyword>Set</keyword> MyRequest = &darootref;.<keyword>Characters</keyword>("<token>CharacterID</token>").<token>method</token> (<token>parameter[s]</token>)</code>
+					<code xml:space="preserve" language="vbscript"><keyword>Set</keyword> MyRequest = &darootref;.<keyword>Characters</keyword>("<token>CharacterID</token>").<token>method</token> (<token>parameter[s]</token>)</code>
 					<para>
 						This adds a reference to the <self class="">Request Object</self>. The <self class="">Request Object</self>
 						will be destroyed when there are no more references to it. Where you declare the <self class="">Request Object</self>
@@ -12198,7 +12195,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 						If the object is declared globally, it will not be destroyed until either the program terminates or
 						a new value (or a value set to "empty") is assigned to the object.
 					</para>
-				</example>
+				</codeSample>
 			</details>
 			<seealso cref="E:&darootobj;.RequestStart" prefix="The" suffix="Event" />
 			<seealso cref="E:&darootobj;.RequestComplete" prefix="The" suffix="Event" />
