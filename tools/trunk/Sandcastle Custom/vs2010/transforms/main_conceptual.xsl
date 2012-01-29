@@ -11,42 +11,62 @@
 
 	<xsl:import href="../../shared/transforms/utilities_bibliography.xsl"/>
 	<xsl:output method="xml"
+							omit-xml-declaration="yes"
 							indent="no"
 							encoding="utf-8" />
 
-	<xsl:param name="bibliographyData"
-						 select="'../data/bibliography.xml'"/>
-	<xsl:param name="changeHistoryOptions" />
-	<!-- key parameter is the api identifier string -->
+	<!-- ============================================================================================
+	Parameters - key parameter is the api identifier string
+	============================================================================================= -->
+
 	<xsl:param name="key" />
 	<xsl:param name="metadata">false</xsl:param>
 	<xsl:param name="languages">false</xsl:param>
+	<xsl:param name="bibliographyData"
+						 select="'../data/bibliography.xml'"/>
+	<xsl:param name="changeHistoryOptions" />
 
-	<xsl:include href="htmlBody.xsl" />
+	<!-- ============================================================================================
+	Includes
+	============================================================================================= -->
+
 	<xsl:include href="utilities_dduexml.xsl" />
-	<xsl:include href="seeAlsoSection.xsl" />
+	<xsl:include href="seealso_dduexml.xsl" />
 	<xsl:include href="conceptualMetadataHelp30.xsl"/>
-	<!-- Still required for MSHCComponent -->
 	<xsl:include href="conceptualMetadataHelp20.xsl"/>
+	<xsl:include href="globalTemplates.xsl"/>
 
 	<!-- ============================================================================================
 	Global Variables
 	============================================================================================= -->
 
-	<xsl:variable name="hasSeeAlsoSection"
+	<xsl:variable name="g_hasSeeAlsoSection"
 								select="boolean(count(/document/topic/*/ddue:relatedTopics/*[local-name()!='sampleRef']) > 0)"/>
-	<xsl:variable name="examplesSection"
-								select="boolean(string-length(/document/topic/*/ddue:codeExample[normalize-space(.)]) > 0)"/>
-	<xsl:variable name="languageFilterSection"
+	<!--<xsl:variable name="g_hasExamplesSection"
+								select="boolean(string-length(/document/topic/*/ddue:codeExample[normalize-space(.)]) > 0)"/>-->
+	<!--<xsl:variable name="g_hasLanguageFilterSection"
 								select="normalize-space(/document/topic/*/ddue:codeExample) 
                 or normalize-space(/document/topic/*//ddue:snippets/ddue:snippet)
-                or /document/topic/ddue:developerSampleDocument/ddue:relatedTopics/ddue:sampleRef[@srcID]" />
-	<xsl:variable name="group"
+                or /document/topic/ddue:developerSampleDocument/ddue:relatedTopics/ddue:sampleRef[@srcID]" />-->
+
+	<xsl:variable name="g_apiGroup"
 								select="/document/reference/apidata/@group" />
-	<xsl:variable name="subgroup"
+	<xsl:variable name="g_apiSubGroup"
 								select="/document/reference/apidata/@subgroup" />
-	<xsl:variable name="subsubgroup"
+	<xsl:variable name="g_apiSubSubGroup"
 								select="/document/reference/apidata/@subsubgroup" />
+	<xsl:variable name="g_topicGroup"
+								select="$g_apiGroup" />
+	<xsl:variable name="g_topicSubGroup"
+								select="$g_apiSubGroup" />
+	<xsl:variable name="g_topicSubSubGroup"
+								select="$g_apiSubSubGroup" />
+	<xsl:variable name="g_apiTopicGroup"
+								select="$g_apiGroup" />
+	<xsl:variable name="g_apiTopicSubGroup"
+								select="$g_apiSubGroup" />
+	<xsl:variable name="g_apiTopicSubSubGroup"
+								select="$g_apiSubSubGroup" />
 	<xsl:variable name="pseudo"
 								select="boolean(/document/reference/apidata[@pseudo='true'])"/>
 
@@ -57,20 +77,18 @@
 			<head>
 				<meta http-equiv="Content-Type"
 							content="text/html; charset=UTF-8"/>
-				<xsl:call-template name="insertNoIndexNoFollow" />
+				<xsl:call-template name="t_insertNoIndexNoFollow" />
 				<title>
-					<xsl:call-template name="topicTitlePlain"/>
+					<xsl:call-template name="t_topicTitlePlain"/>
 				</title>
 				<xsl:call-template name="insert30Metadata" />
-				<xsl:call-template name="insertStylesheets" />
-				<!-- Still required for MSHCComponent -->
+				<xsl:call-template name="t_insertStylesheets" />
 				<xsl:call-template name="insertMetadata" />
 			</head>
 			<body>
-				<xsl:call-template name="upperBodyStuff"/>
 				<!--<div class="OH_outerDiv"> Automatically added by the Help Viewer -->
 				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
-				<xsl:call-template name="bodyHeader"/>
+				<xsl:call-template name="t_bodyTitle"/>
 				<xsl:call-template name="main"/>
 				<xsl:call-template name="t_footer" />
 			</body>
@@ -78,45 +96,6 @@
 	</xsl:template>
 
 	<!-- document head -->
-
-	<xsl:template name="insertNoIndexNoFollow">
-		<xsl:if test="/document/metadata/attribute[@name='NoSearch']">
-			<META NAME="ROBOTS"
-						CONTENT="NOINDEX, NOFOLLOW" />
-		</xsl:if>
-	</xsl:template>
-
-	<xsl:template name="insertStylesheets">
-		<style type="text/css">
-			.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft, .OH_CodeSnippetContainerTabLeftDisabled
-			{
-			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/tabLeftBG.gif');
-			}
-			.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight, .OH_CodeSnippetContainerTabRightDisabled
-			{
-			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/tabRightBG.gif');
-			}
-			.OH_footer
-			{
-			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/footer_slice.gif');
-			background-position: top;
-			background-repeat: repeat-x;
-			}
-		</style>
-		<!--<link rel="stylesheet"
-					type="text/css">
-			<includeAttribute name="href"
-												item="stylePath">
-				<parameter>Presentation.css</parameter>
-			</includeAttribute>
-		</link>-->
-		<!-- make mshelp links work -->
-		<!--
-		<link rel="stylesheet"
-					type="text/css"
-					href="ms-help://Hx/HxRuntime/HxLink.css" />-->
-		<!--<link rel="stylesheet" type="text/css" href="ms-help://Dx/DxRuntime/DxLink.css" />-->
-	</xsl:template>
 
 	<xsl:template name="nestedKeywordText">
 		<xsl:for-each select="keyword[@index='K']">
@@ -130,19 +109,19 @@
 		<xsl:value-of select="true()"/>
 	</xsl:template>
 
-	<!-- document body -->
+	<!-- ============================================================================================
+	Formatted topic title
+	============================================================================================= -->
 
-	<!-- Title in topic -->
-
-	<xsl:template name="topicTitleDecorated">
-		<xsl:call-template name="topicTitle" />
+	<xsl:template name="t_topicTitlePlain">
+		<xsl:call-template name="t_topicTitle" />
 	</xsl:template>
 
-	<xsl:template name="topicTitlePlain">
-		<xsl:call-template name="topicTitle" />
+	<xsl:template name="t_topicTitleDecorated">
+		<xsl:call-template name="t_topicTitle" />
 	</xsl:template>
 
-	<xsl:template name="topicTitle">
+	<xsl:template name="t_topicTitle">
 		<xsl:choose>
 			<xsl:when test="normalize-space(/document/metadata/title)">
 				<xsl:value-of select="normalize-space(/document/metadata/title)"/>
@@ -164,13 +143,13 @@
 
 			<div id="mainBody">
 				<include item="header" />
-				<xsl:call-template name="body" />
+				<xsl:call-template name="t_body" />
 			</div>
 		</div>
 
 	</xsl:template>
 
-	<xsl:template name="body">
+	<xsl:template name="t_body">
 		<!-- freshness date -->
 		<xsl:call-template name="writeFreshnessDate">
 			<xsl:with-param name="ChangedHistoryDate"
@@ -199,7 +178,7 @@
 
 	<xsl:template match="ddue:parameters">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_section">
+			<xsl:call-template name="t_putSection">
 				<xsl:with-param name="toggleSwitch"
 												select="'parameters'"/>
 				<xsl:with-param name="title">
@@ -216,7 +195,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:choose>
 				<xsl:when test="(normalize-space(ddue:content)='') and ddue:sections/ddue:section[ddue:title='Property Value']">
-					<xsl:call-template name="t_section">
+					<xsl:call-template name="t_putSection">
 						<xsl:with-param name="toggleSwitch"
 														select="'returnValue'"/>
 						<xsl:with-param name="title">
@@ -228,7 +207,7 @@
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:call-template name="t_section">
+					<xsl:call-template name="t_putSection">
 						<xsl:with-param name="toggleSwitch"
 														select="'returnValue'"/>
 						<xsl:with-param name="title">
@@ -245,7 +224,7 @@
 
 	<xsl:template match="ddue:exceptions">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_section">
+			<xsl:call-template name="t_putSection">
 				<xsl:with-param name="toggleSwitch"
 												select="'ddueExceptions'"/>
 				<xsl:with-param name="title">
@@ -260,7 +239,7 @@
 
 	<xsl:template match="ddue:relatedSections">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_section">
+			<xsl:call-template name="t_putSection">
 				<xsl:with-param name="toggleSwitch"
 												select="'relatedSections'"/>
 				<xsl:with-param name="title">
@@ -274,8 +253,8 @@
 	</xsl:template>
 
 	<xsl:template match="ddue:relatedTopics">
-		<xsl:if test="$hasSeeAlsoSection">
-			<xsl:call-template name="t_section">
+		<xsl:if test="$g_hasSeeAlsoSection">
+			<xsl:call-template name="t_putSection">
 				<xsl:with-param name="toggleSwitch"
 												select="'seeAlso'"/>
 				<xsl:with-param name="title">
@@ -292,7 +271,7 @@
 	<xsl:template match="ddue:codeExample">
 		<!-- create Example section for the first codeExample node -->
 		<xsl:if test="not(preceding-sibling::ddue:codeExample) and ../ddue:codeExample[normalize-space(.)!='']">
-			<xsl:call-template name="t_section">
+			<xsl:call-template name="t_putSection">
 				<xsl:with-param name="toggleSwitch"
 												select="'example'"/>
 				<xsl:with-param name="title">
@@ -313,7 +292,7 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template name="runningHeader">
+	<xsl:template name="t_runningHeader">
 		<xsl:variable name="runningHeaderText">
 			<xsl:value-of select="/document/metadata/runningHeaderText/@uscid"/>
 		</xsl:variable>
@@ -490,17 +469,17 @@
 					 match="//ddue:cite"
 					 use="text()" />
 
-	<xsl:variable name="hasCitations"
+	<xsl:variable name="g_hasCitations"
 								select="boolean(count(//ddue:cite) > 0)"/>
 
 	<xsl:template match="ddue:cite">
-		<xsl:variable name="currentCitation"
+		<xsl:variable name="v_currentCitation"
 									select="text()"/>
 		<xsl:for-each select="//ddue:cite[generate-id(.)=generate-id(key('citations',text()))]">
 			<!-- Distinct citations only -->
-			<xsl:if test="$currentCitation=.">
+			<xsl:if test="$v_currentCitation=.">
 				<xsl:choose>
-					<xsl:when test="document($bibliographyData)/bibliography/reference[@name=$currentCitation]">
+					<xsl:when test="document($bibliographyData)/bibliography/reference[@name=$v_currentCitation]">
 						<sup class="citation">
 							<a>
 								<xsl:attribute name="href">
@@ -518,8 +497,8 @@
 	</xsl:template>
 
 	<xsl:template match="ddue:bibliography">
-		<xsl:if test="$hasCitations">
-			<xsl:call-template name="t_section">
+		<xsl:if test="$g_hasCitations">
+			<xsl:call-template name="t_putSection">
 				<xsl:with-param name="toggleSwitch"
 												select="'cite'" />
 				<xsl:with-param name="title">
@@ -535,10 +514,10 @@
 	<xsl:template name="autogenBibliographyLinks">
 		<xsl:for-each select="//ddue:cite[generate-id(.)=generate-id(key('citations',text()))]">
 			<!-- Distinct citations only -->
-			<xsl:variable name="citation"
+			<xsl:variable name="v_citation"
 										select="."/>
 			<xsl:variable name="entry"
-										select="document($bibliographyData)/bibliography/reference[@name=$citation]"/>
+										select="document($bibliographyData)/bibliography/reference[@name=$v_citation]"/>
 
 			<xsl:call-template name="bibliographyReference">
 				<xsl:with-param name="number"

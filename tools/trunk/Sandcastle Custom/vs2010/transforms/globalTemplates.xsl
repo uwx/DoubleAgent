@@ -7,13 +7,281 @@
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
         >
 
-	<!-- ======================================================================================== -->
+	<!-- ============================================================================================
+	String formatting
+	============================================================================================= -->
 
-	<xsl:template name="autogenSeeAlsoLinks">
+	<!-- Gets the substring after the last occurence of a period in a given string -->
+	<xsl:template name="t_getTrimmedLastPeriod">
+		<xsl:param name="p_string" />
+
+		<xsl:choose>
+			<xsl:when test="contains($p_string, '.')">
+				<xsl:call-template name="t_getTrimmedLastPeriod">
+					<xsl:with-param name="p_string"
+													select="substring-after($p_string, '.')" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$p_string" />
+			</xsl:otherwise>
+		</xsl:choose>
+
+	</xsl:template>
+
+	<xsl:template name="t_getTrimmedAtPeriod">
+		<xsl:param name="p_string" />
+
+		<xsl:variable name="v_trimmedString"
+									select="substring(normalize-space($p_string), 1, 256)" />
+		<xsl:choose>
+			<xsl:when test="normalize-space($p_string) != $v_trimmedString">
+				<xsl:choose>
+					<xsl:when test="not(contains($v_trimmedString, '.'))">
+						<xsl:value-of select="$v_trimmedString"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="t_getSubstringAndLastPeriod">
+							<xsl:with-param name="p_string"
+															select="$v_trimmedString" />
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="normalize-space($p_string)"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="t_getSubstringAndLastPeriod">
+		<xsl:param name="p_string" />
+
+		<xsl:if test="contains($p_string, '.')">
+			<xsl:variable name="v_after"
+										select="substring-after($p_string, '.')" />
+			<xsl:value-of select="concat(substring-before($p_string, '.'),'.')" />
+			<xsl:if test="contains($v_after, '.')">
+				<xsl:call-template name="t_getSubstringAndLastPeriod">
+					<xsl:with-param name="p_string"
+													select="$v_after" />
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- indent by 2*n spaces -->
+	<xsl:template name="t_putIndent">
+		<xsl:param name="p_count" />
+		<xsl:if test="$p_count &gt; 1">
+			<xsl:text>&#160;&#160;</xsl:text>
+			<xsl:call-template name="t_putIndent">
+				<xsl:with-param name="p_count"
+												select="$p_count - 1" />
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	LanguageSpecific text
+
+	NOTE - the MSHCComponent recognizes these bits and post-processes them into the format used
+	       by the MS Help Viewer. 
+	============================================================================================= -->
+
+	<xsl:template name="t_decoratedNameSep">
+		<span class="languageSpecificText">
+			<span class="cs">.</span>
+			<span class="vb">.</span>
+			<span class="cpp">::</span>
+			<span class="fs">.</span>
+			<span class="nu">.</span>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_nullKeyword">
+		<span class="keyword"
+					style="display: none">
+			<span class="languageSpecificText">
+				<span class="cs">null</span>
+				<span class="vb">Nothing</span>
+				<span class="cpp">nullptr</span>
+			</span>
+		</span>
+		<span class="nu">
+			<include item="nullKeyword"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_staticKeyword">
+		<span class="keyword"
+					style="display: none">
+			<span class="languageSpecificText">
+				<span class="cs">static</span>
+				<span class="vb">Shared</span>
+				<span class="cpp">static</span>
+			</span>
+		</span>
+		<span class="nu">
+			<include item="staticKeyword"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_virtualKeyword">
+		<span class="keyword"
+					style="display: none">
+			<span class="languageSpecificText">
+				<span class="cs">virtual</span>
+				<span class="vb">Overridable</span>
+				<span class="cpp">virtual</span>
+			</span>
+		</span>
+		<span class="nu">
+			<include item="virtualKeyword"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_trueKeyword">
+		<span class="keyword"
+					style="display: none">
+			<span class="languageSpecificText">
+				<span class="cs">true</span>
+				<span class="vb">True</span>
+				<span class="cpp">true</span>
+			</span>
+		</span>
+		<span class="nu">
+			<include item="trueKeyword"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_falseKeyword">
+		<span class="keyword"
+					style="display: none">
+			<span class="languageSpecificText">
+				<span class="cs">false</span>
+				<span class="vb">False</span>
+				<span class="cpp">false</span>
+			</span>
+		</span>
+		<span class="nu">
+			<include item="falseKeyword"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_abstractKeyword">
+		<span class="keyword"
+					style="display: none">
+			<span class="languageSpecificText">
+				<span class="cs">abstract</span>
+				<span class="vb">MustInherit</span>
+				<span class="cpp">abstract</span>
+			</span>
+		</span>
+		<span class="nu">
+			<include item="abstractKeyword"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_inKeyword">
+		<span class="keyword">
+			<span class="languageSpecificText">
+				<span class="cs">in</span>
+				<span class="vb">In</span>
+				<span class="cpp">in</span>
+				<span class="fs"></span>
+				<span class="nu">in</span>
+			</span>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="t_outKeyword">
+		<span class="keyword">
+			<span class="languageSpecificText">
+				<span class="cs">out</span>
+				<span class="vb">Out</span>
+				<span class="cpp">out</span>
+				<span class="fs"></span>
+				<span class="nu">out</span>
+			</span>
+		</span>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Common metadata
+	============================================================================================= -->
+
+	<xsl:template name="t_insertNoIndexNoFollow">
+		<xsl:if test="/document/metadata/attribute[@name='NoSearch']">
+			<META NAME="ROBOTS"
+						CONTENT="NOINDEX, NOFOLLOW" />
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="t_insertStylesheets">
+		<style type="text/css">
+			.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft, .OH_CodeSnippetContainerTabLeftDisabled
+			{
+			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/tabLeftBG.gif');
+			}
+			.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight, .OH_CodeSnippetContainerTabRightDisabled
+			{
+			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/tabRightBG.gif');
+			}
+			.OH_footer
+			{
+			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/footer_slice.gif');
+			background-position: top;
+			background-repeat: repeat-x;
+			}
+		</style>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Running header
+	============================================================================================= -->
+
+	<xsl:template name="t_bodyTitle">
+		<div class="OH_topic">
+			<div class="OH_title">
+				<table>
+					<tr>
+						<td class="OH_tdTitleColumn">
+							<include item="nsrTitle">
+								<parameter>
+									<xsl:call-template name="t_topicTitleDecorated"/>
+								</parameter>
+							</include>
+							<xsl:choose>
+								<xsl:when test="logoFile">
+									<td class="OH_tdLogoColumn">
+										<xsl:apply-templates select="logoFile"/>
+									</td>
+								</xsl:when>
+								<xsl:otherwise>
+									<td align="right">
+										<xsl:call-template name="t_runningHeader" />
+									</td>
+								</xsl:otherwise>
+							</xsl:choose>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="OH_feedbacklink">
+			<include item="headerFeedback"/>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	SeeAlso links
+	============================================================================================= -->
+	<xsl:template name="t_autogenSeeAlsoLinks">
 
 		<!-- a link to the containing type on all list and member topics -->
-		<xsl:if test="($group='member' or $group='list')">
-			<xsl:variable name="typeTopicId">
+		<xsl:if test="($g_apiTopicGroup='member' or $g_apiTopicGroup='list')">
+			<xsl:variable name="v_typeTopicId">
 				<xsl:choose>
 					<xsl:when test="/document/reference/topicdata/@typeTopicId">
 						<xsl:value-of select="/document/reference/topicdata/@typeTopicId"/>
@@ -24,7 +292,7 @@
 				</xsl:choose>
 			</xsl:variable>
 			<div class="seeAlsoStyle">
-				<referenceLink target="{$typeTopicId}"
+				<referenceLink target="{$v_typeTopicId}"
 											 display-target="format">
 					<include item="SeeAlsoTypeLinkText">
 						<parameter>{0}</parameter>
@@ -44,19 +312,19 @@
 		</xsl:if>
 
 		<!-- a link to the type's All Members list -->
-		<xsl:variable name="allMembersTopicId">
+		<xsl:variable name="v_allMembersId">
 			<xsl:choose>
 				<xsl:when test="/document/reference/topicdata/@allMembersTopicId">
 					<xsl:value-of select="/document/reference/topicdata/@allMembersTopicId"/>
 				</xsl:when>
-				<xsl:when test="$group='member' or ($group='list' and $subgroup='overload')">
+				<xsl:when test="$g_apiTopicGroup='member' or ($g_apiTopicGroup='list' and $g_apiTopicSubGroup='overload')">
 					<xsl:value-of select="/document/reference/containers/type/topicdata/@allMembersTopicId"/>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:if test="normalize-space($allMembersTopicId) and not($allMembersTopicId=$key)">
+		<xsl:if test="normalize-space($v_allMembersId) and not($v_allMembersId=$key)">
 			<div class="seeAlsoStyle">
-				<referenceLink target="{$allMembersTopicId}"
+				<referenceLink target="{$v_allMembersId}"
 											 display-target="format">
 					<include item="SeeAlsoMembersLinkText">
 						<parameter>{0}</parameter>
@@ -65,10 +333,13 @@
 			</div>
 		</xsl:if>
 
-		<xsl:if test="/document/reference/memberdata/@overload">
-			<!-- a link to the overload topic -->
+		<!-- a link to the overload topic -->
+		<xsl:variable name="v_overloadId">
+			<xsl:value-of select="/document/reference/memberdata/@overload"/>
+		</xsl:variable>
+		<xsl:if test="normalize-space($v_overloadId)">
 			<div class="seeAlsoStyle">
-				<referenceLink target="{/document/reference/memberdata/@overload}"
+				<referenceLink target="{$v_overloadId}"
 											 display-target="format"
 											 show-parameters="false">
 					<include item="SeeAlsoOverloadLinkText">
@@ -79,12 +350,12 @@
 		</xsl:if>
 
 		<!-- a link to the namespace topic -->
-		<xsl:variable name="namespaceId">
+		<xsl:variable name="v_namespaceId">
 			<xsl:value-of select="/document/reference/containers/namespace/@api"/>
 		</xsl:variable>
-		<xsl:if test="normalize-space($namespaceId)">
+		<xsl:if test="normalize-space($v_namespaceId)">
 			<div class="seeAlsoStyle">
-				<referenceLink target="{$namespaceId}"
+				<referenceLink target="{$v_namespaceId}"
 											 display-target="format">
 					<include item="SeeAlsoNamespaceLinkText">
 						<parameter>{0}</parameter>
@@ -96,126 +367,10 @@
 	</xsl:template>
 
 	<!-- ============================================================================================
-	String formatting
-	============================================================================================= -->
-
-	<xsl:variable name="typeId">
-		<xsl:choose>
-			<xsl:when test="/document/reference/topicdata[@group='api'] and /document/reference/apidata[@group='type']">
-				<xsl:value-of select="$key"/>
-			</xsl:when>
-			<xsl:when test="/document/reference/topicdata/@typeTopicId">
-				<xsl:value-of select="/document/reference/topicdata/@typeTopicId"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="/document/reference/containers/type/@api"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-
-	<!-- indent by 2*n spaces -->
-	<xsl:template name="indent">
-		<xsl:param name="count" />
-		<xsl:if test="$count &gt; 1">
-			<xsl:text>&#160;&#160;</xsl:text>
-			<xsl:call-template name="indent">
-				<xsl:with-param name="count"
-												select="$count - 1" />
-			</xsl:call-template>
-		</xsl:if>
-	</xsl:template>
-
-	<!-- Gets the substring after the last occurence of a period in a given string -->
-	<xsl:template name="subString">
-		<xsl:param name="name" />
-
-		<xsl:choose>
-			<xsl:when test="contains($name, '.')">
-				<xsl:call-template name="subString">
-					<xsl:with-param name="name"
-													select="substring-after($name, '.')" />
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$name" />
-			</xsl:otherwise>
-		</xsl:choose>
-
-	</xsl:template>
-
-	<xsl:template name="trimAtPeriod">
-		<xsl:param name="string" />
-
-		<xsl:variable name="trimmedString"
-									select="substring(normalize-space($string), 1, 256)" />
-		<xsl:choose>
-			<xsl:when test="normalize-space($string) != $trimmedString">
-				<xsl:choose>
-					<xsl:when test="not(contains($trimmedString, '.'))">
-						<xsl:value-of select="$trimmedString"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="substringAndLastPeriod">
-							<xsl:with-param name="string"
-															select="$trimmedString" />
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="normalize-space($string)"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template name="substringAndLastPeriod">
-		<xsl:param name="string" />
-
-		<xsl:if test="contains($string, '.')">
-			<xsl:variable name="after"
-										select="substring-after($string, '.')" />
-			<xsl:value-of select="concat(substring-before($string, '.'),'.')" />
-			<xsl:if test="contains($after, '.')">
-				<xsl:call-template name="substringAndLastPeriod">
-					<xsl:with-param name="string"
-													select="$after" />
-				</xsl:call-template>
-			</xsl:if>
-		</xsl:if>
-	</xsl:template>
-
-	<!-- ============================================================================================
-	Reference links
-	============================================================================================= -->
-
-	<xsl:template name="createReferenceLink">
-		<xsl:param name="id" />
-		<xsl:param name="qualified"
-							 select="false()" />
-		<referenceLink class="mtps-internal-link"
-									 target="{$id}"
-									 qualified="{$qualified}" />
-	</xsl:template>
-
-	<xsl:template name="decoratedNameSep">
-		<xsl:variable name="v_LangSpecId">
-			<xsl:value-of select="generate-id()"/>
-		</xsl:variable>
-		<xsl:variable name="v_ScriptText">
-			<xsl:value-of disable-output-escaping="yes"
-										select="concat('addToLanSpecTextIdSet(&quot;',$v_LangSpecId,'?cs=.|vb=.|cpp=::|nu=.&quot;);')"/>
-		</xsl:variable>
-		<span id="{$v_LangSpecId}"></span>
-		<script type="text/javascript">
-			<xsl:value-of select="$v_ScriptText"/>
-		</script>
-	</xsl:template>
-
-	<!-- ============================================================================================
 	Section headers
 	============================================================================================= -->
 
-	<xsl:template name="t_section">
+	<xsl:template name="t_putSection">
 		<xsl:param name="toggleSwitch" />
 		<xsl:param name="title" />
 		<xsl:param name="content" />
@@ -248,7 +403,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="t_subSection">
+	<xsl:template name="t_putSubSection">
 		<xsl:param name="title" />
 		<xsl:param name="content" />
 
@@ -262,9 +417,9 @@
 	Code formatting
 	============================================================================================= -->
 
-	<xsl:template name="t_codeSection">
+	<xsl:template name="t_putCodeSection">
 		<xsl:param name="p_codeLang" />
-		<xsl:param name="p_CodeTitle" />
+		<xsl:param name="p_codeTitle" />
 		<xsl:param name="p_formatCode"
 							 select="false()" />
 		<xsl:param name="p_enableCopyCode"
@@ -281,8 +436,8 @@
 		</xsl:variable>
 		<xsl:variable name="v_codeLangName">
 			<xsl:choose>
-				<xsl:when test="($v_codeLangUnique = 'none') and (normalize-space($p_CodeTitle) != '')">
-					<xsl:value-of select="$p_CodeTitle"/>
+				<xsl:when test="($v_codeLangUnique = 'none') and (normalize-space($p_codeTitle) != '')">
+					<xsl:value-of select="$p_codeTitle"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="t_codeLangName">
@@ -301,7 +456,7 @@
 		<div id="{$sectionId}"
 				 class="OH_CodeSnippetContainer">
 
-			<xsl:call-template name="t_codeTabsSolo">
+			<xsl:call-template name="t_putCodeTabsSolo">
 				<xsl:with-param name="sectionId"
 												select="$sectionId"/>
 				<xsl:with-param name="p_codeLangName"
@@ -324,7 +479,7 @@
 					</div>
 				</div>
 
-				<xsl:call-template name="t_codeDiv">
+				<xsl:call-template name="t_putCodeDiv">
 					<xsl:with-param name="sectionId"
 													select="$sectionId"/>
 					<xsl:with-param name="p_codeLang"
@@ -336,7 +491,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template name="t_codeSections">
+	<xsl:template name="t_putCodeSections">
 		<xsl:param name="p_codeNodes" />
 		<xsl:param name="p_nodeCount" />
 		<xsl:param name="p_codeLangAttr"
@@ -363,7 +518,7 @@
 				<div class="OH_CodeSnippetContainerTabLeftActive"
 						 id="{$sectionId}_tabimgleft"></div>
 
-				<xsl:call-template name="t_codeTabs">
+				<xsl:call-template name="t_putCodeTabs">
 					<xsl:with-param name="sectionId"
 													select="$sectionId"/>
 					<xsl:with-param name="p_codeNodes"
@@ -420,7 +575,7 @@
 					</div>
 				</div>
 
-				<xsl:call-template name="t_codeDivs">
+				<xsl:call-template name="t_putCodeDivs">
 					<xsl:with-param name="sectionId"
 													select="$sectionId"/>
 					<xsl:with-param name="p_codeNodes"
@@ -436,7 +591,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template name="t_codeTabsSolo">
+	<xsl:template name="t_putCodeTabsSolo">
 		<xsl:param name="sectionId" />
 		<xsl:param name="p_codeLangName" />
 		<xsl:param name="p_enableCopyCode"
@@ -458,7 +613,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template name="t_codeTabs">
+	<xsl:template name="t_putCodeTabs">
 		<xsl:param name="sectionId" />
 		<xsl:param name="p_codeNodes" />
 		<xsl:param name="p_nodeCount" />
@@ -482,18 +637,18 @@
 				</xsl:call-template>
 			</xsl:variable>
 
-			<xsl:variable name="t_isCodeLangValid">
+			<xsl:variable name="v_isCodeLangValid">
 				<xsl:call-template name="t_isCodeLangValid">
 					<xsl:with-param name="p_codeLang"
 													select="$v_codeLang"/>
 				</xsl:call-template>
 			</xsl:variable>
-			<xsl:variable name="p_CodeTitle"
+			<xsl:variable name="v_codeTitle"
 										select="@title"/>
 			<xsl:variable name="v_codeLangName">
 				<xsl:choose>
-					<xsl:when test="($v_codeLang = 'none') and (normalize-space($p_CodeTitle) != '')">
-						<xsl:value-of select="$p_CodeTitle"/>
+					<xsl:when test="($v_codeLang = 'none') and (normalize-space($v_codeTitle) != '')">
+						<xsl:value-of select="$v_codeTitle"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="t_codeLangName">
@@ -503,21 +658,21 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:variable name="labelLang">
+			<xsl:variable name="v_labelLang">
 				<xsl:choose>
-					<xsl:when test="($v_codeLang = 'none') and (normalize-space($p_CodeTitle) != '')">
-						<xsl:value-of select="$p_CodeTitle"/>
+					<xsl:when test="($v_codeLang = 'none') and (normalize-space($v_codeTitle) != '')">
+						<xsl:value-of select="$v_codeTitle"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="t_codeLangLabel">
-							<xsl:with-param name="t_codeLang"
+							<xsl:with-param name="p_codeLang"
 															select="$v_codeLang"/>
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
 
-			<xsl:variable name="tabClass">
+			<xsl:variable name="v_tabClass">
 				<xsl:choose>
 					<xsl:when test="$nodeIndex = 1">
 						<xsl:text>OH_CodeSnippetContainerTabActive</xsl:text>
@@ -529,16 +684,16 @@
 			</xsl:variable>
 
 			<div id="{$sectionId}_tab{$nodeIndex}"
-					 class="{$tabClass}"
+					 class="{$v_tabClass}"
 					 EnableCopyCode="{$p_enableCopyCode}">
-				<a href="javascript:ChangeTab('{$sectionId}','{$labelLang}','{$nodeIndex}','{$p_nodeCount}')">
+				<a href="javascript:ChangeTab('{$sectionId}','{$v_labelLang}','{$nodeIndex}','{$p_nodeCount}')">
 					<xsl:value-of select="$v_codeLangName"/>
 				</a>
 			</div>
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="t_codeDiv">
+	<xsl:template name="t_putCodeDiv">
 		<xsl:param name="sectionId" />
 		<xsl:param name="p_codeLang" />
 		<xsl:param name="p_codeDivIndex"
@@ -546,7 +701,7 @@
 		<xsl:param name="p_formatCode"
 							 select="true()" />
 
-		<xsl:variable name="t_isCodeLangValid">
+		<xsl:variable name="v_isCodeLangValid">
 			<xsl:call-template name="t_isCodeLangValid">
 				<xsl:with-param name="p_codeLang"
 												select="$p_codeLang"/>
@@ -588,7 +743,7 @@
 
 	</xsl:template>
 
-	<xsl:template name="t_codeDivs">
+	<xsl:template name="t_putCodeDivs">
 		<xsl:param name="sectionId" />
 		<xsl:param name="p_codeNodes" />
 		<xsl:param name="p_nodeCount" />
@@ -610,7 +765,7 @@
 				</xsl:call-template>
 			</xsl:variable>
 
-			<xsl:call-template name="t_codeDiv">
+			<xsl:call-template name="t_putCodeDiv">
 				<xsl:with-param name="sectionId"
 												select="$sectionId"/>
 				<xsl:with-param name="p_codeLang"
@@ -870,7 +1025,7 @@
 					<xsl:value-of select="$key"/>
 				</parameter>
 				<parameter>
-					<xsl:call-template name="topicTitlePlain"/>
+					<xsl:call-template name="t_topicTitlePlain"/>
 				</parameter>
 				<parameter>
 					<xsl:value-of select="/document/metadata/item[@id='PBM_FileVersion']" />
@@ -879,6 +1034,46 @@
 					<xsl:value-of select="/document/metadata/attribute[@name='TopicVersion']" />
 				</parameter>
 			</include>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Debugging
+	============================================================================================= -->
+
+	<xsl:template name="t_Dump">
+		<xsl:param name="p_Path"/>
+		<xsl:param name="p_Recursive"
+							 select="true()"/>
+
+		<div>
+			<xsl:value-of select="name($p_Path)"/>
+			<ol>
+				<xsl:for-each select="msxsl:node-set($p_Path)/@*">
+					<li>
+						@<xsl:value-of select="name()"/> [<xsl:value-of select="."/>]
+					</li>
+				</xsl:for-each>
+			</ol>
+			<ul>
+				<xsl:for-each select="msxsl:node-set($p_Path)/*">
+					<xsl:choose>
+						<xsl:when test="boolean($p_Recursive)">
+							<li>
+								<xsl:call-template name="t_Dump">
+									<xsl:with-param name="p_Path"
+																	select="."/>
+								</xsl:call-template>
+							</li>
+						</xsl:when>
+						<xsl:otherwise>
+							<li>
+								<xsl:value-of select="name()"/> [<xsl:value-of select="."/>]
+							</li>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</ul>
 		</div>
 	</xsl:template>
 

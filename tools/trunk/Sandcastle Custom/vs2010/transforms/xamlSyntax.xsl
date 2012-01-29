@@ -5,44 +5,51 @@
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
  >
+	<!-- ======================================================================================== -->
 
-  <xsl:import href="globalTemplates.xsl"/>
+	<xsl:import href="globalTemplates.xsl"/>
 
-  <xsl:variable name="showNonXamlAssemblyBoilerplate" select="'false'" />
+	<!-- ============================================================================================
+	Global Variables
+	============================================================================================= -->
 
-  <!-- XAML Syntax -->
+	<xsl:variable name="showNonXamlAssemblyBoilerplate" select="'false'" />
+
+	<!-- ============================================================================================
+	XAML Syntax
+	============================================================================================= -->
 
   <xsl:template name="XamlSyntaxBlock">
     <!-- Branch based on pagetype -->
     <xsl:choose>
       <!-- Display boilerplate for pagetypes that cannot be used in XAML,
            unless there's an authored XAML text section, which is used in place of the boilerplate. -->
-      <xsl:when test="$subgroup='method' or 
-                      $subgroup='constructor' or
-                      $subgroup='interface' or
-                      $subgroup='delegate' or
-                      $subgroup='field'">
+      <xsl:when test="$g_apiTopicSubGroup='method' or 
+                      $g_apiTopicSubGroup='constructor' or
+                      $g_apiTopicSubGroup='interface' or
+                      $g_apiTopicSubGroup='delegate' or
+                      $g_apiTopicSubGroup='field'">
         <xsl:call-template name="nonXamlMembersXamlSyntax"/>
       </xsl:when>
 
       <!-- class and struct -->
-      <xsl:when test="$subgroup='class' or 
-                      $subgroup='structure'">
+      <xsl:when test="$g_apiTopicSubGroup='class' or 
+                      $g_apiTopicSubGroup='structure'">
         <xsl:call-template name="classOrStructXamlSyntax"/>
       </xsl:when>
 
       <!-- enumeration -->
-      <xsl:when test="$subgroup='enumeration'">
+      <xsl:when test="$g_apiTopicSubGroup='enumeration'">
         <xsl:call-template name="enumerationXamlSyntax"/>
       </xsl:when>
 
       <!-- property -->
-      <xsl:when test="$subgroup='property' or $subsubgroup='attachedProperty'">
+      <xsl:when test="$g_apiTopicSubGroup='property' or $g_apiTopicSubSubGroup='attachedProperty'">
         <xsl:call-template name="propertyXamlSyntax"/>
       </xsl:when>
 
       <!-- event -->
-      <xsl:when test="$subgroup='event' or $subsubgroup='attachedEvent'">
+      <xsl:when test="$g_apiTopicSubGroup='event' or $g_apiTopicSubSubGroup='attachedEvent'">
         <xsl:call-template name="eventXamlSyntax"/>
       </xsl:when>
 
@@ -396,7 +403,7 @@
     <xsl:for-each select="//ddue:section[starts-with(@address,'xamlValues')]">
       <div id="xamlValues">
         <p/>
-        <xsl:call-template name="t_subSection">
+        <xsl:call-template name="t_putSubSection">
           <xsl:with-param name="title">
             <include item="xamlValuesSectionHeading" />
           </xsl:with-param>
@@ -420,7 +427,7 @@
 
   <!-- the authored dependency Property Information section -->
   <xsl:template match="ddue:section[starts-with(@address,'dependencyPropertyInfo')]" mode="section">
-    <xsl:call-template name="t_section">
+    <xsl:call-template name="t_putSection">
       <xsl:with-param name="toggleSwitch" select="'dependencyPropertyInfo'"/>
       <xsl:with-param name="title">
         <include item="dependencyPropertyInfoHeading" />
@@ -433,7 +440,7 @@
 
   <!-- the authored routed event Information section -->
   <xsl:template match="ddue:section[starts-with(@address,'routedEventInfo')]" mode="section">
-    <xsl:call-template name="t_section">
+    <xsl:call-template name="t_putSection">
       <xsl:with-param name="toggleSwitch" select="'routedEventInfo'"/>
       <xsl:with-param name="title">
         <include item="routedEventInfoHeading" />

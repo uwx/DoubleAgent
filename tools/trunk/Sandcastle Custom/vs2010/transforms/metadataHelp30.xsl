@@ -56,7 +56,7 @@
     <xsl:choose>
       
       <!-- namespace pages get the namespace keyword, if it exists -->
-      <xsl:when test="$group='namespace'">
+      <xsl:when test="$g_apiTopicGroup='namespace'">
         <xsl:variable name="namespace" select="/document/reference/apidata/@name" />
         <xsl:if test="$namespace != ''">
           <meta name="Microsoft.Help.F1" content="{$namespace}" />
@@ -64,10 +64,10 @@
       </xsl:when>
       
       <!-- type memberlist topics do NOT get F keywords -->
-      <xsl:when test="$group='list' and $subgroup='members'"/>
+      <xsl:when test="$g_apiTopicGroup='list' and $g_apiTopicSubGroup='members'"/>
       
       <!-- type overview pages get namespace.type keywords -->
-      <xsl:when test="$group='type'">
+      <xsl:when test="$g_apiTopicGroup='type'">
         <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
         <xsl:variable name="type">
           <xsl:for-each select="/document/reference[1]">
@@ -81,7 +81,7 @@
           </xsl:call-template>
 
           <!-- for enums, write F1 keywords for each enum member -->
-        <xsl:if test="$subgroup = 'enumeration'">
+        <xsl:if test="$g_apiTopicSubGroup = 'enumeration'">
           <xsl:for-each select="/document/reference/elements/element">
             <xsl:call-template name="writeF1WithApiName">
               <xsl:with-param name="namespace" select="$namespace" />
@@ -98,7 +98,7 @@
       </xsl:when>
 
       <!-- overload list pages get namespace.type.member keyword -->
-      <xsl:when test="$group='list' and $subgroup='overload'">
+      <xsl:when test="$g_apiTopicGroup='list' and $g_apiTopicSubGroup='overload'">
         <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
         <xsl:variable name="type">
           <xsl:for-each select="/document/reference[1]/containers">
@@ -150,7 +150,7 @@
 
 
       <!-- member pages -->
-      <xsl:when test="$group='member'">
+      <xsl:when test="$g_apiTopicGroup='member'">
         <xsl:choose>
           <!-- no F1 help entries for overload signature topics -->
           <xsl:when test="/document/reference/memberdata/@overload"/>
@@ -159,7 +159,7 @@
           <xsl:when test="/document/reference[memberdata[@visibility='private'] and proceduredata[@virtual = 'true']]"/>
 
           <!-- Property pages -->
-          <xsl:when test="$subgroup = 'property'">
+          <xsl:when test="$g_apiTopicSubGroup = 'property'">
 
             <xsl:variable name="type">
               <xsl:for-each select="/document/reference[1]/containers">
@@ -277,7 +277,7 @@
   <xsl:variable name="var_wpf_f1index_prefix_1_namespaces">N:System.Windows.Controls#N:System.Windows.Documents#N:System.Windows.Shapes#N:System.Windows.Navigation#N:System.Windows.Data#N:System.Windows#N:System.Windows.Controls.Primitives#N:System.Windows.Media.Animation#N:System.Windows.Annotations#N:System.Windows.Annotations.Anchoring#N:System.Windows.Annotations.Storage#N:System.Windows.Media#N:System.Windows.Media.Animation#N:System.Windows.Media.Media3D#N:</xsl:variable> -->
 
   <xsl:template name="xamlMSHelpFKeywords30">
-    <xsl:if test="$subgroup='class' or $subgroup='enumeration' or $subgroup='structure'">
+    <xsl:if test="$g_apiTopicSubGroup='class' or $g_apiTopicSubGroup='enumeration' or $g_apiTopicSubGroup='structure'">
       <xsl:if test="boolean(contains($var_wpf_f1index_prefix_1_namespaces, concat('#',/document/reference/containers/namespace/@api,'#'))
                            or starts-with($var_wpf_f1index_prefix_1_namespaces, concat(/document/reference/containers/namespace/@api,'#')))">
         <meta name="Microsoft.Help.F1" content="{concat($var_wpf_f1index_prefix_1, /document/reference/apidata/@name)}"/>
@@ -290,7 +290,7 @@
   <xsl:template name="indexMetadata30">
     <xsl:choose>
       <!-- namespace topics get one unqualified index entry -->
-      <xsl:when test="$topic-group='api' and $api-group='namespace'">
+      <xsl:when test="$g_topicGroup='api' and $g_apiGroup='namespace'">
         <xsl:variable name="names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
@@ -305,7 +305,7 @@
         </meta>
       </xsl:when>
       <!-- type overview topics get qualified and unqualified index entries, and an about index entry -->
-      <xsl:when test="$topic-group='api' and $api-group='type'">
+      <xsl:when test="$g_topicGroup='api' and $g_apiGroup='type'">
         <xsl:variable name="names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
@@ -314,7 +314,7 @@
         <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
         <xsl:for-each select="msxsl:node-set($names)/name">
           <meta name="System.Keywords">
-            <includeAttribute name="content" item="{$api-subgroup}IndexEntry">
+            <includeAttribute name="content" item="{$g_apiSubGroup}IndexEntry">
               <parameter>
                 <xsl:copy-of select="."/>
               </parameter>
@@ -322,7 +322,7 @@
           </meta>
           <xsl:if test="boolean($namespace != '')">
             <meta name="System.Keywords">
-              <includeAttribute name="content" item="{$api-subgroup}IndexEntry">
+              <includeAttribute name="content" item="{$g_apiSubGroup}IndexEntry">
                 <parameter>
                   <xsl:value-of select="$namespace"/>
                   <xsl:text>.</xsl:text>
@@ -332,11 +332,11 @@
             </meta>
           </xsl:if>
           <!-- multi-topic types (not delegates and enumerations) get about entries, too-->
-          <xsl:if test="$api-subgroup='class' or $api-subgroup='structure' or $api-subgroup='interface'">
+          <xsl:if test="$g_apiSubGroup='class' or $g_apiSubGroup='structure' or $g_apiSubGroup='interface'">
             <meta name="System.Keywords">
               <includeAttribute name="content" item="aboutTypeIndexEntry">
                 <parameter>
-                  <include item="{$api-subgroup}IndexEntry">
+                  <include item="{$g_apiSubGroup}IndexEntry">
                     <parameter>
                       <xsl:copy-of select="."/>
                     </parameter>
@@ -347,10 +347,10 @@
           </xsl:if>
         </xsl:for-each>
         <!-- enumerations get the index entries for their members -->
-        <xsl:if test="$api-subgroup='enumeration'">
+        <xsl:if test="$g_apiSubGroup='enumeration'">
           <xsl:for-each select="/document/reference/elements/element">
             <meta name="System.Keywords">
-              <includeAttribute name="content" item="{$api-subgroup}MemberIndexEntry">
+              <includeAttribute name="content" item="{$g_apiSubGroup}MemberIndexEntry">
                 <parameter>
                   <xsl:value-of select="apidata/@name" />
                 </parameter>
@@ -360,7 +360,7 @@
         </xsl:if>
       </xsl:when>
       <!-- all member lists get unqualified entries, qualified entries, and unqualified sub-entries -->
-      <xsl:when test="$topic-group='list' and $topic-subgroup='members'">
+      <xsl:when test="$g_topicGroup='list' and $g_topicSubGroup='members'">
         <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
         <xsl:variable name="names">
           <xsl:for-each select="/document/reference">
@@ -369,7 +369,7 @@
         </xsl:variable>
         <xsl:for-each select="msxsl:node-set($names)/name">
           <meta name="System.Keywords">
-            <includeAttribute name="content" item="{$api-subgroup}IndexEntry">
+            <includeAttribute name="content" item="{$g_apiSubGroup}IndexEntry">
               <parameter>
                 <xsl:value-of select="." />
               </parameter>
@@ -378,7 +378,7 @@
           <meta name="System.Keywords">
             <includeAttribute name="content" item="membersIndexEntry">
               <parameter>
-                <include item="{$api-subgroup}IndexEntry">
+                <include item="{$g_apiSubGroup}IndexEntry">
                   <parameter>
                     <xsl:value-of select="." />
                   </parameter>
@@ -395,7 +395,7 @@
         <xsl:if test="boolean($namespace != '')">
           <xsl:for-each select="msxsl:node-set($qnames)/name">
             <meta name="System.Keywords">
-              <includeAttribute name="content" item="{$api-subgroup}IndexEntry">
+              <includeAttribute name="content" item="{$g_apiSubGroup}IndexEntry">
                 <parameter>
                   <xsl:value-of select="." />
                 </parameter>
@@ -405,14 +405,14 @@
         </xsl:if>
       </xsl:when>
       <!-- other member list pages get unqualified sub-entries -->
-      <xsl:when test="$topic-group='list' and not($topic-subgroup = 'overload')">
+      <xsl:when test="$g_topicGroup='list' and not($g_topicSubGroup = 'overload')">
         <xsl:variable name="names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
           </xsl:for-each>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="$topic-subgroup='Operators'">
+          <xsl:when test="$g_topicSubGroup='Operators'">
             <xsl:variable name="operators" select="document/reference/elements/element[not(apidata[@name='Explicit' or @name='Implicit'])]"/>
             <xsl:variable name="conversions" select="document/reference/elements/element[apidata[@name='Explicit' or @name='Implicit']]" />
             <xsl:variable name="entryType">
@@ -427,7 +427,7 @@
                 </xsl:when>
                 <!-- operators + no type conversions -->
                 <xsl:otherwise>
-                  <xsl:value-of select="$topic-subgroup" />
+                  <xsl:value-of select="$g_topicSubGroup" />
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
@@ -435,7 +435,7 @@
               <meta name="System.Keywords">
                 <includeAttribute name="content" item="{$entryType}IndexEntry">
                   <parameter>
-                    <include item="{$api-subgroup}IndexEntry">
+                    <include item="{$g_apiSubGroup}IndexEntry">
                       <parameter>
                         <xsl:value-of select="." />
                       </parameter>
@@ -448,9 +448,9 @@
           <xsl:otherwise>
         <xsl:for-each select="msxsl:node-set($names)/name">
           <meta name="System.Keywords">
-            <includeAttribute name="content" item="{$subgroup}IndexEntry">
+            <includeAttribute name="content" item="{$g_apiTopicSubGroup}IndexEntry">
               <parameter>
-                <include item="{$api-subgroup}IndexEntry">
+                <include item="{$g_apiSubGroup}IndexEntry">
                   <parameter>
                     <xsl:value-of select="." />
                   </parameter>
@@ -463,7 +463,7 @@
         </xsl:choose>
       </xsl:when>
       <!-- constructor (or constructor overload) topics get unqualified sub-entries using the type names -->
-      <xsl:when test="($topic-group='api' and $api-subgroup='constructor' and not(/document/reference/memberdata/@overload)) or ($topic-subgroup='overload' and $api-subgroup = 'constructor')">
+      <xsl:when test="($g_topicGroup='api' and $g_apiSubGroup='constructor' and not(/document/reference/memberdata/@overload)) or ($g_topicSubGroup='overload' and $g_apiSubGroup = 'constructor')">
         <xsl:variable name="typeSubgroup" select="/document/reference/containers/type/apidata/@subgroup" />
         <xsl:variable name="names">
           <xsl:for-each select="/document/reference/containers/type">
@@ -499,7 +499,7 @@
         </xsl:for-each>
       </xsl:when>
       <!-- op_explicit and op_implicit members -->
-      <xsl:when test="$topic-group='api' and $api-subsubgroup='operator' and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit')">
+      <xsl:when test="$g_topicGroup='api' and $g_apiSubSubGroup='operator' and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit')">
         <xsl:variable name="names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="operatorTextNames" />
@@ -516,26 +516,26 @@
         </xsl:for-each>
       </xsl:when>
       <!-- other member (or overload) topics get qualified and unqualified entries using the member names -->
-      <xsl:when test="($topic-group='api' and $api-group='member' and not(/document/reference/memberdata/@overload)) or $topic-subgroup='overload'">
+      <xsl:when test="($g_topicGroup='api' and $g_apiGroup='member' and not(/document/reference/memberdata/@overload)) or $g_topicSubGroup='overload'">
 
         <xsl:choose>
           <!-- overload op_explicit and op_implicit topics -->
-          <xsl:when test="$api-subsubgroup='operator' and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit')">
+          <xsl:when test="$g_apiSubSubGroup='operator' and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit')">
           </xsl:when>
           <!-- explicit interface implementation -->
           <xsl:when test="/document/reference/proceduredata/@virtual='true' and /document/reference/memberdata/@visibility='private'">
             <xsl:variable name="entryType">
               <xsl:choose>
-                <xsl:when test="string($subsubgroup)">
-                  <xsl:value-of select="$subsubgroup" />
+                <xsl:when test="string($g_apiTopicSubSubGroup)">
+                  <xsl:value-of select="$g_apiTopicSubSubGroup" />
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:choose>
-                    <xsl:when test="$subgroup='overload'">
+                    <xsl:when test="$g_apiTopicSubGroup='overload'">
                       <xsl:value-of select="/document/reference/apidata/@subgroup"/>
                     </xsl:when>
                     <xsl:otherwise>
-                      <xsl:value-of select="$subgroup" />
+                      <xsl:value-of select="$g_apiTopicSubGroup" />
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:otherwise>
@@ -573,19 +573,19 @@
           <xsl:otherwise>
             <xsl:variable name="entryType">
               <xsl:choose>
-                <xsl:when test="string($subsubgroup)">
-                  <xsl:value-of select="$subsubgroup" />
+                <xsl:when test="string($g_apiTopicSubSubGroup)">
+                  <xsl:value-of select="$g_apiTopicSubSubGroup" />
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:choose>
-                    <xsl:when test="$api-subsubgroup='operator'">
-                      <xsl:value-of select="$api-subsubgroup"/>
+                    <xsl:when test="$g_apiSubSubGroup='operator'">
+                      <xsl:value-of select="$g_apiSubSubGroup"/>
                     </xsl:when>
-                    <xsl:when test="$subgroup='overload'">
+                    <xsl:when test="$g_apiTopicSubGroup='overload'">
                       <xsl:value-of select="/document/reference/apidata/@subgroup"/>
                     </xsl:when>
                     <xsl:otherwise>
-                      <xsl:value-of select="$subgroup" />
+                      <xsl:value-of select="$g_apiTopicSubGroup" />
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:otherwise>
@@ -647,11 +647,11 @@
     <meta name="Microsoft.Help.Id" content="{$key}" />
 
     <!-- Microsoft.Help.Description -->
-    <xsl:if test="$abstractSummary">
+    <xsl:if test="$g_abstractSummary">
       <meta name="Description">
         <xsl:attribute name="content">
-          <xsl:call-template name="trimAtPeriod">
-            <xsl:with-param name="string" select="$abstractSummary" />
+          <xsl:call-template name="t_getTrimmedAtPeriod">
+            <xsl:with-param name="string" select="$g_abstractSummary" />
           </xsl:call-template>
         </xsl:attribute> 
       </meta>

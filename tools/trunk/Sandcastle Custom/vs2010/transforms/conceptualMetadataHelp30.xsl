@@ -85,8 +85,8 @@
     <xsl:if test="$abstract">
       <meta name="Description">
         <xsl:attribute name="content">
-          <xsl:call-template name="trimAtPeriod">
-            <xsl:with-param name="string" select="$abstract" />
+          <xsl:call-template name="t_getTrimmedAtPeriod">
+            <xsl:with-param name="p_string" select="$abstract" />
           </xsl:call-template>
         </xsl:attribute>
       </meta>
