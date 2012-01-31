@@ -157,7 +157,8 @@
   <xsl:template name="t_putSeeAlsoSubSection">
     <xsl:param name="p_headerGroup" />
     <xsl:param name="p_members" />
-    <xsl:param name="p_autoGenerateLinks" />
+    <xsl:param name="p_autoGenerateLinks"
+							 select="false()" />
     <xsl:call-template name="t_putSubSection">
       <xsl:with-param name="title">
         <include item="{$p_headerGroup}"/>
@@ -166,7 +167,7 @@
         <xsl:if test="boolean($p_autoGenerateLinks)">
           <xsl:call-template name="t_autogenSeeAlsoLinks"/>
         </xsl:if>
-        <xsl:for-each select="$p_members">
+        <xsl:for-each select="msxsl:node-set($p_members)">
           <div class="seeAlsoStyle">
             <xsl:apply-templates select="." />
           </div>

@@ -29,7 +29,7 @@
     <SandcastlePath>%ProgramFiles(x86)%\Sandcastle\</SandcastlePath>
     <MissingTags>Parameter, Returns, Value, Namespace, TypeParameter, IncludeTargets</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers</VisibleItems>
-    <SyntaxFilters>Standard</SyntaxFilters>
+    <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, FSharp, JScript</SyntaxFilters>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
     <BinaryTOC>False</BinaryTOC>
@@ -601,7 +601,7 @@
                     Stylesheet file (required)
                     Script file (required)
                     "Copy" image file (required) -->
-          <colorizer stylesheet="" scriptFile="" copyImage="" />
+          <colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" self-branded="{@SelfBranded}" />
           <!-- Base output paths for the files (required).  These should match
                  the parent folder of the output path of the HTML files (see
                  each of the SaveComponent instances below). -->
@@ -648,7 +648,7 @@
     <MSHelpViewerSdkLinkType>Id</MSHelpViewerSdkLinkType>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>The Double Agent Class Library</RootNamespaceTitle>
-    <SelfBranded>True</SelfBranded>
+    <SelfBranded>False</SelfBranded>
     <IncludeFavorites>True</IncludeFavorites>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DoubleAgent.AxControl" isDocumented="True" xmlns="">The Double Agent Control for Windows Forms</NamespaceSummaryItem>

@@ -1,10 +1,12 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 								version="1.0"
+								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
+								xmlns:mtps="http://msdn2.microsoft.com/mtps"
+								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
-								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
         >
 
 	<!-- ============================================================================================
@@ -222,19 +224,128 @@
 		<style type="text/css">
 			.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft, .OH_CodeSnippetContainerTabLeftDisabled
 			{
-			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/tabLeftBG.gif');
+			background-image: url('/icons/tabLeftBG.gif');
 			}
 			.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight, .OH_CodeSnippetContainerTabRightDisabled
 			{
-			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/tabRightBG.gif');
+			background-image: url('/icons/tabRightBG.gif');
 			}
 			.OH_footer
 			{
-			background-image: url('ms.help?c:\\Program Files\\Microsoft Help Viewer\\v1.0\\dev10.mshc;/footer_slice.gif');
+			background-image: url('/icons/footer_slice.gif');
 			background-position: top;
 			background-repeat: repeat-x;
 			}
 		</style>
+	</xsl:template>
+
+	<xsl:template name="t_fixupStylesheets"
+								xml:space="preserve">
+		<div id="dummyImageDivProvidesImageUrls"
+				 style="display: none">
+			<img id="tabLeftBG"
+					 alt=""
+					 style="display: none">
+				<includeAttribute name="src"
+													item="iconPath">
+					<parameter>tabLeftBG.gif</parameter>
+				</includeAttribute>
+			</img>
+			<img id="tabRightBG"
+					 alt=""
+					 style="display: none">
+				<includeAttribute name="src"
+													item="iconPath">
+					<parameter>tabRightBG.gif</parameter>
+				</includeAttribute>
+			</img>
+			<img id="footer_slice"
+					 alt=""
+					 style="display: none">
+				<includeAttribute name="src"
+													item="iconPath">
+					<parameter>footer_slice.gif</parameter>
+				</includeAttribute>
+			</img>
+		</div>
+		<script type="text/javascript">
+			try
+			{
+				var styleSheetEnum = new Enumerator(document.styleSheets);
+				var styleSheet;
+				var ruleNdx;
+				var rule;
+
+				for (; !styleSheetEnum.atEnd(); styleSheetEnum.moveNext())
+				{
+					styleSheet = styleSheetEnum.item();
+					if (styleSheet.rules)
+					{
+						if (styleSheet.rules.length != 0)
+						{
+							for (ruleNdx = 0; ruleNdx != styleSheet.rules.length; ruleNdx++)
+							{
+								rule = styleSheet.rules.item(ruleNdx);
+
+								var bgUrl = rule.style.backgroundImage;
+								if (bgUrl != "")
+								{
+									bgUrl = bgUrl.substring(bgUrl.indexOf("(")+1,bgUrl.lastIndexOf(")"));
+									if (bgUrl != "")
+									{
+										if (tabLeftBG.src.indexOf (bgUrl) != -1)
+										{
+											bgUrl = rule.style.backgroundImage.replace (bgUrl, tabLeftBG.src);
+											rule.style.backgroundImage = bgUrl;
+										}
+										else if (tabRightBG.src.indexOf (bgUrl) != -1)
+										{
+											bgUrl = rule.style.backgroundImage.replace (bgUrl, tabRightBG.src);
+											rule.style.backgroundImage = bgUrl;
+										}
+										else if (footer_slice.src.indexOf (bgUrl) != -1)
+										{
+											bgUrl = rule.style.backgroundImage.replace (bgUrl, footer_slice.src);
+											rule.style.backgroundImage = bgUrl;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (e) {}
+			finally {}
+		</script>
+	</xsl:template>
+
+	<xsl:template name="t_fixupMessedUpTags"
+								xml:space="preserve">
+		<script type="text/javascript">
+			try
+			{
+				var brTags = document.all.tags("br");
+				if (brTags)
+				{
+					var brEnum = new Enumerator(brTags);
+					for (; !brEnum.atEnd(); brEnum.moveNext())
+					{
+						var brTag = brEnum.item();
+						var brNext = brTag.nextSibling;
+						if (brNext)
+						{
+							if (brNext.tagName.toLowerCase() == "br")
+							{
+								brNext.parentElement.removeChild (brNext);
+							}
+						}
+					}
+				}
+			}
+			catch (e) {}
+			finally {}
+		</script>
 	</xsl:template>
 
 	<!-- ============================================================================================
@@ -793,9 +904,6 @@
 			<xsl:when test="$v_codeLangLC = 'vb' or $v_codeLangLC = 'vb#' or $v_codeLangLC = 'kblangvb' or $v_codeLangLC = 'visualbasicdeclaration' or $v_codeLangLC = 'visualbasic'" >
 				<xsl:text>VisualBasic</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangLC = 'vb6' or $v_codeLangLC = 'visualbasic6'" >
-				<xsl:text>VisualBasic6</xsl:text>
-			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'visualbasicusage'" >
 				<xsl:text>VisualBasicUsage</xsl:text>
 			</xsl:when>
@@ -853,9 +961,6 @@
 			<xsl:when test="$v_codeLangUnique = 'VisualBasic' or $v_codeLangUnique = 'VisualBasicUsage'" >
 				<xsl:text>VB</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasic6'" >
-				<xsl:text>VB6</xsl:text>
-			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
 				<xsl:text>C#</xsl:text>
 			</xsl:when>
@@ -904,9 +1009,6 @@
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'VisualBasic'" >
 				<xsl:text>Visual Basic</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasic6'" >
-				<xsl:text>Visual Basic 6</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'VisualBasicUsage'" >
 				<xsl:text>Visual Basic Usage</xsl:text>
@@ -1017,7 +1119,8 @@
 	<!-- ============================================================================================
 	Footer
 	============================================================================================= -->
-	<xsl:template name="t_footer">
+
+	<xsl:template name="t_bodyFooter">
 		<div class="OH_footer"
 				 id="footer">
 			<include item="footer">
@@ -1035,6 +1138,36 @@
 				</parameter>
 			</include>
 		</div>
+		<xsl:call-template name="t_fixupFooter"/>
+	</xsl:template>
+
+	<xsl:template name="t_fixupFooter"
+								xml:space="preserve">
+		<script type="text/javascript">
+			try
+			{
+				var footer = document.getElementById("footer");
+				if (footer)
+				{
+					var footerParent = footer.parentElement;
+					var footerParentParent;
+					if (footerParent.className == "OH_outerContent")
+					{
+						footerParentParent = footerParent.parentElement;
+						footerParent.removeChild (footer);
+						footerParentParent.appendChild (footer);
+					}
+					if (footerParent.className == "OH_outerDiv")
+					{
+						footerParentParent = footerParent.parentElement;
+						footerParent.removeChild (footer);
+						footerParentParent.appendChild (footer);
+					}
+				}
+			}
+			catch (e) {}
+			finally {}
+		</script>
 	</xsl:template>
 
 	<!-- ============================================================================================

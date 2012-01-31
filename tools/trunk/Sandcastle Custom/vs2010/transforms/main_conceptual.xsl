@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 								version="1.1"
+								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
+								xmlns:mtps="http://msdn2.microsoft.com/mtps"
+								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
-								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 >
 	<!-- ======================================================================================== -->
 
@@ -73,7 +75,7 @@
 	<!-- ======================================================================================== -->
 
 	<xsl:template match="/document">
-		<html xmlns:xlink="http://www.w3.org/1999/xlink">
+		<html>
 			<head>
 				<meta http-equiv="Content-Type"
 							content="text/html; charset=UTF-8"/>
@@ -89,8 +91,10 @@
 				<!--<div class="OH_outerDiv"> Automatically added by the Help Viewer -->
 				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
 				<xsl:call-template name="t_bodyTitle"/>
-				<xsl:call-template name="main"/>
-				<xsl:call-template name="t_footer" />
+				<xsl:call-template name="t_bodyMain"/>
+				<xsl:call-template name="t_bodyFooter" />
+				<xsl:call-template name="t_fixupStylesheets" />
+				<xsl:call-template name="t_fixupMessedUpTags" />
 			</body>
 		</html>
 	</xsl:template>
@@ -138,7 +142,7 @@
 
 	<!-- main window -->
 
-	<xsl:template name="main">
+	<xsl:template name="t_bodyMain">
 		<div id="mainSection">
 
 			<div id="mainBody">

@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 								version="1.1"
+								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
+								xmlns:mtps="http://msdn2.microsoft.com/mtps"
+								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
-								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
     >
 	<!-- ======================================================================================== -->
 
@@ -114,8 +116,10 @@
 				<!--<div class="OH_outerDiv"> Automatically added by the Help Viewer -->
 				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
 				<xsl:call-template name="t_bodyTitle"/>
-				<xsl:call-template name="main"/>
-				<xsl:call-template name="t_footer" />
+				<xsl:call-template name="t_bodyMain"/>
+				<xsl:call-template name="t_bodyFooter" />
+				<xsl:call-template name="t_fixupStylesheets" />
+				<xsl:call-template name="t_fixupMessedUpTags" />
 			</body>
 		</html>
 	</xsl:template>
@@ -124,7 +128,7 @@
 	Main body div
 	============================================================================================= -->
 
-	<xsl:template name="main">
+	<xsl:template name="t_bodyMain">
 		<div id="mainSection">
 
 			<div id="mainBody">
@@ -844,7 +848,7 @@
 						</referenceLink>
 					</xsl:when>
 					<xsl:otherwise>
-						<referenceLink target="@api"
+						<referenceLink target="{@api}"
 													 qualified="false" />
 					</xsl:otherwise>
 				</xsl:choose>
@@ -877,7 +881,7 @@
 				</xsl:call-template>
 			</td>
 			<td>
-				<referenceLink target="@api"
+				<referenceLink target="{@api}"
 											 qualified="false" />
 			</td>
 			<td>
@@ -1867,6 +1871,9 @@
 							 select="false()" />
 		<span class="languageSpecificText">
 			<span class="cpp">array&lt;</span>
+			<span class="cs"></span>
+			<span class="vb"></span>
+			<span class="fs"></span>
 			<span class="nu"></span>
 		</span>
 		<xsl:apply-templates mode="link">
@@ -1913,6 +1920,9 @@
 			<span class="cpp">
 				<xsl:text>*</xsl:text>
 			</span>
+			<span class="cs"></span>
+			<span class="vb"></span>
+			<span class="fs"></span>
 			<span class="nu"></span>
 		</span>
 	</xsl:template>
@@ -1924,6 +1934,27 @@
 												 mode="decorated"/>
 		<span class="languageSpecificText">
 			<span class="cpp">%</span>
+			<span class="cs"></span>
+			<span class="vb"></span>
+			<span class="fs"></span>
+			<span class="nu"></span>
+		</span>
+	</xsl:template>
+
+	<!-- fix for template in shared utilities_reference -->
+	<xsl:template match="referenceTo"
+								mode="link">
+		<xsl:param name="qualified"
+							 select="false()" />
+		<xsl:apply-templates mode="link">
+			<xsl:with-param name="qualified"
+											select="$qualified" />
+		</xsl:apply-templates>
+		<span class="languageSpecificText">
+			<span class="cpp">%</span>
+			<span class="cs"></span>
+			<span class="vb"></span>
+			<span class="fs"></span>
 			<span class="nu"></span>
 		</span>
 	</xsl:template>
