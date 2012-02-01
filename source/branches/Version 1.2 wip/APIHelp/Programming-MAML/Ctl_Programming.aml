@@ -12,7 +12,12 @@
 				or a scripting language such as <token>VB</token> Scripting Edition (VBScript).
 			</para>
 			<para>
-				The Double Agent control can be used as a simple programming object, either <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2"> 				stand-alone</link> or <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">connected</link> to the Double
+				The Double Agent control can be used as a simple programming object, either <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+					<token>standalone</token>
+				</link>
+				 or <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+					<token>connected</token>
+				</link> to the Double
 				Agent server. As an <token>ActiveXCtl</token>, it can provide character animations within a form or
 				Web page.
 			</para>

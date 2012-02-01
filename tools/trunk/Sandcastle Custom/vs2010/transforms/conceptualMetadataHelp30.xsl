@@ -82,13 +82,16 @@
 
     <!-- Microsoft.Help.Description -->
     <xsl:variable name="abstract" select="normalize-space(string(/document/topic//ddue:para[1]))" />
-    <xsl:if test="$abstract">
-      <meta name="Description">
-        <xsl:attribute name="content">
+		<xsl:variable name="description">
           <xsl:call-template name="t_getTrimmedAtPeriod">
             <xsl:with-param name="p_string" select="$abstract" />
           </xsl:call-template>
-        </xsl:attribute>
+		</xsl:variable>
+    <xsl:if test="normalize-space($description)">
+      <meta name="Description">
+        <xsl:attribute name="content">
+					<xsl:value-of select="normalize-space($description)"/>
+				</xsl:attribute>
       </meta>
     </xsl:if>
 

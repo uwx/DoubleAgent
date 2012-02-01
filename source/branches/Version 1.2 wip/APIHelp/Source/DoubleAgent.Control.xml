@@ -9878,6 +9878,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Commands.Caption" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Commands.VoiceGrammar" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -9912,6 +9913,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</para>
 			</remarks>
 			<include file="&dainclude;" path="/doc/properties/details[@name='VoiceCaption']" />
+			<seealso cref="P:&dans;.Commands.VoiceCaption" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -10384,6 +10386,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Command.Caption" prefix="The" suffix="Property" />
+			<seealso cref="P:&dans;.Command.VoiceGrammar" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->
@@ -10421,6 +10424,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</para>
 			</remarks>
 			<include file="&dainclude;" path="/doc/properties/details[@name='VoiceCaption']" />
+			<seealso cref="P:&dans;.Command.VoiceCaption" prefix="The" suffix="Property" />
 		</member>
 
 		<!--=============================================================================================-->

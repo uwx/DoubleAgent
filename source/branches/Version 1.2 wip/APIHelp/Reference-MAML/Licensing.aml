@@ -16,6 +16,7 @@
 		</introduction>
 
 		<section>
+			<title>Specifics</title>
 			<content>
 				<list class="bullet">
 					<listItem>
@@ -142,6 +143,8 @@
 		</section>
 
 		<relatedTopics>
+			<link xlink:href="e08466ba-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e08466bb-419c-11e1-9d4f-002421116fb2" />
 		</relatedTopics>
 
 	</developerConceptualDocument>

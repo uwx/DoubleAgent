@@ -18,6 +18,7 @@
 				Because Double Agent supports the <token>MsAgent</token> international language components,
 				the evolution of its user interface is limited.
 			</para>
+			<autoOutline/>
 		</introduction>
 
 		<section address="Character">
@@ -30,7 +31,7 @@
 					<unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method.
 				</para>
 				<para>
-					The Double Agent Control can also be used in <newTerm>contained</newTerm> mode. It appears as
+					The Double Agent Control can also be used in <token>contained</token> mode. It appears as
 					a child window within an application and it's character is limited to its window. In this case, the
 					user cannot move the character and the <unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method is disabled.
 				</para>

@@ -36,14 +36,20 @@
 						that support the <token>ActiveXInt</token>.
 					</para>
 					<para>
-						The control can be connected to the server, allowing Agent characters to be shared
-						among multiple applications. It can also run <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2#standalone">standalone</link>,
+						The control can be <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2#connected">
+							<token>connected</token>
+						</link> to the server, allowing Agent characters to be shared
+						among multiple applications. It can also run <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2#standalone">
+							<token>standalone</token>
+						</link>,
 						providing Agent characters that are private to a specific application.
 						This is a new feature of Double Agent that is not supported by <token>MsAgent</token>.
 					</para>
 					<para>
 						The control also allows Double Agent to provide it's character animation services
-						<link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2#contained">contained</link> within a <newTerm>child</newTerm>
+						<link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2#contained">
+							<token>contained</token>
+						</link> within a <newTerm>child</newTerm>
 						window of a <newTerm>client application</newTerm>'s window. This is a new feature of Double
 						Agent that is not supported by <token>MsAgent</token>.
 					</para>

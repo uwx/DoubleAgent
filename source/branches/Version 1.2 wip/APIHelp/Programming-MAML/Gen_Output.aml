@@ -22,6 +22,7 @@
 					<token>WordBalloon</token>
 				</link>.
 			</para>
+			<autoOutline/>
 		</introduction>
 
 		<section address="Effects">
@@ -30,7 +31,7 @@
 				<para>
 					Double Agent also allows you to include sound effects as a part of a character's animation. Using the
 					<token>MsAgent</token> Character Editor, you can specify the filename of standard <token>Windows</token> sound
-					(.WAV) files to trigger on a given frame. Note that Double Agent does not synchronize sound effects
+					(<localUri>.WAV</localUri>) files to trigger on a given frame. Note that Double Agent does not synchronize sound effects
 					and spoken output, so sound effects can interfere with spoken output. Therefore, avoid any long or looping
 					sound effect as a part of a character's animation.
 				</para>
@@ -43,28 +44,27 @@
 				<para>
 					If you use synthesized speech, your character has the ability to say almost anything, which provides
 					the greatest flexibility. With recorded audio, you can give the character a specific or unique voice.
-					To specify output, provide the spoken text as a parameter of the <legacyItalic>Speak</legacyItalic> method.
+					To specify output, provide the spoken text as a parameter of the <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method.
 				</para>
 				<para>
-					A character's <legacyItalic>LanguageID</legacyItalic> setting determines its TTS output. If a client does
-					not specify a <legacyItalic>LanguageID</legacyItalic> for the character, the character's <legacyItalic>
-						LanguageID
-					</legacyItalic> is set to the user default language. If the character's definition includes a specific
+					A character's <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> setting determines its TTS output. If a client does
+					not specify a <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> for the character, the character's
+					 <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> is set to the user default language. If the character's definition includes a specific
 					engine and that engine can be loaded and it matches the character's language setting, that engine will
 					be used. Otherwise, Double Agent enumerates the other available engines and chooses best match based
 					on language and gender (in that order). If there is no matching engine available, there is no TTS output
-					for that client's use of the character. Agent attempts to load the TTS engine on the first <legacyItalic>
-						Speak
-					</legacyItalic> call or when you query or successfully set its <legacyItalic>TTSModeID</legacyItalic>.
-				</para>
+					for that client's use of the character. Agent attempts to load the TTS engine on the first
+					 <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> call or when you query or successfully set its <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference>.
+				
+			</para>
 				<para>
-					A client application can also specify a TTS engine for its character (using the <legacyItalic>TTSModeID</legacyItalic>
+					A client application can also specify a TTS engine for its character (using the <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference>
 					property). This overrides the server's attempt to automatically find a matching engine based on the
-					character's preferred <legacyItalic>TTSModeID</legacyItalic> or the character's current <legacyItalic>
-						LanguageID
-					</legacyItalic> setting. However, if that engine is not installed (or cannot otherwise be loaded),
+					character's preferred <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference> or the character's current
+					 <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> setting.
+					  However, if that engine is not installed (or cannot otherwise be loaded),
 					the call will fail (and raise an error in the control). The server then attempts to load another engine
-					based on the <legacyItalic>LanguageID</legacyItalic>, compiled character TTS setting, and available TTS
+					based on the <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference>, compiled character TTS setting, and available TTS
 					engines. If there is still no match, TTS is not available for that client, but the character can still
 					speak into its <link xlink:href="#Balloon">
 						<token>WordBalloon</token>
@@ -73,7 +73,7 @@
 				<para>
 					Only the TTS engines in use by any client remain loaded. For example, if a character has a defined preference
 					for a specific engine and that engine is available, but your client application has specified a different
-					engine (by setting a character's <legacyItalic>LanguageID</legacyItalic> differently from the engine or
+					engine (by setting a character's <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> differently from the engine or
 					specifying a different mode ID), only the engine specified by your application remains loaded. The engine
 					matching the character's defined preference for a TTS setting is unloaded (unless another client is
 					using the character's compiled engine setting).
@@ -86,7 +86,7 @@
 			<content>
 				<para>
 					Double Agent allows you to use audio files for a character's spoken output. You can record audio files
-					and use the <legacyItalic>Speak</legacyItalic> method to play that data. Double Agent's animation stream
+					and use the <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method to play that data. Double Agent's animation stream
 					automatically supports lip-syncing the character's mouth by using the audio characteristics of the audio
 					file.
 				</para>
@@ -102,14 +102,14 @@
 				<para>
 					Spoken output can also appear as textual output in the form of a cartoon <token>WordBalloon</token>.
 					This can be used to supplement the spoken output of a character or as an alternative to audio output
-					when you use the <legacyItalic>Speak</legacyItalic> method.
+					when you use the <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method.
 				</para>
 				<mediaLink>
 					<image xlink:href="WordBalloon" />
 				</mediaLink>
 				<para>
 					You can also use a <token>WordBalloon</token> to communicate what a character is &quot;thinking&quot;
-					using the <legacyItalic>Think</legacyItalic> method. This displays the text you supply in a
+					using the <unmanagedCodeEntityReference>Think</unmanagedCodeEntityReference> method. This displays the text you supply in a
 					<legacyItalic>thought</legacyItalic>&#160;<token>WordBalloon</token>.
 					The <unmanagedCodeEntityReference>Think</unmanagedCodeEntityReference> method differs
 					from the <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method in that it produces no audio output.

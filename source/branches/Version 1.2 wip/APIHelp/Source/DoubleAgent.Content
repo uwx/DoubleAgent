@@ -1,34 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
   <Topic id="e08466b8-419c-11e1-9d4f-002421116fb2" visible="True" isDefault="true" isExpanded="true" isSelected="true" title="Double Agent" tocTitle="Double Agent">
-    <HelpAttributes>
-      <HelpAttribute name="TopicType" value="kbOrient" />
-      <HelpAttribute name="TopicType" value="apiref" />
-      <HelpAttribute name="DocSet" value="DoubleAgent" />
-      <HelpAttribute name="DocSet" value="NETFramework" />
-      <HelpAttribute name="DocSet" value="WindowsForms" />
-      <HelpAttribute name="DocSet" value="C#" />
-      <HelpAttribute name="DocSet" value="Visual Basic" />
-      <HelpAttribute name="DocSet" value="ExpressLibVS" />
-      <HelpAttribute name="Technology" value="Agent" />
-      <HelpAttribute name="Technology" value="ManagedCode" />
-      <HelpAttribute name="Technology" value="ActiveX" />
-      <HelpAttribute name="Technology" value="WindowsForms" />
-      <HelpAttribute name="Technology" value="kb3Ptech" />
-      <HelpAttribute name="ProgModel" value="managed" />
-      <HelpAttribute name="TargetOS" value="Windows" />
-    </HelpAttributes>
-    <HelpKeywords>
-      <HelpKeyword index="K" term="Introduction to Double Agent" />
-      <HelpKeyword index="NamedUrlIndex" term="DefaultPage" />
-      <HelpKeyword index="NamedUrlIndex" term="HomePage" />
-    </HelpKeywords>
     <Topic id="e08466b9-419c-11e1-9d4f-002421116fb2" visible="True" isExpanded="true" title="Licensing and Distribution">
-      <Topic id="e08466ba-419c-11e1-9d4f-002421116fb2" visible="True" title="GNU GENERAL PUBLIC LICENSE" tocTitle="The GNU General Public License" />
-      <Topic id="e08466bb-419c-11e1-9d4f-002421116fb2" visible="True" title="GNU LESSER GENERAL PUBLIC LICENSE" tocTitle="The GNU Lesser General Public License" />
+      <Topic id="e08466ba-419c-11e1-9d4f-002421116fb2" visible="True" title="The GNU General Public License" />
+      <Topic id="e08466bb-419c-11e1-9d4f-002421116fb2" visible="True" title="The GNU Lesser General Public License" />
     </Topic>
     <Topic id="e08466bc-419c-11e1-9d4f-002421116fb2" visible="True" isExpanded="true" title="The Double Agent User Interface">
-      <Topic id="f277e74e-520f-479d-a7b7-8f126ae321e7" visible="True" title="The Character Window" />
       <Topic id="e08466bd-419c-11e1-9d4f-002421116fb2" visible="True" title="Image Rendering" />
       <Topic id="e08466be-419c-11e1-9d4f-002421116fb2" visible="True" title="The Advanced Character Options Window" />
       <Topic id="e08466bf-419c-11e1-9d4f-002421116fb2" visible="True" title="The Double Agent Control Panel" />

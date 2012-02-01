@@ -12,18 +12,27 @@
 			</para>
 			<para>
 				While <token>MsAgent</token>'s animation services are only available through it's server, the Double
-				Agent control can run in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">stand-alone</link> mode, not
+				Agent control can run in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+					<token>standalone</token>
+				</link> mode, not
 				connected to the Double Agent server. When the shared server is used, each character can only be loaded
 				<legacyItalic>once per user</legacyItalic> and is shared by all applications that use it. When the Double Agent control
-				is used <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">stand-alone</link>, each character can be loaded
-				<legacyItalic>once per process</legacyItalic>. If multiple applications use the same character in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2"> 					stand-alone</link> mode, there will be multiple copies of the character (one per application).
+				is used <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+					<token>standalone</token>
+				</link>, each character can be loaded
+				<legacyItalic>once per process</legacyItalic>. If multiple applications use the same character in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+					<token>standalone</token>
+				</link> mode, there will be multiple copies of the character (one per application).
 			</para>
 			<para>
 				If multiple copies of the same character are shown as <token>Popup</token> windows, it will be confusing to the user.
-				Application developers are encouraged to use <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">stand-alone</link>
+				Application developers are encouraged to use <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+					<token>standalone</token>
+				</link>
 				characters only when using the Double Agent control as a <legacyItalic>child</legacyItalic> window. This will make it obvious
 				to the user which application that particular instance of the character belongs to.
 			</para>
+			<autoOutline/>
 		</introduction>
 
 		<section address="LoadCharacter">
@@ -51,8 +60,11 @@
 					use it.
 				</para>
 				<para>
-					However, when the Double Agent control is used in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2"> 					stand-alone</link> mode (not connected to the server) then a single instance of each loaded character is created
-					for the <token>Windows</token> <legacyItalic>process</legacyItalic> that owns the control(s). Generally, an application has only a single
+					However, when the Double Agent control is used in
+					 <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+						 <token>standalone</token>
+					 </link> mode (not connected to the server) then a single instance of each loaded character is created
+					for the <token>Windows</token>&#160;<legacyItalic>process</legacyItalic> that owns the control(s). Generally, an application has only a single
 					process, and each application has a different process.
 				</para>
 			</content>

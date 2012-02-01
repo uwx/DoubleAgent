@@ -251,11 +251,11 @@
 								<para>It can act as a portal to the Server, as in previous versions.</para>
 							</listItem>
 							<listItem>
-								<para>It can now run stand-alone, providing full functionality without any connection to the Server.</para>
+								<para>It can now run <token>standalone</token>, providing full functionality without any connection to the Server.</para>
 							</listItem>
 							<listItem>
 								<para>
-									It can now work as a <token>ActiveXCtl</token>, with it&#39;s character contained within
+									It can now work as a <token>ActiveXCtl</token>, with it&#39;s character <token>contained</token> within
 									the control window.
 								</para>
 							</listItem>
@@ -269,15 +269,15 @@
 						<list class="bullet">
 							<listItem>
 								<para>
-									In <legacyItalic>connected</legacyItalic> mode, a character belongs to the Server and is shared
+									In <token>connected</token> mode, a character belongs to the Server and is shared
 									among all applications using it. A particular character will only have a single instance, with multiple
 									client applications.
 								</para>
 							</listItem>
 							<listItem>
 								<para>
-									In <legacyItalic>stand-alone</legacyItalic> mode, a character belongs to the Control (and thus the
-									application that created the Control). Each application that uses the Control in <legacyItalic>stand-alone</legacyItalic>
+									In <token>standalone</token> mode, a character belongs to the Control (and thus the
+									application that created the Control). Each application that uses the Control in <token>standalone</token>
 									mode has its own <legacyItalic>private</legacyItalic> instance of a character. If another application is using the same character
 									at the same time, there will be two copies of the character on the screen and two <token>NotificationIcon</token>s,
 									one for each application.
@@ -285,9 +285,9 @@
 							</listItem>
 							<listItem>
 								<para>
-									In <legacyItalic>contained</legacyItalic> mode (which is also stand-alone), a character belongs to the
+									In <token>contained</token> mode (which is also <token>standalone</token>), a character belongs to the
 									Control. However, since it&#39;s limited to the Control&#39;s child window, it is visibly clear
-									that it belongs to that application. Also, in <legacyItalic>contained</legacyItalic> mode a character doesn&#39;t
+									that it belongs to that application. Also, in <token>contained</token> mode a character doesn&#39;t
 									have a <token>NotificationIcon</token>.
 								</para>
 							</listItem>

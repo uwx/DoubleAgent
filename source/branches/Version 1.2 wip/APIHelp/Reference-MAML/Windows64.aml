@@ -274,7 +274,7 @@
 							<entry>
 								<para>32-bit control</para>
 								<para>
-									(standalone)
+									(<token>standalone</token>)
 								</para>
 							</entry>
 							<entry>
@@ -352,7 +352,7 @@
 							<entry>
 								<para>64-bit control</para>
 								<para>
-									(standalone)
+									(<token>standalone</token>)
 								</para>
 							</entry>
 							<entry>

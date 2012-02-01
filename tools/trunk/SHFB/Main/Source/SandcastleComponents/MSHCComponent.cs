@@ -607,9 +607,11 @@ namespace SandcastleBuilder.Components
 
 			XmlElement elem = null;
 
+//FIX
 			if (!multiple)
 				elem = _document.SelectSingleNode (String.Format (CultureInfo.InvariantCulture,
-					@"//meta[@{0}]", name)) as XmlElement;
+					"//meta[@name='{0}']", name)) as XmlElement;
+//END FIX
 
 			if (elem == null)
 			{

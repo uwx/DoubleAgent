@@ -14,8 +14,8 @@
 				not under its control. Specifically, this includes character definition files and speech engines. Double
 				Agent provides services that allow client applications to discover what resources are available.
 			</para>
+			<autoOutline/>
 		</introduction>
-
 
 		<section address="PropSheet">
 			<title>

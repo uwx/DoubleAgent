@@ -520,9 +520,6 @@
       <PlugInConfig id="Additional Content Only" enabled="False">
         <configuration />
       </PlugInConfig>
-      <PlugInConfig id="Version Builder" enabled="False">
-        <configuration />
-      </PlugInConfig>
     </PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
@@ -655,7 +652,7 @@
       <NamespaceSummaryItem name="DoubleAgent.Control" isDocumented="True" xmlns="">The Double Agent Control</NamespaceSummaryItem>
       <NamespaceSummaryItem name="DoubleAgent.Server" isDocumented="True" xmlns="">The Double Agent Server</NamespaceSummaryItem>
     </NamespaceSummaries>
-    <IndentHtml>True</IndentHtml>
+    <IndentHtml>False</IndentHtml>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional

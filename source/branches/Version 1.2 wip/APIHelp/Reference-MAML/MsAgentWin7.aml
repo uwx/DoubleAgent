@@ -27,7 +27,7 @@
 				<listItem>
 					<para>
 						There will be limitations in Double Agent&#39;s ability to emulate <token>MsAgent</token>. This
-						is because emulation is achieved by redirecting <token>MsAgent</token> <token>COM</token> classes to Double Agent
+						is because emulation is achieved by redirecting <token>MsAgent</token>&#160;<token>COM</token> classes to Double Agent
 						<token>COM</token> classes using the <legacyBold>TreatAs</legacyBold> registry entry. However, the <token>MsAgent</token> registration
 						in the <codeInline>HKEY_LOCAL_MACHINE</codeInline> registry hive cannot be changed, so the <legacyBold>TreatAs</legacyBold>
 						redirection can only be set in the <codeInline>HKEY_CURRENT_USER</codeInline> registry hive.

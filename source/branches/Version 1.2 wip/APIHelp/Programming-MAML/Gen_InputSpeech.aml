@@ -17,6 +17,7 @@
 				for a <unmanagedCodeEntityReference>Command</unmanagedCodeEntityReference> in your <unmanagedCodeEntityReference>Commands</unmanagedCodeEntityReference> collection. You can
 				include optional and alternative words and repeated sequences in your <legacyItalic>grammar</legacyItalic>.
 			</para>
+			<autoOutline/>
 		</introduction>
 
 		<section address="Listen">

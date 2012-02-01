@@ -48,26 +48,29 @@
 	<item id="DefaultCharacterProperties"><ddue:ui>Default Character Properties</ddue:ui></item>
 	<item id="DaControlPanel"><ddue:ui>Double Agent Control Panel</ddue:ui></item>
 	<item id="VoiceCommands"><ddue:ui>Voice Commands</ddue:ui></item>
-	<item id="WordBalloon"><ddue:ui>word balloon</ddue:ui></item>
-	<item id="WordBalloonUc"><ddue:ui>Word Balloon</ddue:ui></item>
-	<item id="WordBalloonUc1"><ddue:ui>Word balloon</ddue:ui></item>
-	<item id="NotificationIcon"><ddue:ui>notification icon</ddue:ui></item>
-	<item id="NotificationIconUc"><ddue:ui>Notification Icon</ddue:ui></item>
+	<item id="WordBalloon"><ddue:newTerm>word balloon</ddue:newTerm></item>
+	<item id="WordBalloonUc"><ddue:newTerm>Word Balloon</ddue:newTerm></item>
+	<item id="WordBalloonUc1"><ddue:newTerm>Word balloon</ddue:newTerm></item>
+	<item id="NotificationIcon"><ddue:newTerm>notification icon</ddue:newTerm></item>
+	<item id="NotificationIconUc"><ddue:newTerm>Notification Icon</ddue:newTerm></item>
 	<item id="Popup">pop-up</item>
-	<item id="PopupMenu"><ddue:ui>pop-up menu</ddue:ui></item>
-	<item id="PopupMenuUc"><ddue:ui>Pop-up Menu</ddue:ui></item>
-	<item id="ListeningTip"><ddue:ui>listening tip</ddue:ui></item>
-	<item id="ListeningTipUc"><ddue:ui>Listening Tip</ddue:ui></item>
-	<item id="ListeningKey"><ddue:ui>listening key</ddue:ui></item>
-	<item id="ListeningKeyUc"><ddue:ui>Listening Key</ddue:ui></item>
-	<item id="ListeningMode"><ddue:ui>listening mode</ddue:ui></item>
-	<item id="ListeningModeUc"><ddue:ui>Listening Mode</ddue:ui></item>
+	<item id="PopupMenu"><ddue:newTerm>pop-up menu</ddue:newTerm></item>
+	<item id="PopupMenuUc"><ddue:newTerm>Pop-up Menu</ddue:newTerm></item>
+	<item id="ListeningTip"><ddue:newTerm>listening tip</ddue:newTerm></item>
+	<item id="ListeningTipUc"><ddue:newTerm>Listening Tip</ddue:newTerm></item>
+	<item id="ListeningKey"><ddue:newTerm>listening key</ddue:newTerm></item>
+	<item id="ListeningKeyUc"><ddue:newTerm>Listening Key</ddue:newTerm></item>
+	<item id="ListeningMode"><ddue:newTerm>listening mode</ddue:newTerm></item>
+	<item id="ListeningModeUc"><ddue:newTerm>Listening Mode</ddue:newTerm></item>
 	<item id="InputActive"><ddue:newTerm>input-active</ddue:newTerm></item>
 	<item id="InputActiveUc"><ddue:newTerm>Input-Active</ddue:newTerm></item>
 
-	<item id="standalone"></item>
-	<item id="connected"></item>
-	<item id="contained"></item>
+	<item id="standalone"><ddue:newTerm>stand-alone</ddue:newTerm></item>
+	<item id="connected"><ddue:newTerm>connected</ddue:newTerm></item>
+	<item id="contained"><ddue:newTerm>contained</ddue:newTerm></item>
+	<item id="standaloneUc"><ddue:newTerm>Stand-alone</ddue:newTerm></item>
+	<item id="connectedUc"><ddue:newTerm>Connected</ddue:newTerm></item>
+	<item id="containedUc"><ddue:newTerm>Contained</ddue:newTerm></item>
 
 	<item id="FSF">
 		<ddue:externalLink>

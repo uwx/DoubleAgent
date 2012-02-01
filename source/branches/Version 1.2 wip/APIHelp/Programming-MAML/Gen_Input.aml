@@ -12,6 +12,7 @@
 				the character. Double Agent passes the coordinates of the pointer and any modifier key state for these
 				events.
 			</para>
+			<autoOutline/>
 		</introduction>
 
 		<section address="Active">
@@ -62,10 +63,10 @@
 			</title>
 			<content>
 				<para>
-					Double Agent includes a <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Menu">
+					Double Agent includes a <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> (also known as a context menu) for each character.
-					Double Agent displays this <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Menu">
+					Double Agent displays this <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> automatically when a user right-clicks
 					the character. You can add commands for your client application to the menu by defining a <unmanagedCodeEntityReference>
@@ -91,7 +92,7 @@
 					menu displays the changes when the user redisplays the menu.
 				</para>
 				<para>
-					If you prefer to provide your own <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Menu">
+					If you prefer to provide your own <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> services for a character, you can
 					use the <unmanagedCodeEntityReference>AutoPopupMenu</unmanagedCodeEntityReference> property to turn off automatic handling of the right-click
@@ -99,7 +100,7 @@
 					handling behaviour.
 				</para>
 				<para>
-					When the user selects a command from a character's <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Menu">
+					When the user selects a command from a character's <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> or the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
 						<token>VoiceCommands</token>
@@ -107,7 +108,7 @@
 					client and passes back the parameters of the input using the <unmanagedCodeEntityReference>UserInput</unmanagedCodeEntityReference> object.
 				</para>
 				<para>
-					Double Agent also provides a <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Menu">
+					Double Agent also provides a <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> for the character's <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
 						<token>NotificationIcon</token>

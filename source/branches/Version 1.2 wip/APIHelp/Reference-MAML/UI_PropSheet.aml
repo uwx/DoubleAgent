@@ -11,6 +11,7 @@
 				settings, and can be shown by any hosting application using the Double Agent programming interface.
 				Double Agent remembers the last page viewed and displays that page when the property sheet appears.
 			</para>
+			<autoOutline/>
 		</introduction>
 
 		<section address="Output">
@@ -52,8 +53,9 @@
 		</section>
 
 		<section address="Gallery">
-			<title>The <token>GalleryPage</token>
-		</title>
+			<title>
+				The <token>GalleryPage</token>
+			</title>
 			<content>
 				<para>
 					As an alternative to loading a specific character, applications can load a character that is a shared
@@ -65,11 +67,9 @@
 					<image xlink:href="Options_Gallery" />
 				</mediaLink>
 				<alert class="note">
-					<para>
-						The <token>GalleryPage</token> used to be in the
-						<token>DefaultCharacterProperties</token> window, which no longer exists as of Double Agent
-						version 1.1.
-					</para>
+					The <token>GalleryPage</token> used to be in the
+					<token>DefaultCharacterProperties</token> window, which no longer exists as of Double Agent
+					version 1.1.
 				</alert>
 			</content>
 		</section>

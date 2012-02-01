@@ -1065,29 +1065,6 @@
 		</span>
 	</xsl:template>
 
-	<!--<xsl:template match="ddue:legacyLink">
-		<xsl:choose>
-			<xsl:when test="starts-with(@xlink:href,'#')">
-				-->
-	<!-- in-page link -->
-	<!--
-				<a class="mtps-internal-link"
-					 href="{@xlink:href}">
-					<xsl:apply-templates />
-				</a>
-			</xsl:when>
-			<xsl:otherwise>
-				-->
-	<!-- unverified, external link -->
-	<!--
-				<mshelp:link keywords="{@xlink:href}"
-										 tabindex="0">
-					<xsl:apply-templates />
-				</mshelp:link>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>-->
-
 	<xsl:template match="ddue:codeEntityReference">
 		<span sdata="cer"
 					target="{normalize-space(string(.))}">
@@ -1110,57 +1087,10 @@
 		</span>
 	</xsl:template>
 
-	<!-- dynamic links -->
-
-	<!--<xsl:template match="ddue:dynamicLink[@type='inline']">
-		<MSHelp:ktable disambiguator='span'
-									 indexMoniker='!DefaultDynamicLinkIndex'>
-			<xsl:attribute name="keywords">
-				<xsl:for-each select="ddue:keyword">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">;</xsl:if>
-				</xsl:for-each>
-			</xsl:attribute>
-			<includeAttribute name="prefix"
-												item="dynamicLinkInlinePreFixText" />
-			<includeAttribute name="postfix"
-												item="dynamicLinkInlinePostFixText" />
-			<includeAttribute name="separator"
-												item="dynamicLinkInlineSeperatorText" />
-		</MSHelp:ktable>
-	</xsl:template>-->
-
-	<!--<xsl:template match="ddue:dynamicLink[@type='table']">
-		<include item="mshelpKTable">
-			<parameter>
-				<xsl:for-each select="ddue:keyword">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">;</xsl:if>
-				</xsl:for-each>
-			</parameter>
-		</include>
-	</xsl:template>-->
-
-	<!--<xsl:template match="ddue:dynamicLink[@type='bulleted']">
-		<MSHelp:ktable disambiguator='span'
-									 indexMoniker='!DefaultDynamicLinkIndex'>
-			<xsl:attribute name="keywords">
-				<xsl:for-each select="ddue:keyword">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">;</xsl:if>
-				</xsl:for-each>
-			</xsl:attribute>
-			<xsl:attribute name="prefix">&lt;ul&gt;&lt;li&gt;</xsl:attribute>
-			<xsl:attribute name="postfix">&lt;/li&gt;&lt;/ul&gt;</xsl:attribute>
-			<xsl:attribute name="separator">&lt;/li&gt;&lt;li&gt;</xsl:attribute>
-		</MSHelp:ktable>
-	</xsl:template>-->
-
 	<!-- -->
 
 	<xsl:template match="ddue:codeFeaturedElement">
 		<xsl:if test="normalize-space(.)">
-			<!--<xsl:if test="count(preceding::ddue:codeFeaturedElement) &gt; 0"><br/></xsl:if>-->
 			<span class="label">
 				<xsl:apply-templates/>
 			</span>

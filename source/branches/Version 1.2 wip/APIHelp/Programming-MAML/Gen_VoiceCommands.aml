@@ -41,45 +41,40 @@
 					</tableHeader>
 					<row>
 						<entry>
-							<para>Open | Close Voice Commands Window</para>
+							Open | Close Voice Commands Window
 						</entry>
 						<entry>
-							<para>((open | show) [the] commands [window] | what can I say [now])</para>
-							<para>or</para>
-							<para>close [the] commands [window]</para>
+							((open | show) [the] commands [window] | what can I say [now])<markup>
+								<br/>
+							</markup>
+							<legacyBold>or</legacyBold><markup>
+								<br/>
+							</markup>
+							close [the] commands [window]
 						</entry>
 					</row>
 					<row>
 						<entry>
-							<para>
 								Hide <placeholder>CharacterName</placeholder>
-							</para>
 						</entry>
 						<entry>
-							<para>
-								hide <placeholder>CharacterName &#160;</placeholder>(once for each visible
-								character)
-							</para>
+								hide <placeholder>CharacterName &#160;</placeholder>(<legacyItalic>once for each visible character</legacyItalic>)
 						</entry>
 					</row>
 					<row>
 						<entry>
-							<para>
 								<placeholder>CharacterName</placeholder>
-							</para>
 						</entry>
 						<entry>
-							<para>
-								<placeholder>CharacterName &#160;</placeholder>(once for each loaded character)
-							</para>
+								<placeholder>CharacterName &#160;</placeholder>(<legacyItalic>once for each loaded character</legacyItalic>)
 						</entry>
 					</row>
 					<row>
 						<entry>
-							<para>Global Commands</para>
+							Global Commands
 						</entry>
 						<entry>
-							<para>[show] [me] global commands</para>
+							[show] [me] global commands
 						</entry>
 					</row>
 				</table>

@@ -752,12 +752,11 @@ namespace SandcastleBuilder.Components
 
 					// Replace the placeholder with the colorized code
 					codePreTag.ParentNode.ReplaceChild (codeBlock.ChildNodes[1], codePreTag);
-
 					// Replace the code div with the colorized code container
 					parent.ParentNode.ReplaceChild (codeBlock, parent);
-
 					// Add the code back to it
 					codeBlock.AppendChild (parent);
+
 					ApplyHelp3CodeStyles (codeBlock);
 				}
 				else

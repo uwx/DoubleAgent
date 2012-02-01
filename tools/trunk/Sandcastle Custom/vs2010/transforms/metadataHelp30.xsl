@@ -648,14 +648,20 @@
 
     <!-- Microsoft.Help.Description -->
     <xsl:if test="$g_abstractSummary">
-      <meta name="Description">
-        <xsl:attribute name="content">
-          <xsl:call-template name="t_getTrimmedAtPeriod">
-            <xsl:with-param name="string" select="$g_abstractSummary" />
-          </xsl:call-template>
-        </xsl:attribute> 
-      </meta>
-    </xsl:if>
+			<xsl:variable name="description">
+				<xsl:call-template name="t_getTrimmedAtPeriod">
+					<xsl:with-param name="p_string"
+													select="$g_abstractSummary" />
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:if test="normalize-space($description)">
+				<meta name="Description">
+					<xsl:attribute name="content">
+						<xsl:value-of select="normalize-space($description)"/>
+					</xsl:attribute>
+				</meta>
+			</xsl:if>
+		</xsl:if>
 
     <!-- Microsoft.Help.TocParent -->
     <xsl:if test="/document/metadata/attribute[@name='TOCParent']">

@@ -66,16 +66,12 @@
 					</tableHeader>
 					<row>
 						<entry>
-							<para>
-								<localUri>Dev\DaControl.tlb</localUri>
-							</para>
+							<localUri>Dev\DaControl.tlb</localUri>
 						</entry>
 						<entry>
-							<para>
-								The Double Agent Control <token>COM</token> type library&#160;<superscript>
-									<legacyBold>1</legacyBold>
-								</superscript>
-							</para>
+							The Double Agent Control <token>COM</token> type library&#160;<superscript>
+								<legacyBold>1</legacyBold>
+							</superscript>
 						</entry>
 					</row>
 					<row>
@@ -99,17 +95,17 @@
 					</row>
 					<row>
 						<entry>
-							<localUri>Dev\DoubleAgent.AxControl.dll</localUri>
+							<localUri>Dev\v3.5\DoubleAgent.AxControl.dll</localUri>
 						</entry>
 						<entry>
 							The Double Agent <token>ActiveXCtl</token>&#160;<token>PIA</token>&#160;<superscript>
 								<legacyBold>2</legacyBold>
-							</superscript>
+							</superscript> for <token>dotNet</token> 3.5
 						</entry>
 					</row>
 					<row>
 						<entry>
-							<localUri>Dev\DoubleAgent.AxControl.xml</localUri>
+							<localUri>Dev\v3.5\DoubleAgent.AxControl.xml</localUri>
 						</entry>
 						<entry>
 							Microsoft<superscript>®</superscript> Visual Studio <newTerm>Intellisense</newTerm> data for <localUri>DoubleAgent.AxControl.dll</localUri>
@@ -117,17 +113,53 @@
 					</row>
 					<row>
 						<entry>
-							<localUri>Dev\DoubleAgent.Control.dll</localUri>
+							<localUri>Dev\v3.5\DoubleAgent.Control.dll</localUri>
 						</entry>
 						<entry>
 							The Double Agent Control <token>PIA</token>&#160;<superscript>
 								<legacyBold>2</legacyBold>
-							</superscript>
+							</superscript> for <token>dotNet</token> 3.5
 						</entry>
 					</row>
 					<row>
 						<entry>
-							<localUri>Dev\DoubleAgent.Control.xml</localUri>
+							<localUri>Dev\v3.5\DoubleAgent.Control.xml</localUri>
+						</entry>
+						<entry>
+							Microsoft<superscript>®</superscript> Visual Studio <newTerm>Intellisense</newTerm> data for <localUri>DoubleAgent.Control.dll</localUri>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<localUri>Dev\v4.0\DoubleAgent.AxControl.dll</localUri>
+						</entry>
+						<entry>
+							The Double Agent <token>ActiveXCtl</token>&#160;<token>PIA</token>&#160;<superscript>
+								<legacyBold>2</legacyBold>
+							</superscript> for <token>dotNet</token> 4.0
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<localUri>Dev\v4.0\DoubleAgent.AxControl.xml</localUri>
+						</entry>
+						<entry>
+							Microsoft<superscript>®</superscript> Visual Studio <newTerm>Intellisense</newTerm> data for <localUri>DoubleAgent.AxControl.dll</localUri>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<localUri>Dev\v4.0\DoubleAgent.Control.dll</localUri>
+						</entry>
+						<entry>
+							The Double Agent Control <token>PIA</token>&#160;<superscript>
+								<legacyBold>2</legacyBold>
+							</superscript> for <token>dotNet</token> 4.0
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<localUri>Dev\v4.0\DoubleAgent.Control.xml</localUri>
 						</entry>
 						<entry>
 							Microsoft<superscript>®</superscript> Visual Studio <newTerm>Intellisense</newTerm> data for <localUri>DoubleAgent.Control.dll</localUri>
@@ -138,14 +170,13 @@
 							<localUri>Dev\AgentCtl.dll</localUri>
 						</entry>
 						<entry>
-							<para>
-								A stub of the <token>MsAgent</token>&#160;<token>ActiveXCtl</token>&#160;<superscript>
-									<legacyBold>3</legacyBold>
-								</superscript>
-							</para>
+							A stub of the <token>MsAgent</token>&#160;<token>ActiveXCtl</token>&#160;<superscript>
+								<legacyBold>3</legacyBold>
+							</superscript>
 						</entry>
 					</row>
 				</table>
+				<para/>
 				<table>
 					<row>
 						<entry>
