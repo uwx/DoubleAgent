@@ -6,7 +6,7 @@
 
 		<introduction>
 			<para>
-				Double Agent includes a <token>COMname</token> (<token>COM</token>) <newTerm>Server</newTerm>
+				<token>DA</token> includes a <token>COMname</token> (<token>COM</token>) <newTerm>Server</newTerm>
 				that allows applications to access its services through <token>COM</token> Interfaces. The
 				server allows characters to be shared among applications. As a standard <token>COM</token> server,
 				it only runs when it's required.
@@ -47,7 +47,7 @@
 		<section>
 			<title>Classes</title>
 			<content>
-				<para>The Double Agent server implements the following object classes:</para>
+				<para>The <token>DA</token> server implements the following object classes:</para>
 			</content>
 			<sections>
 				<section>

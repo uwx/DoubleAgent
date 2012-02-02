@@ -5,8 +5,9 @@
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
 		<introduction>
-			<para>Double Agent returns the following error information:</para>
-
+			<para>
+				<token>DA</token> returns the following error information:
+			</para>
 			<table>
 				<tableHeader>
 					<row>
@@ -425,7 +426,9 @@
 						</para>
 					</entry>
 					<entry>
-						<para>The <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2#Gallery">default character</link> and other characters cannot be loaded at the same time by a single control.</para>
+						<para>
+							The <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2#Gallery">default character</link> and other characters cannot be loaded at the same time by a single control.
+						</para>
 					</entry>
 				</row>
 				<row>
@@ -586,7 +589,9 @@
 						</para>
 					</entry>
 					<entry>
-						<para>The operation was interrupted because the <token>ListeningKey</token> was pressed.</para>
+						<para>
+							The operation was interrupted because the <token>ListeningKey</token> was pressed.
+						</para>
 					</entry>
 				</row>
 				<row>
@@ -1494,7 +1499,7 @@
 						</superscript>
 					</entry>
 					<entry>
-						For compatibility reasons, error descriptions refer to <token>MsAgent</token> rather than Double Agent.
+						For compatibility reasons, error descriptions refer to <token>MA</token> rather than <token>DA</token>.
 					</entry>
 				</row>
 				<row>
@@ -1504,7 +1509,7 @@
 						</superscript>
 					</entry>
 					<entry>
-						<token>Windows</token> system errors are provided here because they may commonly occur in Agent
+						<token>Windows</token> system errors are provided here because they may commonly occur in <token>Agent</token>
 						client applications. For information on errors not included here, see the <token>Windows</token> Platform
 						SDK documentation.
 					</entry>

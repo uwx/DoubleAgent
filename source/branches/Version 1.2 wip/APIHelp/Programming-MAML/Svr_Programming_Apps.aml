@@ -6,7 +6,7 @@
 
 		<introduction>
 			<para>
-				You can access the Double Agent server from any programming environment that supports
+				You can access the <token>DA</token> server from any programming environment that supports
 				the <token>COM</token> standard or the <token>dotNET</token>
 				standard. This includes <token>VB</token> 6, <token>VB</token> .NET, Visual C#, Visual C++,
 				JScript, VBScript, and many other programming languages.
@@ -19,7 +19,7 @@
 			<content>
 				<para>
 					For programming languages that support <token>COM</token> interfaces,
-					use the native Double Agent server directly.
+					use the native <token>DA</token> server directly.
 				</para>
 				<list class="bullet">
 					<listItem>
@@ -41,7 +41,7 @@
 					</listItem>
 					<listItem>
 						<para>
-							If the Double Agent server is running, this call connects to the server; otherwise,
+							If the <token>DA</token> server is running, this call connects to the server; otherwise,
 							it starts the server.
 						</para>
 					</listItem>
@@ -55,7 +55,7 @@
 					</listItem>
 					<listItem>
 						<para>
-							Note that as Double Agent evolves, new interfaces are defined with numeric suffixes.
+							Note that as <token>DA</token> evolves, new interfaces are defined with numeric suffixes.
 							Each new interface is derived from, and therefore includes all the functionality
 							of, the interface it supersedes. For example, the <unmanagedCodeEntityReference>IDaServer2</unmanagedCodeEntityReference>
 							interface supersedes the <unmanagedCodeEntityReference>IDaServer</unmanagedCodeEntityReference> interface. If you want
@@ -83,7 +83,9 @@
 					<listItem>
 						<para>
 							A <legacyItalic>reference copy</legacyItalic> of the server's <token>COM</token> type library
-							is installed with the <link xlink:href="e0846751-419c-11e1-9d4f-002421116fb2#DevFiles">Double Agent SDK</link>
+							is installed with the <link xlink:href="e0846751-419c-11e1-9d4f-002421116fb2#DevFiles">
+								<token>theSDK</token>
+							</link>
 							in folder <localUri>C:\Program Files\Double&#160;Agent\Dev</localUri>.
 						</para>
 					</listItem>
@@ -98,7 +100,7 @@
 				<para>
 					For programming languages that support the <token>dotNET</token>&#160;
 					<token>CLRname</token> (<token>CLR</token>),
-					use the Double Agent Server <token>PIA</token>.
+					use the <token>DA</token> Server <token>PIA</token>.
 				</para>
 				<list class="bullet">
 					<listItem>
@@ -123,27 +125,31 @@
 					<listItem>
 						<para>
 							For a programming environment that retrieves references from the <token>GACname</token> (<token>GAC</token>),
-							this assembly is added to the <token>GAC</token> when Double Agent is installed.
+							this assembly is added to the <token>GAC</token> when <token>DA</token> is installed.
 						</para>
 						<para>
 							There are different versions of the <token>PIA</token>
 							for <token>dotNET</token> 3.5 or earlier and <token>dotNET</token>
 							4.0 or later.&#160; If you move from <token>dotNET</token> 3.5 to <token>dotNET</token> 4.0 you should
-							reinstall the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles"> 									Double Agent SDK</link> to get the correct <token>PIA</token>
+							reinstall the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">
+								<token>theSDK</token>
+							</link> to get the correct <token>PIA</token>
 							version installed in the the <token>GAC</token>.
 						</para>
 					</listItem>
 					<listItem>
 						<para>
 							If an assembly file is required, a <legacyItalic>reference copy</legacyItalic> of the assembly is installed
-							with the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">Double Agent SDK</link> in
+							with the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">
+								<token>theSDK</token>
+							</link> in
 							folder <localUri>C:\Program Files\Double&#160;Agent\Dev\v3.5</localUri> (for <token>dotNET</token> 3.5 or earlier)
 							or <localUri>C:\Program Files\Double&#160;Agent\Dev\v4.0</localUri> (for <token>dotNET</token> 4.0 or later).
 						</para>
 					</listItem>
 					<listItem>
 						<para>
-							You can use a reference to the assembly's full path, or add the SDK install location
+							You can use a reference to the assembly's full path, or add the <token>theSDK</token> install location
 							to the programming environment's reference search path.
 						</para>
 					</listItem>

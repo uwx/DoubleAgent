@@ -5,15 +5,14 @@
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
 		<introduction>
-			<para>This is a summary of what has changed between version 1.0 and version 1.1 of Double Agent.</para>
+			<para>This is a summary of what has changed between version 1.0 and version 1.1 of <token>DA</token>.</para>
 		</introduction>
-
 
 		<section address="UI">
 			<title>The User Interface</title>
 			<content>
 				<para>
-					A few changes have been made to the Double Agent user interface. Mostly, these changes are aimed at improving
+					A few changes have been made to the <token>DA</token> user interface. Mostly, these changes are aimed at improving
 					the quality of the visual presentation.
 				</para>
 				<list class="bullet">
@@ -204,7 +203,7 @@
 							<listItem>
 								<para>
 									They now include a full <newTerm>RCW (Runtime Callable Wrapper)</newTerm> for each class. This
-									makes the classes indistinguishable from any other managed class and means that Double Agent is accessed
+									makes the classes indistinguishable from any other managed class and means that <token>DA</token> is accessed
 									through <newTerm>classes</newTerm> rather than <newTerm>interfaces</newTerm>, like any other managed assembly.
 								</para>
 							</listItem>
@@ -225,8 +224,8 @@
 					</listItem>
 				</list>
 				<para>
-					Of course, the programming interfaces are fully backward-compatible with Double Agent 1.0, and still
-					binary-compatible with <token>MsAgent</token>.
+					Of course, the programming interfaces are fully backward-compatible with <token>DA</token> 1.0, and still
+					binary-compatible with <token>MA</token>.
 				</para>
 
 			</content>
@@ -236,7 +235,7 @@
 			<title>Refactoring</title>
 			<content>
 				<para>
-					One of the biggest changes in Double Agent 1.1 is a refactoring of the Server and Control
+					One of the biggest changes in <token>DA</token> 1.1 is a refactoring of the Server and Control
 					components. Changes to the programming interfaces give developers a better choice of which component
 					to use. Changes to the Control make it a first-class component rather than just a portal to the
 					Server.
@@ -244,7 +243,7 @@
 				<list class="bullet">
 					<listItem>
 						<para>
-							The Double Agent Control can now operate in three different <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">modes</link>:
+							The <token>DA</token> Control can now operate in three different <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">modes</link>:
 						</para>
 						<list class="bullet">
 							<listItem>

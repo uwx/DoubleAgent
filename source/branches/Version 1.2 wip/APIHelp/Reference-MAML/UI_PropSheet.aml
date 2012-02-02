@@ -6,10 +6,10 @@
 
 		<introduction>
 			<para>
-				Double Agent maintains preference settings that allow a user to control interaction with all characters.
+				<token>DA</token> maintains preference settings that allow a user to control interaction with all characters.
 				The <token>AdvancedCharacterOptions</token> window displays these options and their current
-				settings, and can be shown by any hosting application using the Double Agent programming interface.
-				Double Agent remembers the last page viewed and displays that page when the property sheet appears.
+				settings, and can be shown by any hosting application using the <token>DA</token> programming interface.
+				<token>DA</token> remembers the last page viewed and displays that page when the property sheet appears.
 			</para>
 			<autoOutline/>
 		</introduction>
@@ -68,7 +68,7 @@
 				</mediaLink>
 				<alert class="note">
 					The <token>GalleryPage</token> used to be in the
-					<token>DefaultCharacterProperties</token> window, which no longer exists as of Double Agent
+					<token>DefaultCharacterProperties</token> window, which no longer exists as of <token>DA</token>
 					version 1.1.
 				</alert>
 			</content>
@@ -78,7 +78,7 @@
 			<title>The Copyright Page</title>
 			<content>
 				<para>
-					This page displays the copyright and version information for Double Agent and <token>MsAgent</token>.
+					This page displays the copyright and version information for <token>DA</token> and <token>MA</token>.
 				</para>
 				<mediaLink>
 					<image xlink:href="Options_Copyright" />

@@ -3,8 +3,10 @@
   xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
   xmlns:xlink="http://www.w3.org/1999/xlink">
 
+	<item id="Agent">Agent</item>
 	<item id="DA">Double Agent</item>
-	<item id="MsAgent">Microsoft<ddue:superscript>®</ddue:superscript>&#160;Agent</item>
+	<item id="MA">Microsoft<ddue:superscript>®</ddue:superscript>&#160;Agent</item>
+	<item id="theSDK">Double Agent SDK</item>
 	<item id="Windows">Microsoft<ddue:superscript>®</ddue:superscript>&#160;Windows</item>
 	<item id="WindowsXP">Windows XP</item>
 	<item id="WindowsVista">Windows Vista™</item>

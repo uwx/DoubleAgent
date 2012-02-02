@@ -6,7 +6,7 @@
 
 		<introduction>
 			<para>
-				The Double Agent control can operate in three different modes: <token>connected</token>, <token>standalone</token>, and <token>contained</token>. The mode a developer chooses
+				The <token>DA</token> control can operate in three different modes: <token>connected</token>, <token>standalone</token>, and <token>contained</token>. The mode a developer chooses
 				depends on the application&#39;s requirements.
 			</para>
 		</introduction>
@@ -17,7 +17,7 @@
 				<token>connectedUc</token> Mode</title>
 			<content>
 				<para>
-					<token>connectedUc</token> mode is the control's default mode, and is compatible with <token>MsAgent</token>. In this mode, the Double Agent control acts as a gateway to the Double Agent server. The control
+					<token>connectedUc</token> mode is the control's default mode, and is compatible with <token>MA</token>. In this mode, the <token>DA</token> control acts as a gateway to the <token>DA</token> server. The control
 					provides all of its services through it's connection with the server. It automatically connects to the
 					server as required, and releases the connection when it's no longer needed.
 				</para>
@@ -73,8 +73,8 @@
 			<content>
 
 				<para>
-					In <token>standalone</token> mode, the Double Agent control is <legacyItalic>not</legacyItalic> connected to
-					the Double Agent server. It provides the server's functionality directly.
+					In <token>standalone</token> mode, the <token>DA</token> control is <legacyItalic>not</legacyItalic> connected to
+					the <token>DA</token> server. It provides the server's functionality directly.
 				</para>
 				<para>
 					When operating in <token>standalone</token> mode, all of the control's characters belong
@@ -90,7 +90,7 @@
 					If the control is contained in a form, it will <legacyItalic>not</legacyItalic> be visible at run-time.
 				</para>
 				<para>
-					A character window floats on top of the application window containing the Double Agent control, but <legacyItalic>
+					A character window floats on top of the application window containing the <token>DA</token> control, but <legacyItalic>
 						not
 					</legacyItalic> other application windows. It is visually associated with your client application as an <legacyItalic>
 						owned <token>Popup</token>
@@ -123,7 +123,7 @@
 			<content>
 
 				<para>
-					In <token>contained</token> mode, the Double Agent control is a <legacyItalic>visible</legacyItalic> child window
+					In <token>contained</token> mode, the <token>DA</token> control is a <legacyItalic>visible</legacyItalic> child window
 					of it's containing form. Like <token>standalone</token> mode, the control is not connected
 					to the server and it's characters are owned by the client application. Unlike <token>standalone</token>
 					mode, the character is not a floating window; it's displayed within the control's child window.

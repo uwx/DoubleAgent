@@ -517,10 +517,10 @@
     <NamingMethod>MemberName</NamingMethod>
     <HelpFileVersion>1.2.0.0</HelpFileVersion>
     <PlugInConfigurations>
-      <PlugInConfig id="Additional Content Only" enabled="False">
+      <PlugInConfig id="Additional Content Only" enabled="True">
         <configuration />
       </PlugInConfig>
-    </PlugInConfigurations>
+<PlugInConfig id="Pack and Sign MSHC files" enabled="True"><configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" /></PlugInConfig></PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
     <FooterText>Double Agent is open source software licensed under the &amp;lt%3ba target=&amp;quot%3b_blank&amp;quot%3b href=&amp;quot%3bhttp://www.gnu.org/licenses/gpl.html&amp;quot%3b&amp;gt%3bGNU General Public License&amp;lt%3b/a&amp;gt%3b</FooterText>
@@ -603,8 +603,8 @@
                  the parent folder of the output path of the HTML files (see
                  each of the SaveComponent instances below). -->
           <outputPaths>
-{@HelpFormatOutputPaths}
-            </outputPaths>
+						{@HelpFormatOutputPaths}
+					</outputPaths>
           <!-- Logo image file (optional).  Filename is required. The height,
                  width, altText, placement, and alignment attributes are
                  optional. -->
@@ -614,8 +614,8 @@
       <ComponentConfig id="API Token Resolution" enabled="True">
         <component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
 
-        {@TokenFiles}
-        <replace elements="/*//token" item="string(.)" /></component>
+					{@TokenFiles}
+					<replace elements="/*//token" item="string(.)" /></component>
       </ComponentConfig>
     </ComponentConfigurations>
     <ProductTitle>Double Agent SDK</ProductTitle>

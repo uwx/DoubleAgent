@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <topic id="e08466ce-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
-	<developerConceptualDocument
+	<developerHowToDocument
 	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -13,7 +13,7 @@
 			<list class="bullet">
 				<listItem>
 					<para>
-						Both the <token>MsAgent</token> and Double Agent <legacyBold>Servers</legacyBold> are implemented as
+						Both the <token>MA</token> and <token>DA</token>&#160;<legacyBold>Servers</legacyBold> are implemented as
 						<newTerm>out-of-process</newTerm>&#160;<token>COM</token> servers.
 						This means that they&#39;re loaded from a Portable Executable File (.exe) and run in a
 						<legacyItalic>different</legacyItalic> process from the client application. Therefore, either a 32-bit or 64-bit application
@@ -23,13 +23,14 @@
 				</listItem>
 				<listItem>
 					<para>
-						When your application creates an instance of the Agent <legacyBold>Server</legacyBold> object, the server architecture
+						When your application creates an instance of the <token>Agent</token>&#160;<legacyBold>Server</legacyBold> object, the server architecture
 						is chosen as follows:
 					</para>
 					<table>
 						<tableHeader>
 							<row>
-								<entry>Agent Server</entry>
+								<entry>
+									<token>Agent</token> Server</entry>
 								<entry>Server instance created using</entry>
 								<entry>Server architecture</entry>
 							</row>
@@ -37,7 +38,7 @@
 						<row>
 							<entry>
 								<para>
-									<token>MsAgent</token>
+									<token>MA</token>
 								</para>
 							</entry>
 							<entry>
@@ -52,7 +53,7 @@
 						<row>
 							<entry>
 								<para>
-									<token>MsAgent</token>
+									<token>MA</token>
 								</para>
 							</entry>
 							<entry>
@@ -67,7 +68,7 @@
 						<row>
 							<entry>
 								<para>
-									<token>MsAgent</token>
+									<token>MA</token>
 								</para>
 							</entry>
 							<entry>
@@ -81,11 +82,13 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
+								<para>
+									<token>DA</token>
+								</para>
 							</entry>
 							<entry>
 								<para>
-									ProgId&#160;<codeInline>DoubleAgent.Server</codeInline> or&#160;<codeInline> DoubleAgent.Server.1.1</codeInline>
+									ProgId&#160;<codeInline>DoubleAgent.Server</codeInline> or <codeInline>DoubleAgent.Server.1.1</codeInline>
 								</para>
 							</entry>
 							<entry>
@@ -94,7 +97,9 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
+								<para>
+									<token>DA</token>
+								</para>
 							</entry>
 							<entry>
 								<para>
@@ -107,7 +112,9 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
+								<para>
+									<token>DA</token>
+								</para>
 							</entry>
 							<entry>
 								<para>
@@ -123,7 +130,9 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
+								<para>
+									<token>DA</token>
+								</para>
 							</entry>
 							<entry>
 								<para>
@@ -141,7 +150,7 @@
 				</listItem>
 				<listItem>
 					<para>
-						Both the <token>MsAgent</token> and Double Agent <token>ActiveXCtls</token> are implemented as
+						Both the <token>MA</token> and <token>DA</token>&#160;<token>ActiveXCtls</token> are implemented as
 						<newTerm>in-process</newTerm>&#160;<token>COM</token> servers. This means that they&#39;re loaded from a Dynamic Link Library (.dll) and run
 						in the <legacyItalic>same</legacyItalic> process as the client application. Therefore, a 32-bit application can only use the
 						32-bit <token>ActiveXCtl</token>, and a 64-bit application can only use the 64-bit <token>ActiveXCtl</token>.
@@ -149,12 +158,13 @@
 				</listItem>
 				<listItem>
 					<para>
-						When your application uses the Agent <token>ActiveXCtl</token>, the server architecture is chosen as follows:
+						When your application uses the <token>Agent</token>&#160;<token>ActiveXCtl</token>, the server architecture is chosen as follows:
 					</para>
 					<table>
 						<tableHeader>
 							<row>
-								<entry>Agent Control</entry>
+								<entry>
+									<token>Agent</token> Control</entry>
 								<entry>Control created using</entry>
 								<entry>Application architecture</entry>
 								<entry>Control architecture</entry>
@@ -164,7 +174,7 @@
 						<row>
 							<entry>
 								<para>
-									<token>MsAgent</token>
+									<token>MA</token>
 								</para>
 							</entry>
 							<entry>
@@ -188,7 +198,7 @@
 						<row>
 							<entry>
 								<para>
-									<token>MsAgent</token>
+									<token>MA</token>
 								</para>
 							</entry>
 							<entry>
@@ -211,30 +221,9 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
-							</entry>
-							<entry>
 								<para>
-									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
+									<token>DA</token>
 								</para>
-								<para>
-									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
-								</para>
-							</entry>
-							<entry>
-								<para>32-bit application</para>
-								<para>(AutoConnect &#8800; 0)</para>
-							</entry>
-							<entry>
-								<para>32-bit control</para>
-							</entry>
-							<entry>
-								<para>32-bit server</para>
-							</entry>
-						</row>
-						<row>
-							<entry>
-								<para>Double Agent</para>
 							</entry>
 							<entry>
 								<para>
@@ -257,7 +246,34 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
+								<para>
+									<token>DA</token>
+								</para>
+							</entry>
+							<entry>
+								<para>
+									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
+								</para>
+								<para>
+									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
+								</para>
+							</entry>
+							<entry>
+								<para>32-bit application</para>
+								<para>(AutoConnect &#8800; 0)</para>
+							</entry>
+							<entry>
+								<para>32-bit control</para>
+							</entry>
+							<entry>
+								<para>32-bit server</para>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<para>
+									<token>DA</token>
+								</para>
 							</entry>
 							<entry>
 								<para>
@@ -283,32 +299,9 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
-							</entry>
-							<entry>
 								<para>
-									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
+									<token>DA</token>
 								</para>
-								<para>
-									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
-								</para>
-							</entry>
-							<entry>
-								<para>64-bit application</para>
-								<para>
-									(AutoConnect &#8800; 0)
-								</para>
-							</entry>
-							<entry>
-								<para>64-bit control</para>
-							</entry>
-							<entry>
-								<para>64-bit server</para>
-							</entry>
-						</row>
-						<row>
-							<entry>
-								<para>Double Agent</para>
 							</entry>
 							<entry>
 								<para>
@@ -333,7 +326,67 @@
 						</row>
 						<row>
 							<entry>
-								<para>Double Agent</para>
+								<para>
+									<token>DA</token>
+								</para>
+							</entry>
+							<entry>
+								<para>
+									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
+								</para>
+								<para>
+									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
+								</para>
+							</entry>
+							<entry>
+								<para>64-bit application</para>
+								<para>
+									(AutoConnect = 64)
+								</para>
+							</entry>
+							<entry>
+								<para>64-bit control</para>
+							</entry>
+							<entry>
+								<para>64-bit server</para>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<para>
+									<token>DA</token>
+								</para>
+							</entry>
+							<entry>
+								<para>
+									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
+								</para>
+								<para>
+									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
+								</para>
+							</entry>
+							<entry>
+								<para>64-bit application</para>
+								<para>
+									(AutoConnect &#8800; 0)
+								</para>
+							</entry>
+							<entry>
+								<para>64-bit control</para>
+							</entry>
+							<entry>
+								<para>
+									32-bit server<superscript>
+										<legacyBold>1</legacyBold>
+									</superscript>
+								</para>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<para>
+									<token>DA</token>
+								</para>
 							</entry>
 							<entry>
 								<para>
@@ -360,6 +413,14 @@
 							</entry>
 						</row>
 					</table>
+					<para/>
+					<alert class="note">
+						<superscript>
+							<legacyBold>1</legacyBold>
+						</superscript>This behaviour is new in <token>DA</token> version 1.2. You can still use the 64-bit server by setting
+						<codeEntityReference>P:DoubleAgent.Control.Control.AutoConnect</codeEntityReference> to <literal>64</literal> but
+						the <legacyItalic>default</legacyItalic> server is the 32-bit server. This change was made for compatibility with <token>MA</token>.
+					</alert>
 				</listItem>
 			</list>
 		</introduction>
@@ -367,5 +428,5 @@
 		<relatedTopics>
 		</relatedTopics>
 
-	</developerConceptualDocument>
+	</developerHowToDocument>
 </topic>

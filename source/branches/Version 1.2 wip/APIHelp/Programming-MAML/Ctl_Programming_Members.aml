@@ -12,7 +12,7 @@
 			<title>Declaring Objects</title>
 			<content>
 				<para>
-					Programming languages that provide access to the object types exposed by the Double Agent control, like
+					Programming languages that provide access to the object types exposed by the <token>DA</token> control, like
 					<token>VB</token>, allow you to use these in your object declarations. For example, instead of declaring
 					an object as a generic type:
 				</para>
@@ -56,7 +56,7 @@
 			<title>Initializing Properties</title>
 			<content>
 				<para>
-					By default, the Double Agent control will automatically create a connection to the Double Agent server
+					By default, the <token>DA</token> control will automatically create a connection to the <token>DA</token> server
 					when the application runs. If you want the control to run in
 					<link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
 						<token>standalone</token>
@@ -76,12 +76,12 @@
 			<content>
 				<para>
 					When using a programming language that supports <token>ActiveXCtls</token> or
-					<token>WinFormsCtl</token>s, adding the Double Agent control to a form will automatically make the control's
+					<token>WinFormsCtl</token>s, adding the <token>DA</token> control to a form will automatically make the control's
 					events available, with their appropriate parameters.
 				</para>
 				<para>
 					You may also be able to use your programming language's object creation syntax to create an instance
-					of the control at runtime. For example, in <token>VB</token> 6, if you include the Double Agent control in
+					of the control at runtime. For example, in <token>VB</token> 6, if you include the <token>DA</token> control in
 					your project's references, you can use a <languageKeyword>With Events...New</languageKeyword> declaration (if
 					you don't include the reference, VB raises an error).
 				</para>

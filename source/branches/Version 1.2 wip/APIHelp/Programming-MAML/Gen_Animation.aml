@@ -6,17 +6,17 @@
 
 		<introduction>
 			<para>
-				Double Agent's animation services manage the animation and movement of a character's image on the screen.
+				<token>DA</token>'s animation services manage the animation and movement of a character's image on the screen.
 				An animation is defined as a sequence of timed and optionally branched frames, composed of one or more
 				images.
 			</para>
 			<para>
-				While <token>MsAgent</token>'s animation services are only available through it's server, the Double
-				Agent control can run in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+				While <token>MA</token>'s animation services are only available through it's server, the
+				<token>DA</token> control can run in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
 					<token>standalone</token>
 				</link> mode, not
-				connected to the Double Agent server. When the shared server is used, each character can only be loaded
-				<legacyItalic>once per user</legacyItalic> and is shared by all applications that use it. When the Double Agent control
+				connected to the <token>DA</token> server. When the shared server is used, each character can only be loaded
+				<legacyItalic>once per user</legacyItalic> and is shared by all applications that use it. When the <token>DA</token> control
 				is used <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
 					<token>standalone</token>
 				</link>, each character can be loaded
@@ -29,7 +29,7 @@
 				Application developers are encouraged to use <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
 					<token>standalone</token>
 				</link>
-				characters only when using the Double Agent control as a <legacyItalic>child</legacyItalic> window. This will make it obvious
+				characters only when using the <token>DA</token> control as a <legacyItalic>child</legacyItalic> window. This will make it obvious
 				to the user which application that particular instance of the character belongs to.
 			</para>
 			<autoOutline/>
@@ -40,7 +40,7 @@
 			<content>
 				<para>
 					To animate a character, you must first load the character. Use the <unmanagedCodeEntityReference>Load</unmanagedCodeEntityReference> method
-					to load the character's data. Double Agent supports two formats for character and animation data: a
+					to load the character's data. <token>DA</token> supports two formats for character and animation data: a
 					single structured file and separate files. Typically, you use the single file format (<localUri>.ACS</localUri>)
 					when the data is stored locally. The multiple file format (<localUri>.ACF</localUri>,
 					<localUri>.ACA</localUri>) works best when you want to download animations individually, such as when accessing
@@ -48,19 +48,19 @@
 
 				</para>
 				<para>
-					A Double Agent control or server client can load only a single instance of the same character. Any attempt
+					A <token>DA</token> control or server client can load only a single instance of the same character. Any attempt
 					to load the same character more than once will fail. However, an application can load the same character
-					multiple times by providing separate connections to Double Agent. For example, an application could
-					load the same character from two copies of the Double Agent control.
+					multiple times by providing separate connections to <token>DA</token>. For example, an application could
+					load the same character from two copies of the <token>DA</token> control.
 				</para>
 				<para>
-					Even if an application loads multiple instances of the same character from multiple clients of the Double
-					Agent server, or from multiple copies of the Double Agent control connected to the server, only a single
+					Even if an application loads multiple instances of the same character from multiple clients of the
+					<token>DA</token> server, or from multiple copies of the <token>DA</token> control connected to the server, only a single
 					instance of the character will be created by the server. It will be shared by all of the clients that
 					use it.
 				</para>
 				<para>
-					However, when the Double Agent control is used in
+					However, when the <token>DA</token> control is used in
 					 <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
 						 <token>standalone</token>
 					 </link> mode (not connected to the server) then a single instance of each loaded character is created
@@ -90,8 +90,8 @@
 				</para>
 				<para>
 					To load the default character, call the <unmanagedCodeEntityReference>Load</unmanagedCodeEntityReference> method without specifying a file
-					name or path. Double Agent automatically loads the default character. If the user has not yet selected
-					a default character, Double Agent will select the first character it finds. If none is available, the
+					name or path. <token>DA</token> automatically loads the default character. If the user has not yet selected
+					a default character, <token>DA</token> will select the first character it finds. If none is available, the
 					method will fail and report back the cause.
 				</para>
 				<para>
@@ -119,7 +119,7 @@
 			<title>Animating a Character</title>
 			<content>
 				<para>
-					Once a character is loaded, you can use several of Double Agent's methods for animating the character.
+					Once a character is loaded, you can use several of <token>DA</token>'s methods for animating the character.
 					The first one you use is typically the <unmanagedCodeEntityReference>Show</unmanagedCodeEntityReference> method. <unmanagedCodeEntityReference>Show</unmanagedCodeEntityReference>
 					makes the character's image visible and plays the animation assigned to the character's
 					<legacyItalic>Showing</legacyItalic> state.
@@ -133,8 +133,8 @@
 				<para>
 					If the character's file is stored locally, you can simply call the <unmanagedCodeEntityReference>Play</unmanagedCodeEntityReference> method.
 					In other cases, such as when you've loaded an .ACF character from an <application>HTTP</application>
-					server, you should use the Prepare method to first retrieve the animation data. This will cause Double
-					Agent to request the animation file from the server cache it on the local machine.
+					server, you should use the Prepare method to first retrieve the animation data. This will cause
+					<token>DA</token> to request the animation file from the server cache it on the local machine.
 				</para>
 				<para>
 					The <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method lets you program the character to speak, automatically lip-syncing
@@ -142,9 +142,9 @@
 				</para>
 				<para>
 					You can use the <unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method to position the character at a new location. When
-					you call the <unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method, Double Agent automatically plays the appropriate
+					you call the <unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method, <token>DA</token> automatically plays the appropriate
 					animation based on the character's current location, then moves the character's image. Similarly, when
-					you call <unmanagedCodeEntityReference>GestureAt</unmanagedCodeEntityReference>, Double Agent plays the appropriate gesturing animation
+					you call <unmanagedCodeEntityReference>GestureAt</unmanagedCodeEntityReference>, <token>DA</token> plays the appropriate gesturing animation
 					based on the character's location and the location specified in the call.
 				</para>
 				<para>
@@ -169,7 +169,7 @@
 			<title>Requests and Synchronization</title>
 			<content>
 				<para>
-					Double Agent processes all animation calls, or <legacyItalic>requests</legacyItalic>, asynchronously. This enables your application's
+					<token>DA</token> processes all animation calls, or <legacyItalic>requests</legacyItalic>, asynchronously. This enables your application's
 					code to continue handling other events while the request is being processed. For example, calls to the
 					<unmanagedCodeEntityReference>Play</unmanagedCodeEntityReference> method place the animation in a queue for the character so that the animations
 					can be played sequentially. However, this means you cannot assume that a call to other functions will
@@ -186,7 +186,7 @@
 					request ID.
 				</para>
 				<para>
-					When your client application loads multiple characters at the same time, Double Agent's animation services
+					When your client application loads multiple characters at the same time, <token>DA</token>'s animation services
 					allow you to animate the characters independently, or use the <unmanagedCodeEntityReference>Wait</unmanagedCodeEntityReference>,
 					<unmanagedCodeEntityReference>Interrupt</unmanagedCodeEntityReference>,
 					and <unmanagedCodeEntityReference>Stop</unmanagedCodeEntityReference> methods to synchronize their animations.
@@ -198,9 +198,9 @@
 			<title>State Animations</title>
 			<content>
 				<para>
-					Double Agent also plays other animations automatically. For example, if the character's state hasn't
-					changed for several seconds, Double Agent begins playing the character's <legacyItalic>Idling</legacyItalic>
-					animations. Similarly, when speech input is enabled, Double Agent plays the character's
+					<token>DA</token> also plays other animations automatically. For example, if the character's state hasn't
+					changed for several seconds, <token>DA</token> begins playing the character's <legacyItalic>Idling</legacyItalic>
+					animations. Similarly, when speech input is enabled, <token>DA</token> plays the character's
 					<legacyItalic>Listening</legacyItalic> animations and then its <legacyItalic>Hearing</legacyItalic> animations. There server-managed
 					animations are called <legacyItalic>states</legacyItalic>, and are defined when a character is created.
 				</para>

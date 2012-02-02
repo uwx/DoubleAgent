@@ -5,7 +5,7 @@
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
 		<introduction>
-			<para>In addition to animation sequences, a Double Agent character supports other types of output.</para>
+			<para>In addition to animation sequences, a <token>DA</token> character supports other types of output.</para>
 			<para>
 				Some animation sequences are accompanied by sound effects, which are included in the character's definition.
 				They can be enabled or disabled by the user using the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2#Output">
@@ -29,9 +29,9 @@
 			<title>Animation Sound Effects</title>
 			<content>
 				<para>
-					Double Agent also allows you to include sound effects as a part of a character's animation. Using the
-					<token>MsAgent</token> Character Editor, you can specify the filename of standard <token>Windows</token> sound
-					(<localUri>.WAV</localUri>) files to trigger on a given frame. Note that Double Agent does not synchronize sound effects
+					<token>DA</token> also allows you to include sound effects as a part of a character's animation. Using the
+					<token>MA</token> Character Editor, you can specify the filename of standard <token>Windows</token> sound
+					(<localUri>.WAV</localUri>) files to trigger on a given frame. Note that <token>DA</token> does not synchronize sound effects
 					and spoken output, so sound effects can interfere with spoken output. Therefore, avoid any long or looping
 					sound effect as a part of a character's animation.
 				</para>
@@ -51,9 +51,9 @@
 					not specify a <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> for the character, the character's
 					 <unmanagedCodeEntityReference>LanguageID</unmanagedCodeEntityReference> is set to the user default language. If the character's definition includes a specific
 					engine and that engine can be loaded and it matches the character's language setting, that engine will
-					be used. Otherwise, Double Agent enumerates the other available engines and chooses best match based
+					be used. Otherwise, <token>DA</token> enumerates the other available engines and chooses best match based
 					on language and gender (in that order). If there is no matching engine available, there is no TTS output
-					for that client's use of the character. Agent attempts to load the TTS engine on the first
+					for that client's use of the character. <token>DA</token> attempts to load the TTS engine on the first
 					 <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> call or when you query or successfully set its <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference>.
 				
 			</para>
@@ -85,8 +85,8 @@
 			<title>Audio Output Support</title>
 			<content>
 				<para>
-					Double Agent allows you to use audio files for a character's spoken output. You can record audio files
-					and use the <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method to play that data. Double Agent's animation stream
+					<token>DA</token> allows you to use audio files for a character's spoken output. You can record audio files
+					and use the <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method to play that data. <token>DA</token>'s animation stream
 					automatically supports lip-syncing the character's mouth by using the audio characteristics of the audio
 					file.
 				</para>
@@ -121,7 +121,7 @@
 					<token>WordBalloonUc1</token>s support only captioned communication from the character, <legacyItalic>not</legacyItalic>
 					user input. Therefore, the <token>WordBalloon</token> does not support input controls. However,
 					you can easily provide user input for a character, using interfaces from your programming language or
-					the other input services provided by Double Agent, such as the
+					the other input services provided by <token>DA</token>, such as the
 					<link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link>.

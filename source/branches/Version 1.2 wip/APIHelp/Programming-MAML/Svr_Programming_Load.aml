@@ -12,8 +12,8 @@
 				There are three different possibilities for the
 				<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Load</codeEntityReference>&#160;<parameterReference>Provider</parameterReference> parameter. The first
 				to specify the full path and filename of a character file. The second possibility is to specify the
-				filename only, in which case Double Agent searches its <legacyItalic>Chars</legacyItalic> directory and
-				the <token>MsAgent</token>&#160;<legacyItalic>Chars</legacyItalic> directory. The last possibility is to
+				filename only, in which case <token>DA</token> searches its <legacyItalic>Chars</legacyItalic> directory and
+				the <token>MA</token>&#160;<legacyItalic>Chars</legacyItalic> directory. The last possibility is to
 				supply an empty <unmanagedCodeEntityReference>VARIANT</unmanagedCodeEntityReference> parameter that causes
 				the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2#Gallery">default character</link> to be loaded.
 			</para>
@@ -46,7 +46,7 @@ Speech = SysAllocString (L"Hello World!");
 Result = character-&gt;Speak (Speech, NULL, &amp;RequestID);
 SysFreeString (Speech);</code>
 			<para>
-				When you no longer need Double Agent, such as when your client application shuts down, release its interfaces.
+				When you no longer need <token>DA</token>, such as when your client application shuts down, release its interfaces.
 				Note that releasing the character interface does not unload the character. Call the
 				<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Unload</codeEntityReference> method to do this
 				before releasing the <unmanagedCodeEntityReference>IDaServer2</unmanagedCodeEntityReference> interface:

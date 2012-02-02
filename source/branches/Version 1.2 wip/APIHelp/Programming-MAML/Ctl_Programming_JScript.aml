@@ -6,7 +6,7 @@
 
 		<introduction>
 			<para>
-				If you use JavaScript or Microsoft JScript<superscript>®</superscript> to access Double Agent's programming interface,
+				If you use JavaScript or Microsoft JScript<superscript>®</superscript> to access <token>DA</token>'s programming interface,
 				follow the language's conventions for specifying methods or properties:
 			</para>
 			<code xml:space="preserve" language="js" >control.object.Method (parameter)
@@ -23,7 +23,7 @@ statements…
 				pages that support <token>MSIE</token> or for code that does not require event handling.
 			</para>
 			<para>
-				To access Double Agent's object collections, use the JScript <languageKeyword>Enumerator</languageKeyword> object.
+				To access <token>DA</token>'s object collections, use the JScript <languageKeyword>Enumerator</languageKeyword> object.
 			</para>
 		</introduction>
 

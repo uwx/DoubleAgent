@@ -6,7 +6,7 @@
 
 		<introduction>
 			<para>
-				Double Agent allows client applications to modify speech output through special tags inserted in the
+				<token>DA</token> allows client applications to modify speech output through special tags inserted in the
 				speech text string. These tags help you change the character's spoken output characteristics.
 			</para>
 		</introduction>
@@ -90,7 +90,7 @@
 								</row>
 							</table>
 							<para>
-								When the speech engine processes a bookmark, Double Agent generates a <placeholder>Bookmark</placeholder>
+								When the speech engine processes a bookmark, <token>DA</token> generates a <placeholder>Bookmark</placeholder>
 								event.
 							</para>
 						</entry>
@@ -656,7 +656,7 @@ character->Speak (SpeechText, …);
 								</row>
 							</table>
 							<para>
-								When the speech engine processes a bookmark, Double Agent generates a <legacyItalic>Bookmark</legacyItalic>
+								When the speech engine processes a bookmark, <token>DA</token> generates a <legacyItalic>Bookmark</legacyItalic>
 								event.
 							</para>
 						</entry>
@@ -803,7 +803,7 @@ character->Speak (SpeechText, …);
 					</row>
 				</table>
 				<alert class="note">
-					Note: Double Agent does not support all of the tags documented
+					<token>DA</token> does not support all of the tags documented
 					in the <token>SAPIname</token> documentation. Parameters may also vary depending on the TTS engine selected.
 					You can set a specific TTS engine using the character's <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference> property.
 				</alert>

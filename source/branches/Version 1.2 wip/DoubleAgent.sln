@@ -27,7 +27,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsiHxReg", "Tools\MsiHxReg\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharFileCLR", "DaCharFileCLR.vcxproj", "{BC62D6F2-CF64-4F75-99E8-C76B192BEEE7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SHFB Plugin", "Tools\SHFB Plugin\SHFB Plugin.vcxproj", "{DC57B238-7EDC-4B2C-8797-8591859DD653}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TocNamespaceGrouping", "Tools\SHFB Plugins\TocNamespaceGrouping\TocNamespaceGrouping.vcxproj", "{DC57B238-7EDC-4B2C-8797-8591859DD653}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ControlOCX", "DaControlOCX.vcxproj", "{7442E3F4-622C-4987-A804-FBAEFEEA89AA}"
 	ProjectSection(ProjectDependencies) = postProject

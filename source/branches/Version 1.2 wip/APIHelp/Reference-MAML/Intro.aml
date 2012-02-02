@@ -6,19 +6,19 @@
 
 		<introduction>
 			<para>
-				<token>MsAgent</token>
+				<token>MA</token>
 				is a set of programmable software services that supports the presentation of
-				interactive animated characters within a <token>Windows</token> user interface. Double Agent is a set
-				of open-source components that reproduce and extend the functionality of <token>MsAgent</token>.
+				interactive animated characters within a <token>Windows</token> user interface. <token>DA</token> is a set
+				of open-source components that reproduce and extend the functionality of <token>MA</token>.
 			</para>
 			<para>
-				Developers can use Agent characters as interactive assistants to introduce, guide, entertain, or otherwise
+				Developers can use <token>Agent</token> characters as interactive assistants to introduce, guide, entertain, or otherwise
 				enhance their Web pages or applications.
 			</para>
 			<para>
-				Agent allows software developers and Web authors to incorporate a form of user interaction, known as
+				<token>Agent</token> allows software developers and Web authors to incorporate a form of user interaction, known as
 				a <newTerm>conversational interface</newTerm>, that incorporates natural aspects of human social communication.
-				In addition to mouse and keyboard input, Agent includes optional support for speech recognition so applications
+				In addition to mouse and keyboard input, <token>Agent</token> includes optional support for speech recognition so applications
 				can respond to voice commands. Characters can respond using synthesized speech, recorded audio, or text
 				in a cartoon <token>WordBalloon</token>.
 			</para>

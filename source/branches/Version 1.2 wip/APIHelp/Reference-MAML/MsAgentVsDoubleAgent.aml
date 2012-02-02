@@ -6,44 +6,44 @@
 
 		<introduction>
 			<para>
-				Double Agent supports the functionality implemented by <token>MsAgent</token> on <token>WindowsXP</token> and
+				<token>DA</token> supports the functionality implemented by <token>MA</token> on <token>WindowsXP</token> and
 				<token>WindowsVista</token>, with the following differences:
 			</para>
 			<list class="bullet">
 				<listItem>
 					<para>
-						<token>MsAgent</token> supports help mode on <token>WindowsXP</token> but not on <token>WindowsVista</token>. Double Agent
+						<token>MA</token> supports help mode on <token>WindowsXP</token> but not on <token>WindowsVista</token>. <token>DA</token>
 						<legacyBold>does not</legacyBold> support help mode (yet).
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						The 32-bit version of Double Agent supports <token>SAPI4</token> text-to-speech engines, but it <legacyBold>does not</legacyBold> support
+						The 32-bit version of <token>DA</token> supports <token>SAPI4</token> text-to-speech engines, but it <legacyBold>does not</legacyBold> support
 						<token>SAPI4</token> voice recognition engines.
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						<token>MsAgent</token> supports <legacyItalic>linguistically enhanced sound files</legacyItalic> for text-to-speech.
-						Double Agent <legacyBold>does not</legacyBold> support this feature (for now).
+						<token>MA</token> supports <legacyItalic>linguistically enhanced sound files</legacyItalic> for text-to-speech.
+						<token>DA</token>&#160;<legacyBold>does not</legacyBold> support this feature (for now).
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						<token>MsAgent</token> supports international languages on <token>WindowsXP</token> but <legacyBold>not</legacyBold> on
-						<token>WindowsVista</token>. Double Agent <legacyBold>does</legacyBold> support international languages.
+						<token>MA</token> supports international languages on <token>WindowsXP</token> but <legacyBold>not</legacyBold> on
+						<token>WindowsVista</token>. <token>DA</token>&#160;<legacyBold>does</legacyBold> support international languages.
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						In a 64-bit environment, Double Agent may use a different server architecture than Microsoft Agent.
+						In a 64-bit environment, <token>DA</token> may use a different server architecture than Microsoft Agent.
 						See <link xlink:href="e08466ce-419c-11e1-9d4f-002421116fb2" /> for details.
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						Double Agent <legacyBold>does not</legacyBold> include any of the <token>MsAgent</token> character editing tools.
-						However, since Double Agent uses <token>MsAgent</token> character files, the original tools can
+						<token>DA</token>&#160;<legacyBold>does not</legacyBold> include any of the <token>MA</token> character editing tools.
+						However, since <token>DA</token> uses <token>MA</token> character files, the original tools can
 						still be used.
 					</para>
 				</listItem>

@@ -6,26 +6,26 @@
 
 		<introduction>
 			<para>
-				Applications built and compiled for <token>MsAgent</token> 2.0 should
-				run without modification using Double Agent 1.0. For compatibility,
-				all of the <unmanagedCodeEntityReference>Help</unmanagedCodeEntityReference> methods, properties, and events are included in Double
-				Agent but they&#39;re non-functional. The same applies for methods, properties,
-				and events that are obsolete in <token>MsAgent</token> 2.0.
+				Applications built and compiled for <token>MA</token> 2.0 should
+				run without modification using <token>DA</token> 1.0. For compatibility,
+				all of the <unmanagedCodeEntityReference>Help</unmanagedCodeEntityReference> methods, properties, and events are included in 
+				<token>DA</token> but they&#39;re non-functional. The same applies for methods, properties,
+				and events that are obsolete in <token>MA</token> 2.0.
 			</para>
 			<para>
-				Applications built and compiled for <token>MsAgent</token> 2.0 or Double
-				Agent 1.0 should run without modification using Double Agent 1.1.
+				Applications built and compiled for <token>MA</token> 2.0 or
+				 <token>DA</token> 1.0 should run without modification using <token>DA</token> 1.1.
 				Deprecated methods, properties, and events are still implemented. To use the
-				<link xlink:href="e08466d1-419c-11e1-9d4f-002421116fb2">new features of Double Agent 1.1</link>,
+				<link xlink:href="e08466d1-419c-11e1-9d4f-002421116fb2">new features of <token>DA</token> 1.1</link>,
 				you&#39;ll need to modify your code.
 			</para>
 			<para>
-				For <token>dotNET</token> applications, Double Agent 1.2 includes
+				For <token>dotNET</token> applications, <token>DA</token> 1.2 includes
 				different <token>PIAs</token> for different <token>dotNETframework</token> versions. There are
 				<token>PIAs</token> compatible with the <token>dotNETframework</token>
 				version 3.5 or earlier, and a separate set of <token>PIAs</token>
 				compatible with <token>dotNET</token> version 4.0 or later. Earlier
-				Double Agent versions are incompatible with <token>dotNET</token>
+				<token>DA</token> versions are incompatible with <token>dotNET</token>
 				4.0.
 			</para>
 		</introduction>

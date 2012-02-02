@@ -7,9 +7,9 @@
 		<introduction>
 			<para>
 				A client application provides the primary user interface for interaction with a character. You can program
-				a character to respond to any form of input, from button-clicks to typed-in text. In addition, Double
-				Agent provides events so you can program what happens when the user clicks, double-clicks, or drags
-				the character. Double Agent passes the coordinates of the pointer and any modifier key state for these
+				a character to respond to any form of input, from button-clicks to typed-in text. In addition,
+				<token>DA</token> provides events so you can program what happens when the user clicks, double-clicks, or drags
+				the character. <token>DA</token> passes the coordinates of the pointer and any modifier key state for these
 				events.
 			</para>
 			<autoOutline/>
@@ -38,7 +38,7 @@
 					for that character. The server automatically makes the <legacyItalic>active</legacyItalic> client of any remaining
 					character(s) <token>InputActive</token>. When all characters are hidden, no client is <token>InputActive</token>.
 					However, in this situation, if the user presses the <token>ListeningKey</token>,
-					Double Agent will continue to listen for its commands (using the speech recognition engine matching
+					<token>DA</token> will continue to listen for its commands (using the speech recognition engine matching
 					the topmost character of the last <token>InputActive</token> client).
 				</para>
 				<para>
@@ -63,10 +63,10 @@
 			</title>
 			<content>
 				<para>
-					Double Agent includes a <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
+					<token>DA</token> includes a <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> (also known as a context menu) for each character.
-					Double Agent displays this <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
+					<token>DA</token> displays this <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> automatically when a user right-clicks
 					the character. You can add commands for your client application to the menu by defining a <unmanagedCodeEntityReference>
@@ -79,10 +79,10 @@
 					(&amp;) before the text character of the <unmanagedCodeEntityReference>Caption</unmanagedCodeEntityReference> text setting.
 				</para>
 				<para>
-					Double Agent automatically adds to the menu commands for opening the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
+					<token>DA</token> automatically adds to the menu commands for opening the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
 						<token>VoiceCommands</token>
 					</link> window and hiding the character as well as the <unmanagedCodeEntityReference>Commands</unmanagedCodeEntityReference> captions
-					of other clients of the character to enable users to switch between clients. Double Agent automatically
+					of other clients of the character to enable users to switch between clients. <token>DA</token> automatically
 					adds a separator to the menu between its menu entries and those defined by the client. Separators appear
 					only when there are items in the menu to separate.
 				</para>
@@ -104,11 +104,11 @@
 						<token>PopupMenu</token>
 					</link> or the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
 						<token>VoiceCommands</token>
-					</link> window, Double Agent triggers the <unmanagedCodeEntityReference>Command</unmanagedCodeEntityReference> event of the associated
+					</link> window, <token>DA</token> triggers the <unmanagedCodeEntityReference>Command</unmanagedCodeEntityReference> event of the associated
 					client and passes back the parameters of the input using the <unmanagedCodeEntityReference>UserInput</unmanagedCodeEntityReference> object.
 				</para>
 				<para>
-					Double Agent also provides a <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
+					<token>DA</token> also provides a <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 						<token>PopupMenu</token>
 					</link> for the character's <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
 						<token>NotificationIcon</token>

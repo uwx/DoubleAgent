@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <topic id="e08466cf-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
-	<developerConceptualDocument
+	<developerHowToDocument
 	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
 		<introduction>
 			<para>
-				The Double Agent installation files are Microsoft Installer (MSI) packages. They can be installed
+				The <token>DA</token> installation files are Microsoft<superscript>®</superscript> Installer (MSI) packages. They can be installed
 				using the <application>msiexec</application> program that&#39;s	part of <token>Windows</token>.
 			</para>
 		</introduction>
@@ -56,11 +56,11 @@
 		<section>
 			<content>
 				<para>
-					If you configure your installation to automatically install Double Agent, you must include the appropriate
+					If you configure your installation to automatically install <token>DA</token>, you must include the appropriate
 					Open Source acknowledgement (see <link xlink:href="e08466b9-419c-11e1-9d4f-002421116fb2" />).
 				</para>
 				<para>
-					If you choose to deploy Double Agent with less than the full user interface, you should include some
+					If you choose to deploy <token>DA</token> with less than the full user interface, you should include some
 					kind reference to the GNU license agreement in your installation. The GNU licenses in HTML format
 					are included in the Double agent installation.
 				</para>
@@ -73,5 +73,5 @@
 			<link xlink:href="e08466bb-419c-11e1-9d4f-002421116fb2" />
 		</relatedTopics>
 
-	</developerConceptualDocument>
+	</developerHowToDocument>
 </topic>

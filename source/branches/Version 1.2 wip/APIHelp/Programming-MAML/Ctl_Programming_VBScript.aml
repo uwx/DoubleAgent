@@ -10,7 +10,7 @@
 				contact your vendor about support.
 			</para>
 			<para>
-				To program Double Agent from VBScript, use the HTML &lt;SCRIPT&gt; tags. To access the programming interface,
+				To program <token>DA</token> from VBScript, use the HTML &lt;SCRIPT&gt; tags. To access the programming interface,
 				use the name of control you assign in the &lt;OBJECT&gt; tag, followed by the sub object (if any), the
 				name of the method or property, and any parameters or values supported by the method or property:
 			</para>
@@ -38,8 +38,8 @@ statements…
 				compatibility, use only the former syntax for events.
 			</para>
 			<para>
-				You can verify whether Double Agent is installed by trying to create the object and checking to see if
-				it exists. The following sample demonstrates how to check for the Double Agent control without triggering
+				You can verify whether <token>DA</token> is installed by trying to create the object and checking to see if
+				it exists. The following sample demonstrates how to check for the <token>DA</token> control without triggering
 				an error (as would happen if you included an &lt;OBJECT&gt; tag for the control on the page):
 			</para>
 

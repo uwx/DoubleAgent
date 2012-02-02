@@ -6,7 +6,7 @@
 
 		<introduction>
 			<para>
-				To be notified of events by Double Agent, you must create and register an object that implements either
+				To be notified of events by <token>DA</token>, you must create and register an object that implements either
 				the <unmanagedCodeEntityReference>IDaSvrNotifySink2</unmanagedCodeEntityReference> or
 				<unmanagedCodeEntityReference>_DaSvrEvents2</unmanagedCodeEntityReference> interface.
 			</para>
@@ -23,7 +23,7 @@ MyNotifySink-&gt;AddRef ();
 // And register it with Double Agent
 Result = server-&gt;Register ((IUnknown*)MyNotifySink, &amp;MyNotifySinkID);</code>
 					<para>
-						Remember to unregister your notification sink when your application shuts down and releases Double Agent's
+						Remember to unregister your notification sink when your application shuts down and releases <token>DA</token>'s
 						interfaces.
 					</para>
 					<code xml:space="preserve" language="cpp">server-&gt;Unregister (MyNotifySinkID);</code>
@@ -37,7 +37,7 @@ Result = server-&gt;Register ((IUnknown*)MyNotifySink, &amp;MyNotifySinkID);</co
 						<unmanagedCodeEntityReference>Unregister</unmanagedCodeEntityReference> methods.
 					</para>
 					<alert class="note">
-						Double Agent also supports the <unmanagedCodeEntityReference>IDaSvrNotifySink</unmanagedCodeEntityReference>,
+						<token>DA</token> also supports the <unmanagedCodeEntityReference>IDaSvrNotifySink</unmanagedCodeEntityReference>,
 						<unmanagedCodeEntityReference>IAgentNotifySink</unmanagedCodeEntityReference> and <unmanagedCodeEntityReference>IAgentNotifySinkEx</unmanagedCodeEntityReference> interfaces.
 					</alert>
 				</listItem>

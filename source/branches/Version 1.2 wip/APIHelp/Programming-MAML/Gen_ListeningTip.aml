@@ -6,8 +6,8 @@
 
 		<introduction>
 			<para>
-				The <token>ListeningTip</token> is another speech input service provided by Double Agent. When
-				speech input is installed, Agent includes a special tooltip window that appears when the user presses
+				The <token>ListeningTip</token> is another speech input service provided by <token>DA</token>. When
+				speech input is installed, <token>DA</token> includes a special tooltip window that appears when the user presses
 				the <token>ListeningKey</token> or calls the <unmanagedCodeEntityReference>Listen</unmanagedCodeEntityReference> method. The
 				<token>ListeningTip</token> appears only when the speech services are available. If no client
 				has authored a voice command or successfully loads a speech engine, the <token>ListeningTip</token>
@@ -225,7 +225,7 @@
 					<row>
 						<entry>
 							<para>
-								When the spoken text matches a defined command, but Double Agent does not act on
+								When the spoken text matches a defined command, but <token>DA</token> does not act on
 								it because the command has a low confidence score, the the <token>ListeningTip</token> displays:
 							</para>
 						</entry>
@@ -251,13 +251,13 @@
 				<para>
 					The <token>ListeningTip</token> automatically times out after being presented. If the "Heard"
 					text time-out completes while the user is still holding down the <token>ListeningKey</token>, the tip reverts
-					to the "listening" text unless Double Agent receives another matching utterance. In this case, the tip
+					to the "listening" text unless <token>DA</token> receives another matching utterance. In this case, the tip
 					displays the new "Heard" text and begins the time-out for that tip text. If the user releases the
-					<token>ListeningKey</token> and Double Agent is displaying the "Heard" text,
+					<token>ListeningKey</token> and <token>DA</token> is displaying the "Heard" text,
 					the time-out continues and the <token>ListeningTip</token> window is hidden when the time-out interval elapses.
 				</para>
 				<para>
-					If Double Agent has not yet attempted to load a speech recognition engine, the <token>ListeningTip</token>
+					If <token>DA</token> has not yet attempted to load a speech recognition engine, the <token>ListeningTip</token>
 					will not display. Similarly, if the user has disabled the display of the <token>ListeningTip</token>
 					or disabled speech input in the <link xlink:href="e0846716-419c-11e1-9d4f-002421116fb2#PropSheet">
 						<token>AdvancedCharacterOptions</token>
@@ -266,11 +266,11 @@
 				</para>
 				<para>
 					Client applications cannot write directly to the <token>ListeningTip</token>, but you can specify
-					alternative text that Double Agent displays on recognition of a matching voice command. To do this,
+					alternative text that <token>DA</token> displays on recognition of a matching voice command. To do this,
 					set the <unmanagedCodeEntityReference>Confidence</unmanagedCodeEntityReference> property and the <unmanagedCodeEntityReference>ConfidenceText</unmanagedCodeEntityReference>
 					property for the command. If spoken input matches the command, but the best match does not exceed the
-					confidence setting, Double Agent uses the text set in the <unmanagedCodeEntityReference>ConfidenceText</unmanagedCodeEntityReference> property
-					in the tip window. If the client does not supply this value, Double Agent displays the text (grammar)
+					confidence setting, <token>DA</token> uses the text set in the <unmanagedCodeEntityReference>ConfidenceText</unmanagedCodeEntityReference> property
+					in the tip window. If the client does not supply this value, <token>DA</token> displays the text (grammar)
 					it matched.
 				</para>
 				<para>

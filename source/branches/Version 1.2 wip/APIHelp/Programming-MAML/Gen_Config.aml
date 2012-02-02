@@ -6,13 +6,13 @@
 
 		<introduction>
 			<para>
-				Double Agent includes support for user preferences. These preferences apply to all client applications
+				<token>DA</token> includes support for user preferences. These preferences apply to all client applications
 				and can only be set by the end-user. However, client applications can query the current preference settings.
 			</para>
 			<para>
-				Double Agent also uses some resources that are installed and configured independently, and are therefore
-				not under its control. Specifically, this includes character definition files and speech engines. Double
-				Agent provides services that allow client applications to discover what resources are available.
+				<token>DA</token> also uses some resources that are installed and configured independently, and are therefore
+				not under its control. Specifically, this includes character definition files and speech engines.
+				<token>DA</token> provides services that allow client applications to discover what resources are available.
 			</para>
 			<autoOutline/>
 		</introduction>
@@ -45,11 +45,11 @@
 					<unmanagedCodeEntityReference>Width</unmanagedCodeEntityReference>, and <unmanagedCodeEntityReference>Height</unmanagedCodeEntityReference> properties.
 				</para>
 				<alert class="note">
-					The Double Agent <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+					The <token>DA</token>&#160;<link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
 						<token>AdvancedCharacterOptions</token>
 					</link>
-					window combines the <token>MsAgent</token>&#160;<token>AdvancedCharacterOptions</token> window
-					and the <token>MsAgent</token>&#160;<token>DefaultCharacterProperties</token> window.
+					window combines the <token>MA</token>&#160;<token>AdvancedCharacterOptions</token> window
+					and the <token>MA</token>&#160;<token>DefaultCharacterProperties</token> window.
 				</alert>
 				<alert class="note">
 					The pages in the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
@@ -67,11 +67,11 @@
 			<content>
 				<para>
 					Character definition files are installed independently and can be added or removed at any time. They
-					can also be installed in different locations: with Double Agent, with <token>MsAgent</token>, or
+					can also be installed in different locations: with <token>DA</token>, with <token>MA</token>, or
 					with older versions of Microsoft<superscript>®</superscript> Office.
 				</para>
 				<para>
-					Double Agent provides services for discovering which character files are installed and where they are
+					<token>DA</token> provides services for discovering which character files are installed and where they are
 					located.
 				</para>
 			</content>
@@ -81,14 +81,14 @@
 			<title>Installed Speech Engines</title>
 			<content>
 				<para>
-					Text-to-Speech engines and Speech Recognition engines are also installed independently from Double Agent.
-					If an Agent character is designed to use a specific speech engine that is not installed, Double Agent
+					Text-to-Speech engines and Speech Recognition engines are also installed independently from <token>DA</token>.
+					If an <token>Agent</token> character is designed to use a specific speech engine that is not installed, <token>DA</token>
 					will automatically use the speech engine that most closely matches the character&#39;s language and
 					gender requirements.
 				</para>
 				<para>
 					However, a client application can also choose a specific Text-to-Speech or Speech Recognition engine.
-					Double Agent provides services that allow the client application to discover the installed speech engines
+					<token>DA</token> provides services that allow the client application to discover the installed speech engines
 					and to match them against a character&#39;s requirements. These services also make it easy for the client
 					application to let the <legacyItalic>user</legacyItalic> choose an appropriate speech engine.
 				</para>

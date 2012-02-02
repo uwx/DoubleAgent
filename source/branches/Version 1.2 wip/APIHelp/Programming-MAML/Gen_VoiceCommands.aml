@@ -10,7 +10,7 @@
 				for the character. The window appears when the <legacyItalic>Open Commands Window</legacyItalic> command
 				is chosen or the <unmanagedCodeEntityReference>Visible</unmanagedCodeEntityReference> property of the <unmanagedCodeEntityReference>CommandsWindow</unmanagedCodeEntityReference>
 				object is set to <literal>True</literal>. If the speech engine has not yet been loaded, querying
-				or setting this property will cause Double Agent to attempt to initialize the engine. If the user disables
+				or setting this property will cause <token>DA</token> to attempt to initialize the engine. If the user disables
 				speech, the window can still display; however, it will include a text message that informs the user
 				that speech is currently disabled.
 			</para>

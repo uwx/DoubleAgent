@@ -6,55 +6,53 @@
 
 		<introduction>
 			<para>
-				Because Double Agent is binary compatible with <token>MsAgent</token>, you can develop an Agent
-				application using the <token>MsAgent</token> API. When the application is deployed:
+				Because <token>DA</token> is binary compatible with <token>MA</token>, you can develop an <token>Agent</token>
+				application using the <token>MA</token> API. When the application is deployed:
 			</para>
 			<list class="bullet">
 				<listItem>
 					<para>
-						On a system where only <token>MsAgent</token> is installed, the <token>MsAgent</token> run-time
+						On a system where only <token>MA</token> is installed, the <token>MA</token> run-time
 						will be used.
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						On a system where Double Agent is also installed, but it is <legacyItalic>not emulating</legacyItalic>&#160;<token>MsAgent</token>, the <token>MsAgent</token> run-time will be used.
+						On a system where <token>DA</token> is also installed, but it is <legacyItalic>not emulating</legacyItalic>&#160;<token>MA</token>, the <token>MA</token> run-time will be used.
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						On a system where Double Agent is also installed, and it is <legacyItalic>emulating</legacyItalic>&#160;<token>MsAgent</token>, the Double Agent run-time will be used.
+						On a system where <token>DA</token> is also installed, and it is <legacyItalic>emulating</legacyItalic>&#160;<token>MA</token>, the <token>DA</token> run-time will be used.
 					</para>
 				</listItem>
 				<listItem>
 					<para>
-						On a system where only Double Agent is installed, the Double Agent run-time will always be used.
+						On a system where only <token>DA</token> is installed, the <token>DA</token> run-time will always be used.
 					</para>
 				</listItem>
 			</list>
 			<para>
-				You can also develop specifically for the Double Agent API. The remainder of this documentation is dedicated
+				You can also develop specifically for the <token>DA</token> API. The remainder of this documentation is dedicated
 				to that scenario.
 			</para>
 			<para/>
 			<para>
-				To use the server interfaces, Double Agent must already be installed on the target system. If you want
-				to install Double Agent as part of your application, you can download Double Agent's installation (<legacyItalic>.MSI</legacyItalic>) package from the Web site. You can include this file in your installation
-				setup program (with the required acknowledgement). Whenever it is executed, it will install Double Agent
+				To use the server interfaces, <token>DA</token> must already be installed on the target system. If you want
+				to install <token>DA</token> as part of your application, you can download <token>DA</token>'s installation (<legacyItalic>.MSI</legacyItalic>) package from the Web site. You can include this file in your installation
+				setup program (with the required acknowledgement). Whenever it is executed, it will install <token>DA</token>
 				on the target system.
 			</para>
 			<para>
-				To program the server, you will also need to install <legacyItalic>at least</legacyItalic> the <legacyItalic>
-					Application
-					Interfaces
-				</legacyItalic> component of the Double Agent SDK.
+				To program the server, you will also need to install <legacyItalic>at least</legacyItalic> the
+				 <legacyItalic>Application Interfaces</legacyItalic> component of the <token>theSDK</token>.
 			</para>
 		</introduction>
 		<section address="DevFiles">
 			<title>Installed Files</title>
 			<content>
 				<para>
-					Once Double Agent and its <legacyItalic>Application Interfaces</legacyItalic> components
+					Once <token>DA</token> and its <legacyItalic>Application Interfaces</legacyItalic> components
 					are installed, the following development files will be available in the installation folder:
 				</para>
 				<table>
@@ -69,7 +67,7 @@
 							<localUri>Dev\DaServer.tlb</localUri>
 						</entry>
 						<entry>
-							The Double Agent Server <token>COM</token> type library&#160;<superscript>
+							The <token>DA</token> Server <token>COM</token> type library&#160;<superscript>
 								<legacyBold>1</legacyBold>
 							</superscript>
 						</entry>
@@ -79,7 +77,7 @@
 							<localUri>Dev\DaServerOdl.h</localUri>
 						</entry>
 						<entry>
-							The generated C/C++ header file for the Double Agent Server <token>COM</token> type library
+							The generated C/C++ header file for the <token>DA</token> Server <token>COM</token> type library
 						</entry>
 					</row>
 					<row>
@@ -87,7 +85,7 @@
 							<localUri>Dev\DaServerInterface.h</localUri>
 						</entry>
 						<entry>
-							C++ <newTerm>Smart pointer</newTerm> definitions for the Double Agent Server type library (includes
+							C++ <newTerm>Smart pointer</newTerm> definitions for the <token>DA</token> Server type library (includes
 							<localUri>DaServerOdl.h</localUri>)
 						</entry>
 					</row>
@@ -96,7 +94,7 @@
 							<localUri>Dev\v3.5\DoubleAgent.Server.dll</localUri>
 						</entry>
 						<entry>
-							The Double Agent Server <token>PIA</token>&#160;<superscript>
+							The <token>DA</token> Server <token>PIA</token>&#160;<superscript>
 								<legacyBold>2</legacyBold>
 							</superscript> for <token>dotNet</token> 3.5
 						</entry>
@@ -114,7 +112,7 @@
 							<localUri>Dev\v4.0\DoubleAgent.Server.dll</localUri>
 						</entry>
 						<entry>
-							The Double Agent Server <token>PIA</token>&#160;<superscript>
+							The <token>DA</token> Server <token>PIA</token>&#160;<superscript>
 								<legacyBold>2</legacyBold>
 							</superscript> for <token>dotNet</token> 4.0
 						</entry>
@@ -132,7 +130,7 @@
 							<localUri>Dev\AgentSvr.tlb</localUri>
 						</entry>
 						<entry>
-							The <token>MsAgent</token> Server <token>COM</token> type library&#160;<superscript>
+							The <token>MA</token> Server <token>COM</token> type library&#160;<superscript>
 								<legacyBold>3</legacyBold>
 							</superscript>
 						</entry>
@@ -147,7 +145,7 @@
 							</superscript>
 						</entry>
 						<entry>
-							When Double Agent is installed, the server's <token>COM</token> components are added to the
+							When <token>DA</token> is installed, the server's <token>COM</token> components are added to the
 							registry. This is a <legacyItalic>copy</legacyItalic> of the server type library. It's installed to be used as a reference
 							in native <token>Windows</token> development projects, but is not required at run
 							time.
@@ -160,7 +158,7 @@
 							</superscript>
 						</entry>
 						<entry>
-							When Double Agent is installed, this <token>dotNETassembly</token> is in installed in the
+							When <token>DA</token> is installed, this <token>dotNETassembly</token> is in installed in the
 							<token>GACname</token>. This is a <legacyItalic>copy</legacyItalic> of the assembly. It's installed
 							to be used as a reference in <token>dotNET</token> development projects, but is not
 							required at run time.
@@ -173,8 +171,8 @@
 							</superscript>
 						</entry>
 						<entry>
-							This file is only installed if <token>MsAgent</token> is not installed. It's purpose is
-							to support programming to the <token>MsAgent</token> Server API on a system where <token>MsAgent</token> isn't present.
+							This file is only installed if <token>MA</token> is not installed. It's purpose is
+							to support programming to the <token>MA</token> Server API on a system where <token>MA</token> isn't present.
 						</entry>
 					</row>
 				</table>

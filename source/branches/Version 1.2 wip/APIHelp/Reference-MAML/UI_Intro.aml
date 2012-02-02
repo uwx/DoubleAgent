@@ -6,16 +6,16 @@
 
 		<introduction>
 			<para>
-				The Double Agent user interface generally reproduces the <token>MsAgent</token> user interface.
-				Double Agent version 1.0 reproduces the <token>MsAgent</token> 2.0 user interface quite faithfully,
+				The <token>DA</token> user interface generally reproduces the <token>MA</token> user interface.
+				<token>DA</token> version 1.0 reproduces the <token>MA</token> 2.0 user interface quite faithfully,
 				except that a few components (such as the <link xlink:href="#ListeningTip">
 					<token>ListeningTip</token>
 				</link>) have
 				been brought up-to-date.
 			</para>
 			<para>
-				The Double Agent version 1.1 user interface has evolved a bit, but is still similar to <token>MsAgent</token>.
-				Because Double Agent supports the <token>MsAgent</token> international language components,
+				The <token>DA</token> version 1.1 user interface has evolved a bit, but is still similar to <token>MA</token>.
+				Because <token>DA</token> supports the <token>MA</token> international language components,
 				the evolution of its user interface is limited.
 			</para>
 			<autoOutline/>
@@ -25,13 +25,13 @@
 			<title>The Character Window</title>
 			<content address="Character_content">
 				<para>
-					Normally, Double Agent displays animated characters in their own windows that float over other application
+					Normally, <token>DA</token> displays animated characters in their own windows that float over other application
 					windows. A user can move a character's window by dragging the character with the left mouse button.
 					The character image moves with the pointer. An application can also move a character using the
 					<unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method.
 				</para>
 				<para>
-					The Double Agent Control can also be used in <token>contained</token> mode. It appears as
+					The <token>DA</token> Control can also be used in <token>contained</token> mode. It appears as
 					a child window within an application and it's character is limited to its window. In this case, the
 					user cannot move the character and the <unmanagedCodeEntityReference>MoveTo</unmanagedCodeEntityReference> method is disabled.
 				</para>
@@ -98,7 +98,7 @@
 					icon provides access to the character's <link xlink:href="#Menu">
 						<token>PopupMenu</token>
 					</link>, which provides
-					access to Double Agent's pre-defined commands such as those that hide and show the character.
+					access to <token>DA</token>'s pre-defined commands such as those that hide and show the character.
 				</para>
 				<mediaLink>
 					<image xlink:href="TaskBarGen" />
@@ -129,7 +129,7 @@
 			</title>
 			<content>
 				<para>
-					In addition to spoken audio output, the Double Agent interface supports textual captioning in the form
+					In addition to spoken audio output, the <token>DA</token> interface supports textual captioning in the form
 					of text output in cartoon-style <token>WordBalloon</token>s. Words appear in the
 					<token>WordBalloon</token> as they are spoken. The <token>WordBalloon</token> hides when spoken output
 					is completed. The <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2#Output">
@@ -152,7 +152,7 @@
 				<para>
 					If speech input is enabled, a special tooltip window appears when the user presses the
 					<token>ListeningKey</token> to begin voice input. <token>ListeningTip</token> displays contextual
-					information related to the current input state of Double Agent. If compatible speech recognition has
+					information related to the current input state of <token>DA</token>. If compatible speech recognition has
 					not been installed or has been disabled, the <token>ListeningTip</token> does not appear.
 				</para>
 				<mediaLink>
@@ -167,7 +167,7 @@
 			</title>
 			<content>
 				<para>
-					If a compatible speech engine is installed, Double Agent supplies a special window called the
+					If a compatible speech engine is installed, <token>DA</token> supplies a special window called the
 					<token>VoiceCommands</token> window that displays the commands that have been voice-enabled for
 					speech recognition. The <token>VoiceCommands</token> window serves as a visual prompt for what
 					can be spoken as input (commands cannot be selected with the mouse).
@@ -205,12 +205,12 @@
 					The <token>VoiceCommands</token> window displays voice-enabled commands as an indented list.
 					If the current hosting application supplies voice commands, they appear expanded and at the top of the
 					window. Entries also appear for other applications using the character. The window also includes the
-					<ui>Global Voice Commands</ui> predefined by Double Agent. If the current hosting application
+					<ui>Global Voice Commands</ui> predefined by <token>DA</token>. If the current hosting application
 					has no voice commands, the <ui>Global Voice Commands</ui> appear expanded and at the
 					top of the window.
 				</para>
 				<para>
-					The user can size and move the <token>VoiceCommands</token> window. Double Agent remembers the
+					The user can size and move the <token>VoiceCommands</token> window. <token>DA</token> remembers the
 					last location of the window and redisplays it at that location if the user closes and re-opens the window.
 					If the entries in the window exceed the current display size of the window, scroll bars appear.
 				</para>

@@ -7,7 +7,7 @@
 		<section>
 			<title>Objects</title>
 			<content>
-				<para>The Double Agent Control object model consists of the following objects:</para>
+				<para>The <token>DA</token> Control object model consists of the following objects:</para>
 			</content>
 			<sections>
 				<section>

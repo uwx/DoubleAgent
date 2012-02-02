@@ -5,15 +5,15 @@
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
 		<introduction>
-			<para>This is a summary of what has changed between version 1.1 and version 1.2 of Double Agent.</para>
+			<para>This is a summary of what has changed between version 1.1 and version 1.2 of <token>DA</token>.</para>
 		</introduction>
 
 
 		<section address="CAB">
-			<title>The Double Agent control for web pages</title>
+			<title>The <token>DA</token> control for web pages</title>
 			<content>
 				<para>
-					Double Agent 1.2 includes a new build of its <token>ActiveXCtl</token>
+					<token>DA</token> 1.2 includes a new build of its <token>ActiveXCtl</token>
 					component specifically intended for use in web pages. It&#39;s packaged as a
 					<legacyItalic>downloadable</legacyItalic>&#160;<token>ActiveXCtl</token> compatible
 					with the <codeInline>&lt;OBJECT ... CODEBASE=...&gt;</codeInline>&#160;<application>HTML</application>
@@ -26,8 +26,8 @@
 			<title>Version 1.5 Character Files</title>
 			<content>
 				<para>
-					Double Agent can now use character files in <token>MsAgent</token> 1.5
-					format. Previous versions of Double Agent could only read <token>MsAgent</token> 2.0
+					<token>DA</token> can now use character files in <token>MA</token> 1.5
+					format. Previous versions of <token>DA</token> could only read <token>MA</token> 2.0
 					character files.
 				</para>
 			</content>
@@ -51,7 +51,7 @@
 						<para>
 							Although <token>dotNET</token> 4.0 is supposed to be able to use <token>COM</token> objects without any <token>PIA</token>,
 							there are problems when the <token>COM</token> objects use named
-							enumerations. This is why Double Agent still uses <token>PIAs</token>, even for <token>dotNET</token> 4.0.
+							enumerations. This is why <token>DA</token> still uses <token>PIAs</token>, even for <token>dotNET</token> 4.0.
 						</para>
 					</listItem>
 				</list>
@@ -65,7 +65,7 @@
 					<listItem>
 						<para>
 							The <codeEntityReference qualifyHint="true">P:DoubleAgent.AxControl.AxControl.AutoConnect</codeEntityReference>
-							property has been adjusted slightly for strict <token>MsAgent</token> compatibility.
+							property has been adjusted slightly for strict <token>MA</token> compatibility.
 						</para>
 					</listItem>
 				</list>
