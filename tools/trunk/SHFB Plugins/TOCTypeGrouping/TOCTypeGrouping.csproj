@@ -74,7 +74,11 @@
     <None Include="CreateVSToc_Override.xsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="DoubleAgent.ico" />
+		<None Include="C:\Program Files (x86)\Sandcastle\ProductionTransforms\CreateVSToc.xsl">
+			<Link>CreateVSToc.xsl.cs</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<Content Include="DoubleAgent.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -517,13 +517,12 @@
     <NamingMethod>MemberName</NamingMethod>
     <HelpFileVersion>1.2.0.0</HelpFileVersion>
     <PlugInConfigurations>
-      <PlugInConfig id="Table Of Contents Type Grouping" enabled="True">
+      <PlugInConfig id="Table of Contents from Sitemap" enabled="True">
         <configuration />
       </PlugInConfig>
-      <PlugInConfig id="Additional Content Only" enabled="False">
-        <configuration />
-      </PlugInConfig>
-    </PlugInConfigurations>
+<PlugInConfig id="Additional Content Only" enabled="False"><configuration /></PlugInConfig>
+<PlugInConfig id="Table of Contents Namespace Placement" enabled="True"><configuration /></PlugInConfig>
+<PlugInConfig id="Table of Contents Type Grouping" enabled="True"><configuration /></PlugInConfig></PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
     <FooterText>Double Agent is open source software licensed under the &amp;lt%3ba target=&amp;quot%3b_blank&amp;quot%3b href=&amp;quot%3bhttp://www.gnu.org/licenses/gpl.html&amp;quot%3b&amp;gt%3bGNU General Public License&amp;lt%3b/a&amp;gt%3b</FooterText>
@@ -556,25 +555,42 @@
           </helpOutput>
         </component>
       </ComponentConfig>
-<ComponentConfig id="Cached Framework Comments Index Data" enabled="True"><component id="Cached Framework Comments Index Data" type="SandcastleBuilder.Components.CachedCopyFromIndexComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><index name="comments" value="/doc/members/member" key="@name" cache="100">
+      <ComponentConfig id="Cached Framework Comments Index Data" enabled="True">
+        <component id="Cached Framework Comments Index Data" type="SandcastleBuilder.Components.CachedCopyFromIndexComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
+          <index name="comments" value="/doc/members/member" key="@name" cache="100">
 						{@CachedFrameworkCommentList}
 						{@CommentFileList}
-					</index><copy name="comments" source="*" target="/document/comments" /></component></ComponentConfig>
-<ComponentConfig id="API Token Resolution" enabled="True"><component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
+					</index>
+          <copy name="comments" source="*" target="/document/comments" />
+        </component>
+      </ComponentConfig>
+      <ComponentConfig id="API Token Resolution" enabled="True">
+        <component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
 
         {@TokenFiles}
-        <replace elements="/*//token" item="string(.)" /></component></ComponentConfig>
-<ComponentConfig id="Post-transform Component" enabled="True"><component id="Post-transform Component" type="SandcastleBuilder.Components.PostTransformComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><!-- Code colorizer files (required).
+        <replace elements="/*//token" item="string(.)" /></component>
+      </ComponentConfig>
+      <ComponentConfig id="Post-transform Component" enabled="True">
+        <component id="Post-transform Component" type="SandcastleBuilder.Components.PostTransformComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
+          <!-- Code colorizer files (required).
                  Attributes:
                     Stylesheet file (required)
                     Script file (required)
-                    "Copy" image file (required) --><colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" /><!-- Base output paths for the files (required).  These should match
+                    "Copy" image file (required) -->
+          <colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" />
+          <!-- Base output paths for the files (required).  These should match
                  the parent folder of the output path of the HTML files (see
-                 each of the SaveComponent instances below). --><outputPaths>
+                 each of the SaveComponent instances below). -->
+          <outputPaths>
 {@HelpFormatOutputPaths}
-            </outputPaths><!-- Logo image file (optional).  Filename is required. The height,
+            </outputPaths>
+          <!-- Logo image file (optional).  Filename is required. The height,
                  width, altText, placement, and alignment attributes are
-                 optional. --><logoFile filename="" height="0" width="0" altText="" placement="left" alignment="left" /></component></ComponentConfig></ComponentConfigurations>
+                 optional. -->
+          <logoFile filename="" height="0" width="0" altText="" placement="left" alignment="left" />
+        </component>
+      </ComponentConfig>
+    </ComponentConfigurations>
     <ProductTitle>Double Agent SDK</ProductTitle>
     <VendorName>Cinnamon Software Inc.</VendorName>
     <TocParentId>-1</TocParentId>

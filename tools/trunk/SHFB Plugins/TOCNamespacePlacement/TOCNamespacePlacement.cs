@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -12,7 +13,7 @@ using SandcastleBuilder.Utils.PlugIn;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
-	public class TOCTypeGrouping : IPlugIn
+	public class TOCNamespacePlacement : IPlugIn
 	{
 		#region Private data members
 		//=====================================================================
@@ -27,7 +28,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		public string Name
 		{
-			get { return "Table of Contents Type Grouping"; }
+			get { return "Table of Contents Namespace Placement"; }
 		}
 
 		public Version Version
@@ -54,8 +55,8 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		{
 			get
 			{
-				return "This plug-in categorizes types by 'Class', 'Interface', 'Delegate', 'Enumeration', etc." +
-					"It adds an extra level of category entries for each namespace in the Table of Contents.";
+				return "This plug-in uses a SiteMap to place namespace contents in the Table of Contents." +
+					"Each namespace can be individually placed anywhere in the TOC.";
 			}
 		}
 
@@ -72,7 +73,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 				{
 					mExecutionPoints = new ExecutionPointCollection
                     {
-                        new ExecutionPoint(BuildStep.GenerateIntermediateTableOfContents, ExecutionBehaviors.Before)
+                        new ExecutionPoint(BuildStep.CombiningIntermediateTocFiles, ExecutionBehaviors.After)
                     };
 				}
 				return mExecutionPoints;
@@ -101,9 +102,9 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			Debug.Print ("{0} {1}", context.Behavior, context.BuildStep);
 #endif
 
-			if ((context.BuildStep == BuildStep.GenerateIntermediateTableOfContents) && (context.Behavior == ExecutionBehaviors.Before))
+			if ((context.BuildStep == BuildStep.CombiningIntermediateTocFiles) && (context.Behavior == ExecutionBehaviors.After))
 			{
-				UpdateGenerateIntermediateProject ();
+				ReparentNamespaceTopics ();
 			}
 		}
 		#endregion
@@ -111,42 +112,72 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Helper Methods
 		//=====================================================================
 
-		private void UpdateGenerateIntermediateProject ()
+		private void ReparentNamespaceTopics ()
 		{
 			try
 			{
-				String lProjectPath = Path.Combine (mBuildProcess.WorkingFolder, "GenerateIntermediateTOC.proj");
+				String lTocFilePath = Path.Combine (mBuildProcess.WorkingFolder, "toc.xml");
 				XmlDocument lDocument = new XmlDocument ();
-				XmlNodeList lNodes;
-				XmlAttribute lAttribute;
-				String lTransform = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "CreateVSToc_Override.xsl");
+				XPathNavigator lNavigator = null;
+				List<XPathNavigator> lTargetNodes = new List<XPathNavigator> ();
+				bool lChanged = false;
 
 #if	DEBUG
-				Debug.Print ("  Load      '{0}'", lProjectPath);
+				Debug.Print ("ReparentNamespaceTopics {0}", lTocFilePath);
 #endif
-				lDocument.Load (lProjectPath);
-				lNodes = lDocument.DocumentElement.SelectNodes ("//*[@Transformations!='']");
-				if (lNodes != null)
+				mBuildProcess.ReportProgress ("{0}: ReparentNamespaceTopics '{1}'", this.Name, lTocFilePath);
+				lDocument.Load (lTocFilePath);
+
+				lNavigator = lDocument.CreateNavigator ();
+				if (lNavigator != null)
 				{
-					foreach (XmlNode lNode in lNodes)
-					{
-						lAttribute = lNode.Attributes["Transformations"];
-						if ((lAttribute != null) && (lAttribute.Value.Contains ("CreateVSToc")))
-						{
-#if	DEBUG
-							Debug.Print ("  Update    '{0}'", lProjectPath);
-							Debug.Print ("    replace '{0}'", lAttribute.Value);
-							Debug.Print ("    with    '{0}'", lTransform);
-#endif
-							mBuildProcess.ReportProgress ("{0}: Update    '{1}'", this.Name, lProjectPath);
-							mBuildProcess.ReportProgress ("{0}:   replace '{1}'", this.Name, lAttribute.Value);
-							mBuildProcess.ReportProgress ("{0}:   with    '{1}", this.Name, lTransform);
+					XPathNodeIterator lNodes = lNavigator.Select ("//topic[@title=@id and @title!='' and not(@file)]");
 
-							lAttribute.Value = lTransform;
-							lDocument.Save (lProjectPath);
-							break;
+					if ((lNodes != null) && (lNodes.Count > 0))
+					{
+#if	DEBUG
+						Debug.Print ("Targets [{0}]", lNodes.Count);
+#endif
+						while (lNodes.MoveNext ())
+						{
+							lTargetNodes.Add (lNodes.Current.Clone ());
 						}
 					}
+				}
+				foreach (XPathNavigator lTargetNode in lTargetNodes)
+				{
+					String lTargetId = lTargetNode.GetAttribute ("id", String.Empty);
+					XPathNodeIterator lNodes = null;
+#if	DEBUG
+					Debug.Print ("  Target [{0}]", lTargetId);
+#endif
+					if (lTargetId.StartsWith ("N:"))
+					{
+						lNodes = lNavigator.Select ("//topic[@id='" + lTargetId + "' and not(@title) and @file]");
+					}
+					if ((lNodes != null) && (lNodes.Count == 1) && lNodes.MoveNext ())
+					{
+#if	DEBUG
+						Debug.Print ("  Source [{0}] [{1}]", lNodes.Current.GetAttribute ("id", String.Empty), lNodes.Current.GetAttribute ("file", String.Empty));
+#endif
+						mBuildProcess.ReportProgress ("{0}:   Reparent id='{1}' file='{2}'", this.Name, lTargetId, lNodes.Current.GetAttribute ("file", String.Empty));
+
+						try
+						{
+							lTargetNode.ReplaceSelf (lNodes.Current);
+							lNodes.Current.DeleteSelf ();
+							lChanged = true;
+						}
+						catch (Exception exp)
+						{
+							System.Diagnostics.Debug.Print (exp.Message);
+						}
+					}
+				}
+
+				if (lChanged)
+				{
+					lDocument.Save (lTocFilePath);
 				}
 			}
 			catch (Exception exp)
@@ -160,7 +191,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IDisposable implementation
 		//=====================================================================
 
-		~TOCTypeGrouping ()
+		~TOCNamespacePlacement ()
 		{
 			this.Dispose (false);
 		}
