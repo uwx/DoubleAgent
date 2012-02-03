@@ -8,7 +8,7 @@
 			<para>
 				To access the <token>DA</token> control from a Web page, use the HTML &lt;OBJECT&gt;
 				tag within the &lt;HEAD&gt; or &lt;BODY&gt; element of the page, specifying the
-				<legacyItalic>CLSID</legacyItalic> (class identifier) for the control.
+				<languageKeyword>CLSID</languageKeyword> (class identifier) for the control.
 			</para>
 		</introduction>
 
@@ -76,7 +76,7 @@ id=AgentControl&gt;
 &lt;/OBJECT&gt;</code>
 				<para>
 					If <token>DA</token> is installed on the target machine, then the installed version will
-					be used (based on the specified <legacyItalic>CLSID</legacyItalic>). If <token>DA</token>
+					be used (based on the specified <languageKeyword>CLSID</languageKeyword>). If <token>DA</token>
 					is <legacyBold>not</legacyBold> installed, the <token>ActiveXCtl</token> will automatically
 					be downloaded and installed from <codeInline>http://doubleagent.sourceforge.net/DaControl.cab</codeInline>.
 				</para>

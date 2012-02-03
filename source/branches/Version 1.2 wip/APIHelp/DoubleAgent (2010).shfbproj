@@ -29,7 +29,7 @@
     <SandcastlePath>%ProgramFiles(x86)%\Sandcastle\</SandcastlePath>
     <MissingTags>Parameter, Returns, Value, Namespace, TypeParameter, IncludeTargets</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers</VisibleItems>
-    <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, FSharp, JScript</SyntaxFilters>
+    <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, JScript</SyntaxFilters>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
     <BinaryTOC>False</BinaryTOC>
@@ -517,10 +517,16 @@
     <NamingMethod>MemberName</NamingMethod>
     <HelpFileVersion>1.2.0.0</HelpFileVersion>
     <PlugInConfigurations>
-      <PlugInConfig id="Additional Content Only" enabled="True">
+      <PlugInConfig id="Additional Content Only" enabled="False">
         <configuration />
       </PlugInConfig>
-<PlugInConfig id="Pack and Sign MSHC files" enabled="True"><configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" /></PlugInConfig></PlugInConfigurations>
+      <PlugInConfig id="Pack and Sign MSHC files" enabled="True">
+        <configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" />
+      </PlugInConfig>
+      <PlugInConfig id="Resolve Partial Reference Links" enabled="True">
+        <configuration />
+      </PlugInConfig>
+    </PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
     <FooterText>Double Agent is open source software licensed under the &amp;lt%3ba target=&amp;quot%3b_blank&amp;quot%3b href=&amp;quot%3bhttp://www.gnu.org/licenses/gpl.html&amp;quot%3b&amp;gt%3bGNU General Public License&amp;lt%3b/a&amp;gt%3b</FooterText>

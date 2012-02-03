@@ -22,10 +22,10 @@
 				<list class="bullet">
 					<listItem>
 						<para>
-							Every <legacyItalic>XML</legacyItalic> element consists of a start tag <legacyItalic>&lt;Some_tag&gt;</legacyItalic>
-							and an end tag <legacyItalic>&lt;/Some_tag&gt;</legacyItalic> with a case-insensitive tag name and contents
-							between these tags. If the element is empty <legacyItalic>&lt;Some_tag&gt;&lt;/Some_tag&gt;</legacyItalic>,
-							it has no contents and the start tag and the end tag might be the same <legacyItalic>&lt;Some_tag/&gt;</legacyItalic>.
+							Every <legacyItalic>XML</legacyItalic> element consists of a start tag <placeholder>&lt;Some_tag&gt;</placeholder>
+							and an end tag <placeholder>&lt;/Some_tag&gt;</placeholder> with a case-insensitive tag name and contents
+							between these tags. If the element is empty <placeholder>&lt;Some_tag&gt;&lt;/Some_tag&gt;</placeholder>,
+							it has no contents and the start tag and the end tag might be the same <placeholder>&lt;Some_tag/&gt;</placeholder>.
 						</para>
 					</listItem>
 					<listItem>
@@ -40,10 +40,10 @@
 							The <legacyItalic>literal</legacyItalic> string cannot contain a less than character (&lt;). If the string
 							is surrounded by single quotation marks, it cannot contain a single quotation mark. If the string is
 							surrounded by double quotation marks it cannot contain a double quotation mark. Furthermore, an ampersand
-							(&amp;) can be used only in an entity reference such as <legacyItalic>&amp;amp;</legacyItalic> and
-							<legacyItalic>&amp;gt;</legacyItalic>.
+							(&amp;) can be used only in an entity reference such as <languageKeyword>&amp;amp;</languageKeyword> and
+							<languageKeyword>&amp;gt;</languageKeyword>.
 							When a <legacyItalic>literal</legacyItalic> string is parsed, an entity reference such
-							as <legacyItalic>&amp;gt;</legacyItalic> is resolved to its corresponding text, such as &quot;&gt;&quot;.
+							as <languageKeyword>&amp;gt;</languageKeyword> is resolved to its corresponding text, such as &quot;&gt;&quot;.
 						</para>
 					</listItem>
 				</list>
@@ -442,8 +442,8 @@
 					<listItem>
 						<para>
 							Unless otherwise specified or modified by another tag, the speech output retains the characteristic
-							set by the tag for the text specified in a single <legacyItalic>Speak</legacyItalic> method. Speech output
-							is automatically reset after a <legacyItalic>Speak</legacyItalic> method is completed.
+							set by the tag for the text specified in a single <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method. Speech output
+							is automatically reset after a <unmanagedCodeEntityReference>Speak</unmanagedCodeEntityReference> method is completed.
 						</para>
 					</listItem>
 				</list>

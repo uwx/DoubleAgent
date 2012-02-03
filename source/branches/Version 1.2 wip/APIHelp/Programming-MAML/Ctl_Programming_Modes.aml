@@ -14,7 +14,8 @@
 
 		<section address="connected">
 			<title>
-				<token>connectedUc</token> Mode</title>
+				<token>connectedUc</token> Mode
+			</title>
 			<content>
 				<para>
 					<token>connectedUc</token> mode is the control's default mode, and is compatible with <token>MA</token>. In this mode, the <token>DA</token> control acts as a gateway to the <token>DA</token> server. The control
@@ -69,7 +70,8 @@
 
 		<section address="standalone">
 			<title>
-				<token>standaloneUc</token> Mode</title>
+				<token>standaloneUc</token> Mode
+			</title>
 			<content>
 
 				<para>
@@ -90,9 +92,9 @@
 					If the control is contained in a form, it will <legacyItalic>not</legacyItalic> be visible at run-time.
 				</para>
 				<para>
-					A character window floats on top of the application window containing the <token>DA</token> control, but <legacyItalic>
-						not
-					</legacyItalic> other application windows. It is visually associated with your client application as an <legacyItalic>
+					A character window floats on top of the application window containing the <token>DA</token> control, but
+					<legacyItalic>not</legacyItalic> other application windows. It is visually associated with your client application as an
+					<legacyItalic>
 						owned <token>Popup</token>
 					</legacyItalic> of the control's parent window - that is, it's hidden when the
 					control's parent window is minimized. However, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">

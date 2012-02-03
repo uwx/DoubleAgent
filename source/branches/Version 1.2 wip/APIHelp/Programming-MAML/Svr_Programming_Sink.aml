@@ -33,8 +33,8 @@ Result = server-&gt;Register ((IUnknown*)MyNotifySink, &amp;MyNotifySinkID);</co
 						If you're using a class library that implements <token>COM</token> connection points (such
 						as <newTerm>MFC</newTerm> or <newTerm>ATL</newTerm>), you can use the
 						<unmanagedCodeEntityReference>IConnectionPoint</unmanagedCodeEntityReference> mechanism instead of the
-						<unmanagedCodeEntityReference>Register</unmanagedCodeEntityReference> and
-						<unmanagedCodeEntityReference>Unregister</unmanagedCodeEntityReference> methods.
+						<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Register</codeEntityReference> and
+						<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Unregister</codeEntityReference> methods.
 					</para>
 					<alert class="note">
 						<token>DA</token> also supports the <unmanagedCodeEntityReference>IDaSvrNotifySink</unmanagedCodeEntityReference>,

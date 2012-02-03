@@ -69,7 +69,7 @@
 		<section>
 			<content>
 				<para>
-					For programming languages that support the <token>dotNET</token>&#160;<legacyItalic>Common Language Runtime (CLR)</legacyItalic>, there are two options:
+					For programming languages that support the <token>dotNET</token>&#160;<token>CLRname</token>&#160;(<token>CLR</token>), there are two options:
 				</para>
 				<list class="ordered">
 					<listItem>
@@ -110,7 +110,7 @@
 							</listItem>
 							<listItem>
 								<para>
-									Use the <codeEntityReference qualifyHint="false">T:DoubleAgent.Control.AxControl</codeEntityReference> class
+									Use the <codeEntityReference qualifyHint="false">T:DoubleAgent.AxControl.AxControl</codeEntityReference> class
 									in the <codeEntityReference qualifyHint="true">N:DoubleAgent.AxControl</codeEntityReference>
 									namespace.
 								</para>

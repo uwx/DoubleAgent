@@ -93,64 +93,44 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		String BrowseForFolder (String CurrentPath, String DefaultPath, String Description)
 		{
 			System.Windows.Forms.FolderBrowserDialog lDialog = new System.Windows.Forms.FolderBrowserDialog ();
-			String lPath = String.Empty;
+			FolderPath lPath = new FolderPath (mProject);
 			String lPathRoot = Path.GetPathRoot (CurrentPath).TrimStart ('\\', '/');
 
 			if (String.IsNullOrEmpty (CurrentPath))
 			{
-				lPath = Path.GetFullPath (DefaultPath);
+				lPath.Path = FolderPath.GetFullPath (DefaultPath);
 			}
 			else if (Path.IsPathRooted (CurrentPath))
 			{
-				lPath = Path.GetFullPath (CurrentPath);
+				lPath.Path = FolderPath.GetFullPath (CurrentPath);
 			}
 			else
 			{
-				lPath = Path.GetFullPath (Path.Combine (DefaultPath, CurrentPath));
+				lPath.Path = FolderPath.RelativeToAbsolutePath (DefaultPath, CurrentPath);
 			}
 
 			if (!String.IsNullOrEmpty (lPath))
 			{
-				lPath = lPath.TrimEnd ('\\', '/');
-				lDialog.SelectedPath = lPath;
+				lDialog.SelectedPath = lPath.Path.TrimEnd ('\\', '/');
 			}
 			lDialog.ShowNewFolderButton = true;
 			lDialog.Description = Description;
 
 			if (lDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 			{
-				lPath = lDialog.SelectedPath + "\\";
-				try
+				lPath.Path = FolderPath.TerminatePath (lDialog.SelectedPath);
+				lPath.IsFixedPath = true;
+
+				if (Path.IsPathRooted (CurrentPath) && String.IsNullOrEmpty (lPathRoot))
 				{
-					Uri lUri = new Uri (lPath);
-
-					if (lUri.IsFile)
-					{
-						lPath = lUri.LocalPath;
-
-						if (Path.IsPathRooted (CurrentPath) && String.IsNullOrEmpty (lPathRoot))
-						{
-							lPath = lPath.Substring (Path.GetPathRoot (lPath).Length - 1);
-						}
-						else if (!Path.IsPathRooted (CurrentPath) && !String.IsNullOrEmpty (DefaultPath))
-						{
-							try
-							{
-								lUri = (new Uri (Path.GetFullPath (DefaultPath))).MakeRelativeUri (lUri);
-								lPath = lUri.ToString ();
-								if (String.IsNullOrEmpty (lPath))
-								{
-									lPath = DefaultPath;
-								}
-							}
-							catch { }
-						}
-						lPath = lPath.Replace ('/', '\\');
-					}
+					lPath.PersistablePath = "\\" + FolderPath.AbsoluteToRelativePath (Path.GetPathRoot (lPath), lPath);
 				}
-				catch { }
+				else if (!Path.IsPathRooted (CurrentPath) && !String.IsNullOrEmpty (DefaultPath))
+				{
+					lPath.PersistablePath = FolderPath.AbsoluteToRelativePath (DefaultPath, lPath);
+				}
 
-				return lPath;
+				return lPath.PersistablePath;
 			}
 			return CurrentPath;
 		}

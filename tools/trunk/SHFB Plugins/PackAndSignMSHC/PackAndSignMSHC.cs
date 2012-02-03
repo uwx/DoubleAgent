@@ -112,6 +112,8 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 				if (CanExecute (lSettings, out lDdfPath))
 				{
+					FilePath lMakeCabPath = new FilePath (lSettings.MakeCabPath, mBuildProcess.CurrentProject);
+					FilePath lSignToolPath = new FilePath (lSettings.SignToolPath, mBuildProcess.CurrentProject);
 					String lSourcePath = Path.Combine (mBuildProcess.OutputFolder, Path.ChangeExtension (mBuildProcess.CurrentProject.HtmlHelpName, ".mshc"));
 					String lTargetPath = Path.Combine (lSettings.CabPathName, lSettings.CabFileName);
 					String lMakeCabArgs;
@@ -119,7 +121,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 					String lSignToolStamp = String.Empty;
 
 					lMakeCabArgs = String.Format ("/V1 /F \"{0}\" /D SourcePath='{1}' /D TargetDir='{2}' /D TargetFile='{3}'", lDdfPath, lSourcePath, lSettings.CabPathName, lSettings.CabFileName);
-					mBuildProcess.RunProcess (lSettings.MakeCabPath, lMakeCabArgs);
+					mBuildProcess.RunProcess (lMakeCabPath, lMakeCabArgs);
 
 					if (File.Exists (lTargetPath))
 					{
@@ -143,7 +145,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 						}
 						if (!String.IsNullOrEmpty (lSignToolArgs))
 						{
-							mBuildProcess.RunProcess (lSettings.SignToolPath, lSignToolArgs);
+							mBuildProcess.RunProcess (lSignToolPath, lSignToolArgs);
 							FixMSHAFiles ();
 						}
 					}
@@ -158,6 +160,8 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		private bool CanExecute (PackAndSignMSHCSettings Settings, out String DdfPath)
 		{
 			DdfPath = Path.ChangeExtension (Assembly.GetExecutingAssembly ().Location, ".ddf");
+			FilePath lMakeCabPath = new FilePath (Settings.MakeCabPath,mBuildProcess.CurrentProject);
+			FilePath lSignToolPath = new FilePath (Settings.SignToolPath, mBuildProcess.CurrentProject);
 
 			if (mBuildProcess.IsPartialBuild)
 			{
@@ -183,11 +187,11 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			{
 				mBuildProcess.ReportWarning (Name, "No path specified for signtool.exe");
 			}
-			else if (!File.Exists (Settings.MakeCabPath))
+			else if (!lMakeCabPath.Exists)
 			{
 				mBuildProcess.ReportWarning (Name, "Invalid path for makecab.exe - \"{0}\"", Settings.MakeCabPath);
 			}
-			else if (!File.Exists (Settings.SignToolPath))
+			else if (!lSignToolPath.Exists)
 			{
 				mBuildProcess.ReportWarning (Name, "Invalid path for signtool.exe - \"{0}\"", Settings.SignToolPath);
 			}

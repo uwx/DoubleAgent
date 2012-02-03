@@ -39,7 +39,7 @@
 			<para/>
 			<para>
 				To use the server interfaces, <token>DA</token> must already be installed on the target system. If you want
-				to install <token>DA</token> as part of your application, you can download <token>DA</token>'s installation (<legacyItalic>.MSI</legacyItalic>) package from the Web site. You can include this file in your installation
+				to install <token>DA</token> as part of your application, you can download <token>DA</token>'s installation (<localUri>.MSI</localUri>) package from the Web site. You can include this file in your installation
 				setup program (with the required acknowledgement). Whenever it is executed, it will install <token>DA</token>
 				on the target system.
 			</para>

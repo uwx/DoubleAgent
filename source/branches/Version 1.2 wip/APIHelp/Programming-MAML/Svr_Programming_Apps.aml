@@ -98,8 +98,7 @@
 			</title>
 			<content>
 				<para>
-					For programming languages that support the <token>dotNET</token>&#160;
-					<token>CLRname</token> (<token>CLR</token>),
+					For programming languages that support the <token>dotNET</token>&#160;<token>CLRname</token> (<token>CLR</token>),
 					use the <token>DA</token> Server <token>PIA</token>.
 				</para>
 				<list class="bullet">

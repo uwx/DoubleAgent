@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOCTypeGrouping", "TOCTypeG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOCNamespacePlacement", "TOCNamespacePlacement\TOCNamespacePlacement.csproj", "{74BD21CC-CD3F-49E8-BB56-C4AA16D42D22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartialReferenceLinks", "PartialReferenceLinks\PartialReferenceLinks.csproj", "{0F85C306-6597-491A-8557-0966E8A99A13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{74BD21CC-CD3F-49E8-BB56-C4AA16D42D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74BD21CC-CD3F-49E8-BB56-C4AA16D42D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74BD21CC-CD3F-49E8-BB56-C4AA16D42D22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F85C306-6597-491A-8557-0966E8A99A13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F85C306-6597-491A-8557-0966E8A99A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F85C306-6597-491A-8557-0966E8A99A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F85C306-6597-491A-8557-0966E8A99A13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

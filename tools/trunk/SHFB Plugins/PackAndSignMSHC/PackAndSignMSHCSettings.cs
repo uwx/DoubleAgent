@@ -568,11 +568,6 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 				{
 					Regex lRegEx = new Regex ("(?<flag>(/|-)\\w+)\\s+(?<value>(\".*\")|\\S+)(?(/|-|$))", RegexOptions.CultureInvariant);
 
-					foreach (String lGroup in lRegEx.GetGroupNames ())
-					{
-						System.Diagnostics.Debug.Print ("  Group [{0}]", lGroup);
-					}
-
 					foreach (Match lMatch in lRegEx.Matches (CertificatePath))
 					{
 						String lFlag = String.Empty;
