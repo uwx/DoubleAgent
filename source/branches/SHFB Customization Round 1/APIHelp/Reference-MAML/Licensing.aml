@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e08466b9-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				<token>DA</token> is open-source software, distributed in the hope that it will be useful, but with ABSOLUTELY
+				NO WARRANTY.
+			</para>
+			<para>
+				You can redistribute it and/or modify it under the terms of the <link xlink:href="e08466ba-419c-11e1-9d4f-002421116fb2">GNU General Public License</link> and the <link xlink:href="e08466bb-419c-11e1-9d4f-002421116fb2">GNU Lesser General Public License</link> published
+				by the <token>FSF</token>.
+			</para>
+		</introduction>
+
+		<section>
+			<title>Specifics</title>
+			<content>
+				<list class="bullet">
+					<listItem>
+						<para>
+							The published <token>COM</token> interfaces (and associated <token>PIAs</token>) are covered by the
+							<token>LGPL3</token>.
+						</para>
+						<list class="bullet">
+							<listItem>
+								<para>
+									This is the license that covers the use of libraries within an application. Using a <token>COM</token> interface or <token>PIA</token> is functionally equivalent
+									to dynamically binding to a runtime library.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									The <token>COM</token> interfaces and <token>PIAs</token>
+									covered by this licence include all interfaces for the <token>DA</token> Control and <token>DA</token> Server.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									The intention is to allow any application that uses <token>MA</token>'s published
+									<token>COM</token> interfaces to use <token>DA</token> in the same way.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									The GNU <legacyBold>Lesser</legacyBold> General Public License licence allows any application, including <phrase>proprietary</phrase>
+									applications, to use open source libraries, with the proper prominent acknowledgement and references
+									to the open source.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									The easiest way provide acknowledgement is to provide access to the <token>DA</token> copyright page. The
+									sample source code in the <token>DA</token> project includes examples of application <ui>About</ui> boxes
+									that do this.
+								</para>
+							</listItem>
+						</list>
+					</listItem>
+					<listItem>
+						<para>
+							The rest of <token>DA</token> (i.e. the internals) is covered by the <token>GPL3</token>.
+						</para>
+						<list class="bullet">
+							<listItem>
+								<para>
+									This license restricts usage to <phrase>non-proprietary</phrase> applications. A <phrase>proprietary</phrase> application
+									may not bind to these libraries either statically (at build time) or dynamically (at run time).
+									A <phrase>proprietary</phrase> application must not make use of any <token>DA</token> source code or
+									<phrase>any derivation of it</phrase>.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									The intention is to restrict usage of any portion <token>DA</token> that is not available through the published
+									<token>COM</token> interfaces and <token>PIAs</token> interfaces.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									A <phrase>non-proprietary</phrase> application that binds to any portion of <token>DA</token> other than the published
+									<token>COM</token> interfaces and <token>PIAs</token> interfaces
+									must include the appropriate acknowledgements and references, and must itself conform to the GNU General
+									Public License or an acceptable alternative.
+								</para>
+							</listItem>
+						</list>
+					</listItem>
+					<listItem>
+						<para>For <token>DA</token> version 1.2 this specifically means:</para>
+						<list class="bullet">
+							<listItem>
+								<para>
+									The basic <token>DA</token> installation available on the <externalLink>
+										<linkText>SourceForge</linkText>
+										<linkUri>http://sourceforge.net/projects/doubleagent/files/</linkUri>
+									</externalLink> website is sufficient for any application.&#160; The development and debugging
+									components are not required at runtime.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									Any application may use the <token>COM</token> interfaces defined in
+									<localUri>DaControl.tlb</localUri> and <localUri>DaControlOdl.h</localUri> and implemented by
+									<localUri>DaControl.dll</localUri>.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									Any application may use the <token>COM</token> interfaces defined in <localUri>DaServer.tlb</localUri>
+									and <localUri>DaServerOdl.h</localUri> and implemented by <localUri>DaServer.exe</localUri>.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									Any application may use the <token>PIAs</token> implemented by <localUri>DoubleAgent.Control.dll</localUri>, <localUri>DoubleAgent.AxControl.dll</localUri>,
+									and <localUri>DoubleAgent.Server.dll</localUri>.
+
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									Everything else is restricted to <legacyItalic>non-proprietary</legacyItalic> applications.
+								</para>
+							</listItem>
+						</list>
+					</listItem>
+				</list>
+				<para/>
+			</content>
+		</section>
+		<section>
+			<content>
+				<para>
+					The <token>DA</token> home page is at <externalLink>
+						<linkText>http://doubleagent.sourceforge.net</linkText>
+						<linkUri>http://doubleagent.sourceforge.net/</linkUri>
+					</externalLink>
+				</para>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e08466ba-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e08466bb-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

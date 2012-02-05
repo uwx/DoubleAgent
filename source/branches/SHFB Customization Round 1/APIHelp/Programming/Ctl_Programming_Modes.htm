@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Connected, Stand-Alone, and Contained</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<xml>
+		<MSHelp:TOCTitle Title="Connected, Stand-Alone, and Contained" />
+		<MSHelp:Keyword Index="K" Term="Connected, Stand-Alone, and Contained" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Connected, Stand-Alone, and Contained</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>The Double Agent control can operate in three different modes: <em class="glossary">connected</em>, <em
+					class="glossary">stand-alone</em>, and <em class="glossary">contained</em>. The mode a developer chooses
+					depends on the application&#39;s requirements.</p>
+				<h4><a name="connected"></a>Connected Mode</h4>
+				<div class="indent">
+					<p><em class="glossary">Connected</em> mode is the control's default mode, and is compatible with Microsoft<sup>®</sup>
+						Agent. In this mode, the Double Agent control acts as a gateway to the Double Agent server. The control
+						provides all of its services through it's connection with the server. It automatically connects to the
+						server as required, and releases the connection when it's no longer needed.</p>
+					<p>When operating in <em class="glossary">connected</em> mode, all of the control's characters belong to
+						the <em>server</em>. This means that all client applications share a <em>single</em> copy of the character's
+						<a class="see" href="../Reference/UI_Intro.htm#Character">window</a>, <a class="see" href="../Reference/UI_Intro.htm#Menu">
+						pop-up menu</a>, <a class="see" href="../Reference/UI_Intro.htm#Icon">notification icon</a>, <a class="see"
+						href="../Reference/UI_Intro.htm#Balloon">word balloon</a>, <a class="see" href="../Reference/UI_Intro.htm#ListeningTip">
+						listening tip</a>, speech engines, etc.</p>
+					<p>Other server resources such as the <a class="see" href="../Reference/UI_PropSheet.htm">Advanced Character
+					Options</a> window and the <a class="see" href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window
+						are also shared by all client applications.</p>
+					<p>If the control is contained in a form, it will <em>not</em> be visible at run-time.</p>
+					<p>A character window floats on top of all application windows and is <em>not</em> visually associated with
+						a specific client application. It can produce Text-to-Speech output and receive mouse, keyboard, and
+						Speech Recognition input even if the client application's window is inactive (not in the foreground)
+						or disabled. It can even be used by a client application that has no visible window.</p>
+					<p>The <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a>, the <a class="see" href="../Reference/UI_Intro.htm#ListeningTip">
+					listening tip</a>, and the <a class="see" href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window
+						are also <em class="glossary">topmost</em> windows, and the <em class="glossary">Listening key</em>
+						is always available.</p>
+				</div>
+				<h4><a name="standalone"></a>Stand-alone Mode</h4>
+				<div class="indent">
+					<p>In <em class="glossary">stand-alone</em> mode, the Double Agent control is <em>not</em> connected to
+						the Double Agent server. It provides the server's functionality directly.</p>
+					<p>When operating in <em class="glossary">stand-alone</em> mode, all of the control's characters belong
+						to the <em>control</em>. Since the control runs in the same process as the client application, this
+						means that the client application has it's own private copy of its characters and all of their resources.
+						The control also has its own copy of <a class="see" href="../Reference/UI_Intro.htm#VoiceCommands"></a>the
+						<a class="see" href="../Reference/UI_PropSheet.htm">Advanced Character Options</a> window and the <a class="see"
+						href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window.</p>
+					<p>If the control is contained in a form, it will <em>not</em> be visible at run-time.</p>
+					<p>A character window floats on top of the application window containing the Double Agent control, but <em>
+						not</em> other application windows. It is visually associated with your client application as an <em
+							class="glossary">owned popup</em> of the control's parent window - that is, it's hidden when the
+						control's parent window is minimized. However, the <a class="see" href="../Reference/UI_Intro.htm#Icon">notification
+						icon</a> remains visible.</p>
+					<p>The <a class="see" href="../Reference/UI_Intro.htm#Balloon">word balloon</a>, the <a class="see" href="../Reference/UI_Intro.htm#ListeningTip">
+					listening tip</a>, and the <a class="see" href="../Reference/UI_Intro.htm#VoiceCommands">Voice Commands</a> window
+						are also <em class="glossary">owned popups</em> of the control's parent window, and the <em class="glossary">
+							Listening key</em> is available only when your application is in the foreground.</p>
+				</div>
+				<h4><a name="contained"></a>Contained Mode</h4>
+				<div class="indent">
+					<p>In <em class="glossary">contained</em> mode, the Double Agent control is a <em>visible</em> child window
+						of it's containing form. Like <em class="glossary">stand-alone</em> mode, the control is not connected
+						to the server and it's characters are owned by the client application. Unlike <em class="glossary">stand-alone</em>
+						mode, the character is not a floating window; it's displayed within the control's child window.</p>
+					<p><em class="glossary">Contained</em> mode applies to a <em>single</em> character of a control that's operating
+						in <em class="glossary">stand-alone</em> mode. The control can load multiple characters, but only one
+						can be contained. When there is a <em class="glossary">contained</em> character, the control will be
+						visible. If there is no <em class="glossary">contained</em> character, the control will <em>not</em>
+						be visible.</p>
+					<p>The <em class="glossary">contained</em> character is set by the client application at run-time, so the
+						control can dynamically change to and from <em class="glossary">contained</em> mode. Also, even when
+						there's a <em class="glossary">contained</em> character, other characters can be shown as floating (uncontained)
+						windows.</p>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Ctl_Programming_Overview.htm">Control Programming Overview</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

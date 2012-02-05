@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846717-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				The <token>VoiceCommands</token> window displays the current active voice commands available
+				for the character. The window appears when the <legacyItalic>Open Commands Window</legacyItalic> command
+				is chosen or the <unmanagedCodeEntityReference>Visible</unmanagedCodeEntityReference> property of the <unmanagedCodeEntityReference>CommandsWindow</unmanagedCodeEntityReference>
+				object is set to <literal>True</literal>. If the speech engine has not yet been loaded, querying
+				or setting this property will cause <token>DA</token> to attempt to initialize the engine. If the user disables
+				speech, the window can still display; however, it will include a text message that informs the user
+				that speech is currently disabled.
+			</para>
+		</introduction>
+		<section>
+			<content>
+				<para>
+					The <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Active">
+						<token>InputActive</token>
+					</link>
+					client's commands appear in the <token>VoiceCommands</token> window based on the
+					<unmanagedCodeEntityReference>VoiceCaption</unmanagedCodeEntityReference> and <unmanagedCodeEntityReference>VoiceGrammar</unmanagedCodeEntityReference>
+					property settings, listed under the <unmanagedCodeEntityReference>VoiceCaption</unmanagedCodeEntityReference> of their
+					<unmanagedCodeEntityReference>Commands</unmanagedCodeEntityReference> collection.
+				</para>
+				<para>
+					The <token>VoiceCommands</token> window also lists the <unmanagedCodeEntityReference>VoiceCaption</unmanagedCodeEntityReference>
+					of the <unmanagedCodeEntityReference>Commands</unmanagedCodeEntityReference> collection for other clients of the character, and the following
+					server-generated voice commands for general interaction under the <legacyItalic>Global Commands</legacyItalic>
+					entry:
+				</para>
+				<table>
+					<tableHeader>
+						<row>
+							<entry>Voice Caption</entry>
+							<entry>Voice Grammar</entry>
+						</row>
+					</tableHeader>
+					<row>
+						<entry>
+							Open | Close Voice Commands Window
+						</entry>
+						<entry>
+							((open | show) [the] commands [window] | what can I say [now])<markup>
+								<br/>
+							</markup>
+							<legacyBold>or</legacyBold><markup>
+								<br/>
+							</markup>
+							close [the] commands [window]
+						</entry>
+					</row>
+					<row>
+						<entry>
+								Hide <placeholder>CharacterName</placeholder>
+						</entry>
+						<entry>
+								hide <placeholder>CharacterName &#160;</placeholder>(<legacyItalic>once for each visible character</legacyItalic>)
+						</entry>
+					</row>
+					<row>
+						<entry>
+								<placeholder>CharacterName</placeholder>
+						</entry>
+						<entry>
+								<placeholder>CharacterName &#160;</placeholder>(<legacyItalic>once for each loaded character</legacyItalic>)
+						</entry>
+					</row>
+					<row>
+						<entry>
+							Global Commands
+						</entry>
+						<entry>
+							[show] [me] global commands
+						</entry>
+					</row>
+				</table>
+				<para>
+					Speaking the voice command for another client's <unmanagedCodeEntityReference>Commands</unmanagedCodeEntityReference> collection switches
+					to that client, and the <token>VoiceCommands</token> window displays the commands of that client.
+					No other entries are expanded. Similarly, if the user switches characters, the <token>VoiceCommands</token>
+					window changes to display the commands of its <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Active">
+						<token>InputActive</token>
+					</link>
+					client. If the client is already <link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Active">
+						<token>InputActive</token>
+					</link>, speaking
+					one of its voice commands has no effect. (However, if the user collapses the active client's sub-tree
+					with the mouse, speaking the client name redisplays the client's sub-tree.)
+				</para>
+				<para>
+					If a client has voice commands, but no <unmanagedCodeEntityReference>VoiceGrammar</unmanagedCodeEntityReference> setting for its
+					<unmanagedCodeEntityReference>Commands</unmanagedCodeEntityReference> object (or no <unmanagedCodeEntityReference>VoiceCaption</unmanagedCodeEntityReference>),
+					the tree displays &quot;(command undefined)&quot; as the parent entry - but only when that client is
+					<link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Active">
+						<token>InputActive</token>
+					</link> and the client
+					has commands in its collection that have <unmanagedCodeEntityReference>VoiceCaption</unmanagedCodeEntityReference>
+					and <unmanagedCodeEntityReference>VoiceGrammar</unmanagedCodeEntityReference> settings.
+				</para>
+				<para>
+					The server automatically displays the commands of the current
+					<link xlink:href="e0846714-419c-11e1-9d4f-002421116fb2#Active">
+						<token>InputActive</token>
+					</link> client and, if necessary, scrolls the window to display as many of the client's commands
+					as possible, based on the size of the window. If the character has no client entries, the
+					<legacyItalic>Global Commands</legacyItalic> entry is expanded.
+				</para>
+				<para>
+					If the user speaks <legacyItalic>Global Commands</legacyItalic>, the <token>VoiceCommands</token> window
+					always displays its associated sub-tree entries. If they are already displayed, the command has no effect.
+				</para>
+				<para>
+					Although you can also display or hide the <token>VoiceCommands</token> window from your application's
+					code using the <unmanagedCodeEntityReference>Visible</unmanagedCodeEntityReference> property, you cannot change the <token>VoiceCommands</token>
+					window size or location. The server maintains the <token>VoiceCommands</token> window's
+					properties based on the user's interaction with the window. Its initial location is immediately adjacent
+					to the character's taskbar icon.
+				</para>
+				<para>
+					The <token>VoiceCommands</token> window is included in the ALT+TAB window order. This enables
+					a user to switch to the window to scroll, resize, or reposition the window with the keyboard.
+				</para>
+			</content>
+		</section>
+		<relatedTopics>
+			<link xlink:href="e0846718-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846716-419c-11e1-9d4f-002421116fb2#PropSheet">
+				<token>AdvancedCharacterOptions</token>
+			</link> Window
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

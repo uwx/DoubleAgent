@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0">
+	<siteMapNode title="Double Agent" url="Reference/Intro.htm" isDefault="true">
+		<siteMapNode title="Licensing and Distribution" url="Reference/Licensing.htm">
+			<siteMapNode title="The GNU General Public License" url="Reference/License.htm" />
+			<siteMapNode title="The GNU Lesser General Public License" url="Reference/License.lesser.htm" />
+		</siteMapNode>
+		<siteMapNode title="The Double Agent User Interface" url="Reference/UI_Intro.htm">
+			<siteMapNode title="The Character Window" url="Reference/UI_Intro.htm" href="#Character" />
+			<siteMapNode title="The Pop-up Menu" url="Reference/UI_Intro.htm" href="#Menu" />
+			<siteMapNode title="The Notification Icon" url="Reference/UI_Intro.htm" href="#Icon" />
+			<siteMapNode title="The Word Balloon" url="Reference/UI_Intro.htm" href="#Balloon" />
+			<siteMapNode title="The Listening Tip" url="Reference/UI_Intro.htm" href="#ListeningTip" />
+			<siteMapNode title="The Voice Commands Window" url="Reference/UI_Intro.htm" href="#VoiceCommands" />
+			<siteMapNode title="Image Rendering" url="Reference/UI_Rendering.htm" />
+			<siteMapNode title="The Advanced Character Options Window" url="Reference/UI_PropSheet.htm">
+				<siteMapNode title="The Output Page" url="Reference/UI_PropSheet.htm" href="#Output" />
+				<siteMapNode title="The Speech Input Page" url="Reference/UI_PropSheet.htm" href="#SpeechInput" />
+				<siteMapNode title="The Gallery Page" url="Reference/UI_PropSheet.htm" href="#Gallery" />
+				<siteMapNode title="The Copyright Page" url="Reference/UI_PropSheet.htm" href="#Copyright" />
+			</siteMapNode>
+			<siteMapNode title="The Double Agent Control Panel" url="Reference/UI_ControlPanel.htm" />
+		</siteMapNode>
+		<siteMapNode title="Programming Double Agent" url="Programming/Gen_Intro.htm">
+			<siteMapNode title="Double Agent API Overview" url="Programming/Gen_Overview.htm">
+				<siteMapNode title="Animation Services" url="Programming/Gen_Animation.htm">
+					<siteMapNode title="Loading a Character" url="Programming/Gen_Animation.htm" href="#LoadCharacter" />
+					<siteMapNode title="Loading the Default Character" url="Programming/Gen_Animation.htm" href="#LoadDefault" />
+					<siteMapNode title="Animating a Character" url="Programming/Gen_Animation.htm" href="#AnimateCharacter" />
+					<siteMapNode title="Requests and Synchronization" url="Programming/Gen_Animation.htm" href="#Requests" />
+					<siteMapNode title="State Animations" url="Programming/Gen_Animation.htm" href="#States" />
+				</siteMapNode>
+				<siteMapNode title="Output Services" url="Programming/Gen_Output.htm">
+					<siteMapNode title="Animation Sound Effects" url="Programming/Gen_Output.htm" href="#Effects" />
+					<siteMapNode title="Synthesized Speech Support" url="Programming/Gen_Output.htm" href="#Speech" />
+					<siteMapNode title="Audio Output Support" url="Programming/Gen_Output.htm" href="#Audio" />
+					<siteMapNode title="Word Balloon Support" url="Programming/Gen_Output.htm" href="#Balloon" />
+				</siteMapNode>
+				<siteMapNode title="Input Services" url="Programming/Gen_Input.htm">
+					<siteMapNode title="Input-Active Client" url="Programming/Gen_Input.htm" href="#Active" />
+					<siteMapNode title="Pop-up Menu Support" url="Programming/Gen_Input.htm" href="#Menu" />
+					<siteMapNode title="Speech Input Support" url="Programming/Gen_InputSpeech.htm" />
+					<siteMapNode title="Speech Engine Selection" url="Programming/Gen_InputSpeech.htm" href="#Engine" />
+					<siteMapNode title="Speech Input Events" url="Programming/Gen_InputSpeech.htm" href="#Events" />
+					<siteMapNode title="The Voice Commands Window" url="Programming/Gen_VoiceCommands.htm" />
+					<siteMapNode title="The Listening Tip" url="Programming/Gen_ListeningTip.htm" />
+				</siteMapNode>
+				<siteMapNode title="Configuration Services" url="Programming/Gen_Config.htm">
+					<siteMapNode title="The Advanced Character Options Window" url="Programming/Gen_Config.htm" href="#PropSheet" />
+					<siteMapNode title="Local Character Files" url="Programming/Gen_Config.htm" href="#InstalledFiles" />
+					<siteMapNode title="Installed Speech Engines" url="Programming/Gen_Config.htm" href="#InstalledSpeech" />
+				</siteMapNode>
+			</siteMapNode>
+			<siteMapNode title="Programming the Double Agent Server" url="Programming/Svr_Programming.htm">
+				<siteMapNode title="Overview" url="Programming/Svr_Programming_Overview.htm">
+					<siteMapNode title="The Double Agent Server Object Model" url="Programming/Svr_Objects.htm" />
+					<siteMapNode title="Using the Server in Applications" url="Programming/Svr_Programming_Apps.htm">
+						<siteMapNode title="Loading Character and Animation Data" url="Programming/Svr_Programming_Load.htm" />
+						<siteMapNode title="Creating a Notification Sink" url="Programming/Svr_Programming_Sink.htm" />
+					</siteMapNode>
+					<siteMapNode title="Using Speech Services" url="Programming/Svr_Programming_Speech.htm" />
+					<siteMapNode title="Updating from Previous Versions" url="Programming/Svr_Programming_Upgrade.htm" />
+				</siteMapNode>
+				<siteMapNode title="N:DoubleAgent.Server" url=""/>
+			</siteMapNode>
+			<siteMapNode title="Programming the Double Agent Control" url="Programming/Ctl_Programming.htm">
+				<siteMapNode title="Overview" url="Programming/Ctl_Programming_Overview.htm">
+					<siteMapNode title="The Double Agent Control Object Model" url="Programming/Ctl_Objects.htm" />
+					<siteMapNode title="Using the Control in Applications" url="Programming/Ctl_Programming_Apps.htm">
+						<siteMapNode title="Creating an Instance of the Control" url="Programming/Ctl_Programming_Instance.htm" />
+						<siteMapNode title="Using the Control's Methods, Properties, and Events" url="Programming/Ctl_Programming_Members.htm" />
+					</siteMapNode>
+					<siteMapNode title="Using the Control in Web Pages" url="Programming/Ctl_Programming_Web.htm">
+						<siteMapNode title="Using VBScript" url="Programming/Ctl_Programming_VBScript.htm" />
+						<siteMapNode title="Using JavaScript and JScript" url="Programming/Ctl_Programming_JScript.htm" />
+					</siteMapNode>
+					<siteMapNode title="Using Speech Services" url="Programming/Ctl_Programming_Speech.htm" />
+					<siteMapNode title="Connected, Stand-Alone, and Contained" url="Programming/Ctl_Programming_Modes.htm" />
+					<siteMapNode title="Updating from Previous Versions" url="Programming/Ctl_Programming_Upgrade.htm" />
+				</siteMapNode>
+				<siteMapNode title="N:DoubleAgent.Control" url=""/>
+				<siteMapNode title="N:DoubleAgent.AxControl" url=""/>
+			</siteMapNode>
+			<siteMapNode title="Reference" url="">
+				<siteMapNode title="Double Agent Error Codes" url="Reference/Ref_Errors.htm" />
+				<siteMapNode title="Speech Output Tags" url="Reference/Ref_SpeechTags.htm">
+					<siteMapNode title="SAPI5 Speech Output Tags" url="Reference/Ref_SpeechTags.htm" href="#SAPI5" />
+					<siteMapNode title="SAPI4 Speech Output Tags" url="Reference/Ref_SpeechTags.htm" href="#SAPI4" />
+					<siteMapNode title="SAPI5 English Normalization Contexts" url="Reference/Ref_SAPI5Contexts.htm" />
+				</siteMapNode>
+			</siteMapNode>
+		</siteMapNode>
+		<siteMapNode title="Notes" url="">
+			<siteMapNode title="Notable differences between Double Agent and Microsoft Agent" url="Reference/MsAgentVsDoubleAgent.htm" />
+			<siteMapNode title="Moving from Microsoft Agent to Double Agent" url="Reference/MsAgentToDoubleAgent.htm" />
+			<siteMapNode title="Targeting 64-bit Windows" url="Reference/Windows64.htm" />
+			<siteMapNode title="Deploying Double Agent" url="Reference/Deployment.htm" />
+			<siteMapNode title="Microsoft Agent Tools" url="Reference/MsAgentTools.htm" />
+			<siteMapNode title="Microsoft Agent on Windows 7" url="Reference/MsAgentWin7.htm" />
+		</siteMapNode>
+		<siteMapNode title="What's New for Version 1.1" url="Reference/Version_1_1_New.htm">
+			<siteMapNode title="The User Interface" url="Reference/Version_1_1_New.htm" href="#UI" />
+			<siteMapNode title="The Programming Interfaces" url="Reference/Version_1_1_New.htm" href="#API" />
+			<siteMapNode title="Refactoring" url="Reference/Version_1_1_New.htm" href="#Refactoring" />
+			<siteMapNode title="Speech Text" url="Reference/Version_1_1_New.htm" href="#SpeechText" />
+        </siteMapNode>
+            <siteMapNode title="What's New for Version 1.2" url="Reference/Version_1_2_New.htm">
+			<siteMapNode title="The Double Agent control for web pages" url="Reference/Version_1_2_New.htm" href="#CAB" />
+			<siteMapNode title="Version 1.5 Character Files" url="Reference/Version_1_2_New.htm" href="#Characters" />
+			<siteMapNode title="The Programming Interfaces" url="Reference/Version_1_2_New.htm" href="#API" />
+			</siteMapNode>
+		</siteMapNode>
+</siteMap>

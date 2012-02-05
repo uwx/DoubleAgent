@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e08466cd-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerHowToDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				Applications developed for <token>MA</token> will continue to work with <token>DA</token>.
+				However, if you want to develop your application for <token>DA</token> instead of <token>MA</token>, make
+				these simple changes:
+			</para>
+
+			<list class="bullet">
+				<listItem>
+					<para>
+						If you're using the <token>Agent</token> Control:
+					</para>
+					<list class="ordered">
+						<listItem>
+							Replace the <token>MA</token> Control <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>Agent.Control</codeInline> or <codeInline>Agent.Control.2</codeInline>
+							with the <token>DA</token> Control <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>DoubleAgent.Control</codeInline>
+							or <codeInline>DoubleAgent.Control.1.1</codeInline>
+						</listItem>
+						<listItem>
+							Replace the <token>MA</token> Control <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
+							with the <token>DA</token> Control <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
+						</listItem>
+						<listItem>
+							Replace the <token>MA</token> Control <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>AgentObjects</codeInline> {F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}
+							with the <token>DA</token> Control <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>DoubleAgentCtl</codeInline> {1147E550-A208-11DE-ABF2-002421116FB2}
+						</listItem>
+					</list>
+				</listItem>
+				<listItem>
+					<para>
+						If you're using the <token>Agent</token> Server:
+					</para>
+					<list class="ordered">
+						<listItem>
+							Replace the <token>MA</token> Server <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>Agent.Server</codeInline> or <codeInline>Agent.Server.2</codeInline>
+							with the <token>DA</token> Server <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>DoubleAgent.Server</codeInline> or <codeInline>DoubleAgent.Server.1.1</codeInline>
+						</listItem>
+						<listItem>
+							Replace the <token>MA</token> Server <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{D45FD2FC-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
+							with the <token>DA</token> Server <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{1147E500-A208-11DE-ABF2-002421116FB2}</codeInline>
+						</listItem>
+						<listItem>
+							Replace the <token>MA</token> Server <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>AgentServerObjects</codeInline> {A7B93C73-7B81-11D0-AC5F-00C04FD97575}
+							with the <token>DA</token> Server <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>DoubleAgentSvr</codeInline> {1147E501-A208-11DE-ABF2-002421116FB2}
+						</listItem>
+					</list>
+				</listItem>
+			</list>
+			<para/>
+			<list class="bullet">
+				<listItem>
+					<para>
+						For C and C++ development, replace the the <token>MA</token> interfaces in
+						<localUri>AgtSvr.h</localUri> and <localUri>AgtCtl.h</localUri> with the coresponding <token>DA</token> interfaces in
+						<localUri>DaServerOdl.h</localUri> and <localUri>DaControlOdl.h</localUri>.
+					</para>
+					<para>
+						Optionally, you can also use the interface smart pointers in <localUri>DaControlInterface.h</localUri>
+						and <localUri>DaServerInterface.h</localUri>.
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						For <token>VB</token> 6 development, replace <localUri>AgentCtl.dll</localUri> references with <localUri>DaControl.dll</localUri>.
+					</para>
+					<para>
+						You can easily change these references in your project (<newTerm>.vbp</newTerm>) and form (<newTerm>.frm</newTerm>) files with a text editor, as follows:
+					</para>
+					<table>
+						<row>
+							<entry>
+								change:
+							</entry>
+							<entry>
+								<codeInline>
+									Object = &quot;{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0&quot;; &quot;AgentCtl.dll&quot;
+								</codeInline>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								to:
+							</entry>
+							<entry>
+								<codeInline>
+									Object = &quot;{1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0&quot;; &quot;DaControl.dll&quot;
+								</codeInline>
+							</entry>
+						</row>
+					</table>
+				</listItem>
+				<listItem>
+					<para>
+						For <token>dotNET</token> languages, change the <token>COM</token>&#160;<token>IA</token> references as follows:
+					</para>
+					<table>
+						<row>
+							<entry>
+								change:
+							</entry>
+							<entry>
+								<codeInline>AgentObjects</codeInline>
+							</entry>
+							<entry>
+								to:
+							</entry>
+							<entry>
+								<codeInline>DoubleAgent.Control</codeInline>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								change:
+							</entry>
+							<entry>
+								<codeInline>AxAgentObjects</codeInline>
+							</entry>
+							<entry>
+								to:
+							</entry>
+							<entry>
+								<codeInline>DoubleAgent.AxControl</codeInline>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								change:
+							</entry>
+							<entry>
+								<codeInline>AgentServerObjects</codeInline>
+							</entry>
+							<entry>
+								to:
+							</entry>
+							<entry>
+								<codeInline>DoubleAgent.Server</codeInline>
+							</entry>
+						</row>
+					</table>
+				</listItem>
+			</list>
+		</introduction>
+
+		<relatedTopics>
+		</relatedTopics>
+
+	</developerHowToDocument>
+</topic>

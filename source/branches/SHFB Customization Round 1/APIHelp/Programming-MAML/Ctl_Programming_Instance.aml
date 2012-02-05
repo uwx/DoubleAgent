@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846734-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerHowToDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				Accessing <token>DA</token>'s control requires that you first create an instance of the control. The easiest
+				way to do this is to place an instance of the control on a form. You may have to add the control to
+				your toolbox before adding it to your form. Depending on your programming language, you may also be
+				able to create the control at runtime.
+			</para>
+			<para>
+				If you plan to show a character as a <token>Popup</token> that floats over other windows on the desktop (as implemented
+				by <token>MA</token>), then you can use the control either as part of a form or dynamically
+				created at runtime. If the control is part of a form it will be invisible at runtime, so the only difference
+				is whether or not you want the control&#39;s lifetime to be tied to that of the form.
+			</para>
+			<para>
+				If you want to show a character within a form, you should use the <token>ActiveXCtl</token> or
+				<token>WinFormsCtl</token> as part of the form definition. Use the control&#39;s
+				<codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Control.AutoConnect</codeEntityReference>,
+				<codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Control.Connected</codeEntityReference>,
+				and <codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Control.ControlCharacter</codeEntityReference>
+				properties to make the control visible at runtime, with the character shown within it&#39;s boundaries.
+			</para>
+			<alert class="note">
+				<para>
+					This is a new feature of <token>DA</token> version 1.1, and it applies to Web pages as well as forms. For
+					more information see <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2" />
+				</para>
+			</alert>
+		</introduction>
+
+		<relatedTopics>
+			<link xlink:href="e0846733-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerHowToDocument>
+</topic>

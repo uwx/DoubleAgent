@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e08466cc-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerConceptualDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				<token>DA</token> supports the functionality implemented by <token>MA</token> on <token>WindowsXP</token> and
+				<token>WindowsVista</token>, with the following differences:
+			</para>
+			<list class="bullet">
+				<listItem>
+					<para>
+						<token>MA</token> supports help mode on <token>WindowsXP</token> but not on <token>WindowsVista</token>. <token>DA</token>
+						<legacyBold>does not</legacyBold> support help mode (yet).
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						The 32-bit version of <token>DA</token> supports <token>SAPI4</token> text-to-speech engines, but it <legacyBold>does not</legacyBold> support
+						<token>SAPI4</token> voice recognition engines.
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						<token>MA</token> supports <legacyItalic>linguistically enhanced sound files</legacyItalic> for text-to-speech.
+						<token>DA</token>&#160;<legacyBold>does not</legacyBold> support this feature (for now).
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						<token>MA</token> supports international languages on <token>WindowsXP</token> but <legacyBold>not</legacyBold> on
+						<token>WindowsVista</token>. <token>DA</token>&#160;<legacyBold>does</legacyBold> support international languages.
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						In a 64-bit environment, <token>DA</token> may use a different server architecture than Microsoft Agent.
+						See <link xlink:href="e08466ce-419c-11e1-9d4f-002421116fb2" /> for details.
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						<token>DA</token>&#160;<legacyBold>does not</legacyBold> include any of the <token>MA</token> character editing tools.
+						However, since <token>DA</token> uses <token>MA</token> character files, the original tools can
+						still be used.
+					</para>
+				</listItem>
+			</list>
+		</introduction>
+
+		<relatedTopics>
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

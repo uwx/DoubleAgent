@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="8d5fdecd-2580-4545-8a88-0d231385c4ba" revisionNumber="1">
+  <developerConceptualDocument
+    xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <introduction>
+
+				<h4 class="summary">Description</h4>
+				
+					<para>Returns the name used in code to identify the control. This property is read-only at run time.</para>
+				
+				<h4 class="syntax">Syntax</h4>
+				
+					<definitionTable>
+						<definedTerm>Visual Basic .NET</definedTerm>
+						<definition>
+							<para>[<legacyItalic>Name</legacyItalic> = ]<legacyItalic>control</legacyItalic>.<legacyItalic>Name</legacyItalic></para>
+						</definition>
+						<definedTerm>Visual Basic 6</definedTerm>
+						<definition>
+							<para>[<legacyItalic>Name</legacyItalic> = ]<legacyItalic>control</legacyItalic>.<legacyItalic>Name</legacyItalic></para>
+						</definition>
+						<definedTerm>VBScript</definedTerm>
+						<definition>
+							<para>[<legacyItalic>Name</legacyItalic> = ]<legacyItalic>control</legacyItalic>.<legacyItalic>Name</legacyItalic></para>
+						</definition>
+						<definedTerm>Visual C#</definedTerm>
+						<definition>
+							<para>[<legacyItalic>Name</legacyItalic> = ]<legacyItalic>control</legacyItalic>.<legacyItalic>Name</legacyItalic></para>
+						</definition>
+					</definitionTable>
+				
+				<h4 class="remarks">Remarks</h4>
+				<para>In some programming environments such as <token>VB</token>, adding the control automatically generates a default
+					name for the control that can be changed at design time. For HTML scripts, you can define the name in
+					the &lt;OBJECT&gt; tag. If you define the name, follow the conventions of the programming language for
+					defining object names.</para>
+	</introduction>
+
+	<relatedTopics>
+    </relatedTopics>
+
+  </developerConceptualDocument>
+</topic>

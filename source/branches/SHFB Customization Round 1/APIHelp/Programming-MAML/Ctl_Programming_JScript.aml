@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846738-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerHowToDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				If you use JavaScript or Microsoft JScript<superscript>®</superscript> to access <token>DA</token>'s programming interface,
+				follow the language's conventions for specifying methods or properties:
+			</para>
+			<code xml:space="preserve" language="js" >control.object.Method (parameter)
+control.object.Property = value</code>
+			<para>
+				JavaScript does not currently have event syntax for non-HTML objects. However, with <token>MSIE</token>
+				you can use the &lt;SCRIPT&gt; tag's <languageKeyword>For…Event</languageKeyword> syntax:
+			</para>
+			<code xml:space="preserve" language="none" title="HTML">&lt;SCRIPT LANGUAGE="JScript" FOR="object" EVENT="event()"&gt;
+statements…
+&lt;/SCRIPT&gt;</code>
+			<para>
+				Because not all browsers currently support this event syntax, you may want to use JavaScript only for
+				pages that support <token>MSIE</token> or for code that does not require event handling.
+			</para>
+			<para>
+				To access <token>DA</token>'s object collections, use the JScript <languageKeyword>Enumerator</languageKeyword> object.
+			</para>
+		</introduction>
+
+		<relatedTopics>
+			<link xlink:href="e0846736-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerHowToDocument>
+</topic>
