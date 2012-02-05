@@ -13,7 +13,14 @@
 					</xsl:apply-templates>
 				</topic>
 			</xsl:if>
-			<xsl:if test="/reflection/apis/api[apidata/@group='type'][topicdata/@group='api'][containers/namespace/@api=current()/@id][apidata/@subgroup='interface']">
+      <xsl:if test="/reflection/apis/api[apidata/@group='type'][topicdata/@group='api'][containers/namespace/@api=current()/@id][apidata/@subgroup='structure']">
+        <topic id="Structures">
+          <xsl:apply-templates select="key('index',elements/element/@api)" mode="structure">
+            <xsl:sort select="@id" />
+          </xsl:apply-templates>
+        </topic>
+      </xsl:if>
+      <xsl:if test="/reflection/apis/api[apidata/@group='type'][topicdata/@group='api'][containers/namespace/@api=current()/@id][apidata/@subgroup='interface']">
 				<topic id="Interfaces">
 					<xsl:apply-templates select="key('index',elements/element/@api)" mode="interface">
 						<xsl:sort select="@id" />
@@ -45,7 +52,7 @@
 		<xsl:call-template name="AddTypeNode"/>
 	</xsl:template>
 
-	<!-- class type templatea -->
+	<!-- class type template -->
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='class'][topicdata[@group='api']]" mode="class">
 		<xsl:call-template name="AddTypeNode"/>
 	</xsl:template>
@@ -54,7 +61,16 @@
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='class'][topicdata[@group='api']]" mode="other">
 	</xsl:template>
 
-	<!-- interface type templatea -->
+  <!-- structure type template -->
+  <xsl:template match="api[apidata/@group='type'][apidata/@subgroup='structure'][topicdata[@group='api']]" mode="structure">
+    <xsl:call-template name="AddTypeNode"/>
+  </xsl:template>
+  <xsl:template match="api[apidata/@group='type'][apidata/@subgroup!='structure'][topicdata[@group='api']]" mode="structure">
+  </xsl:template>
+  <xsl:template match="api[apidata/@group='type'][apidata/@subgroup='structure'][topicdata[@group='api']]" mode="other">
+  </xsl:template>
+
+  <!-- interface type template -->
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='interface'][topicdata[@group='api']]" mode="interface">
 		<xsl:call-template name="AddTypeNode"/>
 	</xsl:template>
@@ -63,7 +79,7 @@
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='interface'][topicdata[@group='api']]" mode="other">
 	</xsl:template>
 
-	<!-- enumeration type templatea -->
+	<!-- enumeration type template -->
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='enumeration'][topicdata[@group='api']]" mode="enumeration">
 		<xsl:call-template name="AddTypeNode"/>
 	</xsl:template>
@@ -72,7 +88,7 @@
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='enumeration'][topicdata[@group='api']]" mode="other">
 	</xsl:template>
 
-	<!-- delegate type templatea -->
+	<!-- delegate type template -->
 	<xsl:template match="api[apidata/@group='type'][apidata/@subgroup='delegate'][topicdata[@group='api']]" mode="delegate">
 		<xsl:call-template name="AddTypeNode"/>
 	</xsl:template>

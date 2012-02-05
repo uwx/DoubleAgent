@@ -9,6 +9,9 @@ using SandcastleBuilder.Utils;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
+	/// <summary>
+	/// This is the configuration dialog for the PackAndSignMHSC plugin.
+	/// </summary>
 	public partial class PackAndSignMHSCConfig : OwnedWPFWindow
 	{
 		#region Private data members
@@ -35,6 +38,9 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Properties
 		//=====================================================================
 
+		/// <summary>
+		/// The configuration XML fragment.
+		/// </summary>
 		public String Configuration
 		{
 			get
@@ -52,11 +58,11 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Helper Methods
 		//=====================================================================
 
-		String BrowseForExeFile (String CurrentFileName)
+		private String BrowseForExeFile (String CurrentFileName)
 		{
 			return BrowseForExeFile (CurrentFileName, String.Empty);
 		}
-		String BrowseForExeFile (String CurrentFileName, String Title)
+		private String BrowseForExeFile (String CurrentFileName, String Title)
 		{
 			Microsoft.Win32.OpenFileDialog lDialog = new Microsoft.Win32.OpenFileDialog ();
 			StringBuilder lFilter = new StringBuilder ();
@@ -82,15 +88,15 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			return CurrentFileName;
 		}
 
-		String BrowseForFolder (String CurrentPath)
+		private String BrowseForFolder (String CurrentPath)
 		{
 			return BrowseForFolder (CurrentPath, String.Empty);
 		}
-		String BrowseForFolder (String CurrentPath, String Description)
+		private String BrowseForFolder (String CurrentPath, String Description)
 		{
 			return BrowseForFolder (CurrentPath, mSettings.DefaultCabPathName, Description);
 		}
-		String BrowseForFolder (String CurrentPath, String DefaultPath, String Description)
+		private String BrowseForFolder (String CurrentPath, String DefaultPath, String Description)
 		{
 			System.Windows.Forms.FolderBrowserDialog lDialog = new System.Windows.Forms.FolderBrowserDialog ();
 			FolderPath lPath = new FolderPath (mProject);
@@ -137,7 +143,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=============================================================================
 
-		static public String FileExtTypeName (String pFileExt)
+		private static String FileExtTypeName (String pFileExt)
 		{
 			String lFileType = pFileExt;
 
@@ -150,7 +156,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			return FileExtTypeName (pFileExt, lFileType);
 		}
 
-		static public String FileExtTypeName (String pFileExt, String pDefault)
+		private static String FileExtTypeName (String pFileExt, String pDefault)
 		{
 			String lTypeName = pDefault;
 
@@ -302,11 +308,11 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=====================================================================
 
-		String BrowseForCertificateFile (String CurrentFileName)
+		private String BrowseForCertificateFile (String CurrentFileName)
 		{
 			return BrowseForCertificateFile (CurrentFileName, String.Empty);
 		}
-		String BrowseForCertificateFile (String CurrentFileName, String Title)
+		private String BrowseForCertificateFile (String CurrentFileName, String Title)
 		{
 			Microsoft.Win32.OpenFileDialog lDialog = new Microsoft.Win32.OpenFileDialog ();
 			StringBuilder lFilter = new StringBuilder ();
@@ -350,7 +356,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 			SignToolPath.Text = mSettings.SignToolPath;
 			TimestampServer.Text = mSettings.TimeStampUrl;
-			ShowCertificate.IsEnabled = !String.IsNullOrEmpty (mSettings.CertificatePath);
+			ShowCertificate.IsEnabled = !String.IsNullOrEmpty (mSettings.CertificateSpec);
 
 			mCertificate = mSettings.LoadCertificate ();
 			ShowCertificateDetails ();
@@ -436,7 +442,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 				if (lCertificate != null)
 				{
-					mSettings.CertificatePath = lCertificatePath;
+					mSettings.CertificateSpec = lCertificatePath;
 					mCertificate = lCertificate;
 					ShowCertificateDetails ();
 				}

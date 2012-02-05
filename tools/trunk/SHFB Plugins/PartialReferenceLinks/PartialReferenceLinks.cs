@@ -14,6 +14,18 @@ using SandcastleBuilder.Utils.ConceptualContent;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
+	/// <summary>
+	/// This plugin scans MAML Conceptual content for incomplete API references and completes them.
+	/// </summary>
+	/// <remarks>
+	/// Using the MAML &lt;codeEntityReferenct&gt; tag for a method reference requires the complete method
+	/// signature.  This plugin allows methods to be referenced by name only. It uses the generated
+	/// reflection information to update incomplete &lt;codeEntityReferenct&gt; method references with the
+	/// full method signature.
+	/// <para>
+	/// Note that parameter references are also processed so that <i>indexer</i> parameters can be treated the same way.
+	/// </para>
+	/// </remarks>
 	public class PartialReferenceLinks : IPlugIn
 	{
 		#region Private data members
@@ -27,11 +39,13 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IPlugIn Properties
 		//=====================================================================
 
+		/// <inheritdoc/>
 		public string Name
 		{
 			get { return "Resolve Partial Reference Links"; }
 		}
 
+		/// <inheritdoc/>
 		public Version Version
 		{
 			get
@@ -42,6 +56,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <inheritdoc/>
 		public string Copyright
 		{
 			get
@@ -52,6 +67,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <inheritdoc/>
 		public string Description
 		{
 			get
@@ -63,11 +79,13 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <inheritdoc/>
 		public bool RunsInPartialBuild
 		{
 			get { return false; }
 		}
 
+		/// <inheritdoc/>
 		public ExecutionPointCollection ExecutionPoints
 		{
 			get
@@ -88,17 +106,20 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IPlugIn Methods
 		//=====================================================================
 
+		/// <inheritdoc/>
 		public string ConfigurePlugIn (SandcastleProject project, string currentConfig)
 		{
 			MessageBox.Show ("This plug-in has no configurable settings", "Build Process Plug-In", MessageBoxButton.OK, MessageBoxImage.Information);
 			return currentConfig;
 		}
 
+		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
 			mBuildProcess = buildProcess;
 		}
 
+		/// <inheritdoc/>
 		public void Execute (ExecutionContext context)
 		{
 #if	DEBUG
@@ -131,6 +152,9 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 					}
 					catch (Exception exp)
 					{
+#if	DEBUG
+						mBuildProcess.ReportWarning (Name, exp.Message);
+#endif
 						System.Diagnostics.Debug.Print (exp.Message);
 					}
 				}
@@ -247,17 +271,20 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IDisposable implementation
 		//=====================================================================
 
+		/// <inheritdoc/>
 		~PartialReferenceLinks ()
 		{
 			this.Dispose (false);
 		}
 
+		/// <inheritdoc/>
 		public void Dispose ()
 		{
 			this.Dispose (true);
 			GC.SuppressFinalize (this);
 		}
 
+		/// <inheritdoc/>
 		protected virtual void Dispose (bool disposing)
 		{
 		}

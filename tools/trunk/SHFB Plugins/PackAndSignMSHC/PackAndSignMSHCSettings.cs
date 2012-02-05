@@ -12,7 +12,10 @@ using SandcastleBuilder.Utils.BuildEngine;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
-	class PackAndSignMSHCSettings
+	/// <summary>
+	/// This class handles the configurable settings for the PackAndSignMSHC plugin.
+	/// </summary>
+	public class PackAndSignMSHCSettings
 	{
 		#region Private data members
 		//=====================================================================
@@ -31,21 +34,37 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Initialization
 		//=====================================================================
 
+		/// <summary>
+		/// Use this constructor to get the default settings without reference to any project.
+		/// </summary>
 		public PackAndSignMSHCSettings ()
 		{
 			this.Configuration = String.Empty;
 		}
 
+		/// <summary>
+		/// Use this constructor to get the default settings for a specific project.
+		/// </summary>
+		/// <param name="Project">The project to use.</param>
 		public PackAndSignMSHCSettings (SandcastleProject Project)
 			: this (Project, String.Empty)
 		{
 		}
 
+		/// <summary>
+		/// Use this constructor to initialize with a specific configuration, but without reference to any project.
+		/// </summary>
+		/// <param name="Configuration">The initial configuration XML fragment.</param>
 		public PackAndSignMSHCSettings (String Configuration)
 		{
 			this.Configuration = Configuration;
 		}
 
+		/// <summary>
+		/// Use this constructor for full initialization and support of project-specific defaults.
+		/// </summary>
+		/// <param name="Project">The project to use.</param>
+		/// <param name="Configuration">The initial configuration XML fragment.</param>
 		public PackAndSignMSHCSettings (SandcastleProject Project, String Configuration)
 		{
 			mProject = Project;
@@ -57,6 +76,9 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Properties
 		//=====================================================================
 
+		/// <summary>
+		/// The PackAndSignMSHC configuration XML fragment. 
+		/// </summary>
 		public String Configuration
 		{
 			get
@@ -133,7 +155,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 				{
 					lRootNode.Attributes.SetNamedItem (lCertificatePath = mConfiguration.CreateAttribute (mCertificateConfig));
 				}
-				lCertificatePath.Value = CertificatePath;
+				lCertificatePath.Value = CertificateSpec;
 
 				return mConfiguration.OuterXml;
 			}
@@ -174,7 +196,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 				CabFileName = (lCabFileName == null) ? String.Empty : lCabFileName.Value.Trim ();
 				CabPathName = (lCabPathName == null) ? String.Empty : lCabPathName.Value.Trim ();
 				TimeStampUrl = (lTimeStampUrl == null) ? String.Empty : lTimeStampUrl.Value.Trim ();
-				CertificatePath = (lCertificatePath == null) ? String.Empty : lCertificatePath.Value.Trim ();
+				CertificateSpec = (lCertificatePath == null) ? String.Empty : lCertificatePath.Value.Trim ();
 
 				if (String.IsNullOrEmpty (MakeCabPath))
 				{
@@ -197,24 +219,53 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=====================================================================
 
+		/// <summary>The full path of the "makecab.exe" tool.</summary>
+		/// <remarks>The path can contain environment variables.</remarks>
 		public String MakeCabPath { get; set; }
+		/// <summary>The full path of the "signtool.exe" tool.</summary>
+		/// <remarks>The path can contain environment variables.</remarks>
 		public String SignToolPath { get; set; }
+		/// <summary>The file name to be used for the cabinet file.</summary>
+		/// <remarks>If this value is blank, the name of the help file will be used with the ".cab" file extension.</remarks>
 		public String CabFileName { get; set; }
+		/// <summary>The absolute or relative path where the cabinet file is to be created.</summary>
+		/// <remarks>If this value is blank, the cabinet file will be placed in the project output folder.</remarks>
 		public String CabPathName { get; set; }
+		/// <summary>The URL of the timestamping service used to timestamp the digital signature.</summary>
 		public String TimeStampUrl { get; set; }
-		public String CertificatePath { get; set; }
+		/// <summary>
+		/// The parameters used to specify an Authenticode certificate for the "signtool.exe" tool.
+		/// </summary>
+		/// <remarks>
+		/// <list type="bullet">
+		/// <item>
+		/// If the certificate is in a certificate store, the value is formatted as follows:
+		/// <para>
+		/// <c>/s &lt;store name&gt; /n &lt;certificate subject name&gt;</c>
+		/// </para>
+		/// For now, the store name is always "my" and the certificate issuer parameter is not used.
+		/// </item>
+		/// <item>
+		/// If the certificate is in a file, the value is the full path of the certificate file.
+		/// </item>
+		/// </list>
+		/// </remarks>
+		public String CertificateSpec { get; set; }
 
 		//=====================================================================
 
+		/// <summary>
+		/// Indicates that the <see cref="P:SandcastleBuilder.PlugIns.CinSoft.PackAndSignMSHCSettings.CertificateSpec"/> is for a certificate in a certificate store.
+		/// </summary>
 		public bool IsStoreCertificate
 		{
 			get
 			{
-				if (!String.IsNullOrWhiteSpace (CertificatePath))
+				if (!String.IsNullOrWhiteSpace (CertificateSpec))
 				{
 					try
 					{
-						String lPrefix = CertificatePath.Trim ().Split (' ')[0];
+						String lPrefix = CertificateSpec.Trim ().Split (' ')[0];
 
 						if (IsStoreFlag (lPrefix, StoreStoreFlag))
 						{
@@ -239,6 +290,9 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <summary>
+		/// If a store certificate is being used, the name of the certificate store. Otherwise an empty string.
+		/// </summary>
 		public String StoreCertificateStore
 		{
 			get
@@ -252,10 +306,13 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 			set
 			{
-				CertificatePath = SetStorePart (StoreStoreFlag, value);
+				CertificateSpec = SetStorePart (StoreStoreFlag, value);
 			}
 		}
 
+		/// <summary>
+		/// If a store certificate is being used, certificate's subject name. Otherwise an empty string.
+		/// </summary>
 		public String StoreCertificateName
 		{
 			get
@@ -264,10 +321,16 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 			set
 			{
-				CertificatePath = SetStorePart (StoreNameFlag, value);
+				CertificateSpec = SetStorePart (StoreNameFlag, value);
 			}
 		}
 
+		/// <summary>
+		/// If a store certificate is being used, certificate's issuer name. Otherwise an empty string.
+		/// </summary>
+		/// <remarks>
+		/// This value is not currently used.
+		/// </remarks>
 		public String StoreCertificateIssuer
 		{
 			get
@@ -276,17 +339,20 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 			set
 			{
-				CertificatePath = SetStorePart (StoreIssuerFlag, value);
+				CertificateSpec = SetStorePart (StoreIssuerFlag, value);
 			}
 		}
 
 		//=====================================================================
 
+		/// <summary>
+		/// Indicates that the <see cref="P:SandcastleBuilder.PlugIns.CinSoft.PackAndSignMSHCSettings.CertificateSpec"/> is for a certificate file.
+		/// </summary>
 		public bool IsFileCertificate
 		{
 			get
 			{
-				if (!String.IsNullOrEmpty (CertificatePath) && !IsStoreCertificate)
+				if (!String.IsNullOrEmpty (CertificateSpec) && !IsStoreCertificate)
 				{
 					return true;
 				}
@@ -294,16 +360,25 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <summary>
+		/// If a file certificate is being used, the full path of the certificate file. Otherwise an empty string.
+		/// </summary>
 		public String FileCertificatePath
 		{
 			get
 			{
-				return IsFileCertificate ? CertificatePath : String.Empty;
+				return IsFileCertificate ? CertificateSpec : String.Empty;
 			}
 		}
 
 		//=====================================================================
 
+		/// <summary>
+		/// The default file name for the cabinet file.
+		/// </summary>
+		/// <remarks>
+		/// The value is an empty string if the class was constructed without a project reference. 
+		/// </remarks>
 		public String DefaultCabFileName
 		{
 			get
@@ -312,6 +387,12 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <summary>
+		/// The default location for the cabinet file.
+		/// </summary>
+		/// <remarks>
+		/// The value is an empty string if the class was constructed without a project reference. 
+		/// </remarks>
 		public String DefaultCabPathName
 		{
 			get
@@ -320,6 +401,12 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <summary>
+		/// The default certificate store name.
+		/// </summary>
+		/// <remarks>
+		/// At this time, the "my" store is always used.
+		/// </remarks>
 		public static String DefaultCertificateStore
 		{
 			get
@@ -330,18 +417,30 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=====================================================================
 
+		/// <summary>
+		/// The flag used to specify the certificate store in the "signtool.exe" command line.
+		/// </summary>
 		public static String StoreStoreFlag
 		{
 			get { return "/s"; }
 		}
+		/// <summary>
+		/// The flag used to specify the certificate issuer name in the "signtool.exe" command line.
+		/// </summary>
 		public static String StoreIssuerFlag
 		{
 			get { return "/i"; }
 		}
+		/// <summary>
+		/// The flag used to specify the certificate subjet name in the "signtool.exe" command line.
+		/// </summary>
 		public static String StoreNameFlag
 		{
 			get { return "/n"; }
 		}
+		/// <summary>
+		/// The flag used to specify the timestamper URL in the "signtool.exe" command line.
+		/// </summary>
 		public static String StoreTimestamperFlag
 		{
 			get { return "/t"; }
@@ -352,11 +451,20 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Public Methods
 		//=====================================================================
 
+		/// <summary>
+		/// Loads an Authenticode code-signing cerificate from the certificate file, if a file path has been provided.
+		/// </summary>
+		/// <returns>The loaded certificate, if successful.</returns>
 		public X509Certificate2 LoadCertificate ()
 		{
 			String lErrorMessage = String.Empty;
 			return LoadCertificate (out lErrorMessage);
 		}
+		/// <summary>
+		/// Loads an Authenticode code-signing cerificate from the certificate file, if a file path has been provided.
+		/// </summary>
+		/// <param name="ErrorMessage">An error message string if the load failed.</param>
+		/// <returns>The loaded certificate, if successful.</returns>
 		public X509Certificate2 LoadCertificate (out String ErrorMessage)
 		{
 			X509Certificate2 lCertificate = null;
@@ -382,11 +490,22 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=====================================================================
 
+		/// <summary>
+		/// Loads an Authenticode code-signing cerificate from a certificate file.
+		/// </summary>
+		/// <param name="FilePath">The full path of the file to load.</param>
+		/// <returns>The loaded certificate, if successful.</returns>
 		public static X509Certificate2 LoadFileCertificate (String FilePath)
 		{
 			String lErrorMessage = String.Empty;
 			return LoadFileCertificate (FilePath, out lErrorMessage);
 		}
+		/// <summary>
+		/// Loads an Authenticode code-signing cerificate from a certificate file.
+		/// </summary>
+		/// <param name="FilePath">The full path of the file to load.</param>
+		/// <param name="ErrorMessage">An error message string if the load failed.</param>
+		/// <returns>The loaded certificate, if successful.</returns>
 		public static X509Certificate2 LoadFileCertificate (String FilePath, out String ErrorMessage)
 		{
 			X509Certificate2 lCertificate = null;
@@ -423,11 +542,32 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=====================================================================
 
+		/// <summary>
+		/// Loads an Authenticode code-signing cerificate from a certificate store.
+		/// </summary>
+		/// <param name="StoreName">The certificate store name.</param>
+		/// <param name="CertificateName">The certificate's subject name (optional).</param>
+		/// <param name="CertificateIssuer">The certificate's issuer name (optional).</param>
+		/// <returns>The loaded certificate, if successful.</returns>
+		/// <remarks>Either the <paramref name="CertificateName"/> or <paramref name="CertificateIssuer"/> must be provided.
+		/// If both are provided, then only a certificate that matches both will be loaded.
+		/// </remarks>
 		public static X509Certificate2 LoadStoreCertificate (String StoreName, String CertificateName, String CertificateIssuer)
 		{
 			String lErrorMessage = String.Empty;
 			return LoadStoreCertificate (StoreName, CertificateName, CertificateIssuer, out lErrorMessage);
 		}
+		/// <summary>
+		/// Loads an Authenticode code-signing cerificate from a certificate store.
+		/// </summary>
+		/// <param name="StoreName">The certificate store name.</param>
+		/// <param name="CertificateName">The certificate's subject name (optional).</param>
+		/// <param name="CertificateIssuer">The certificate's issuer name (optional).</param>
+		/// <param name="ErrorMessage">An error message string if the load failed.</param>
+		/// <returns>The loaded certificate, if successful.</returns>
+		/// <remarks>Either the <paramref name="CertificateName"/> or <paramref name="CertificateIssuer"/> must be provided.
+		/// If both are provided, then only a certificate that matches both will be loaded.
+		/// </remarks>
 		public static X509Certificate2 LoadStoreCertificate (String StoreName, String CertificateName, String CertificateIssuer, out String ErrorMessage)
 		{
 			X509Certificate2 lCertificate = null;
@@ -503,7 +643,11 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region Helper Methods
 		//=====================================================================
 
-		static String FindMakeCab ()
+		/// <summary>
+		/// Uses the environment PATH to search for "makecab.exe".
+		/// </summary>
+		/// <returns>The full file path, if found. Otherwise an empty string.</returns>
+		public static String FindMakeCab ()
 		{
 			try
 			{
@@ -526,7 +670,11 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			return String.Empty;
 		}
 
-		static String FindSignTool ()
+		/// <summary>
+		/// Uses the environment PATH to search for "signtool.exe".
+		/// </summary>
+		/// <returns>The full file path, if found. Otherwise an empty string.</returns>
+		public static String FindSignTool ()
 		{
 			try
 			{
@@ -551,24 +699,24 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 		//=====================================================================
 
-		private static bool IsStoreFlag (String pFlag, String pStoreFlag)
+		private static bool IsStoreFlag (String Flag, String StoreFlag)
 		{
-			if (pFlag.StartsWith ("-"))
+			if (Flag.StartsWith ("-"))
 			{
-				pFlag = "/" + pFlag.Substring (1);
+				Flag = "/" + Flag.Substring (1);
 			}
-			return (String.Compare (pFlag, pStoreFlag, StringComparison.InvariantCultureIgnoreCase) == 0);
+			return (String.Compare (Flag, StoreFlag, StringComparison.InvariantCultureIgnoreCase) == 0);
 		}
 
-		private String GetStorePart (String pStoreFlag)
+		private String GetStorePart (String StoreFlag)
 		{
-			if (!String.IsNullOrEmpty (CertificatePath))
+			if (!String.IsNullOrEmpty (CertificateSpec))
 			{
 				try
 				{
 					Regex lRegEx = new Regex ("(?<flag>(/|-)\\w+)\\s+(?<value>(\".*\")|\\S+)(?(/|-|$))", RegexOptions.CultureInvariant);
 
-					foreach (Match lMatch in lRegEx.Matches (CertificatePath))
+					foreach (Match lMatch in lRegEx.Matches (CertificateSpec))
 					{
 						String lFlag = String.Empty;
 						String lValue = String.Empty;
@@ -586,7 +734,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 									lValue = lMatch.Groups[lGroupNdx].Value;
 								}
 						}
-						if (IsStoreFlag (lFlag, pStoreFlag))
+						if (IsStoreFlag (lFlag, StoreFlag))
 						{
 							return lValue;
 						}
@@ -596,11 +744,12 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 			return String.Empty;
 		}
-		private String SetStorePart (String pStoreFlag, String pValue)
+
+		private String SetStorePart (String StoreFlag, String Value)
 		{
-			String lStoreStore = IsStoreFlag (pStoreFlag, StoreStoreFlag) ? pValue : StoreCertificateStore;
-			String lStoreName = IsStoreFlag (pStoreFlag, StoreNameFlag) ? pValue : StoreCertificateName;
-			String lStoreIssuer = IsStoreFlag (pStoreFlag, StoreIssuerFlag) ? pValue : StoreCertificateIssuer;
+			String lStoreStore = IsStoreFlag (StoreFlag, StoreStoreFlag) ? Value : StoreCertificateStore;
+			String lStoreName = IsStoreFlag (StoreFlag, StoreNameFlag) ? Value : StoreCertificateName;
+			String lStoreIssuer = IsStoreFlag (StoreFlag, StoreIssuerFlag) ? Value : StoreCertificateIssuer;
 			List<String> lStoreParts = new List<String> ();
 
 			if (!String.IsNullOrWhiteSpace (lStoreStore))

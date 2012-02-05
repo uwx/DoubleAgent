@@ -18,21 +18,23 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\</OutputPath>
-    <TargetExt>.plugins</TargetExt>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>1591</NoWarn>
+    <DocumentationFile>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\TOCTypeGrouping.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\</OutputPath>
-    <TargetExt>.plugins</TargetExt>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>1591</NoWarn>
+    <DocumentationFile>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\TOCTypeGrouping.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -74,13 +76,16 @@
     <None Include="CreateVSToc_Override.xsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-		<None Include="C:\Program Files (x86)\Sandcastle\ProductionTransforms\CreateVSToc.xsl">
-			<Link>CreateVSToc.xsl.cs</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<Content Include="DoubleAgent.ico" />
+    <None Include="C:\Program Files (x86)\Sandcastle\ProductionTransforms\CreateVSToc.xsl">
+      <Link>CreateVSToc.xsl</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="DoubleAgent.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)$(TargetFileName)" "$(TargetDir)$(TargetName).plugins"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -2,7 +2,7 @@
 .Define TargetDir=%TargetDir%
 .Define TargetFile=%TargetFile%
 .Set Cabinet=ON
-.Set Compress=ON
+.Set Compress=OFF
 .Set GenerateInf=OFF
 
 .Set DiskDirectory1=%TargetDir%\

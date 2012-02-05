@@ -13,6 +13,9 @@ using SandcastleBuilder.Utils.PlugIn;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
+/// <summary>
+/// 
+/// </summary>
 	public class TOCFromSitemap : IPlugIn
 	{
 		#region Private data members
@@ -26,11 +29,13 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IPlugIn Properties
 		//=====================================================================
 
+		/// <inheritdoc/>
 		public string Name
 		{
 			get { return "Table of Contents from Sitemap"; }
 		}
 
+		/// <inheritdoc/>
 		public Version Version
 		{
 			get
@@ -41,6 +46,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <inheritdoc/>
 		public string Copyright
 		{
 			get
@@ -51,6 +57,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <inheritdoc/>
 		public string Description
 		{
 			get
@@ -60,11 +67,13 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			}
 		}
 
+		/// <inheritdoc/>
 		public bool RunsInPartialBuild
 		{
 			get { return false; }
 		}
 
+		/// <inheritdoc/>
 		public ExecutionPointCollection ExecutionPoints
 		{
 			get
@@ -86,17 +95,20 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IPlugIn Methods
 		//=====================================================================
 
+		/// <inheritdoc/>
 		public string ConfigurePlugIn (SandcastleProject project, string currentConfig)
 		{
 			MessageBox.Show ("This plug-in has no configurable settings", "Build Process Plug-In", MessageBoxButton.OK, MessageBoxImage.Information);
 			return currentConfig;
 		}
 
+		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
 			mBuildProcess = buildProcess;
 		}
 
+		/// <inheritdoc/>
 		public void Execute (ExecutionContext context)
 		{
 #if	DEBUG
@@ -105,10 +117,12 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 
 			if ((context.BuildStep == BuildStep.GenerateHelpFormatTableOfContents) && (context.Behavior == ExecutionBehaviors.Before))
 			{
+				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 				UpdateGenerateHelpFormatProject ();
 			}
 			else if ((context.BuildStep == BuildStep.CombiningIntermediateTocFiles) && (context.Behavior == ExecutionBehaviors.Before))
 			{
+				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 #if	DEBUG_NOT
 				LogXmlFile (Path.Combine (mBuildProcess.WorkingFolder, "toc.xml"));
 #endif
@@ -425,17 +439,20 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		#region IDisposable implementation
 		//=====================================================================
 
+		/// <inheritdoc/>
 		~TOCFromSitemap ()
 		{
 			this.Dispose (false);
 		}
 
+		/// <inheritdoc/>
 		public void Dispose ()
 		{
 			this.Dispose (true);
 			GC.SuppressFinalize (this);
 		}
 
+		/// <inheritdoc/>
 		protected virtual void Dispose (bool disposing)
 		{
 		}

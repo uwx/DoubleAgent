@@ -3,8 +3,21 @@ using System.Windows;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
+	/// <summary>
+	/// This class is a kludge that allows a WPF window to be shown as a modal dialog
+	/// in either a WPF application or a Forms application.
+	/// </summary>
 	public partial class OwnedWPFWindow : Window
 	{
+		/// <summary>
+		/// This overload checks the current execution environment, and
+		/// sets the <see cref="P:System.Windows.Window.Owner" /> property accordingly.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Nullable`1"/> value of type <see cref="T:System.Boolean"/> that specifies whether the dialog
+		/// was accepted (<b>true</b>) or canceled (<b>false</b>).
+		/// The return value is the value of the <see cref="P:System.Windows.Window.DialogResult"/> property before a window closes. 
+		/// </returns>
 		public new bool? ShowDialog ()
 		{
 			System.Windows.Window lActiveWindow = null;
@@ -67,6 +80,12 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			return base.ShowDialog ();
 		}
 
+		/// <summary>
+		/// This method determines if there is either an active WPF window or an active
+		/// Form and returns its native handle.  The return value is useful as the owner
+		/// window for modal dialogs (like MessageBox).
+		/// </summary>
+		/// <returns>The native window handle of the application's active window (if any).</returns>
 		static public IntPtr GetDialogOwner ()
 		{
 			System.Windows.Window lActiveWindow = null;

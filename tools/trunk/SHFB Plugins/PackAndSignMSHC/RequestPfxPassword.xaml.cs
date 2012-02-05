@@ -15,6 +15,9 @@ using System.Security;
 
 namespace SandcastleBuilder.PlugIns.CinSoft
 {
+	/// <summary>
+	/// This dialog is used to request the password used to open a certificate file.
+	/// </summary>
 	public partial class RequestPfxPassword : OwnedWPFWindow
 	{
 		public RequestPfxPassword (String pFileName)
@@ -23,6 +26,9 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 			PromptLabel.Content = String.Format (PromptLabel.Content as String, pFileName);
 		}
 
+		/// <summary>
+		/// The password entered by the user (if any).
+		/// </summary>
 		public SecureString SecurePassword { get; protected set; }
 
 		private void OnOK (object sender, RoutedEventArgs e)

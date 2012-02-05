@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0F85C306-6597-491a-8557-0966E8A99A13}</ProjectGuid>
+    <ProjectGuid>{0F85C306-6597-491A-8557-0966E8A99A13}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SandcastleBuilder.PlugIns.CinSoft</RootNamespace>
@@ -18,21 +18,23 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\</OutputPath>
-    <TargetExt>.plugins</TargetExt>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>1591</NoWarn>
+    <DocumentationFile>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\PartialReferenceLinks.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\</OutputPath>
-    <TargetExt>.plugins</TargetExt>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>1591</NoWarn>
+    <DocumentationFile>..\..\..\..\ProgramData\EWSoftware\Sandcastle Help File Builder\Components and Plug-Ins\PartialReferenceLinks.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -74,6 +76,9 @@
     <Content Include="DoubleAgent.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)$(TargetFileName)" "$(TargetDir)$(TargetName).plugins"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
