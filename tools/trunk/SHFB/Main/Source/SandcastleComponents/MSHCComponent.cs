@@ -61,7 +61,8 @@ namespace SandcastleBuilder.Components
 	/// <code lang="xml" title="Example Component Configuration">
 	/// &lt;component type="SandcastleBuilder.Components.MSHCComponent"
 	///   assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"&gt;
-	///   &lt;data self-branded="{@SelfBranded}" topic-version="{@TopicVersion}" toc-file="toc.xml"
+	///   &lt;data self-branded="{@SelfBranded}" branding-package="{@BrandingPackage}"
+	///   topic-version="{@TopicVersion}" toc-file="toc.xml"
 	///   toc-parent="{@ApiTocParentId}" toc-parent-version="{@TocParentVersion}" locale="{@Locale}" /&gt;
 	/// &lt;/component&gt;
 	/// </code>
@@ -101,6 +102,8 @@ namespace SandcastleBuilder.Components
 		{
 			public const string Locale = "locale";
 			public const string SelfBranded = "self-branded";
+			public const string BrandingPackage = "branding-package";
+			public const string HelpOutput = "help-output";
 			public const string TopicVersion = "topic-version";
 			public const string TocFile = "toc-file";
 			public const string TocParent = "toc-parent";
@@ -193,6 +196,8 @@ namespace SandcastleBuilder.Components
 		private static class MHSDefault
 		{
 			public const bool SelfBranded = true;
+			public const string BrandingPackage = "dev10";
+			public const string HelpOutput = "MSHelpViewer";
 			public const string Locale = "en-us";
 			public const string Reference = "Reference";
 			public const string TopicVersion = "100";
@@ -235,6 +240,8 @@ namespace SandcastleBuilder.Components
 
 		private string _locale = String.Empty;
 		private bool _selfBranded = MHSDefault.SelfBranded;
+		private string _brandingPackage = MHSDefault.BrandingPackage;
+		private string _helpOutput = MHSDefault.HelpOutput;
 		private string _topicVersion = MHSDefault.TopicVersion;
 		private string _tocParent = MHSDefault.TocParent;
 		private string _tocParentVersion = MHSDefault.TocParentVersion;
@@ -267,6 +274,16 @@ namespace SandcastleBuilder.Components
 				if (!String.IsNullOrEmpty (value))
 					_selfBranded = bool.Parse (value);
 
+				value = data.GetAttribute (ConfigurationAttr.BrandingPackage, String.Empty);
+
+				if (!String.IsNullOrEmpty (value))
+					_brandingPackage = value;
+
+				value = data.GetAttribute (ConfigurationAttr.HelpOutput, String.Empty);
+
+				if (!String.IsNullOrEmpty (value))
+					_helpOutput = value;
+
 				value = data.GetAttribute (ConfigurationAttr.TopicVersion, String.Empty);
 
 				if (!String.IsNullOrEmpty (value))
@@ -288,7 +305,10 @@ namespace SandcastleBuilder.Components
 					tocFile = value;
 			}
 
-			LoadToc (Path.GetFullPath (Environment.ExpandEnvironmentVariables (tocFile)));
+			if (!String.IsNullOrEmpty (tocFile) && !String.IsNullOrEmpty (_tocParent))
+			{
+				LoadToc (Path.GetFullPath (Environment.ExpandEnvironmentVariables (tocFile)));
+			}
 		}
 		#endregion
 
@@ -306,8 +326,16 @@ namespace SandcastleBuilder.Components
 
 			EnsureHeaderExists ();
 
-			//PATCH
-			if (_selfBranded)
+#if DEBUG
+			try
+			{
+				WriteMessage (MessageLevel.Warn, String.Format ("--- HelpOutput [{0}] SelfBranded [{1}] Package [{2}] ---", _helpOutput, _selfBranded, _brandingPackage));
+			}
+			catch { }
+#endif
+
+/////////////PATCH
+			if (String.Compare (_brandingPackage, MHSDefault.BrandingPackage, StringComparison.InvariantCultureIgnoreCase) == 0)
 			{
 				ModifyAttribute ("id", "mainSection");
 				ModifyAttribute ("class", "members");
@@ -319,21 +347,23 @@ namespace SandcastleBuilder.Components
 				MakePlainCodeCopies ();
 			}
 
-			AddMHSMeta (MHSMetaName.SelfBranded, "true");
-			//AddMHSMeta (MHSMetaName.SelfBranded, _selfBranded.ToString ().ToLowerInvariant ());
-			//END PATCH
-			AddMHSMeta (MHSMetaName.ContentType, MHSDefault.Reference);
-			AddMHSMeta (MHSMetaName.TopicVersion, _topicVersion);
+			if (String.Compare (_helpOutput, MHSDefault.HelpOutput, StringComparison.InvariantCultureIgnoreCase) == 0)
+			{
+////////////END PATCH
+				AddMHSMeta (MHSMetaName.SelfBranded, _selfBranded.ToString ().ToLower ());
+				AddMHSMeta (MHSMetaName.ContentType, MHSDefault.Reference);
+				AddMHSMeta (MHSMetaName.TopicVersion, _topicVersion);
 
-			String locale;
-			String id;
-			Help20MetaToHelp30Meta (out locale, out id);
+				String locale;
+				String id;
+				Help20MetaToHelp30Meta (out locale, out id);
 
-			AddMHSMeta (MHSMetaName.Locale, locale);
-			AddMHSMeta (MHSMetaName.TopicLocale, locale);
-			AddMHSMeta (MHSMetaName.Id, id);
+				AddMHSMeta (MHSMetaName.Locale, locale);
+				AddMHSMeta (MHSMetaName.TopicLocale, locale);
+				AddMHSMeta (MHSMetaName.Id, id);
 
-			EnsureDocInToc (id);
+				EnsureDocInToc (id);
+			}
 		}
 		#endregion
 
