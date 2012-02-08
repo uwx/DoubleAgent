@@ -21,8 +21,8 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private ExecutionPointCollection mExecutionPoints;
-		private BuildProcess mBuildProcess;
+		private ExecutionPointCollection m_executionPoints;
+		private BuildProcess m_buildProcess;
 
 		#endregion
 
@@ -40,9 +40,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				FileVersionInfo lFileVersionInfo = FileVersionInfo.GetVersionInfo (lAssembly.Location);
-				return new Version (lFileVersionInfo.ProductVersion);
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				FileVersionInfo v_fileVersionInfo = FileVersionInfo.GetVersionInfo (v_assembly.Location);
+				return new Version (v_fileVersionInfo.ProductVersion);
 			}
 		}
 
@@ -51,9 +51,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				AssemblyCopyrightAttribute lCopyrightAttribute = Attribute.GetCustomAttribute (lAssembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
-				return lCopyrightAttribute.Copyright;
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				AssemblyCopyrightAttribute v_copyrightAttribute = Attribute.GetCustomAttribute (v_assembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
+				return v_copyrightAttribute.Copyright;
 			}
 		}
 
@@ -78,15 +78,15 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				if (mExecutionPoints == null)
+				if (m_executionPoints == null)
 				{
-					mExecutionPoints = new ExecutionPointCollection
+					m_executionPoints = new ExecutionPointCollection
                     {
                         new ExecutionPoint(BuildStep.GenerateHelpFormatTableOfContents, ExecutionBehaviors.Before),
                         new ExecutionPoint(BuildStep.CombiningIntermediateTocFiles, ExecutionBehaviors.Before)
                     };
 				}
-				return mExecutionPoints;
+				return m_executionPoints;
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace SandcastleBuilder.PlugIns
 		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
-			mBuildProcess = buildProcess;
+			m_buildProcess = buildProcess;
 		}
 
 		/// <inheritdoc/>
@@ -117,12 +117,12 @@ namespace SandcastleBuilder.PlugIns
 
 			if ((context.BuildStep == BuildStep.GenerateHelpFormatTableOfContents) && (context.Behavior == ExecutionBehaviors.Before))
 			{
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 				UpdateGenerateHelpFormatProject ();
 			}
 			else if ((context.BuildStep == BuildStep.CombiningIntermediateTocFiles) && (context.Behavior == ExecutionBehaviors.Before))
 			{
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 #if	DEBUG_NOT
 				LogXmlFile (Path.Combine (mBuildProcess.WorkingFolder, "toc.xml"));
 #endif
@@ -146,7 +146,7 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				return mBuildProcess.CurrentProject.HasItems (BuildAction.SiteMap);
+				return m_buildProcess.CurrentProject.HasItems (BuildAction.SiteMap);
 			}
 		}
 
@@ -154,11 +154,11 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				foreach (FileItem lFileItem in mBuildProcess.CurrentProject.FileItems)
+				foreach (FileItem v_fileItem in m_buildProcess.CurrentProject.FileItems)
 				{
-					if (lFileItem.BuildAction == BuildAction.SiteMap)
+					if (v_fileItem.BuildAction == BuildAction.SiteMap)
 					{
-						return lFileItem;
+						return v_fileItem;
 					}
 				}
 				return null;
@@ -169,11 +169,11 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				foreach (FileItem lFileItem in mBuildProcess.CurrentProject.FileItems)
+				foreach (FileItem v_fileItem in m_buildProcess.CurrentProject.FileItems)
 				{
-					if (lFileItem.BuildAction == BuildAction.SiteMap)
+					if (v_fileItem.BuildAction == BuildAction.SiteMap)
 					{
-						return lFileItem.FullPath;
+						return v_fileItem.FullPath;
 					}
 				}
 				return String.Empty;
@@ -189,42 +189,42 @@ namespace SandcastleBuilder.PlugIns
 		{
 			try
 			{
-				String lProjectPath = Path.Combine (mBuildProcess.WorkingFolder, "Generate2xTOC.proj");
-				XmlDocument lDocument = new XmlDocument ();
-				XmlNodeList lNodes;
-				XmlAttribute lAttribute;
-				String lTransform = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "TocToHxsContents_Override.xsl");
+				String v_projectPath = Path.Combine (m_buildProcess.WorkingFolder, "Generate2xTOC.proj");
+				XmlDocument v_document = new XmlDocument ();
+				XmlNodeList v_nodes;
+				XmlAttribute v_attribute;
+				String v_transform = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "TocToHxsContents_Override.xsl");
 
 #if	DEBUG
-				Debug.Print ("  Load      '{0}'", lProjectPath);
+				Debug.Print ("  Load      '{0}'", v_projectPath);
 #endif
-				lDocument.Load (lProjectPath);
-				lNodes = lDocument.DocumentElement.SelectNodes ("//*[@Transformations!='']");
-				if (lNodes != null)
+				v_document.Load (v_projectPath);
+				v_nodes = v_document.DocumentElement.SelectNodes ("//*[@Transformations!='']");
+				if (v_nodes != null)
 				{
-					foreach (XmlNode lNode in lNodes)
+					foreach (XmlNode v_node in v_nodes)
 					{
-						lAttribute = lNode.Attributes["Transformations"];
-						if ((lAttribute != null) && (lAttribute.Value.Contains ("TocToHxSContents")))
+						v_attribute = v_node.Attributes["Transformations"];
+						if ((v_attribute != null) && (v_attribute.Value.Contains ("TocToHxSContents")))
 						{
 #if	DEBUG
-							Debug.Print ("  Update    '{0}'", lProjectPath);
-							Debug.Print ("    replace '{0}'", lAttribute.Value);
-							Debug.Print ("    with    '{0}'", lTransform);
+							Debug.Print ("  Update    '{0}'", v_projectPath);
+							Debug.Print ("    replace '{0}'", v_attribute.Value);
+							Debug.Print ("    with    '{0}'", v_transform);
 							Debug.Print ("    SiteMap '{0}'", SiteMapPath);
 #endif
-							mBuildProcess.ReportProgress ("{0}: Update    '{1}'", this.Name, lProjectPath);
-							mBuildProcess.ReportProgress ("{0}:   replace '{1}'", this.Name, lAttribute.Value);
-							mBuildProcess.ReportProgress ("{0}:   with    '{1}", this.Name, lTransform);
-							mBuildProcess.ReportProgress ("{0}:   SiteMap '{1}", this.Name, SiteMapPath);
+							m_buildProcess.ReportProgress ("{0}: Update    '{1}'", this.Name, v_projectPath);
+							m_buildProcess.ReportProgress ("{0}:   replace '{1}'", this.Name, v_attribute.Value);
+							m_buildProcess.ReportProgress ("{0}:   with    '{1}", this.Name, v_transform);
+							m_buildProcess.ReportProgress ("{0}:   SiteMap '{1}", this.Name, SiteMapPath);
 
-							lAttribute.Value = lTransform;
+							v_attribute.Value = v_transform;
 
-							lAttribute = lDocument.CreateAttribute ("Arguments");
-							lAttribute.Value = "SiteMap=file://" + SiteMapPath;
-							lNode.Attributes.Append (lAttribute);
+							v_attribute = v_document.CreateAttribute ("Arguments");
+							v_attribute.Value = "SiteMap=file://" + SiteMapPath;
+							v_node.Attributes.Append (v_attribute);
 
-							lDocument.Save (lProjectPath);
+							v_document.Save (v_projectPath);
 							break;
 						}
 					}
@@ -242,42 +242,42 @@ namespace SandcastleBuilder.PlugIns
 		{
 			try
 			{
-				FileItem lSiteMapFile = this.SiteMapFile;
-				TocEntryCollection lSiteMapToc;
+				FileItem v_siteMapFile = this.SiteMapFile;
+				TocEntryCollection v_siteMapToc;
 
-				if (lSiteMapFile != null)
+				if (v_siteMapFile != null)
 				{
 #if	DEBUG
-					Debug.Print ("Load [{0}]", lSiteMapFile.FullPath);
+					Debug.Print ("Load [{0}]", v_siteMapFile.FullPath);
 #endif
-					mBuildProcess.ReportProgress ("{0}: SitemapToToc '{1}'", this.Name, lSiteMapFile.FullPath);
-					lSiteMapToc = new TocEntryCollection (lSiteMapFile);
-					lSiteMapToc.Load ();
+					m_buildProcess.ReportProgress ("{0}: SitemapToToc '{1}'", this.Name, v_siteMapFile.FullPath);
+					v_siteMapToc = new TocEntryCollection (v_siteMapFile);
+					v_siteMapToc.Load ();
 
-					TargetTocEntries (lSiteMapToc);
+					TargetTocEntries (v_siteMapToc);
 #if	DEBUG_NOT
-					LogTocEntries (lSiteMapToc);
+					LogTocEntries (v_siteMapToc);
 #endif
 #if	DEBUG_NOT
 					Debug.Print ("");
-					Debug.Print ("{0}", lSiteMapToc.ToString (HelpFileFormat.MSHelp2));
+					Debug.Print ("{0}", v_siteMapToc.ToString (HelpFileFormat.MSHelp2));
 					Debug.Print ("");
 #endif
 					try
 					{
-						String lTocFilePath = Path.Combine (mBuildProcess.WorkingFolder, "_ConceptualTOC_.xml");
-						System.IO.StreamWriter lWriter = new System.IO.StreamWriter (lTocFilePath);
+						String v_tocFilePath = Path.Combine (m_buildProcess.WorkingFolder, "_ConceptualTOC_.xml");
+						System.IO.StreamWriter v_writer = new System.IO.StreamWriter (v_tocFilePath);
 
 #if	DEBUG
-						Debug.Print ("Save [{0}]", lTocFilePath);
+						Debug.Print ("Save [{0}]", v_tocFilePath);
 #endif
-						lWriter.WriteLine ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-						lWriter.WriteLine ("<topics>");
+						v_writer.WriteLine ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+						v_writer.WriteLine ("<topics>");
 
-						WriteTocEntries (lSiteMapToc, lWriter);
+						WriteTocEntries (v_siteMapToc, v_writer);
 
-						lWriter.WriteLine ("</topics>");
-						lWriter.Close ();
+						v_writer.WriteLine ("</topics>");
+						v_writer.Close ();
 					}
 					catch (Exception exp)
 					{
@@ -291,25 +291,25 @@ namespace SandcastleBuilder.PlugIns
 			}
 		}
 
-		void TargetTocEntries (TocEntryCollection Entries)
+		void TargetTocEntries (TocEntryCollection entries)
 		{
-			foreach (TocEntry lEntry in Entries)
+			foreach (TocEntry v_entry in entries)
 			{
-				TargetTocEntry (lEntry);
+				TargetTocEntry (v_entry);
 			}
 		}
 
-		void TargetTocEntry (TocEntry pEntry)
+		void TargetTocEntry (TocEntry entry)
 		{
-			if (pEntry != null)
+			if (entry != null)
 			{
-				if ((!String.IsNullOrEmpty (pEntry.SourceFile)) && (String.IsNullOrEmpty (pEntry.DestinationFile)))
+				if ((!String.IsNullOrEmpty (entry.SourceFile)) && (String.IsNullOrEmpty (entry.DestinationFile)))
 				{
-					pEntry.DestinationFile = FilePath.AbsoluteToRelativePath (pEntry.SourceFile.BasePath, pEntry.SourceFile.ExpandedPath);
+					entry.DestinationFile = FilePath.AbsoluteToRelativePath (entry.SourceFile.BasePath, entry.SourceFile.ExpandedPath);
 				}
-				if (pEntry.Children != null)
+				if (entry.Children != null)
 				{
-					TargetTocEntries (pEntry.Children);
+					TargetTocEntries (entry.Children);
 				}
 			}
 		}
@@ -318,47 +318,47 @@ namespace SandcastleBuilder.PlugIns
 		//	Replacement of TocEntryCollection.SaveToIntermediateTocFile which only works for MAML
 		//
 
-		private void WriteTocEntries (TocEntryCollection Entries, StreamWriter Writer)
+		private void WriteTocEntries (TocEntryCollection entries, StreamWriter writer)
 		{
-			foreach (TocEntry lEntry in Entries)
+			foreach (TocEntry v_entry in entries)
 			{
-				WriteTocEntry (lEntry, Writer);
+				WriteTocEntry (v_entry, writer);
 			}
 		}
 
-		private void WriteTocEntry (TocEntry pEntry, StreamWriter Writer)
+		private void WriteTocEntry (TocEntry entry, StreamWriter writer)
 		{
-			Writer.Write ("<topic");
+			writer.Write ("<topic");
 
-			if (!String.IsNullOrEmpty (pEntry.Title))
+			if (!String.IsNullOrEmpty (entry.Title))
 			{
-				Writer.Write (" id=\"");
-				Writer.Write (pEntry.Title);
-				Writer.Write ("\"");
+				writer.Write (" id=\"");
+				writer.Write (entry.Title);
+				writer.Write ("\"");
 			}
 
-			if (!String.IsNullOrEmpty (pEntry.DestinationFile))
+			if (!String.IsNullOrEmpty (entry.DestinationFile))
 			{
-				Writer.Write (" file=\"");
-				Writer.Write (pEntry.DestinationFile);
-				Writer.Write ("\"");
+				writer.Write (" file=\"");
+				writer.Write (entry.DestinationFile);
+				writer.Write ("\"");
 			}
-			else if (!String.IsNullOrEmpty (pEntry.Title))
+			else if (!String.IsNullOrEmpty (entry.Title))
 			{
-				Writer.Write (" title=\"");
-				Writer.Write (pEntry.Title);
-				Writer.Write ("\"");
+				writer.Write (" title=\"");
+				writer.Write (entry.Title);
+				writer.Write ("\"");
 			}
 
-			if ((pEntry.Children != null) && (pEntry.Children.Count > 0))
+			if ((entry.Children != null) && (entry.Children.Count > 0))
 			{
-				Writer.WriteLine (">");
-				WriteTocEntries (pEntry.Children, Writer);
-				Writer.WriteLine ("</topic>");
+				writer.WriteLine (">");
+				WriteTocEntries (entry.Children, writer);
+				writer.WriteLine ("</topic>");
 			}
 			else
 			{
-				Writer.WriteLine ("/>");
+				writer.WriteLine ("/>");
 			}
 		}
 
@@ -368,36 +368,36 @@ namespace SandcastleBuilder.PlugIns
 		//=====================================================================
 
 #if DEBUG
-		private void LogXmlFile (String FilePath)
+		private void LogXmlFile (String filePath)
 		{
 			try
 			{
-				XmlReaderSettings lReaderSettings = new XmlReaderSettings ();
-				XmlReader lReader;
-				XmlDocument lDocument = new XmlDocument ();
+				XmlReaderSettings v_readerSettings = new XmlReaderSettings ();
+				XmlReader v_reader;
+				XmlDocument v_document = new XmlDocument ();
 
-				lReaderSettings.ValidationType = ValidationType.None;
-				lReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None;
-				lReaderSettings.ConformanceLevel = ConformanceLevel.Document;
-				lReaderSettings.IgnoreComments = true;
-				lReaderSettings.IgnoreWhitespace = false;
-				lReaderSettings.IgnoreProcessingInstructions = true;
-				lReaderSettings.CloseInput = true;
+				v_readerSettings.ValidationType = ValidationType.None;
+				v_readerSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None;
+				v_readerSettings.ConformanceLevel = ConformanceLevel.Document;
+				v_readerSettings.IgnoreComments = true;
+				v_readerSettings.IgnoreWhitespace = false;
+				v_readerSettings.IgnoreProcessingInstructions = true;
+				v_readerSettings.CloseInput = true;
 
-				lReader = XmlReader.Create (FilePath, lReaderSettings);
+				v_reader = XmlReader.Create (filePath, v_readerSettings);
 
 				try
 				{
-					Debug.Print ("{0}", FilePath);
-					lDocument.Load (lReader);
-					Debug.Print ("{0}", lDocument.DocumentElement.OuterXml.Replace ("\n", "\\n").Replace ("\r", "\\r").Replace ("\t", " "));
+					Debug.Print ("{0}", filePath);
+					v_document.Load (v_reader);
+					Debug.Print ("{0}", v_document.DocumentElement.OuterXml.Replace ("\n", "\\n").Replace ("\r", "\\r").Replace ("\t", " "));
 				}
 				catch (Exception exp)
 				{
 					System.Diagnostics.Debug.Print (exp.Message);
 				}
 
-				lReader.Close ();
+				v_reader.Close ();
 			}
 			catch (Exception exp)
 			{
@@ -406,31 +406,31 @@ namespace SandcastleBuilder.PlugIns
 		}
 
 
-		private void LogTocEntry (TocEntry Entry, String Indent)
+		private void LogTocEntry (TocEntry entry, String indent)
 		{
-			Debug.Print ("{0}Entry '{1}' Source [{2}] Target [{3}] [Include {4} Sort {5} Parse {6} {7} {8} Default {9}]", Indent, Entry.Title, Entry.SourceFile.Path, Entry.DestinationFile, Entry.IncludePage, Entry.SortOrder, Entry.HasProjectTags, Entry.HasLinks, Entry.HasCodeBlocks, Entry.IsDefaultTopic);
-			if (Entry.Children != null)
+			Debug.Print ("{0}Entry '{1}' Source [{2}] Target [{3}] [Include {4} Sort {5} Parse {6} {7} {8} Default {9}]", indent, entry.Title, entry.SourceFile.Path, entry.DestinationFile, entry.IncludePage, entry.SortOrder, entry.HasProjectTags, entry.HasLinks, entry.HasCodeBlocks, entry.IsDefaultTopic);
+			if (entry.Children != null)
 			{
-				LogTocEntries (Entry.Children, Indent + "  ");
+				LogTocEntries (entry.Children, indent + "  ");
 			}
 		}
 
-		private void LogTocEntry (TocEntry Entry)
+		private void LogTocEntry (TocEntry entry)
 		{
-			LogTocEntry (Entry, "  ");
+			LogTocEntry (entry, "  ");
 		}
 
-		private void LogTocEntries (TocEntryCollection Entries, String Indent)
+		private void LogTocEntries (TocEntryCollection entries, String indent)
 		{
-			foreach (TocEntry lEntry in Entries)
+			foreach (TocEntry lEntry in entries)
 			{
-				LogTocEntry (lEntry, Indent);
+				LogTocEntry (lEntry, indent);
 			}
 		}
 
-		private void LogTocEntries (TocEntryCollection Entries)
+		private void LogTocEntries (TocEntryCollection entries)
 		{
-			LogTocEntries (Entries, "  ");
+			LogTocEntries (entries, "  ");
 		}
 #endif
 

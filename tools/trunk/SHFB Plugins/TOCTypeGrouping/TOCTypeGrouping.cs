@@ -25,8 +25,8 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private ExecutionPointCollection mExecutionPoints;
-		private BuildProcess mBuildProcess;
+		private ExecutionPointCollection m_executionPoints;
+		private BuildProcess m_buildProcess;
 
 		#endregion
 
@@ -44,9 +44,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				FileVersionInfo lFileVersionInfo = FileVersionInfo.GetVersionInfo (lAssembly.Location);
-				return new Version (lFileVersionInfo.ProductVersion);
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				FileVersionInfo v_fileVersionInfo = FileVersionInfo.GetVersionInfo (v_assembly.Location);
+				return new Version (v_fileVersionInfo.ProductVersion);
 			}
 		}
 
@@ -55,9 +55,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				AssemblyCopyrightAttribute lCopyrightAttribute = Attribute.GetCustomAttribute (lAssembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
-				return lCopyrightAttribute.Copyright;
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				AssemblyCopyrightAttribute v_copyrightAttribute = Attribute.GetCustomAttribute (v_assembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
+				return v_copyrightAttribute.Copyright;
 			}
 		}
 
@@ -82,15 +82,15 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				if (mExecutionPoints == null)
+				if (m_executionPoints == null)
 				{
-					mExecutionPoints = new ExecutionPointCollection
+					m_executionPoints = new ExecutionPointCollection
                     {
                         new ExecutionPoint(BuildStep.TransformReflectionInfo, ExecutionBehaviors.After),
                         new ExecutionPoint(BuildStep.GenerateIntermediateTableOfContents, ExecutionBehaviors.Before)
                     };
 				}
-				return mExecutionPoints;
+				return m_executionPoints;
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace SandcastleBuilder.PlugIns
 		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
-			mBuildProcess = buildProcess;
+			m_buildProcess = buildProcess;
 		}
 
 		/// <inheritdoc/>
@@ -121,138 +121,138 @@ namespace SandcastleBuilder.PlugIns
 #if false
 			if ((context.BuildStep == BuildStep.TransformReflectionInfo) && (context.Behavior == ExecutionBehaviors.After))
 			{
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 				try
 				{
-					String lReflectionFileName = Path.ChangeExtension(mBuildProcess.ReflectionInfoFilename, ".xml");
-					XmlDocument lReflectionDocument = new XmlDocument ();
-					XmlNodeList lNamespaceNodes;
-					XmlNode lNamespaceData;
-					String lNamespaceId;
-					String lNamespaceName;
+					String v_reflectionFileName = Path.ChangeExtension(m_buildProcess.ReflectionInfoFilename, ".xml");
+					XmlDocument v_reflectionDocument = new XmlDocument ();
+					XmlNodeList v_namespaceNodes;
+					XmlNode v_namespaceData;
+					String v_namespaceId;
+					String v_namespaceName;
 
-					mBuildProcess.ReportProgress ("ReflectionInfo [{0}]", lReflectionFileName);
-					lReflectionDocument.Load (lReflectionFileName);
-					lNamespaceNodes = lReflectionDocument.SelectNodes ("reflection/apis/api[starts-with(@id,'N:')]");
+					m_buildProcess.ReportProgress ("ReflectionInfo [{0}]", v_reflectionFileName);
+					v_reflectionDocument.Load (v_reflectionFileName);
+					v_namespaceNodes = v_reflectionDocument.SelectNodes ("reflection/apis/api[starts-with(@id,'N:')]");
 
-					foreach (XmlNode lNamespaceNode in lNamespaceNodes)
+					foreach (XmlNode v_namespaceNode in v_namespaceNodes)
 					{
-						lNamespaceId = NodeAttrValue (lNamespaceNode, "id");
-						mBuildProcess.ReportProgress ("Namespace [{0}]", lNamespaceId);
+						v_namespaceId = NodeAttrValue (v_namespaceNode, "id");
+						m_buildProcess.ReportProgress ("Namespace [{0}]", v_namespaceId);
 
-						lNamespaceData = lNamespaceNode.SelectSingleNode ("apidata[@group='namespace' and not(@subgroup)]");
-						if (lNamespaceData != null)
+						v_namespaceData = v_namespaceNode.SelectSingleNode ("apidata[@group='namespace' and not(@subgroup)]");
+						if (v_namespaceData != null)
 						{
 							try
 							{
-								Dictionary<String, XmlNode> lSubgroupElements = new Dictionary<String, XmlNode> ();
-								XmlNodeList lElementNodes;
+								Dictionary<String, XmlNode> v_subgroupElements = new Dictionary<String, XmlNode> ();
+								XmlNodeList v_elementNodes;
 
-								lNamespaceName = NodeAttrValue (lNamespaceData, "name");
-								mBuildProcess.ReportProgress ("  Apidata [{0}] [{1}]", lNamespaceId, lNamespaceName);
-								lElementNodes = lNamespaceNode.SelectNodes ("elements/element");
+								v_namespaceName = NodeAttrValue (v_namespaceData, "name");
+								m_buildProcess.ReportProgress ("  Apidata [{0}] [{1}]", v_namespaceId, v_namespaceName);
+								v_elementNodes = v_namespaceNode.SelectNodes ("elements/element");
 
-								foreach (XmlNode lElementNode in lElementNodes)
+								foreach (XmlNode v_elementNode in v_elementNodes)
 								{
-									XmlNode lTypeElement;
-									XmlNode lTypeData = null;
-									String lSubgroup = String.Empty;
+									XmlNode v_typeElement;
+									XmlNode v_typeData = null;
+									String v_subgroup = String.Empty;
 
-									lTypeElement = lReflectionDocument.SelectSingleNode (String.Format ("reflection/apis/api[@id='{0}']", NodeAttrValue (lElementNode, "api")));
-									if (lTypeElement != null)
+									v_typeElement = v_reflectionDocument.SelectSingleNode (String.Format ("reflection/apis/api[@id='{0}']", NodeAttrValue (v_elementNode, "api")));
+									if (v_typeElement != null)
 									{
-										lTypeData = lTypeElement.SelectSingleNode ("apidata");
-										if (lTypeData != null)
+										v_typeData = v_typeElement.SelectSingleNode ("apidata");
+										if (v_typeData != null)
 										{
-											lSubgroup = NodeAttrValue (lTypeData, "subgroup");
+											v_subgroup = NodeAttrValue (v_typeData, "subgroup");
 										}
 									}
-									mBuildProcess.ReportProgress ("    Element [{0}] [{1}] [{2}]", NodeAttrValue (lElementNode, "api"), (lTypeElement == null) ? "<not found>" : NodeAttrValue (lTypeElement, "id"), lSubgroup);
+									m_buildProcess.ReportProgress ("    Element [{0}] [{1}] [{2}]", NodeAttrValue (v_elementNode, "api"), (v_typeElement == null) ? "<not found>" : NodeAttrValue (v_typeElement, "id"), v_subgroup);
 
-									if (!String.IsNullOrEmpty (lSubgroup))
+									if (!String.IsNullOrEmpty (v_subgroup))
 									{
-										if (!lSubgroupElements.ContainsKey (lSubgroup))
+										if (!v_subgroupElements.ContainsKey (v_subgroup))
 										{
-											lSubgroupElements.Add (lSubgroup, lReflectionDocument.CreateElement ("elements"));
+											v_subgroupElements.Add (v_subgroup, v_reflectionDocument.CreateElement ("elements"));
 										}
-										lSubgroupElements[lSubgroup].AppendChild (lElementNode.CloneNode (true));
+										v_subgroupElements[v_subgroup].AppendChild (v_elementNode.CloneNode (true));
 									}
 								}
 
-								foreach (KeyValuePair<String, XmlNode> lSubgroup in lSubgroupElements)
+								foreach (KeyValuePair<String, XmlNode> v_subgroup in v_subgroupElements)
 								{
-									mBuildProcess.ReportProgress ("  Subgroup [{0}] Count [{1}]", lSubgroup.Key, lSubgroup.Value.ChildNodes.Count);
+									m_buildProcess.ReportProgress ("  Subgroup [{0}] Count [{1}]", v_subgroup.Key, v_subgroup.Value.ChildNodes.Count);
 								}
-								foreach (KeyValuePair<String, XmlNode> lSubgroup in lSubgroupElements)
+								foreach (KeyValuePair<String, XmlNode> v_subgroup in v_subgroupElements)
 								{
-									String lApiId = ApiSubgroupId (lSubgroup.Key);
-									XmlElement lApiNode;
-									XmlElement lApiDataNode;
-									XmlElement lTopicDataNode;
-									XmlElement lFileNameNode;
-									XmlAttribute lAttribute;
+									String v_apiId = ApiSubgroupId (v_subgroup.Key);
+									XmlElement v_apiNode;
+									XmlElement v_apiDataNode;
+									XmlElement v_topicDataNode;
+									XmlElement v_fileNameNode;
+									XmlAttribute v_attribute;
 
-									if (String.IsNullOrEmpty (lApiId))
+									if (String.IsNullOrEmpty (v_apiId))
 									{
 										continue;
 									}
 
-									lApiNode = lReflectionDocument.CreateElement ("api");
-									lAttribute = lReflectionDocument.CreateAttribute ("id");
-									lAttribute.Value = String.Format ("{0}.{1}", lApiId, lNamespaceId);
-									lApiNode.Attributes.SetNamedItem (lAttribute);
+									v_apiNode = v_reflectionDocument.CreateElement ("api");
+									v_attribute = v_reflectionDocument.CreateAttribute ("id");
+									v_attribute.Value = String.Format ("{0}.{1}", v_apiId, v_namespaceId);
+									v_apiNode.Attributes.SetNamedItem (v_attribute);
 
-									lApiDataNode = lReflectionDocument.CreateElement ("apidata");
-									lApiDataNode.Attributes.SetNamedItem (lNamespaceData.Attributes.GetNamedItem ("name", String.Empty).CloneNode (true));
-									lApiDataNode.Attributes.SetNamedItem (lNamespaceData.Attributes.GetNamedItem ("group", String.Empty).CloneNode (true));
+									v_apiDataNode = v_reflectionDocument.CreateElement ("apidata");
+									v_apiDataNode.Attributes.SetNamedItem (v_namespaceData.Attributes.GetNamedItem ("name", String.Empty).CloneNode (true));
+									v_apiDataNode.Attributes.SetNamedItem (v_namespaceData.Attributes.GetNamedItem ("group", String.Empty).CloneNode (true));
 
-									lAttribute = lReflectionDocument.CreateAttribute ("subgroup");
+									v_attribute = v_reflectionDocument.CreateAttribute ("subgroup");
 									//lAttribute.Value = "type";
 									//lApiDataNode.Attributes.SetNamedItem (lAttribute);
 
 									//lAttribute = lReflectionDocument.CreateAttribute ("subsubgroup");
-									lAttribute.Value = lSubgroup.Key;
-									lApiDataNode.Attributes.SetNamedItem (lAttribute);
+									v_attribute.Value = v_subgroup.Key;
+									v_apiDataNode.Attributes.SetNamedItem (v_attribute);
 
-									lTopicDataNode = lReflectionDocument.CreateElement ("topicdata");
-									lTopicDataNode.Attributes.SetNamedItem (lNamespaceData.Attributes.GetNamedItem ("name", String.Empty).CloneNode (true));
+									v_topicDataNode = v_reflectionDocument.CreateElement ("topicdata");
+									v_topicDataNode.Attributes.SetNamedItem (v_namespaceData.Attributes.GetNamedItem ("name", String.Empty).CloneNode (true));
 
-									lAttribute = lReflectionDocument.CreateAttribute ("group");
-									lAttribute.Value = "list";
-									lTopicDataNode.Attributes.SetNamedItem (lAttribute);
+									v_attribute = v_reflectionDocument.CreateAttribute ("group");
+									v_attribute.Value = "list";
+									v_topicDataNode.Attributes.SetNamedItem (v_attribute);
 
-									lAttribute = lReflectionDocument.CreateAttribute ("subgroup");
-									lAttribute.Value = lSubgroup.Key;
-									lTopicDataNode.Attributes.SetNamedItem (lAttribute);
+									v_attribute = v_reflectionDocument.CreateAttribute ("subgroup");
+									v_attribute.Value = v_subgroup.Key;
+									v_topicDataNode.Attributes.SetNamedItem (v_attribute);
 
-									lFileNameNode = lReflectionDocument.CreateElement ("file");
-									lAttribute = lReflectionDocument.CreateAttribute ("name");
-									lAttribute.Value = String.Format ("{0}.{1}", lApiId, lNamespaceId).Replace (":", "_").Replace (".", "_");
-									lFileNameNode.Attributes.SetNamedItem (lAttribute);
+									v_fileNameNode = v_reflectionDocument.CreateElement ("file");
+									v_attribute = v_reflectionDocument.CreateAttribute ("name");
+									v_attribute.Value = String.Format ("{0}.{1}", v_apiId, v_namespaceId).Replace (":", "_").Replace (".", "_");
+									v_fileNameNode.Attributes.SetNamedItem (v_attribute);
 
-									lApiNode.AppendChild (lTopicDataNode);
-									lApiNode.AppendChild (lApiDataNode);
-									lApiNode.AppendChild (lFileNameNode);
-									lApiDataNode.AppendChild (lSubgroup.Value);
-									lNamespaceNode.ParentNode.InsertAfter (lApiNode, lNamespaceNode);
+									v_apiNode.AppendChild (v_topicDataNode);
+									v_apiNode.AppendChild (v_apiDataNode);
+									v_apiNode.AppendChild (v_fileNameNode);
+									v_apiDataNode.AppendChild (v_subgroup.Value);
+									v_namespaceNode.ParentNode.InsertAfter (v_apiNode, v_namespaceNode);
 								}
 							}
 							catch (Exception exp)
 							{
 #if	DEBUG
-								mBuildProcess.ReportWarning (Name, exp.Message);
+								m_buildProcess.ReportWarning (Name, exp.Message);
 #endif
 								System.Diagnostics.Debug.Print (exp.Message);
 							}
 						}
 					}
 
-					lReflectionDocument.Save (lReflectionFileName);
+					v_reflectionDocument.Save (v_reflectionFileName);
 				}
 				catch (Exception exp)
 				{
 #if	DEBUG
-					mBuildProcess.ReportWarning (Name, exp.Message);
+					m_buildProcess.ReportWarning (Name, exp.Message);
 #endif
 					System.Diagnostics.Debug.Print (exp.Message);
 				}
@@ -261,7 +261,7 @@ namespace SandcastleBuilder.PlugIns
 #if true
 			if ((context.BuildStep == BuildStep.GenerateIntermediateTableOfContents) && (context.Behavior == ExecutionBehaviors.Before))
 			{
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 				UpdateGenerateIntermediateProject ();
 			}
 #endif
@@ -271,38 +271,38 @@ namespace SandcastleBuilder.PlugIns
 		#region Helper Methods
 		//=====================================================================
 
-		private static String NodeAttrValue (XmlNode Node, String AttrName)
+		private static String NodeAttrValue (XmlNode node, String attrName)
 		{
-			if ((Node != null) && (Node.Attributes != null))
+			if ((node != null) && (node.Attributes != null))
 			{
-				XmlNode lAttr = Node.Attributes.GetNamedItem (AttrName);
-				if (lAttr != null)
+				XmlNode v_attr = node.Attributes.GetNamedItem (attrName);
+				if (v_attr != null)
 				{
-					return lAttr.Value;
+					return v_attr.Value;
 				}
 			}
 			return String.Empty;
 		}
 
-		private static String ApiSubgroupId (String SubgroupName)
+		private static String ApiSubgroupId (String subgroupName)
 		{
-			if (String.Compare (SubgroupName, "class", StringComparison.InvariantCultureIgnoreCase) == 0)
+			if (String.Compare (subgroupName, "class", StringComparison.InvariantCultureIgnoreCase) == 0)
 			{
 				return "Classes";
 			}
-			else if (String.Compare (SubgroupName, "structure", StringComparison.InvariantCultureIgnoreCase) == 0)
+			else if (String.Compare (subgroupName, "structure", StringComparison.InvariantCultureIgnoreCase) == 0)
 			{
 				return "Structures";
 			}
-			else if (String.Compare (SubgroupName, "interface", StringComparison.InvariantCultureIgnoreCase) == 0)
+			else if (String.Compare (subgroupName, "interface", StringComparison.InvariantCultureIgnoreCase) == 0)
 			{
 				return "Interfaces";
 			}
-			else if (String.Compare (SubgroupName, "enumeration", StringComparison.InvariantCultureIgnoreCase) == 0)
+			else if (String.Compare (subgroupName, "enumeration", StringComparison.InvariantCultureIgnoreCase) == 0)
 			{
 				return "Enumerations";
 			}
-			else if (String.Compare (SubgroupName, "delegate", StringComparison.InvariantCultureIgnoreCase) == 0)
+			else if (String.Compare (subgroupName, "delegate", StringComparison.InvariantCultureIgnoreCase) == 0)
 			{
 				return "Delegates";
 			}
@@ -313,35 +313,35 @@ namespace SandcastleBuilder.PlugIns
 		{
 			try
 			{
-				String lProjectPath = Path.Combine (mBuildProcess.WorkingFolder, "GenerateIntermediateTOC.proj");
-				XmlDocument lDocument = new XmlDocument ();
-				XmlNodeList lNodes;
-				XmlAttribute lAttribute;
-				String lTransform = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "CreateVSToc_Override.xsl");
+				String v_projectPath = Path.Combine (m_buildProcess.WorkingFolder, "GenerateIntermediateTOC.proj");
+				XmlDocument v_document = new XmlDocument ();
+				XmlNodeList v_nodes;
+				XmlAttribute v_attribute;
+				String v_transform = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "CreateVSToc_Override.xsl");
 
 #if	DEBUG
-				Debug.Print ("  Load      '{0}'", lProjectPath);
+				Debug.Print ("  Load      '{0}'", v_projectPath);
 #endif
-				lDocument.Load (lProjectPath);
-				lNodes = lDocument.DocumentElement.SelectNodes ("//*[@Transformations!='']");
-				if (lNodes != null)
+				v_document.Load (v_projectPath);
+				v_nodes = v_document.DocumentElement.SelectNodes ("//*[@Transformations!='']");
+				if (v_nodes != null)
 				{
-					foreach (XmlNode lNode in lNodes)
+					foreach (XmlNode v_node in v_nodes)
 					{
-						lAttribute = lNode.Attributes["Transformations"];
-						if ((lAttribute != null) && (lAttribute.Value.Contains ("CreateVSToc")))
+						v_attribute = v_node.Attributes["Transformations"];
+						if ((v_attribute != null) && (v_attribute.Value.Contains ("CreateVSToc")))
 						{
 #if	DEBUG
-							Debug.Print ("  Update    '{0}'", lProjectPath);
-							Debug.Print ("    replace '{0}'", lAttribute.Value);
-							Debug.Print ("    with    '{0}'", lTransform);
+							Debug.Print ("  Update    '{0}'", v_projectPath);
+							Debug.Print ("    replace '{0}'", v_attribute.Value);
+							Debug.Print ("    with    '{0}'", v_transform);
 #endif
-							mBuildProcess.ReportProgress ("{0}: Update    '{1}'", this.Name, lProjectPath);
-							mBuildProcess.ReportProgress ("{0}:   replace '{1}'", this.Name, lAttribute.Value);
-							mBuildProcess.ReportProgress ("{0}:   with    '{1}", this.Name, lTransform);
+							m_buildProcess.ReportProgress ("{0}: Update    '{1}'", this.Name, v_projectPath);
+							m_buildProcess.ReportProgress ("{0}:   replace '{1}'", this.Name, v_attribute.Value);
+							m_buildProcess.ReportProgress ("{0}:   with    '{1}", this.Name, v_transform);
 
-							lAttribute.Value = lTransform;
-							lDocument.Save (lProjectPath);
+							v_attribute.Value = v_transform;
+							v_document.Save (v_projectPath);
 							break;
 						}
 					}

@@ -20,14 +20,14 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private SandcastleProject mProject;
-		private XmlDocument mConfiguration;
-		private static String mMakeCabConfig = "make-cab";
-		private static String mSignToolConfig = "sign-code";
-		private static String mCabFileConfig = "cab-file";
-		private static String mCabPathConfig = "cab-path";
-		private static String mTimeStampConfig = "timestamp-url";
-		private static String mCertificateConfig = "certificate";
+		private SandcastleProject m_project;
+		private XmlDocument m_configuration;
+		private static String m_makeCabConfig = "make-cab";
+		private static String m_signToolConfig = "sign-code";
+		private static String m_cabFileConfig = "cab-file";
+		private static String m_cabPathConfig = "cab-path";
+		private static String m_timeStampConfig = "timestamp-url";
+		private static String m_certificateConfig = "certificate";
 
 		#endregion
 
@@ -45,30 +45,30 @@ namespace SandcastleBuilder.PlugIns
 		/// <summary>
 		/// Use this constructor to get the default settings for a specific project.
 		/// </summary>
-		/// <param name="Project">The project to use.</param>
-		public PackAndSignMSHCSettings (SandcastleProject Project)
-			: this (Project, String.Empty)
+		/// <param name="project">The project to use.</param>
+		public PackAndSignMSHCSettings (SandcastleProject project)
+			: this (project, String.Empty)
 		{
 		}
 
 		/// <summary>
 		/// Use this constructor to initialize with a specific configuration, but without reference to any project.
 		/// </summary>
-		/// <param name="Configuration">The initial configuration XML fragment.</param>
-		public PackAndSignMSHCSettings (String Configuration)
+		/// <param name="configuration">The initial configuration XML fragment.</param>
+		public PackAndSignMSHCSettings (String configuration)
 		{
-			this.Configuration = Configuration;
+			this.Configuration = configuration;
 		}
 
 		/// <summary>
 		/// Use this constructor for full initialization and support of project-specific defaults.
 		/// </summary>
-		/// <param name="Project">The project to use.</param>
-		/// <param name="Configuration">The initial configuration XML fragment.</param>
-		public PackAndSignMSHCSettings (SandcastleProject Project, String Configuration)
+		/// <param name="project">The project to use.</param>
+		/// <param name="configuration">The initial configuration XML fragment.</param>
+		public PackAndSignMSHCSettings (SandcastleProject project, String configuration)
 		{
-			mProject = Project;
-			this.Configuration = Configuration;
+			m_project = project;
+			this.Configuration = configuration;
 		}
 
 		#endregion
@@ -83,90 +83,90 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				if (mConfiguration == null)
+				if (m_configuration == null)
 				{
 					Configuration = String.Empty;
 				}
 
-				XmlNode lRootNode = mConfiguration.SelectSingleNode ("configuration");
-				XmlNode lMakeCabPath;
-				XmlNode lSignToolPath;
-				XmlNode lCabFileName;
-				XmlNode lCabPathName;
-				XmlNode lTimeStampUrl;
-				XmlNode lCertificatePath;
+				XmlNode v_rootNode = m_configuration.SelectSingleNode ("configuration");
+				XmlNode v_makeCabPath;
+				XmlNode v_signToolPath;
+				XmlNode v_cabFileName;
+				XmlNode v_cabPathName;
+				XmlNode v_timeStampUrl;
+				XmlNode v_certificatePath;
 
-				if (lRootNode == null)
+				if (v_rootNode == null)
 				{
-					mConfiguration.AppendChild (lRootNode = mConfiguration.CreateElement ("configuration"));
+					m_configuration.AppendChild (v_rootNode = m_configuration.CreateElement ("configuration"));
 				}
 
-				lMakeCabPath = lRootNode.Attributes.GetNamedItem (mMakeCabConfig);
-				if (lMakeCabPath == null)
+				v_makeCabPath = v_rootNode.Attributes.GetNamedItem (m_makeCabConfig);
+				if (v_makeCabPath == null)
 				{
-					lRootNode.Attributes.SetNamedItem (lMakeCabPath = mConfiguration.CreateAttribute (mMakeCabConfig));
+					v_rootNode.Attributes.SetNamedItem (v_makeCabPath = m_configuration.CreateAttribute (m_makeCabConfig));
 				}
-				lMakeCabPath.Value = MakeCabPath;
+				v_makeCabPath.Value = MakeCabPath;
 
-				lSignToolPath = lRootNode.Attributes.GetNamedItem (mSignToolConfig);
-				if (lSignToolPath == null)
+				v_signToolPath = v_rootNode.Attributes.GetNamedItem (m_signToolConfig);
+				if (v_signToolPath == null)
 				{
-					lRootNode.Attributes.SetNamedItem (lSignToolPath = mConfiguration.CreateAttribute (mSignToolConfig));
+					v_rootNode.Attributes.SetNamedItem (v_signToolPath = m_configuration.CreateAttribute (m_signToolConfig));
 				}
-				lSignToolPath.Value = SignToolPath;
+				v_signToolPath.Value = SignToolPath;
 
 				if (String.IsNullOrEmpty (CabFileName) || (CabFileName == DefaultCabFileName))
 				{
-					lRootNode.Attributes.RemoveNamedItem (mCabFileConfig);
+					v_rootNode.Attributes.RemoveNamedItem (m_cabFileConfig);
 				}
 				else
 				{
-					lCabFileName = lRootNode.Attributes.GetNamedItem (mCabFileConfig);
-					if (lCabFileName == null)
+					v_cabFileName = v_rootNode.Attributes.GetNamedItem (m_cabFileConfig);
+					if (v_cabFileName == null)
 					{
-						lRootNode.Attributes.SetNamedItem (lCabFileName = mConfiguration.CreateAttribute (mCabFileConfig));
+						v_rootNode.Attributes.SetNamedItem (v_cabFileName = m_configuration.CreateAttribute (m_cabFileConfig));
 					}
-					lCabFileName.Value = CabFileName;
+					v_cabFileName.Value = CabFileName;
 				}
 
 				if (String.IsNullOrEmpty (CabPathName) || (CabPathName == DefaultCabPathName))
 				{
-					lRootNode.Attributes.RemoveNamedItem (mCabPathConfig);
+					v_rootNode.Attributes.RemoveNamedItem (m_cabPathConfig);
 				}
 				else
 				{
-					lCabPathName = lRootNode.Attributes.GetNamedItem (mCabPathConfig);
-					if (lCabPathName == null)
+					v_cabPathName = v_rootNode.Attributes.GetNamedItem (m_cabPathConfig);
+					if (v_cabPathName == null)
 					{
-						lRootNode.Attributes.SetNamedItem (lCabPathName = mConfiguration.CreateAttribute (mCabPathConfig));
+						v_rootNode.Attributes.SetNamedItem (v_cabPathName = m_configuration.CreateAttribute (m_cabPathConfig));
 					}
-					lCabPathName.Value = CabPathName;
+					v_cabPathName.Value = CabPathName;
 				}
 
-				lTimeStampUrl = lRootNode.Attributes.GetNamedItem (mTimeStampConfig);
-				if (lTimeStampUrl == null)
+				v_timeStampUrl = v_rootNode.Attributes.GetNamedItem (m_timeStampConfig);
+				if (v_timeStampUrl == null)
 				{
-					lRootNode.Attributes.SetNamedItem (lTimeStampUrl = mConfiguration.CreateAttribute (mTimeStampConfig));
+					v_rootNode.Attributes.SetNamedItem (v_timeStampUrl = m_configuration.CreateAttribute (m_timeStampConfig));
 				}
-				lTimeStampUrl.Value = TimeStampUrl;
+				v_timeStampUrl.Value = TimeStampUrl;
 
-				lCertificatePath = lRootNode.Attributes.GetNamedItem (mCertificateConfig);
-				if (lCertificatePath == null)
+				v_certificatePath = v_rootNode.Attributes.GetNamedItem (m_certificateConfig);
+				if (v_certificatePath == null)
 				{
-					lRootNode.Attributes.SetNamedItem (lCertificatePath = mConfiguration.CreateAttribute (mCertificateConfig));
+					v_rootNode.Attributes.SetNamedItem (v_certificatePath = m_configuration.CreateAttribute (m_certificateConfig));
 				}
-				lCertificatePath.Value = CertificateSpec;
+				v_certificatePath.Value = CertificateSpec;
 
-				return mConfiguration.OuterXml;
+				return m_configuration.OuterXml;
 			}
 			set
 			{
-				mConfiguration = new XmlDocument ();
+				m_configuration = new XmlDocument ();
 				if (!String.IsNullOrWhiteSpace (value))
 				{
 					try
 					{
-						mConfiguration.LoadXml (value);
+						m_configuration.LoadXml (value);
 					}
 					catch (Exception exc)
 					{
@@ -174,29 +174,29 @@ namespace SandcastleBuilder.PlugIns
 					}
 				}
 
-				XmlNode lRootNode = mConfiguration.SelectSingleNode ("configuration");
-				XmlNode lMakeCabPath = null;
-				XmlNode lSignToolPath = null;
-				XmlNode lCabFileName = null;
-				XmlNode lCabPathName = null;
-				XmlNode lTimeStampUrl = null;
-				XmlNode lCertificatePath = null;
+				XmlNode v_rootNode = m_configuration.SelectSingleNode ("configuration");
+				XmlNode v_makeCabPath = null;
+				XmlNode v_signToolPath = null;
+				XmlNode v_cabFileName = null;
+				XmlNode v_cabPathName = null;
+				XmlNode v_timeStampUrl = null;
+				XmlNode v_certificatePath = null;
 
-				if (lRootNode != null)
+				if (v_rootNode != null)
 				{
-					lMakeCabPath = lRootNode.Attributes.GetNamedItem (mMakeCabConfig);
-					lSignToolPath = lRootNode.Attributes.GetNamedItem (mSignToolConfig);
-					lCabFileName = lRootNode.Attributes.GetNamedItem (mCabFileConfig);
-					lCabPathName = lRootNode.Attributes.GetNamedItem (mCabPathConfig);
-					lTimeStampUrl = lRootNode.Attributes.GetNamedItem (mTimeStampConfig);
-					lCertificatePath = lRootNode.Attributes.GetNamedItem (mCertificateConfig);
+					v_makeCabPath = v_rootNode.Attributes.GetNamedItem (m_makeCabConfig);
+					v_signToolPath = v_rootNode.Attributes.GetNamedItem (m_signToolConfig);
+					v_cabFileName = v_rootNode.Attributes.GetNamedItem (m_cabFileConfig);
+					v_cabPathName = v_rootNode.Attributes.GetNamedItem (m_cabPathConfig);
+					v_timeStampUrl = v_rootNode.Attributes.GetNamedItem (m_timeStampConfig);
+					v_certificatePath = v_rootNode.Attributes.GetNamedItem (m_certificateConfig);
 				}
-				MakeCabPath = (lMakeCabPath == null) ? String.Empty : lMakeCabPath.Value.Trim ();
-				SignToolPath = (lSignToolPath == null) ? String.Empty : lSignToolPath.Value.Trim ();
-				CabFileName = (lCabFileName == null) ? String.Empty : lCabFileName.Value.Trim ();
-				CabPathName = (lCabPathName == null) ? String.Empty : lCabPathName.Value.Trim ();
-				TimeStampUrl = (lTimeStampUrl == null) ? String.Empty : lTimeStampUrl.Value.Trim ();
-				CertificateSpec = (lCertificatePath == null) ? String.Empty : lCertificatePath.Value.Trim ();
+				MakeCabPath = (v_makeCabPath == null) ? String.Empty : v_makeCabPath.Value.Trim ();
+				SignToolPath = (v_signToolPath == null) ? String.Empty : v_signToolPath.Value.Trim ();
+				CabFileName = (v_cabFileName == null) ? String.Empty : v_cabFileName.Value.Trim ();
+				CabPathName = (v_cabPathName == null) ? String.Empty : v_cabPathName.Value.Trim ();
+				TimeStampUrl = (v_timeStampUrl == null) ? String.Empty : v_timeStampUrl.Value.Trim ();
+				CertificateSpec = (v_certificatePath == null) ? String.Empty : v_certificatePath.Value.Trim ();
 
 				if (String.IsNullOrEmpty (MakeCabPath))
 				{
@@ -265,21 +265,21 @@ namespace SandcastleBuilder.PlugIns
 				{
 					try
 					{
-						String lPrefix = CertificateSpec.Trim ().Split (' ')[0];
+						String v_prefix = CertificateSpec.Trim ().Split (' ')[0];
 
-						if (IsStoreFlag (lPrefix, StoreStoreFlag))
+						if (IsStoreFlag (v_prefix, StoreStoreFlag))
 						{
 							return true;
 						}
-						if (IsStoreFlag (lPrefix, StoreNameFlag))
+						if (IsStoreFlag (v_prefix, StoreNameFlag))
 						{
 							return true;
 						}
-						if (IsStoreFlag (lPrefix, StoreIssuerFlag))
+						if (IsStoreFlag (v_prefix, StoreIssuerFlag))
 						{
 							return true;
 						}
-						if (IsStoreFlag (lPrefix, StoreTimestamperFlag))
+						if (IsStoreFlag (v_prefix, StoreTimestamperFlag))
 						{
 							return true;
 						}
@@ -297,12 +297,12 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				String lStore = GetStorePart (StoreStoreFlag);
-				if (String.IsNullOrWhiteSpace (lStore))
+				String v_store = GetStorePart (StoreStoreFlag);
+				if (String.IsNullOrWhiteSpace (v_store))
 				{
-					lStore = DefaultCertificateStore;
+					v_store = DefaultCertificateStore;
 				}
-				return lStore;
+				return v_store;
 			}
 			set
 			{
@@ -383,7 +383,7 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				return (mProject == null) ? String.Empty : Path.ChangeExtension (mProject.HtmlHelpName, ".cab");
+				return (m_project == null) ? String.Empty : Path.ChangeExtension (m_project.HtmlHelpName, ".cab");
 			}
 		}
 
@@ -397,7 +397,7 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				return (mProject == null) ? String.Empty : mProject.OutputPath;
+				return (m_project == null) ? String.Empty : m_project.OutputPath;
 			}
 		}
 
@@ -457,35 +457,35 @@ namespace SandcastleBuilder.PlugIns
 		/// <returns>The loaded certificate, if successful.</returns>
 		public X509Certificate2 LoadCertificate ()
 		{
-			String lErrorMessage = String.Empty;
-			return LoadCertificate (out lErrorMessage);
+			String v_errorMessage = String.Empty;
+			return LoadCertificate (out v_errorMessage);
 		}
 		/// <summary>
 		/// Loads an Authenticode code-signing cerificate from the certificate file, if a file path has been provided.
 		/// </summary>
-		/// <param name="ErrorMessage">An error message string if the load failed.</param>
+		/// <param name="errorMessage">An error message string if the load failed.</param>
 		/// <returns>The loaded certificate, if successful.</returns>
-		public X509Certificate2 LoadCertificate (out String ErrorMessage)
+		public X509Certificate2 LoadCertificate (out String errorMessage)
 		{
-			X509Certificate2 lCertificate = null;
+			X509Certificate2 v_certificate = null;
 
-			ErrorMessage = String.Empty;
+			errorMessage = String.Empty;
 
 			if (IsFileCertificate)
 			{
-				lCertificate = LoadFileCertificate (FileCertificatePath, out ErrorMessage);
+				v_certificate = LoadFileCertificate (FileCertificatePath, out errorMessage);
 
-				if (lCertificate != null)
+				if (v_certificate != null)
 				{
 					//TODO - add the certificate to "my" store
 				}
 			}
 			else if (IsStoreCertificate)
 			{
-				lCertificate = LoadStoreCertificate (StoreCertificateStore, StoreCertificateName, StoreCertificateIssuer, out ErrorMessage);
+				v_certificate = LoadStoreCertificate (StoreCertificateStore, StoreCertificateName, StoreCertificateIssuer, out errorMessage);
 			}
 
-			return lCertificate;
+			return v_certificate;
 		}
 
 		//=====================================================================
@@ -493,51 +493,51 @@ namespace SandcastleBuilder.PlugIns
 		/// <summary>
 		/// Loads an Authenticode code-signing cerificate from a certificate file.
 		/// </summary>
-		/// <param name="FilePath">The full path of the file to load.</param>
+		/// <param name="filePath">The full path of the file to load.</param>
 		/// <returns>The loaded certificate, if successful.</returns>
-		public static X509Certificate2 LoadFileCertificate (String FilePath)
+		public static X509Certificate2 LoadFileCertificate (String filePath)
 		{
-			String lErrorMessage = String.Empty;
-			return LoadFileCertificate (FilePath, out lErrorMessage);
+			String v_errorMessage = String.Empty;
+			return LoadFileCertificate (filePath, out v_errorMessage);
 		}
 		/// <summary>
 		/// Loads an Authenticode code-signing cerificate from a certificate file.
 		/// </summary>
-		/// <param name="FilePath">The full path of the file to load.</param>
-		/// <param name="ErrorMessage">An error message string if the load failed.</param>
+		/// <param name="filePath">The full path of the file to load.</param>
+		/// <param name="errorMessage">An error message string if the load failed.</param>
 		/// <returns>The loaded certificate, if successful.</returns>
-		public static X509Certificate2 LoadFileCertificate (String FilePath, out String ErrorMessage)
+		public static X509Certificate2 LoadFileCertificate (String filePath, out String errorMessage)
 		{
-			X509Certificate2 lCertificate = null;
+			X509Certificate2 v_certificate = null;
 
-			ErrorMessage = String.Empty;
+			errorMessage = String.Empty;
 
 			try
 			{
-				RequestPfxPassword lRequestPassword = new RequestPfxPassword (Path.GetFileName (FilePath));
+				RequestPfxPassword v_requestPassword = new RequestPfxPassword (Path.GetFileName (filePath));
 
-				if (lRequestPassword.ShowDialog ().GetValueOrDefault ())
+				if (v_requestPassword.ShowDialog ().GetValueOrDefault ())
 				{
-					lCertificate = new X509Certificate2 (FilePath, lRequestPassword.SecurePassword);
+					v_certificate = new X509Certificate2 (filePath, v_requestPassword.SecurePassword);
 				}
 			}
 			catch (CryptographicException exp)
 			{
 				System.Diagnostics.Debug.Print (exp.Message);
-				ErrorMessage = exp.Message;
+				errorMessage = exp.Message;
 			}
 			catch (Exception exp)
 			{
 				System.Diagnostics.Debug.Print (exp.Message);
-				ErrorMessage = exp.Message;
+				errorMessage = exp.Message;
 			}
 
-			if ((lCertificate != null) && (!lCertificate.HasPrivateKey))
+			if ((v_certificate != null) && (!v_certificate.HasPrivateKey))
 			{
-				ErrorMessage = String.Format ("The certificate in {0} does not have a private key.", FilePath);
-				lCertificate = null;
+				errorMessage = String.Format ("The certificate in {0} does not have a private key.", filePath);
+				v_certificate = null;
 			}
-			return lCertificate;
+			return v_certificate;
 		}
 
 		//=====================================================================
@@ -545,97 +545,97 @@ namespace SandcastleBuilder.PlugIns
 		/// <summary>
 		/// Loads an Authenticode code-signing cerificate from a certificate store.
 		/// </summary>
-		/// <param name="StoreName">The certificate store name.</param>
-		/// <param name="CertificateName">The certificate's subject name (optional).</param>
-		/// <param name="CertificateIssuer">The certificate's issuer name (optional).</param>
+		/// <param name="storeName">The certificate store name.</param>
+		/// <param name="certificateName">The certificate's subject name (optional).</param>
+		/// <param name="certificateIssuer">The certificate's issuer name (optional).</param>
 		/// <returns>The loaded certificate, if successful.</returns>
-		/// <remarks>Either the <paramref name="CertificateName"/> or <paramref name="CertificateIssuer"/> must be provided.
+		/// <remarks>Either the <paramref name="certificateName"/> or <paramref name="certificateIssuer"/> must be provided.
 		/// If both are provided, then only a certificate that matches both will be loaded.
 		/// </remarks>
-		public static X509Certificate2 LoadStoreCertificate (String StoreName, String CertificateName, String CertificateIssuer)
+		public static X509Certificate2 LoadStoreCertificate (String storeName, String certificateName, String certificateIssuer)
 		{
-			String lErrorMessage = String.Empty;
-			return LoadStoreCertificate (StoreName, CertificateName, CertificateIssuer, out lErrorMessage);
+			String v_errorMessage = String.Empty;
+			return LoadStoreCertificate (storeName, certificateName, certificateIssuer, out v_errorMessage);
 		}
 		/// <summary>
 		/// Loads an Authenticode code-signing cerificate from a certificate store.
 		/// </summary>
-		/// <param name="StoreName">The certificate store name.</param>
-		/// <param name="CertificateName">The certificate's subject name (optional).</param>
-		/// <param name="CertificateIssuer">The certificate's issuer name (optional).</param>
-		/// <param name="ErrorMessage">An error message string if the load failed.</param>
+		/// <param name="storeName">The certificate store name.</param>
+		/// <param name="certificateName">The certificate's subject name (optional).</param>
+		/// <param name="certificateIssuer">The certificate's issuer name (optional).</param>
+		/// <param name="errorMessage">An error message string if the load failed.</param>
 		/// <returns>The loaded certificate, if successful.</returns>
-		/// <remarks>Either the <paramref name="CertificateName"/> or <paramref name="CertificateIssuer"/> must be provided.
+		/// <remarks>Either the <paramref name="certificateName"/> or <paramref name="certificateIssuer"/> must be provided.
 		/// If both are provided, then only a certificate that matches both will be loaded.
 		/// </remarks>
-		public static X509Certificate2 LoadStoreCertificate (String StoreName, String CertificateName, String CertificateIssuer, out String ErrorMessage)
+		public static X509Certificate2 LoadStoreCertificate (String storeName, String certificateName, String certificateIssuer, out String errorMessage)
 		{
-			X509Certificate2 lCertificate = null;
+			X509Certificate2 v_certificate = null;
 
-			ErrorMessage = String.Empty;
+			errorMessage = String.Empty;
 
 			try
 			{
-				X509Store lCertStore = new X509Store (StoreName, StoreLocation.CurrentUser);
-				X509Certificate2Collection lCertificates;
+				X509Store v_certStore = new X509Store (storeName, StoreLocation.CurrentUser);
+				X509Certificate2Collection v_certificates;
 
-				lCertStore.Open (OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+				v_certStore.Open (OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
 				try
 				{
-					lCertificates = lCertStore.Certificates as X509Certificate2Collection;
-					if ((lCertificates != null) && (lCertificates.Count > 0))
+					v_certificates = v_certStore.Certificates as X509Certificate2Collection;
+					if ((v_certificates != null) && (v_certificates.Count > 0))
 					{
-						lCertificates = lCertificates.Find (X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
+						v_certificates = v_certificates.Find (X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
 					}
 					else
 					{
-						ErrorMessage = String.Format ("Certificate store \"{0}\" is empty.", StoreName);
+						errorMessage = String.Format ("Certificate store \"{0}\" is empty.", storeName);
 					}
 
-					if ((lCertificates != null) && (lCertificates.Count > 0))
+					if ((v_certificates != null) && (v_certificates.Count > 0))
 					{
-						if (!String.IsNullOrEmpty (CertificateName))
+						if (!String.IsNullOrEmpty (certificateName))
 						{
-							lCertificates = lCertificates.Find (X509FindType.FindBySubjectName, CertificateName, true);
+							v_certificates = v_certificates.Find (X509FindType.FindBySubjectName, certificateName, true);
 						}
-						if ((lCertificates != null) && (lCertificates.Count > 0) && !String.IsNullOrEmpty (CertificateIssuer))
+						if ((v_certificates != null) && (v_certificates.Count > 0) && !String.IsNullOrEmpty (certificateIssuer))
 						{
-							lCertificates = lCertificates.Find (X509FindType.FindByIssuerName, CertificateIssuer, true);
+							v_certificates = v_certificates.Find (X509FindType.FindByIssuerName, certificateIssuer, true);
 						}
 					}
 					else
 					{
-						ErrorMessage = String.Format ("Certificate store \"{0}\" does not contain any code signing certificates.", StoreName);
+						errorMessage = String.Format ("Certificate store \"{0}\" does not contain any code signing certificates.", storeName);
 					}
 
-					if ((lCertificates != null) && (lCertificates.Count > 0))
+					if ((v_certificates != null) && (v_certificates.Count > 0))
 					{
-						lCertificate = lCertificates[0];
+						v_certificate = v_certificates[0];
 					}
 					else
 					{
-						ErrorMessage = String.Format ("Certificate store \"{0}\" does not contain the specified certificate.", StoreName);
+						errorMessage = String.Format ("Certificate store \"{0}\" does not contain the specified certificate.", storeName);
 					}
 				}
 				catch (Exception exp)
 				{
 					System.Diagnostics.Debug.Print (exp.Message);
-					ErrorMessage = exp.Message;
+					errorMessage = exp.Message;
 				}
-				lCertStore.Close ();
+				v_certStore.Close ();
 			}
 			catch (Exception exp)
 			{
 				System.Diagnostics.Debug.Print (exp.Message);
-				ErrorMessage = exp.Message;
+				errorMessage = exp.Message;
 			}
 
-			if ((lCertificate != null) && (!lCertificate.HasPrivateKey))
+			if ((v_certificate != null) && (!v_certificate.HasPrivateKey))
 			{
-				ErrorMessage = String.Format ("The certificate for {0} from {1} does not have a private key.", lCertificate.GetNameInfo (X509NameType.SimpleName, false), lCertificate.GetNameInfo (X509NameType.SimpleName, true));
-				lCertificate = null;
+				errorMessage = String.Format ("The certificate for {0} from {1} does not have a private key.", v_certificate.GetNameInfo (X509NameType.SimpleName, false), v_certificate.GetNameInfo (X509NameType.SimpleName, true));
+				v_certificate = null;
 			}
-			return lCertificate;
+			return v_certificate;
 		}
 
 		#endregion
@@ -651,16 +651,16 @@ namespace SandcastleBuilder.PlugIns
 		{
 			try
 			{
-				String[] lPaths = Environment.GetEnvironmentVariable ("PATH").Split (';');
-				foreach (String lPath in lPaths)
+				String[] v_paths = Environment.GetEnvironmentVariable ("PATH").Split (';');
+				foreach (String v_path in v_paths)
 				{
 					try
 					{
-						String lFilePath = Path.Combine (Path.GetFullPath (Environment.ExpandEnvironmentVariables (lPath)), "makecab.exe");
+						String v_filePath = Path.Combine (Path.GetFullPath (Environment.ExpandEnvironmentVariables (v_path)), "makecab.exe");
 
-						if (File.Exists (lFilePath))
+						if (File.Exists (v_filePath))
 						{
-							return lFilePath;
+							return v_filePath;
 						}
 					}
 					catch { }
@@ -678,16 +678,16 @@ namespace SandcastleBuilder.PlugIns
 		{
 			try
 			{
-				String[] lPaths = Environment.GetEnvironmentVariable ("PATH").Split (';');
-				foreach (String lPath in lPaths)
+				String[] v_paths = Environment.GetEnvironmentVariable ("PATH").Split (';');
+				foreach (String v_path in v_paths)
 				{
 					try
 					{
-						String lFilePath = Path.Combine (Path.GetFullPath (Environment.ExpandEnvironmentVariables (lPath)), "signtool.exe");
+						String v_filePath = Path.Combine (Path.GetFullPath (Environment.ExpandEnvironmentVariables (v_path)), "signtool.exe");
 
-						if (File.Exists (lFilePath))
+						if (File.Exists (v_filePath))
 						{
-							return lFilePath;
+							return v_filePath;
 						}
 					}
 					catch { }
@@ -699,44 +699,43 @@ namespace SandcastleBuilder.PlugIns
 
 		//=====================================================================
 
-		private static bool IsStoreFlag (String Flag, String StoreFlag)
+		private static bool IsStoreFlag (String flag, String storeFlag)
 		{
-			if (Flag.StartsWith ("-"))
+			if (flag.StartsWith ("-"))
 			{
-				Flag = "/" + Flag.Substring (1);
+				flag = "/" + flag.Substring (1);
 			}
-			return (String.Compare (Flag, StoreFlag, StringComparison.InvariantCultureIgnoreCase) == 0);
+			return (String.Compare (flag, storeFlag, StringComparison.InvariantCultureIgnoreCase) == 0);
 		}
 
-		private String GetStorePart (String StoreFlag)
+		private String GetStorePart (String storeFlag)
 		{
 			if (!String.IsNullOrEmpty (CertificateSpec))
 			{
 				try
 				{
-					Regex lRegEx = new Regex ("(?<flag>(/|-)\\w+)\\s+(?<value>(\".*\")|\\S+)(?(/|-|$))", RegexOptions.CultureInvariant);
+					Regex v_regEx = new Regex ("(?<flag>(/|-)\\w+)\\s+(?<value>(\".*\")|\\S+)(?(/|-|$))", RegexOptions.CultureInvariant);
 
-					foreach (Match lMatch in lRegEx.Matches (CertificateSpec))
+					foreach (Match v_match in v_regEx.Matches (CertificateSpec))
 					{
-						String lFlag = String.Empty;
-						String lValue = String.Empty;
-						int lGroupNdx;
+						String v_flag = String.Empty;
+						String v_value = String.Empty;
+						int v_groupNdx;
 
-						for (lGroupNdx = 0; lGroupNdx < lMatch.Groups.Count; lGroupNdx++)
+						for (v_groupNdx = 0; v_groupNdx < v_match.Groups.Count; v_groupNdx++)
 						{
-							if (lRegEx.GroupNameFromNumber (lGroupNdx) == "flag")
+							if (v_regEx.GroupNameFromNumber (v_groupNdx) == "flag")
 							{
-								lFlag = lMatch.Groups[lGroupNdx].Value;
+								v_flag = v_match.Groups[v_groupNdx].Value;
 							}
-							else
-								if (lRegEx.GroupNameFromNumber (lGroupNdx) == "value")
-								{
-									lValue = lMatch.Groups[lGroupNdx].Value;
-								}
+							else if (v_regEx.GroupNameFromNumber (v_groupNdx) == "value")
+							{
+								v_value = v_match.Groups[v_groupNdx].Value;
+							}
 						}
-						if (IsStoreFlag (lFlag, StoreFlag))
+						if (IsStoreFlag (v_flag, storeFlag))
 						{
-							return lValue;
+							return v_value;
 						}
 					}
 				}
@@ -745,30 +744,30 @@ namespace SandcastleBuilder.PlugIns
 			return String.Empty;
 		}
 
-		private String SetStorePart (String StoreFlag, String Value)
+		private String SetStorePart (String storeFlag, String value)
 		{
-			String lStoreStore = IsStoreFlag (StoreFlag, StoreStoreFlag) ? Value : StoreCertificateStore;
-			String lStoreName = IsStoreFlag (StoreFlag, StoreNameFlag) ? Value : StoreCertificateName;
-			String lStoreIssuer = IsStoreFlag (StoreFlag, StoreIssuerFlag) ? Value : StoreCertificateIssuer;
-			List<String> lStoreParts = new List<String> ();
+			String v_storeStore = IsStoreFlag (storeFlag, StoreStoreFlag) ? value : StoreCertificateStore;
+			String v_storeName = IsStoreFlag (storeFlag, StoreNameFlag) ? value : StoreCertificateName;
+			String v_storeIssuer = IsStoreFlag (storeFlag, StoreIssuerFlag) ? value : StoreCertificateIssuer;
+			List<String> v_storeParts = new List<String> ();
 
-			if (!String.IsNullOrWhiteSpace (lStoreStore))
+			if (!String.IsNullOrWhiteSpace (v_storeStore))
 			{
-				lStoreParts.Add (StoreStoreFlag);
-				lStoreParts.Add (lStoreStore);
+				v_storeParts.Add (StoreStoreFlag);
+				v_storeParts.Add (v_storeStore);
 			}
-			if (!String.IsNullOrWhiteSpace (lStoreName))
+			if (!String.IsNullOrWhiteSpace (v_storeName))
 			{
-				lStoreParts.Add (StoreNameFlag);
-				lStoreParts.Add ("\"" + lStoreName + "\"");
+				v_storeParts.Add (StoreNameFlag);
+				v_storeParts.Add ("\"" + v_storeName + "\"");
 			}
-			if (!String.IsNullOrWhiteSpace (lStoreIssuer))
+			if (!String.IsNullOrWhiteSpace (v_storeIssuer))
 			{
-				lStoreParts.Add (StoreIssuerFlag);
-				lStoreParts.Add ("\"" + lStoreIssuer + "\"");
+				v_storeParts.Add (StoreIssuerFlag);
+				v_storeParts.Add ("\"" + v_storeIssuer + "\"");
 			}
 
-			return String.Join (" ", lStoreParts.ToArray ());
+			return String.Join (" ", v_storeParts.ToArray ());
 		}
 
 		#endregion

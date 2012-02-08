@@ -17,19 +17,19 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private SandcastleProject mProject;
-		private PackAndSignMSHCSettings mSettings;
-		private X509Certificate2 mCertificate = null;
+		private SandcastleProject m_project;
+		private PackAndSignMSHCSettings m_settings;
+		private X509Certificate2 m_certificate = null;
 
 		#endregion
 
 		#region Initialization
 		//=====================================================================
 
-		public PackAndSignMHSCConfig (SandcastleProject pProject)
+		public PackAndSignMHSCConfig (SandcastleProject project)
 		{
-			mProject = pProject;
-			mSettings = new PackAndSignMSHCSettings (mProject);
+			m_project = project;
+			m_settings = new PackAndSignMSHCSettings (m_project);
 			InitializeComponent ();
 		}
 
@@ -45,11 +45,11 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				return mSettings.Configuration;
+				return m_settings.Configuration;
 			}
 			set
 			{
-				mSettings = new PackAndSignMSHCSettings (mProject, value);
+				m_settings = new PackAndSignMSHCSettings (m_project, value);
 			}
 		}
 
@@ -58,129 +58,129 @@ namespace SandcastleBuilder.PlugIns
 		#region Helper Methods
 		//=====================================================================
 
-		private String BrowseForExeFile (String CurrentFileName)
+		private String BrowseForExeFile (String currentFileName)
 		{
-			return BrowseForExeFile (CurrentFileName, String.Empty);
+			return BrowseForExeFile (currentFileName, String.Empty);
 		}
-		private String BrowseForExeFile (String CurrentFileName, String Title)
+		private String BrowseForExeFile (String currentFileName, String title)
 		{
-			Microsoft.Win32.OpenFileDialog lDialog = new Microsoft.Win32.OpenFileDialog ();
-			StringBuilder lFilter = new StringBuilder ();
+			Microsoft.Win32.OpenFileDialog v_dialog = new Microsoft.Win32.OpenFileDialog ();
+			StringBuilder v_filter = new StringBuilder ();
 
-			lFilter.Append (FileExtTypeName (".exe", "Applications") + " (*.exe)|*.exe");
-			lFilter.Append ("|All Files (*.*)|*.*");
+			v_filter.Append (FileExtTypeName (".exe", "Applications") + " (*.exe)|*.exe");
+			v_filter.Append ("|All Files (*.*)|*.*");
 
-			lDialog.Filter = lFilter.ToString ();
-			lDialog.CheckFileExists = true;
-			if (!String.IsNullOrEmpty (CurrentFileName))
+			v_dialog.Filter = v_filter.ToString ();
+			v_dialog.CheckFileExists = true;
+			if (!String.IsNullOrEmpty (currentFileName))
 			{
-				lDialog.FileName = Path.GetFileName (CurrentFileName);
-				lDialog.InitialDirectory = Path.GetDirectoryName (CurrentFileName);
+				v_dialog.FileName = Path.GetFileName (currentFileName);
+				v_dialog.InitialDirectory = Path.GetDirectoryName (currentFileName);
 			}
-			if (!String.IsNullOrWhiteSpace (Title))
+			if (!String.IsNullOrWhiteSpace (title))
 			{
-				lDialog.Title = Title;
+				v_dialog.Title = title;
 			}
-			if (lDialog.ShowDialog (this).GetValueOrDefault ())
+			if (v_dialog.ShowDialog (this).GetValueOrDefault ())
 			{
-				return lDialog.FileName;
+				return v_dialog.FileName;
 			}
-			return CurrentFileName;
+			return currentFileName;
 		}
 
-		private String BrowseForFolder (String CurrentPath)
+		private String BrowseForFolder (String currentPath)
 		{
-			return BrowseForFolder (CurrentPath, String.Empty);
+			return BrowseForFolder (currentPath, String.Empty);
 		}
-		private String BrowseForFolder (String CurrentPath, String Description)
+		private String BrowseForFolder (String currentPath, String description)
 		{
-			return BrowseForFolder (CurrentPath, mSettings.DefaultCabPathName, Description);
+			return BrowseForFolder (currentPath, m_settings.DefaultCabPathName, description);
 		}
-		private String BrowseForFolder (String CurrentPath, String DefaultPath, String Description)
+		private String BrowseForFolder (String currentPath, String defaultPath, String description)
 		{
-			System.Windows.Forms.FolderBrowserDialog lDialog = new System.Windows.Forms.FolderBrowserDialog ();
-			FolderPath lPath = new FolderPath (mProject);
-			String lPathRoot = Path.GetPathRoot (CurrentPath).TrimStart ('\\', '/');
+			System.Windows.Forms.FolderBrowserDialog v_dialog = new System.Windows.Forms.FolderBrowserDialog ();
+			FolderPath v_path = new FolderPath (m_project);
+			String v_pathRoot = Path.GetPathRoot (currentPath).TrimStart ('\\', '/');
 
-			if (String.IsNullOrEmpty (CurrentPath))
+			if (String.IsNullOrEmpty (currentPath))
 			{
-				lPath.Path = FolderPath.GetFullPath (DefaultPath);
+				v_path.Path = FolderPath.GetFullPath (defaultPath);
 			}
-			else if (Path.IsPathRooted (CurrentPath))
+			else if (Path.IsPathRooted (currentPath))
 			{
-				lPath.Path = FolderPath.GetFullPath (CurrentPath);
+				v_path.Path = FolderPath.GetFullPath (currentPath);
 			}
 			else
 			{
-				lPath.Path = FolderPath.RelativeToAbsolutePath (DefaultPath, CurrentPath);
+				v_path.Path = FolderPath.RelativeToAbsolutePath (defaultPath, currentPath);
 			}
 
-			if (!String.IsNullOrEmpty (lPath))
+			if (!String.IsNullOrEmpty (v_path))
 			{
-				lDialog.SelectedPath = lPath.Path.TrimEnd ('\\', '/');
+				v_dialog.SelectedPath = v_path.Path.TrimEnd ('\\', '/');
 			}
-			lDialog.ShowNewFolderButton = true;
-			lDialog.Description = Description;
+			v_dialog.ShowNewFolderButton = true;
+			v_dialog.Description = description;
 
-			if (lDialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
+			if (v_dialog.ShowDialog () == System.Windows.Forms.DialogResult.OK)
 			{
-				lPath.Path = FolderPath.TerminatePath (lDialog.SelectedPath);
-				lPath.IsFixedPath = true;
+				v_path.Path = FolderPath.TerminatePath (v_dialog.SelectedPath);
+				v_path.IsFixedPath = true;
 
-				if (Path.IsPathRooted (CurrentPath) && String.IsNullOrEmpty (lPathRoot))
+				if (Path.IsPathRooted (currentPath) && String.IsNullOrEmpty (v_pathRoot))
 				{
-					lPath.PersistablePath = "\\" + FolderPath.AbsoluteToRelativePath (Path.GetPathRoot (lPath), lPath);
+					v_path.PersistablePath = "\\" + FolderPath.AbsoluteToRelativePath (Path.GetPathRoot (v_path), v_path);
 				}
-				else if (!Path.IsPathRooted (CurrentPath) && !String.IsNullOrEmpty (DefaultPath))
+				else if (!Path.IsPathRooted (currentPath) && !String.IsNullOrEmpty (defaultPath))
 				{
-					lPath.PersistablePath = FolderPath.AbsoluteToRelativePath (DefaultPath, lPath);
+					v_path.PersistablePath = FolderPath.AbsoluteToRelativePath (defaultPath, v_path);
 				}
 
-				return lPath.PersistablePath;
+				return v_path.PersistablePath;
 			}
-			return CurrentPath;
+			return currentPath;
 		}
 
 		//=============================================================================
 
-		private static String FileExtTypeName (String pFileExt)
+		private static String FileExtTypeName (String fileExt)
 		{
-			String lFileType = pFileExt;
+			String v_fileType = fileExt;
 
-			if (lFileType.StartsWith ("."))
+			if (v_fileType.StartsWith ("."))
 			{
-				lFileType = lFileType.Substring (1);
+				v_fileType = v_fileType.Substring (1);
 			}
-			lFileType = lFileType.ToUpper () + " File";
+			v_fileType = v_fileType.ToUpper () + " File";
 
-			return FileExtTypeName (pFileExt, lFileType);
+			return FileExtTypeName (fileExt, v_fileType);
 		}
 
-		private static String FileExtTypeName (String pFileExt, String pDefault)
+		private static String FileExtTypeName (String fileExt, String defaultValue)
 		{
-			String lTypeName = pDefault;
+			String v_typeName = defaultValue;
 
 			try
 			{
-				Microsoft.Win32.RegistryKey lFileExtKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey (pFileExt, false);
-				Microsoft.Win32.RegistryKey lProgIdKey = null;
+				Microsoft.Win32.RegistryKey v_fileExtKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey (fileExt, false);
+				Microsoft.Win32.RegistryKey v_progIdKey = null;
 
-				if (lFileExtKey != null)
+				if (v_fileExtKey != null)
 				{
-					lProgIdKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey (lFileExtKey.GetValue (String.Empty).ToString ());
+					v_progIdKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey (v_fileExtKey.GetValue (String.Empty).ToString ());
 				}
-				if (lProgIdKey != null)
+				if (v_progIdKey != null)
 				{
-					lTypeName = lProgIdKey.GetValue (String.Empty).ToString ();
+					v_typeName = v_progIdKey.GetValue (String.Empty).ToString ();
 				}
-				if (String.IsNullOrEmpty (lTypeName))
+				if (String.IsNullOrEmpty (v_typeName))
 				{
-					lTypeName = pDefault;
+					v_typeName = defaultValue;
 				}
 			}
 			catch { }
 
-			return lTypeName;
+			return v_typeName;
 		}
 
 		#endregion
@@ -190,7 +190,7 @@ namespace SandcastleBuilder.PlugIns
 
 		private void ShowCertificateDetails ()
 		{
-			if (mCertificate == null)
+			if (m_certificate == null)
 			{
 				CertificateIssuedBy.Text = "(none)";
 				CertificateIssuedTo.Text = "(none)";
@@ -199,43 +199,43 @@ namespace SandcastleBuilder.PlugIns
 			}
 			else
 			{
-				List<String> lExtensions = new List<String> ();
+				List<String> v_extensions = new List<String> ();
 
-				CertificateIssuedBy.Text = mCertificate.GetNameInfo (X509NameType.SimpleName, true);
-				CertificateIssuedTo.Text = mCertificate.GetNameInfo (X509NameType.SimpleName, false);
-				CertificateExpiration.Text = mCertificate.NotAfter.ToString ();
+				CertificateIssuedBy.Text = m_certificate.GetNameInfo (X509NameType.SimpleName, true);
+				CertificateIssuedTo.Text = m_certificate.GetNameInfo (X509NameType.SimpleName, false);
+				CertificateExpiration.Text = m_certificate.NotAfter.ToString ();
 
-				foreach (X509Extension lExtension in mCertificate.Extensions)
+				foreach (X509Extension v_extension in m_certificate.Extensions)
 				{
-					X509KeyUsageExtension lKeyUsage = lExtension as X509KeyUsageExtension;
-					X509EnhancedKeyUsageExtension lEnhancedKeyUsage = lExtension as X509EnhancedKeyUsageExtension;
+					X509KeyUsageExtension v_keyUsage = v_extension as X509KeyUsageExtension;
+					X509EnhancedKeyUsageExtension v_enhancedKeyUsage = v_extension as X509EnhancedKeyUsageExtension;
 
-					if (lKeyUsage != null)
+					if (v_keyUsage != null)
 					{
-						lExtensions.Add (lKeyUsage.KeyUsages.ToString ());
+						v_extensions.Add (v_keyUsage.KeyUsages.ToString ());
 					}
-					if (lEnhancedKeyUsage != null)
+					if (v_enhancedKeyUsage != null)
 					{
-						foreach (Oid lOid in lEnhancedKeyUsage.EnhancedKeyUsages)
+						foreach (Oid v_oid in v_enhancedKeyUsage.EnhancedKeyUsages)
 						{
-							lExtensions.Add (lOid.FriendlyName);
+							v_extensions.Add (v_oid.FriendlyName);
 						}
 					}
 
 				}
-				CertificatePurpose.Text = String.Join (", ", lExtensions.ToArray ());
+				CertificatePurpose.Text = String.Join (", ", v_extensions.ToArray ());
 			}
 		}
 
 		private void DisplayCertificate ()
 		{
-			if (mCertificate != null)
+			if (m_certificate != null)
 			{
 				try
 				{
 					System.Windows.Interop.WindowInteropHelper lInteropHelper = new System.Windows.Interop.WindowInteropHelper (this);
 
-					X509Certificate2UI.DisplayCertificate (mCertificate, lInteropHelper.Handle);
+					X509Certificate2UI.DisplayCertificate (m_certificate, lInteropHelper.Handle);
 				}
 				catch (Exception exp)
 				{
@@ -248,92 +248,92 @@ namespace SandcastleBuilder.PlugIns
 
 		private X509Certificate2 OpenStoreCertificate ()
 		{
-			String lErrorMessage = String.Empty;
-			return OpenStoreCertificate (out lErrorMessage);
+			String v_errorMessage = String.Empty;
+			return OpenStoreCertificate (out v_errorMessage);
 		}
-		private X509Certificate2 OpenStoreCertificate (out String ErrorMessage)
+		private X509Certificate2 OpenStoreCertificate (out String errorMessage)
 		{
-			ErrorMessage = String.Empty;
+			errorMessage = String.Empty;
 
 			try
 			{
-				System.Windows.Interop.WindowInteropHelper lInteropHelper = new System.Windows.Interop.WindowInteropHelper (this);
-				String lCertificateStore = mSettings.StoreCertificateStore;
-				X509Store lCertStore = new X509Store (lCertificateStore, StoreLocation.CurrentUser);
-				X509Certificate2Collection lCertificates;
+				System.Windows.Interop.WindowInteropHelper v_interopHelper = new System.Windows.Interop.WindowInteropHelper (this);
+				String v_certificateStore = m_settings.StoreCertificateStore;
+				X509Store v_certStore = new X509Store (v_certificateStore, StoreLocation.CurrentUser);
+				X509Certificate2Collection v_certificates;
 
-				lCertStore.Open (OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+				v_certStore.Open (OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
 				try
 				{
-					lCertificates = lCertStore.Certificates as X509Certificate2Collection;
-					if ((lCertificates != null) && (lCertificates.Count > 0))
+					v_certificates = v_certStore.Certificates as X509Certificate2Collection;
+					if ((v_certificates != null) && (v_certificates.Count > 0))
 					{
-						lCertificates = lCertificates.Find (X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
+						v_certificates = v_certificates.Find (X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
 					}
 					else
 					{
-						ErrorMessage = String.Format ("Certificate store \"{0}\" is empty.", lCertificateStore);
+						errorMessage = String.Format ("Certificate store \"{0}\" is empty.", v_certificateStore);
 					}
 
-					if ((lCertificates != null) && (lCertificates.Count > 0))
+					if ((v_certificates != null) && (v_certificates.Count > 0))
 					{
-						lCertificates = X509Certificate2UI.SelectFromCollection (lCertificates, "Select a Certificate", "Select a certificate to sign the Cabinet file.", X509SelectionFlag.SingleSelection, lInteropHelper.Handle);
+						v_certificates = X509Certificate2UI.SelectFromCollection (v_certificates, "Select a Certificate", "Select a certificate to sign the Cabinet file.", X509SelectionFlag.SingleSelection, v_interopHelper.Handle);
 					}
 					else
 					{
-						ErrorMessage = String.Format ("Certificate store \"{0}\" does not contain any code signing certificates.", lCertificateStore);
+						errorMessage = String.Format ("Certificate store \"{0}\" does not contain any code signing certificates.", v_certificateStore);
 					}
 
-					if ((lCertificates != null) && (lCertificates.Count > 0))
+					if ((v_certificates != null) && (v_certificates.Count > 0))
 					{
-						mCertificate = lCertificates[0]; 
-						mSettings.StoreCertificateStore = lCertStore.Name;
-						mSettings.StoreCertificateName = mCertificate.GetNameInfo (X509NameType.SimpleName, false);
+						m_certificate = v_certificates[0]; 
+						m_settings.StoreCertificateStore = v_certStore.Name;
+						m_settings.StoreCertificateName = m_certificate.GetNameInfo (X509NameType.SimpleName, false);
 					}
 				}
 				catch (Exception exp)
 				{
 					System.Diagnostics.Debug.Print (exp.Message);
-					ErrorMessage = exp.Message;
+					errorMessage = exp.Message;
 				}
-				lCertStore.Close ();
+				v_certStore.Close ();
 			}
 			catch (Exception exp)
 			{
 				System.Diagnostics.Debug.Print (exp.Message);
-				ErrorMessage = exp.Message;
+				errorMessage = exp.Message;
 			}
-			return mCertificate;
+			return m_certificate;
 		}
 
 		//=====================================================================
 
-		private String BrowseForCertificateFile (String CurrentFileName)
+		private String BrowseForCertificateFile (String currentFileName)
 		{
-			return BrowseForCertificateFile (CurrentFileName, String.Empty);
+			return BrowseForCertificateFile (currentFileName, String.Empty);
 		}
-		private String BrowseForCertificateFile (String CurrentFileName, String Title)
+		private String BrowseForCertificateFile (String currentFileName, String title)
 		{
-			Microsoft.Win32.OpenFileDialog lDialog = new Microsoft.Win32.OpenFileDialog ();
-			StringBuilder lFilter = new StringBuilder ();
+			Microsoft.Win32.OpenFileDialog v_dialog = new Microsoft.Win32.OpenFileDialog ();
+			StringBuilder v_filter = new StringBuilder ();
 
-			lFilter.Append (FileExtTypeName (".pfx", "Personal Information Exchange") + " (*.pfx)|*.pfx");
-			lFilter.Append ("|All Files (*.*)|*.*");
+			v_filter.Append (FileExtTypeName (".pfx", "Personal Information Exchange") + " (*.pfx)|*.pfx");
+			v_filter.Append ("|All Files (*.*)|*.*");
 
-			lDialog.Filter = lFilter.ToString ();
-			lDialog.CheckFileExists = true;
-			if (!String.IsNullOrEmpty (CurrentFileName))
+			v_dialog.Filter = v_filter.ToString ();
+			v_dialog.CheckFileExists = true;
+			if (!String.IsNullOrEmpty (currentFileName))
 			{
-				lDialog.FileName = Path.GetFileName (CurrentFileName);
-				lDialog.InitialDirectory = Path.GetDirectoryName (CurrentFileName);
+				v_dialog.FileName = Path.GetFileName (currentFileName);
+				v_dialog.InitialDirectory = Path.GetDirectoryName (currentFileName);
 			}
-			if (!String.IsNullOrWhiteSpace (Title))
+			if (!String.IsNullOrWhiteSpace (title))
 			{
-				lDialog.Title = Title;
+				v_dialog.Title = title;
 			}
-			if (lDialog.ShowDialog (this).GetValueOrDefault ())
+			if (v_dialog.ShowDialog (this).GetValueOrDefault ())
 			{
-				return lDialog.FileName;
+				return v_dialog.FileName;
 			}
 			return String.Empty;
 		}
@@ -345,31 +345,31 @@ namespace SandcastleBuilder.PlugIns
 
 		private void OnLoaded (object sender, RoutedEventArgs e)
 		{
-			MakeCabPath.Text = mSettings.MakeCabPath;
-			CabFileName.Text = mSettings.CabFileName;
-			CabFileNameDefault.IsEnabled = (mSettings.CabFileName != mSettings.DefaultCabFileName);
-			CabPathName.Text = mSettings.CabPathName;
-			CabPathName.IsEnabled = (mSettings.CabPathName != mSettings.DefaultCabPathName);
-			CabPathOutput.IsChecked = (mSettings.CabPathName == mSettings.DefaultCabPathName);
-			CabPathThis.IsChecked = (mSettings.CabPathName != mSettings.DefaultCabPathName);
-			CabPathBrowse.IsEnabled = (mSettings.CabPathName != mSettings.DefaultCabPathName);
+			MakeCabPath.Text = m_settings.MakeCabPath;
+			CabFileName.Text = m_settings.CabFileName;
+			CabFileNameDefault.IsEnabled = (m_settings.CabFileName != m_settings.DefaultCabFileName);
+			CabPathName.Text = m_settings.CabPathName;
+			CabPathName.IsEnabled = (m_settings.CabPathName != m_settings.DefaultCabPathName);
+			CabPathOutput.IsChecked = (m_settings.CabPathName == m_settings.DefaultCabPathName);
+			CabPathThis.IsChecked = (m_settings.CabPathName != m_settings.DefaultCabPathName);
+			CabPathBrowse.IsEnabled = (m_settings.CabPathName != m_settings.DefaultCabPathName);
 
-			SignToolPath.Text = mSettings.SignToolPath;
-			TimestampServer.Text = mSettings.TimeStampUrl;
-			ShowCertificate.IsEnabled = !String.IsNullOrEmpty (mSettings.CertificateSpec);
+			SignToolPath.Text = m_settings.SignToolPath;
+			TimestampServer.Text = m_settings.TimeStampUrl;
+			ShowCertificate.IsEnabled = !String.IsNullOrEmpty (m_settings.CertificateSpec);
 
-			mCertificate = mSettings.LoadCertificate ();
+			m_certificate = m_settings.LoadCertificate ();
 			ShowCertificateDetails ();
 		}
 
 		private void OnOK (object sender, RoutedEventArgs e)
 		{
-			mSettings.MakeCabPath = MakeCabPath.Text;
-			mSettings.CabFileName = CabFileName.Text;
-			mSettings.CabPathName = (CabPathOutput.IsChecked.GetValueOrDefault ()) ? String.Empty : CabPathName.Text;
+			m_settings.MakeCabPath = MakeCabPath.Text;
+			m_settings.CabFileName = CabFileName.Text;
+			m_settings.CabPathName = (CabPathOutput.IsChecked.GetValueOrDefault ()) ? String.Empty : CabPathName.Text;
 
-			mSettings.SignToolPath = SignToolPath.Text;
-			mSettings.TimeStampUrl = TimestampServer.Text;
+			m_settings.SignToolPath = SignToolPath.Text;
+			m_settings.TimeStampUrl = TimestampServer.Text;
 
 			DialogResult = true;
 			Close ();
@@ -385,25 +385,25 @@ namespace SandcastleBuilder.PlugIns
 
 		private void OnBrowseForMakeCab (object sender, RoutedEventArgs e)
 		{
-			mSettings.MakeCabPath = BrowseForExeFile (MakeCabPath.Text, "Where is makecab.exe?");
-			MakeCabPath.Text = mSettings.MakeCabPath;
+			m_settings.MakeCabPath = BrowseForExeFile (MakeCabPath.Text, "Where is makecab.exe?");
+			MakeCabPath.Text = m_settings.MakeCabPath;
 		}
 
 		private void OnBrowseForSignTool (object sender, RoutedEventArgs e)
 		{
-			mSettings.SignToolPath = BrowseForExeFile (SignToolPath.Text, "Where is signtool.exe?");
-			SignToolPath.Text = mSettings.SignToolPath;
+			m_settings.SignToolPath = BrowseForExeFile (SignToolPath.Text, "Where is signtool.exe?");
+			SignToolPath.Text = m_settings.SignToolPath;
 		}
 
 		private void OnBrowseForCabPath (object sender, RoutedEventArgs e)
 		{
-			mSettings.CabPathName = BrowseForFolder (CabPathName.Text, "Select the folder where the Cabinet file will be created.");
-			CabPathName.Text = mSettings.CabPathName;
+			m_settings.CabPathName = BrowseForFolder (CabPathName.Text, "Select the folder where the Cabinet file will be created.");
+			CabPathName.Text = m_settings.CabPathName;
 		}
 
 		private void OnCabPathOutput (object sender, RoutedEventArgs e)
 		{
-			CabPathName.Text = mSettings.CabPathName = mSettings.DefaultCabPathName;
+			CabPathName.Text = m_settings.CabPathName = m_settings.DefaultCabPathName;
 			CabPathName.IsEnabled = false;
 			CabPathBrowse.IsEnabled = false;
 			CabPathOutput.IsChecked = true;
@@ -420,35 +420,35 @@ namespace SandcastleBuilder.PlugIns
 
 		private void OnGetStoreCertificate (object sender, RoutedEventArgs e)
 		{
-			String lErrorMessage = String.Empty;
+			String v_errorMessage = String.Empty;
 
-			mCertificate = OpenStoreCertificate (out lErrorMessage);
+			m_certificate = OpenStoreCertificate (out v_errorMessage);
 			ShowCertificateDetails ();
 
-			if (!String.IsNullOrEmpty (lErrorMessage))
+			if (!String.IsNullOrEmpty (v_errorMessage))
 			{
-				MessageBox.Show (this, lErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show (this, v_errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
 		private void OnGetFileCertificate (object sender, RoutedEventArgs e)
 		{
-			String lCertificatePath = BrowseForCertificateFile (mSettings.FileCertificatePath);
+			String v_certificatePath = BrowseForCertificateFile (m_settings.FileCertificatePath);
 
-			if (!String.IsNullOrEmpty (lCertificatePath))
+			if (!String.IsNullOrEmpty (v_certificatePath))
 			{
-				String lErrorMessage = String.Empty;
-				X509Certificate2 lCertificate = PackAndSignMSHCSettings.LoadFileCertificate (lCertificatePath, out lErrorMessage);
+				String v_errorMessage = String.Empty;
+				X509Certificate2 v_certificate = PackAndSignMSHCSettings.LoadFileCertificate (v_certificatePath, out v_errorMessage);
 
-				if (lCertificate != null)
+				if (v_certificate != null)
 				{
-					mSettings.CertificateSpec = lCertificatePath;
-					mCertificate = lCertificate;
+					m_settings.CertificateSpec = v_certificatePath;
+					m_certificate = v_certificate;
 					ShowCertificateDetails ();
 				}
-				else if (!String.IsNullOrEmpty (lErrorMessage))
+				else if (!String.IsNullOrEmpty (v_errorMessage))
 				{
-					MessageBox.Show (this, lErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					MessageBox.Show (this, v_errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
 		}

@@ -21,8 +21,8 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private ExecutionPointCollection mExecutionPoints;
-		private BuildProcess mBuildProcess;
+		private ExecutionPointCollection m_executionPoints;
+		private BuildProcess m_buildProcess;
 
 		#endregion
 
@@ -40,9 +40,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				FileVersionInfo lFileVersionInfo = FileVersionInfo.GetVersionInfo (lAssembly.Location);
-				return new Version (lFileVersionInfo.ProductVersion);
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				FileVersionInfo v_fileVersionInfo = FileVersionInfo.GetVersionInfo (v_assembly.Location);
+				return new Version (v_fileVersionInfo.ProductVersion);
 			}
 		}
 
@@ -51,9 +51,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				AssemblyCopyrightAttribute lCopyrightAttribute = Attribute.GetCustomAttribute (lAssembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
-				return lCopyrightAttribute.Copyright;
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				AssemblyCopyrightAttribute v_copyrightAttribute = Attribute.GetCustomAttribute (v_assembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
+				return v_copyrightAttribute.Copyright;
 			}
 		}
 
@@ -78,14 +78,14 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				if (mExecutionPoints == null)
+				if (m_executionPoints == null)
 				{
-					mExecutionPoints = new ExecutionPointCollection
+					m_executionPoints = new ExecutionPointCollection
                     {
                         new ExecutionPoint(BuildStep.CombiningIntermediateTocFiles, ExecutionBehaviors.After)
                     };
 				}
-				return mExecutionPoints;
+				return m_executionPoints;
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace SandcastleBuilder.PlugIns
 		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
-			mBuildProcess = buildProcess;
+			m_buildProcess = buildProcess;
 		}
 
 		/// <inheritdoc/>
@@ -116,7 +116,7 @@ namespace SandcastleBuilder.PlugIns
 
 			if ((context.BuildStep == BuildStep.CombiningIntermediateTocFiles) && (context.Behavior == ExecutionBehaviors.After))
 			{
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 				ReparentNamespaceTopics ();
 			}
 		}
@@ -129,57 +129,57 @@ namespace SandcastleBuilder.PlugIns
 		{
 			try
 			{
-				String lTocFilePath = Path.Combine (mBuildProcess.WorkingFolder, "toc.xml");
-				XmlDocument lDocument = new XmlDocument ();
-				XPathNavigator lNavigator = null;
-				List<XPathNavigator> lTargetNodes = new List<XPathNavigator> ();
-				bool lChanged = false;
+				String v_tocFilePath = Path.Combine (m_buildProcess.WorkingFolder, "toc.xml");
+				XmlDocument v_document = new XmlDocument ();
+				XPathNavigator v_navigator = null;
+				List<XPathNavigator> v_targetNodes = new List<XPathNavigator> ();
+				bool v_changed = false;
 
 #if	DEBUG
-				Debug.Print ("ReparentNamespaceTopics {0}", lTocFilePath);
+				Debug.Print ("ReparentNamespaceTopics {0}", v_tocFilePath);
 #endif
-				mBuildProcess.ReportProgress ("{0}: ReparentNamespaceTopics '{1}'", this.Name, lTocFilePath);
-				lDocument.Load (lTocFilePath);
+				m_buildProcess.ReportProgress ("{0}: ReparentNamespaceTopics '{1}'", this.Name, v_tocFilePath);
+				v_document.Load (v_tocFilePath);
 
-				lNavigator = lDocument.CreateNavigator ();
-				if (lNavigator != null)
+				v_navigator = v_document.CreateNavigator ();
+				if (v_navigator != null)
 				{
-					XPathNodeIterator lNodes = lNavigator.Select ("//topic[@title=@id and @title!='' and not(@file)]");
+					XPathNodeIterator v_nodes = v_navigator.Select ("//topic[@title=@id and @title!='' and not(@file)]");
 
-					if ((lNodes != null) && (lNodes.Count > 0))
+					if ((v_nodes != null) && (v_nodes.Count > 0))
 					{
 #if	DEBUG
-						Debug.Print ("Targets [{0}]", lNodes.Count);
+						Debug.Print ("Targets [{0}]", v_nodes.Count);
 #endif
-						while (lNodes.MoveNext ())
+						while (v_nodes.MoveNext ())
 						{
-							lTargetNodes.Add (lNodes.Current.Clone ());
+							v_targetNodes.Add (v_nodes.Current.Clone ());
 						}
 					}
 				}
-				foreach (XPathNavigator lTargetNode in lTargetNodes)
+				foreach (XPathNavigator v_targetNode in v_targetNodes)
 				{
-					String lTargetId = lTargetNode.GetAttribute ("id", String.Empty);
-					XPathNodeIterator lNodes = null;
+					String v_targetId = v_targetNode.GetAttribute ("id", String.Empty);
+					XPathNodeIterator v_nodes = null;
 #if	DEBUG
-					Debug.Print ("  Target [{0}]", lTargetId);
+					Debug.Print ("  Target [{0}]", v_targetId);
 #endif
-					if (lTargetId.StartsWith ("N:"))
+					if (v_targetId.StartsWith ("N:"))
 					{
-						lNodes = lNavigator.Select ("//topic[@id='" + lTargetId + "' and not(@title) and @file]");
+						v_nodes = v_navigator.Select ("//topic[@id='" + v_targetId + "' and not(@title) and @file]");
 					}
-					if ((lNodes != null) && (lNodes.Count == 1) && lNodes.MoveNext ())
+					if ((v_nodes != null) && (v_nodes.Count == 1) && v_nodes.MoveNext ())
 					{
 #if	DEBUG
-						Debug.Print ("  Source [{0}] [{1}]", lNodes.Current.GetAttribute ("id", String.Empty), lNodes.Current.GetAttribute ("file", String.Empty));
+						Debug.Print ("  Source [{0}] [{1}]", v_nodes.Current.GetAttribute ("id", String.Empty), v_nodes.Current.GetAttribute ("file", String.Empty));
 #endif
-						mBuildProcess.ReportProgress ("{0}:   Reparent id='{1}' file='{2}'", this.Name, lTargetId, lNodes.Current.GetAttribute ("file", String.Empty));
+						m_buildProcess.ReportProgress ("{0}:   Reparent id='{1}' file='{2}'", this.Name, v_targetId, v_nodes.Current.GetAttribute ("file", String.Empty));
 
 						try
 						{
-							lTargetNode.ReplaceSelf (lNodes.Current);
-							lNodes.Current.DeleteSelf ();
-							lChanged = true;
+							v_targetNode.ReplaceSelf (v_nodes.Current);
+							v_nodes.Current.DeleteSelf ();
+							v_changed = true;
 						}
 						catch (Exception exp)
 						{
@@ -188,9 +188,9 @@ namespace SandcastleBuilder.PlugIns
 					}
 				}
 
-				if (lChanged)
+				if (v_changed)
 				{
-					lDocument.Save (lTocFilePath);
+					v_document.Save (v_tocFilePath);
 				}
 			}
 			catch (Exception exp)

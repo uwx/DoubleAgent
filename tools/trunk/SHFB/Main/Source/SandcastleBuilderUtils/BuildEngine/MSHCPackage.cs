@@ -13,11 +13,11 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		#region Private data members
 		//=====================================================================
 
-		String m_PackagePath;
-		Package m_Package = null;
-		XmlDocument m_DefaultContentTypes = null;
-		ProjectCollection m_ProjectCollection = null;
-		Dictionary<String, String> m_GlobalProperties = new Dictionary<String, String> ();
+		String m_packagePath;
+		Package m_package = null;
+		XmlDocument m_defaultContentTypes = null;
+		ProjectCollection m_projectCollection = null;
+		Dictionary<String, String> m_globalProperties = new Dictionary<String, String> ();
 
 		#endregion
 
@@ -27,7 +27,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		public MSHCPackage (String PackagePath, System.IO.FileMode OpenMode, System.IO.FileAccess OpenAccess, System.IO.FileShare OpenShare)
 		{
 			this.PackagePath = PackagePath;
-			m_Package = Package.Open (this.PackagePath, OpenMode, OpenAccess, OpenShare);
+			m_package = Package.Open (this.PackagePath, OpenMode, OpenAccess, OpenShare);
 		}
 		public MSHCPackage (String PackagePath, System.IO.FileMode OpenMode, System.IO.FileAccess OpenAccess)
 			: this (PackagePath, OpenMode, OpenAccess, (OpenAccess == FileAccess.Read) ? FileShare.Read : FileShare.None)
@@ -70,11 +70,11 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <inheritDoc/>
 		protected virtual void Dispose (bool disposing)
 		{
-			if (m_Package != null)
+			if (m_package != null)
 			{
 				try
 				{
-					m_Package.Close ();
+					m_package.Close ();
 				}
 				catch (Exception exp)
 				{
@@ -92,23 +92,23 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 		bool IsOpen
 		{
-			get { return (m_Package != null); }
+			get { return (m_package != null); }
 		}
 
 		public String PackagePath
 		{
 			get
 			{
-				return m_PackagePath;
+				return m_packagePath;
 			}
 			protected set
 			{
-				m_PackagePath = value;
-				if (!String.IsNullOrEmpty (m_PackagePath))
+				m_packagePath = value;
+				if (!String.IsNullOrEmpty (m_packagePath))
 				{
-					if (!Path.HasExtension (m_PackagePath) || (String.Compare (Path.GetExtension (m_PackagePath), ".mshc", StringComparison.OrdinalIgnoreCase) != 0))
+					if (!Path.HasExtension (m_packagePath) || (String.Compare (Path.GetExtension (m_packagePath), ".mshc", StringComparison.OrdinalIgnoreCase) != 0))
 					{
-						m_PackagePath += ".mshc";
+						m_packagePath += ".mshc";
 					}
 				}
 			}
@@ -128,7 +128,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 		Dictionary<String, String> ManifestProperties
 		{
-			get { return m_GlobalProperties; }
+			get { return m_globalProperties; }
 		}
 
 		#endregion
@@ -139,23 +139,23 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 		public String[] GetPartNames ()
 		{
-			List<String> lPartNames = new List<String> ();
+			List<String> v_partNames = new List<String> ();
 
 			if (IsOpen)
 			{
-				foreach (PackagePart lPart in m_Package.GetParts ())
+				foreach (PackagePart v_part in m_package.GetParts ())
 				{
-					lPartNames.Add (PartName (lPart));
+					v_partNames.Add (partName (v_part));
 				}
 			}
-			return lPartNames.ToArray ();
+			return v_partNames.ToArray ();
 		}
 
-		public bool PartExists (String PartName)
+		public bool PartExists (String partName)
 		{
 			if (IsOpen)
 			{
-				if (m_Package.PartExists (PartUri (PartName)))
+				if (m_package.PartExists (PartUri (partName)))
 				{
 					return true;
 				}
@@ -168,107 +168,107 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		#region Copy Single Part
 		//=====================================================================
 
-		public bool GetPart (String PartName, String TargetPath)
+		public bool GetPart (String partName, String targetPath)
 		{
-			return GetPart (PartName, TargetPath, false);
+			return GetPart (partName, targetPath, false);
 		}
-		public bool GetPart (String PartName, String TargetPath, bool ReplaceTarget)
+		public bool GetPart (String partName, String targetPath, bool replaceTarget)
 		{
-			bool lRet = false;
+			bool v_ret = false;
 
-			if (PartExists (PartName))
+			if (PartExists (partName))
 			{
-				if (ReplaceTarget || !File.Exists (TargetPath))
+				if (replaceTarget || !File.Exists (targetPath))
 				{
-					String lTargetFolder = Path.GetDirectoryName (TargetPath);
-					System.IO.FileStream lStream;
+					String v_targetFolder = Path.GetDirectoryName (targetPath);
+					System.IO.FileStream v_stream;
 
-					if (!Directory.Exists (lTargetFolder))
+					if (!Directory.Exists (v_targetFolder))
 					{
-						Directory.CreateDirectory (lTargetFolder);
+						Directory.CreateDirectory (v_targetFolder);
 					}
-					lStream = System.IO.File.OpenWrite (TargetPath);
+					v_stream = System.IO.File.OpenWrite (targetPath);
 
-					if (lStream != null)
+					if (v_stream != null)
 					{
-						lRet = GetPart (PartName, lStream);
-						lStream.Close ();
+						v_ret = GetPart (partName, v_stream);
+						v_stream.Close ();
 					}
 				}
 			}
-			return lRet;
+			return v_ret;
 		}
-		public bool GetPart (String PartName, System.IO.Stream TargetStream)
+		public bool GetPart (String partName, System.IO.Stream targetStream)
 		{
-			bool lRet = false;
+			bool v_ret = false;
 
-			if (PartExists (PartName))
+			if (PartExists (partName))
 			{
-				PackagePart lPart = m_Package.GetPart (PartUri (PartName));
-				System.IO.Stream lPartStream = null;
+				PackagePart v_part = m_package.GetPart (PartUri (partName));
+				System.IO.Stream v_partStream = null;
 
-				if (lPart != null)
+				if (v_part != null)
 				{
-					lPartStream = lPart.GetStream (FileMode.Open, FileAccess.Read);
+					v_partStream = v_part.GetStream (FileMode.Open, FileAccess.Read);
 				}
-				if (lPartStream != null)
+				if (v_partStream != null)
 				{
-					lPartStream.CopyTo (TargetStream);
-					lPartStream.Close ();
-					lRet = true;
+					v_partStream.CopyTo (targetStream);
+					v_partStream.Close ();
+					v_ret = true;
 				}
 			}
-			return lRet;
+			return v_ret;
 		}
 
 		//=====================================================================
 
-		public bool PutPart (String PartName, String SourcePath)
+		public bool PutPart (String partName, String sourcePath)
 		{
-			return PutPart (PartName, SourcePath, false);
+			return PutPart (partName, sourcePath, false);
 		}
-		public bool PutPart (String PartName, String SourcePath, bool ReplaceTarget)
+		public bool PutPart (String partName, String sourcePath, bool replaceTarget)
 		{
-			return PutPart (PartName, SourcePath, ReplaceTarget, DefaultPartType (SourcePath));
+			return PutPart (partName, sourcePath, replaceTarget, DefaultPartType (sourcePath));
 		}
-		public bool PutPart (String PartName, String SourcePath, bool ReplaceTarget, String TargetType)
+		public bool PutPart (String partName, String sourcePath, bool replaceTarget, String targetType)
 		{
-			bool lRet = false;
+			bool v_ret = false;
 
-			if (IsOpen && !PartExists (PartName) || ReplaceTarget)
+			if (IsOpen && !PartExists (partName) || replaceTarget)
 			{
-				System.IO.FileStream lStream = System.IO.File.OpenRead (SourcePath);
+				System.IO.FileStream v_stream = System.IO.File.OpenRead (sourcePath);
 
-				if (lStream != null)
+				if (v_stream != null)
 				{
-					lRet = PutPart (PartName, lStream, ReplaceTarget, TargetType);
-					lStream.Close ();
+					v_ret = PutPart (partName, v_stream, replaceTarget, targetType);
+					v_stream.Close ();
 				}
 			}
-			return lRet;
+			return v_ret;
 		}
-		public bool PutPart (String PartName, System.IO.Stream SourceStream)
+		public bool PutPart (String partName, System.IO.Stream sourceStream)
 		{
-			return PutPart (PartName, SourceStream, false);
+			return PutPart (partName, sourceStream, false);
 		}
-		public bool PutPart (String PartName, System.IO.Stream SourceStream, bool ReplaceTarget)
+		public bool PutPart (String partName, System.IO.Stream sourceStream, bool replaceTarget)
 		{
-			return PutPart (PartName, SourceStream, ReplaceTarget, String.Empty);
+			return PutPart (partName, sourceStream, replaceTarget, String.Empty);
 		}
-		public bool PutPart (String PartName, System.IO.Stream SourceStream, bool ReplaceTarget, String TargetType)
+		public bool PutPart (String partName, System.IO.Stream sourceStream, bool replaceTarget, String targetType)
 		{
-			bool lRet = false;
+			bool v_ret = false;
 
 			if (IsOpen)
 			{
-				PackagePart lPart;
-				System.IO.Stream lPartStream = null;
+				PackagePart v_part;
+				System.IO.Stream v_partStream = null;
 
-				if (PartExists (PartName))
+				if (PartExists (partName))
 				{
-					if (ReplaceTarget)
+					if (replaceTarget)
 					{
-						m_Package.DeletePart (PartUri (PartName));
+						m_package.DeletePart (PartUri (partName));
 					}
 					else
 					{
@@ -276,19 +276,19 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					}
 				}
 
-				lPart = m_Package.CreatePart (PartUri (PartName), TargetType, CompressionOption.Maximum);
-				if (lPart != null)
+				v_part = m_package.CreatePart (PartUri (partName), targetType, CompressionOption.Maximum);
+				if (v_part != null)
 				{
-					lPartStream = lPart.GetStream (FileMode.Create, FileAccess.ReadWrite);
+					v_partStream = v_part.GetStream (FileMode.Create, FileAccess.ReadWrite);
 				}
-				if (lPartStream != null)
+				if (v_partStream != null)
 				{
-					SourceStream.CopyTo (lPartStream);
-					lPartStream.Close ();
-					lRet = true;
+					sourceStream.CopyTo (v_partStream);
+					v_partStream.Close ();
+					v_ret = true;
 				}
 			}
-			return lRet;
+			return v_ret;
 		}
 
 		#endregion
@@ -296,122 +296,122 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		#region Copy All Parts
 		//=====================================================================
 
-		public uint GetAllParts (String TargetFolder)
+		public uint GetAllParts (String targetFolder)
 		{
-			return GetAllParts (TargetFolder, false);
+			return GetAllParts (targetFolder, false);
 		}
-		public uint GetAllParts (String TargetFolder, bool ReplaceTargets)
+		public uint GetAllParts (String targetFolder, bool replaceTargets)
 		{
-			uint lPartCount = 0;
+			uint v_partCount = 0;
 
 			if (IsOpen)
 			{
-				Uri lTargetFolder = new Uri (TargetFolder);
-				Uri lTargetUri;
-				String lTargetPath;
+				Uri v_targetFolder = new Uri (targetFolder);
+				Uri v_targetUri;
+				String v_targetPath;
 
-				if (!lTargetFolder.ToString ().EndsWith ("/"))
+				if (!v_targetFolder.ToString ().EndsWith ("/"))
 				{
-					lTargetFolder = new Uri (lTargetFolder.ToString () + "/");
+					v_targetFolder = new Uri (v_targetFolder.ToString () + "/");
 				}
 
-				foreach (PackagePart lPart in m_Package.GetParts ())
+				foreach (PackagePart v_part in m_package.GetParts ())
 				{
-					lTargetUri = new Uri (lTargetFolder, PartName (lPart));
-					lTargetPath = Path.GetDirectoryName (lTargetUri.AbsolutePath);
+					v_targetUri = new Uri (v_targetFolder, partName (v_part));
+					v_targetPath = Path.GetDirectoryName (v_targetUri.AbsolutePath);
 
-					if (!Directory.Exists (lTargetPath))
+					if (!Directory.Exists (v_targetPath))
 					{
-						Directory.CreateDirectory (lTargetPath);
+						Directory.CreateDirectory (v_targetPath);
 					}
-					if (GetPart (PartName (lPart), lTargetUri.AbsolutePath, ReplaceTargets))
+					if (GetPart (partName (v_part), v_targetUri.AbsolutePath, replaceTargets))
 					{
-						lPartCount++;
+						v_partCount++;
 					}
 				}
 			}
-			return lPartCount;
+			return v_partCount;
 		}
 
-		public uint PutAllParts (String SourceFolder)
+		public uint PutAllParts (String sourceFolder)
 		{
-			return PutAllParts (SourceFolder, false);
+			return PutAllParts (sourceFolder, false);
 		}
-		public uint PutAllParts (String SourceFolder, bool ReplaceTargets)
+		public uint PutAllParts (String sourceFolder, bool replaceTargets)
 		{
-			return PutAllParts (SourceFolder, true, ReplaceTargets);
+			return PutAllParts (sourceFolder, true, replaceTargets);
 		}
-		public uint PutAllParts (String SourceFolder, bool Recursive, bool ReplaceTargets)
+		public uint PutAllParts (String sourceFolder, bool recursive, bool replaceTargets)
 		{
-			return PutAllParts (SourceFolder, Recursive, ReplaceTargets, null);
+			return PutAllParts (sourceFolder, recursive, replaceTargets, null);
 		}
-		private uint PutAllParts (String SourceFolder, bool Recursive, bool ReplaceTargets, String TargetPath)
+		private uint PutAllParts (String sourceFolder, bool recursive, bool replaceTargets, String targetPath)
 		{
-			uint lPartCount = 0;
-			DirectoryInfo lSourceFolder = new DirectoryInfo (SourceFolder);
+			uint v_partCount = 0;
+			DirectoryInfo v_sourceFolder = new DirectoryInfo (sourceFolder);
 
-			foreach (FileInfo lFile in lSourceFolder.GetFiles ())
+			foreach (FileInfo v_file in v_sourceFolder.GetFiles ())
 			{
-				Uri lPartUri = PartUri (String.IsNullOrEmpty (TargetPath) ? lFile.Name : Path.Combine (TargetPath, lFile.Name));
+				Uri v_partUri = PartUri (String.IsNullOrEmpty (targetPath) ? v_file.Name : Path.Combine (targetPath, v_file.Name));
 
-				if (PutPart (PartName (lPartUri), lFile.FullName, ReplaceTargets))
+				if (PutPart (partName (v_partUri), v_file.FullName, replaceTargets))
 				{
-					lPartCount++;
+					v_partCount++;
 				}
 			}
 
-			if (Recursive)
+			if (recursive)
 			{
-				foreach (DirectoryInfo lFolder in lSourceFolder.GetDirectories ())
+				foreach (DirectoryInfo v_folder in v_sourceFolder.GetDirectories ())
 				{
-					String lTargetPath = lFolder.Name;
-					if (!String.IsNullOrEmpty (TargetPath))
+					String v_targetPath = v_folder.Name;
+					if (!String.IsNullOrEmpty (targetPath))
 					{
-						lTargetPath = Path.Combine (TargetPath, lTargetPath);
+						v_targetPath = Path.Combine (targetPath, v_targetPath);
 					}
-					lPartCount += PutAllParts (lFolder.FullName, Recursive, ReplaceTargets, lTargetPath);
+					v_partCount += PutAllParts (v_folder.FullName, recursive, replaceTargets, v_targetPath);
 				}
 			}
-			return lPartCount;
+			return v_partCount;
 		}
 
 		#endregion
 
-		#region Copy Parts by Manifest
+		#region Copy Parts by manifest
 		//=====================================================================
 
-		public uint GetTheseParts (String TargetFolder, String ManifestPath)
+		public uint GetTheseParts (String targetFolder, String manifestPath)
 		{
-			return GetTheseParts (TargetFolder, GetManifestProject (ManifestPath));
+			return GetTheseParts (targetFolder, GetManifestProject (manifestPath));
 		}
-		public uint GetTheseParts (String TargetFolder, String ManifestPath, bool ReplaceTargets)
+		public uint GetTheseParts (String targetFolder, String manifestPath, bool replaceTargets)
 		{
-			return GetTheseParts (TargetFolder, GetManifestProject (ManifestPath), ReplaceTargets);
+			return GetTheseParts (targetFolder, GetManifestProject (manifestPath), replaceTargets);
 		}
-		public uint GetTheseParts (String TargetFolder, Microsoft.Build.Evaluation.Project Manifest)
+		public uint GetTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest)
 		{
-			return GetTheseParts (TargetFolder, Manifest, false);
+			return GetTheseParts (targetFolder, manifest, false);
 		}
-		public uint GetTheseParts (String TargetFolder, Microsoft.Build.Evaluation.Project Manifest, bool ReplaceTargets)
+		public uint GetTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
 		{
-			uint lPartCount = 0;
+			uint v_partCount = 0;
 
-			if (IsOpen && (Manifest != null))
+			if (IsOpen && (manifest != null))
 			{
 				try
 				{
-					foreach (ProjectItem lManifestItem in Manifest.AllEvaluatedItems)
+					foreach (ProjectItem v_ManifestItem in manifest.AllEvaluatedItems)
 					{
-						bool lCopyItem = true;
-						ProjectMetadata lMetaData;
+						bool v_copyItem = true;
+						ProjectMetadata v_metaData;
 
-						if ((lMetaData = lManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
+						if ((v_metaData = v_ManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
 						{
-							lCopyItem = bool.Parse (lMetaData.EvaluatedValue);
+							v_copyItem = bool.Parse (v_metaData.EvaluatedValue);
 						}
-						if (lCopyItem && GetPart (lManifestItem.EvaluatedInclude, Path.Combine (TargetFolder, lManifestItem.EvaluatedInclude), ReplaceTargets))
+						if (v_copyItem && GetPart (v_ManifestItem.EvaluatedInclude, Path.Combine (targetFolder, v_ManifestItem.EvaluatedInclude), replaceTargets))
 						{
-							lPartCount++;
+							v_partCount++;
 						}
 					}
 				}
@@ -422,46 +422,46 @@ namespace SandcastleBuilder.Utils.BuildEngine
 #endif
 				}
 			}
-			return lPartCount;
+			return v_partCount;
 		}
 
-		public uint PutTheseParts (String SourceFolder, String ManifestPath)
+		public uint PutTheseParts (String sourceFolder, String manifestPath)
 		{
-			return PutTheseParts (SourceFolder, GetManifestProject (ManifestPath));
+			return PutTheseParts (sourceFolder, GetManifestProject (manifestPath));
 		}
-		public uint PutTheseParts (String SourceFolder, String ManifestPath, bool ReplaceTargets)
+		public uint PutTheseParts (String sourceFolder, String manifestPath, bool replaceTargets)
 		{
-			return PutTheseParts (SourceFolder, GetManifestProject (ManifestPath), ReplaceTargets);
+			return PutTheseParts (sourceFolder, GetManifestProject (manifestPath), replaceTargets);
 		}
-		public uint PutTheseParts (String SourceFolder, Microsoft.Build.Evaluation.Project Manifest)
+		public uint PutTheseParts (String sourceFolder, Microsoft.Build.Evaluation.Project manifest)
 		{
-			return PutTheseParts (SourceFolder, Manifest, false);
+			return PutTheseParts (sourceFolder, manifest, false);
 		}
-		public uint PutTheseParts (String SourceFolder, Microsoft.Build.Evaluation.Project Manifest, bool ReplaceTargets)
+		public uint PutTheseParts (String sourceFolder, Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
 		{
-			uint lPartCount = 0;
+			uint v_partCount = 0;
 
-			if (IsOpen && (Manifest != null))
+			if (IsOpen && (manifest != null))
 			{
 				try
 				{
-					foreach (ProjectItem lManifestItem in Manifest.AllEvaluatedItems)
+					foreach (ProjectItem lManifestItem in manifest.AllEvaluatedItems)
 					{
-						bool lCopyItem = true;
-						String lItemType = null;
-						ProjectMetadata lMetaData;
+						bool v_copyItem = true;
+						String v_itemType = null;
+						ProjectMetadata v_metaData;
 
-						if ((lMetaData = lManifestItem.GetMetadata ("SubType")) != null)
+						if ((v_metaData = lManifestItem.GetMetadata ("SubType")) != null)
 						{
-							lItemType = lMetaData.EvaluatedValue;
+							v_itemType = v_metaData.EvaluatedValue;
 						}
-						if ((lMetaData = lManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
+						if ((v_metaData = lManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
 						{
-							lCopyItem = bool.Parse (lMetaData.EvaluatedValue);
+							v_copyItem = bool.Parse (v_metaData.EvaluatedValue);
 						}
-						if (lCopyItem && PutPart (lManifestItem.EvaluatedInclude, Path.Combine (Manifest.DirectoryPath, lManifestItem.EvaluatedInclude), ReplaceTargets, lItemType))
+						if (v_copyItem && PutPart (lManifestItem.EvaluatedInclude, Path.Combine (manifest.DirectoryPath, lManifestItem.EvaluatedInclude), replaceTargets, v_itemType))
 						{
-							lPartCount++;
+							v_partCount++;
 						}
 					}
 				}
@@ -472,16 +472,16 @@ namespace SandcastleBuilder.Utils.BuildEngine
 #endif
 				}
 			}
-			return lPartCount;
+			return v_partCount;
 		}
 
-		private Project GetManifestProject (String ManifestPath)
+		private Project GetManifestProject (String manifestPath)
 		{
-			if (m_ProjectCollection == null)
+			if (m_projectCollection == null)
 			{
-				m_ProjectCollection = new ProjectCollection (ManifestProperties);
+				m_projectCollection = new ProjectCollection (ManifestProperties);
 			}
-			return new Project (ManifestPath, null, null, m_ProjectCollection);
+			return new Project (manifestPath, null, null, m_projectCollection);
 		}
 
 		#endregion
@@ -490,47 +490,47 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		#region Helper Methods
 		//=====================================================================
 
-		static private Uri PartUri (String PartName)
+		static private Uri PartUri (String partName)
 		{
-			String lPartName = PartName.Replace ('\\', '/');
-			if (!lPartName.StartsWith ("/"))
+			String v_partName = partName.Replace ('\\', '/');
+			if (!v_partName.StartsWith ("/"))
 			{
-				lPartName = "/" + lPartName;
+				v_partName = "/" + v_partName;
 			}
-			return new Uri (lPartName, UriKind.Relative);
+			return new Uri (v_partName, UriKind.Relative);
 		}
-		static private String PartName (PackagePart Part)
+		static private String partName (PackagePart part)
 		{
-			if (Part != null)
+			if (part != null)
 			{
-				return PartName (Part.Uri);
+				return partName (part.Uri);
 			}
 			return String.Empty;
 		}
-		static private String PartName (Uri PartUri)
+		static private String partName (Uri partUri)
 		{
-			if (PartUri != null)
+			if (partUri != null)
 			{
-				return PartUri.ToString ().TrimStart ('\\', '/');
+				return partUri.ToString ().TrimStart ('\\', '/');
 			}
 			return String.Empty;
 		}
 
-		public String DefaultPartType (String PartName)
+		public String DefaultPartType (String partName)
 		{
-			String lPartType = String.Empty;
+			String v_partType = String.Empty;
 
 			try
 			{
-				String lNameExt = Path.GetExtension (PartName);
-				XmlNamespaceManager lNamespaceManager;
-				XmlNode lTypeNode;
-				XmlNode lTypeAttribute;
+				String v_nameExt = Path.GetExtension (partName);
+				XmlNamespaceManager v_namespaceManager;
+				XmlNode v_typeNode;
+				XmlNode v_typeAttribute;
 
-				if (m_DefaultContentTypes == null)
+				if (m_defaultContentTypes == null)
 				{
-					m_DefaultContentTypes = new XmlDocument ();
-					m_DefaultContentTypes.LoadXml (
+					m_defaultContentTypes = new XmlDocument ();
+					m_defaultContentTypes.LoadXml (
 						"<?xml version='1.0' encoding='utf-8'?>" +
 						"<Types xmlns='http://schemas.openxmlformats.org/package/2006/content-types'>" +
 							"<Default Extension='css' ContentType='text/richtext' />" +
@@ -543,16 +543,16 @@ namespace SandcastleBuilder.Utils.BuildEngine
 							"<Default Extension='htm' ContentType='text/html' />" +
 						"</Types>");
 				}
-				lNamespaceManager = new XmlNamespaceManager (m_DefaultContentTypes.NameTable);
-				lNamespaceManager.AddNamespace ("openxml", "http://schemas.openxmlformats.org/package/2006/content-types");
+				v_namespaceManager = new XmlNamespaceManager (m_defaultContentTypes.NameTable);
+				v_namespaceManager.AddNamespace ("openxml", "http://schemas.openxmlformats.org/package/2006/content-types");
 
-				lTypeNode = m_DefaultContentTypes.DocumentElement.SelectSingleNode (String.Format ("openxml:Default[@Extension=substring-after('{0}','.')]", lNameExt), lNamespaceManager);
-				if (lTypeNode != null)
+				v_typeNode = m_defaultContentTypes.DocumentElement.SelectSingleNode (String.Format ("openxml:Default[@Extension=substring-after('{0}','.')]", v_nameExt), v_namespaceManager);
+				if (v_typeNode != null)
 				{
-					lTypeAttribute = lTypeNode.Attributes.GetNamedItem ("ContentType");
-					if (lTypeAttribute != null)
+					v_typeAttribute = v_typeNode.Attributes.GetNamedItem ("ContentType");
+					if (v_typeAttribute != null)
 					{
-						lPartType = lTypeAttribute.Value;
+						v_partType = v_typeAttribute.Value;
 					}
 				}
 			}
@@ -562,7 +562,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				Debug.Print (exp.Message);
 #endif
 			}
-			return lPartType;
+			return v_partType;
 		}
 
 		#endregion

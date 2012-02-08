@@ -20,60 +20,60 @@ namespace SandcastleBuilder.PlugIns
 		/// </returns>
 		public new bool? ShowDialog ()
 		{
-			System.Windows.Window lActiveWindow = null;
-			System.Windows.Forms.Form lActiveForm = null;
-			System.Windows.Interop.WindowInteropHelper lInteropHelper = null;
+			System.Windows.Window v_activeWindow = null;
+			System.Windows.Forms.Form v_activeForm = null;
+			System.Windows.Interop.WindowInteropHelper v_interopHelper = null;
 
 			if (System.Windows.Application.Current != null)
 			{
-				lActiveWindow = System.Windows.Application.Current.MainWindow;
+				v_activeWindow = System.Windows.Application.Current.MainWindow;
 
-				if (lActiveWindow == null)
+				if (v_activeWindow == null)
 				{
-					foreach (System.Windows.Window lWindow in System.Windows.Application.Current.Windows)
+					foreach (System.Windows.Window v_window in System.Windows.Application.Current.Windows)
 					{
-						if (lWindow.IsActive)
+						if (v_window.IsActive)
 						{
-							lActiveWindow = lWindow;
+							v_activeWindow = v_window;
 							break;
 						}
 					}
 				}
-				while (lActiveWindow != null)
+				while (v_activeWindow != null)
 				{
-					foreach (System.Windows.Window lWindow in lActiveWindow.OwnedWindows)
+					foreach (System.Windows.Window v_window in v_activeWindow.OwnedWindows)
 					{
-						if (lWindow.IsActive)
+						if (v_window.IsActive)
 						{
-							lActiveWindow = lWindow;
+							v_activeWindow = v_window;
 							break;
 						}
 					}
 				}
 			}
 
-			if (lActiveWindow != null)
+			if (v_activeWindow != null)
 			{
-				Owner = lActiveWindow;
+				Owner = v_activeWindow;
 			}
 			else
 			{
-				lActiveForm = System.Windows.Forms.Form.ActiveForm;
-				if (lActiveForm == null)
+				v_activeForm = System.Windows.Forms.Form.ActiveForm;
+				if (v_activeForm == null)
 				{
 					foreach (System.Windows.Forms.Form lForm in System.Windows.Forms.Application.OpenForms)
 					{
 						if (lForm.Enabled)
 						{
-							lActiveForm = lForm;
+							v_activeForm = lForm;
 							break;
 						}
 					}
 				}
-				if (lActiveForm != null)
+				if (v_activeForm != null)
 				{
-					lInteropHelper = new System.Windows.Interop.WindowInteropHelper (this);
-					lInteropHelper.Owner = lActiveForm.Handle;
+					v_interopHelper = new System.Windows.Interop.WindowInteropHelper (this);
+					v_interopHelper.Owner = v_activeForm.Handle;
 				}
 			}
 
@@ -88,60 +88,60 @@ namespace SandcastleBuilder.PlugIns
 		/// <returns>The native window handle of the application's active window (if any).</returns>
 		static public IntPtr GetDialogOwner ()
 		{
-			System.Windows.Window lActiveWindow = null;
-			System.Windows.Forms.Form lActiveForm = null;
-			System.Windows.Interop.WindowInteropHelper lInteropHelper = null;
+			System.Windows.Window v_activeWindow = null;
+			System.Windows.Forms.Form v_activeForm = null;
+			System.Windows.Interop.WindowInteropHelper v_interopHelper = null;
 
 			if (System.Windows.Application.Current != null)
 			{
-				lActiveWindow = System.Windows.Application.Current.MainWindow;
+				v_activeWindow = System.Windows.Application.Current.MainWindow;
 
-				if (lActiveWindow == null)
+				if (v_activeWindow == null)
 				{
-					foreach (System.Windows.Window lWindow in System.Windows.Application.Current.Windows)
+					foreach (System.Windows.Window v_window in System.Windows.Application.Current.Windows)
 					{
-						if (lWindow.IsActive)
+						if (v_window.IsActive)
 						{
-							lActiveWindow = lWindow;
+							v_activeWindow = v_window;
 							break;
 						}
 					}
 				}
-				while (lActiveWindow != null)
+				while (v_activeWindow != null)
 				{
-					foreach (System.Windows.Window lWindow in lActiveWindow.OwnedWindows)
+					foreach (System.Windows.Window v_window in v_activeWindow.OwnedWindows)
 					{
-						if (lWindow.IsActive)
+						if (v_window.IsActive)
 						{
-							lActiveWindow = lWindow;
+							v_activeWindow = v_window;
 							break;
 						}
 					}
 				}
 			}
 
-			if (lActiveWindow != null)
+			if (v_activeWindow != null)
 			{
-				lInteropHelper = new System.Windows.Interop.WindowInteropHelper (lActiveWindow);
-				return lInteropHelper.Handle;
+				v_interopHelper = new System.Windows.Interop.WindowInteropHelper (v_activeWindow);
+				return v_interopHelper.Handle;
 			}
 			else
 			{
-				lActiveForm = System.Windows.Forms.Form.ActiveForm;
-				if (lActiveForm == null)
+				v_activeForm = System.Windows.Forms.Form.ActiveForm;
+				if (v_activeForm == null)
 				{
 					foreach (System.Windows.Forms.Form lForm in System.Windows.Forms.Application.OpenForms)
 					{
 						if (lForm.Enabled)
 						{
-							lActiveForm = lForm;
+							v_activeForm = lForm;
 							break;
 						}
 					}
 				}
-				if (lActiveForm != null)
+				if (v_activeForm != null)
 				{
-					return lActiveForm.Handle;
+					return v_activeForm.Handle;
 				}
 			}
 

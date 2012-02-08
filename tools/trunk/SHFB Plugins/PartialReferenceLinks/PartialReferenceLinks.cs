@@ -31,8 +31,8 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private ExecutionPointCollection mExecutionPoints;
-		private BuildProcess mBuildProcess;
+		private ExecutionPointCollection m_executionPoints;
+		private BuildProcess m_buildProcess;
 
 		#endregion
 
@@ -50,9 +50,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				FileVersionInfo lFileVersionInfo = FileVersionInfo.GetVersionInfo (lAssembly.Location);
-				return new Version (lFileVersionInfo.ProductVersion);
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				FileVersionInfo v_fileVersionInfo = FileVersionInfo.GetVersionInfo (v_assembly.Location);
+				return new Version (v_fileVersionInfo.ProductVersion);
 			}
 		}
 
@@ -61,9 +61,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				AssemblyCopyrightAttribute lCopyrightAttribute = Attribute.GetCustomAttribute (lAssembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
-				return lCopyrightAttribute.Copyright;
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				AssemblyCopyrightAttribute v_copyrightAttribute = Attribute.GetCustomAttribute (v_assembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
+				return v_copyrightAttribute.Copyright;
 			}
 		}
 
@@ -90,14 +90,14 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				if (mExecutionPoints == null)
+				if (m_executionPoints == null)
 				{
-					mExecutionPoints = new ExecutionPointCollection
+					m_executionPoints = new ExecutionPointCollection
                     {
                         new ExecutionPoint(BuildStep.BuildConceptualTopics, ExecutionBehaviors.Before)
                     };
 				}
-				return mExecutionPoints;
+				return m_executionPoints;
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace SandcastleBuilder.PlugIns
 		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
-			mBuildProcess = buildProcess;
+			m_buildProcess = buildProcess;
 		}
 
 		/// <inheritdoc/>
@@ -128,32 +128,32 @@ namespace SandcastleBuilder.PlugIns
 
 			if ((context.BuildStep == BuildStep.BuildConceptualTopics) && (context.Behavior == ExecutionBehaviors.Before))
 			{
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 
-				if ((mBuildProcess.ConceptualContent == null) || (mBuildProcess.ConceptualContent.Topics == null) || (mBuildProcess.ConceptualContent.Topics.Count <= 0))
+				if ((m_buildProcess.ConceptualContent == null) || (m_buildProcess.ConceptualContent.Topics == null) || (m_buildProcess.ConceptualContent.Topics.Count <= 0))
 				{
-					mBuildProcess.ReportWarning (Name, "No conceptual topics");
+					m_buildProcess.ReportWarning (Name, "No conceptual topics");
 				}
 				else
 				{
 					try
 					{
-						FolderPath lTopicFolder = new FolderPath (Path.Combine (mBuildProcess.WorkingFolder, "ddueXml"), mBuildProcess.CurrentProject);
-						XmlDocument lReflectionDocument = new XmlDocument ();
-						XPathNavigator lReflectionNavigator;
+						FolderPath v_topicFolder = new FolderPath (Path.Combine (m_buildProcess.WorkingFolder, "ddueXml"), m_buildProcess.CurrentProject);
+						XmlDocument v_reflectionDocument = new XmlDocument ();
+						XPathNavigator v_reflectionNavigator;
 
-						lReflectionDocument.Load (mBuildProcess.ReflectionInfoFilename);
-						lReflectionNavigator = lReflectionDocument.CreateNavigator ();
+						v_reflectionDocument.Load (m_buildProcess.ReflectionInfoFilename);
+						v_reflectionNavigator = v_reflectionDocument.CreateNavigator ();
 
-						foreach (TopicCollection lCollection in mBuildProcess.ConceptualContent.Topics)
+						foreach (TopicCollection v_collection in m_buildProcess.ConceptualContent.Topics)
 						{
-							ScanTopicCollection (lCollection, lTopicFolder, lReflectionNavigator);
+							ScanTopicCollection (v_collection, v_topicFolder, v_reflectionNavigator);
 						}
 					}
 					catch (Exception exp)
 					{
 #if	DEBUG
-						mBuildProcess.ReportWarning (Name, exp.Message);
+						m_buildProcess.ReportWarning (Name, exp.Message);
 #endif
 						System.Diagnostics.Debug.Print (exp.Message);
 					}
@@ -165,105 +165,105 @@ namespace SandcastleBuilder.PlugIns
 		#region Helper Methods
 		//=====================================================================
 
-		private bool ScanTopicCollection (TopicCollection Collection, FolderPath TopicFolder, XPathNavigator ReflectionInfo)
+		private bool ScanTopicCollection (TopicCollection collection, FolderPath topicFolder, XPathNavigator reflectionInfo)
 		{
-			bool lChanged = false;
+			bool v_changed = false;
 
-			foreach (Topic lItem in Collection)
+			foreach (Topic v_iItem in collection)
 			{
-				if (ScanTopic (lItem, TopicFolder, ReflectionInfo))
+				if (ScanTopic (v_iItem, topicFolder, reflectionInfo))
 				{
-					lChanged = true;
+					v_changed = true;
 				}
-				if (lItem.Subtopics != null)
+				if (v_iItem.Subtopics != null)
 				{
-					if (ScanTopicCollection (lItem.Subtopics, TopicFolder, ReflectionInfo))
+					if (ScanTopicCollection (v_iItem.Subtopics, topicFolder, reflectionInfo))
 					{
-						lChanged = true;
+						v_changed = true;
 					}
 				}
 			}
-			return lChanged;
+			return v_changed;
 		}
 
-		private bool ScanTopic (Topic ConceptualTopic, FolderPath TopicFolder, XPathNavigator ReflectionInfo)
+		private bool ScanTopic (Topic conceptualTopic, FolderPath topicFolder, XPathNavigator reflectionInfo)
 		{
-			bool lChanged = false;
+			bool v_changed = false;
 
-			if (ConceptualTopic.TopicFile != null)
+			if (conceptualTopic.TopicFile != null)
 			{
 
 				try
 				{
-					FilePath lTopicPath = new FilePath (Path.ChangeExtension (Path.Combine (TopicFolder, ConceptualTopic.Id), ".xml"), mBuildProcess.CurrentProject);
+					FilePath v_topicPath = new FilePath (Path.ChangeExtension (Path.Combine (topicFolder, conceptualTopic.Id), ".xml"), m_buildProcess.CurrentProject);
 #if DEBUG
-					mBuildProcess.ReportProgress ("Topic \"{0}\" File \"{1}\" Process \"{2}\"", ConceptualTopic.Title, ConceptualTopic.TopicFile.Name, lTopicPath);
+					m_buildProcess.ReportProgress ("Topic \"{0}\" File \"{1}\" Process \"{2}\"", conceptualTopic.Title, conceptualTopic.TopicFile.Name, v_topicPath);
 #endif
-					if (lTopicPath.Exists)
+					if (v_topicPath.Exists)
 					{
-						XmlDocument lConceptualDocument = new XmlDocument ();
-						XmlNamespaceManager lNamespaceManager;
-						XPathNodeIterator lMethodIterator;
+						XmlDocument v_conceptualDocument = new XmlDocument ();
+						XmlNamespaceManager v_namespaceManager;
+						XPathNodeIterator v_methodIterator;
 
-						lConceptualDocument.Load (lTopicPath);
-						lNamespaceManager = new XmlNamespaceManager (lConceptualDocument.NameTable);
-						if (!lNamespaceManager.HasNamespace ("ddue"))
+						v_conceptualDocument.Load (v_topicPath);
+						v_namespaceManager = new XmlNamespaceManager (v_conceptualDocument.NameTable);
+						if (!v_namespaceManager.HasNamespace ("ddue"))
 						{
-							lNamespaceManager.AddNamespace ("ddue", "http://ddue.schemas.microsoft.com/authoring/2003/5");
+							v_namespaceManager.AddNamespace ("ddue", "http://ddue.schemas.microsoft.com/authoring/2003/5");
 						}
 
 						// 
 						//	Note - process Methods and Properties to ensure that indexer properties are covered.
 						//
-						foreach (XmlNode lMethodReference in lConceptualDocument.SelectNodes ("topic//ddue:codeEntityReference[(starts-with(.,'M:') or starts-with(.,'P:')) and not(contains(.,'('))]", lNamespaceManager))
+						foreach (XmlNode v_methodReference in v_conceptualDocument.SelectNodes ("topic//ddue:codeEntityReference[(starts-with(.,'M:') or starts-with(.,'P:')) and not(contains(.,'('))]", v_namespaceManager))
 						{
-							lMethodIterator = ReflectionInfo.Select (String.Format ("reflection/apis/api[starts-with(@id,'{0}(')]", lMethodReference.InnerText));
-							if ((lMethodIterator != null) && lMethodIterator.MoveNext ())
+							v_methodIterator = reflectionInfo.Select (String.Format ("reflection/apis/api[starts-with(@id,'{0}(')]", v_methodReference.InnerText));
+							if ((v_methodIterator != null) && v_methodIterator.MoveNext ())
 							{
-								if (lMethodIterator.Count > 1)
+								if (v_methodIterator.Count > 1)
 								{
 #if	DEBUG
-									mBuildProcess.ReportWarning (Name, "Multiple API entries found for \"{0}\" in \"{1}\"", lMethodReference.InnerText, ConceptualTopic.TopicFile.Name);
+									m_buildProcess.ReportWarning (Name, "Multiple API entries found for \"{0}\" in \"{1}\"", v_methodReference.InnerText, conceptualTopic.TopicFile.Name);
 									do
 									{
-										mBuildProcess.ReportWarning (Name, "  \"{0}\"", lMethodIterator.Current.GetAttribute ("id", String.Empty));
+										m_buildProcess.ReportWarning (Name, "  \"{0}\"", v_methodIterator.Current.GetAttribute ("id", String.Empty));
 									}
-									while (lMethodIterator.MoveNext ());
+									while (v_methodIterator.MoveNext ());
 #endif
 								}
 								else
 								{
-									String lMethodSignature = lMethodIterator.Current.GetAttribute ("id", String.Empty);
+									String v_methodSignature = v_methodIterator.Current.GetAttribute ("id", String.Empty);
 #if DEBUG
-									mBuildProcess.ReportProgress ("  Replace \"{0}\" with \"{1}\" in \"{2}\"", lMethodReference.InnerText, lMethodSignature, ConceptualTopic.TopicFile.Name);
+									m_buildProcess.ReportProgress ("  Replace \"{0}\" with \"{1}\" in \"{2}\"", v_methodReference.InnerText, v_methodSignature, conceptualTopic.TopicFile.Name);
 #endif
-									lMethodReference.InnerText = lMethodSignature;
-									lChanged = true;
+									v_methodReference.InnerText = v_methodSignature;
+									v_changed = true;
 								}
 							}
 #if	DEBUG
-							else if (!lMethodReference.InnerText.StartsWith ("P:"))
+							else if (!v_methodReference.InnerText.StartsWith ("P:"))
 							{
-								mBuildProcess.ReportWarning (Name, "No API entry found for \"{0}\" in \"{1}\"", lMethodReference.InnerText, ConceptualTopic.TopicFile.Name);
+								m_buildProcess.ReportWarning (Name, "No API entry found for \"{0}\" in \"{1}\"", v_methodReference.InnerText, conceptualTopic.TopicFile.Name);
 							}
 #endif
 						}
 
-						if (lChanged)
+						if (v_changed)
 						{
-							lConceptualDocument.Save (lTopicPath);
+							v_conceptualDocument.Save (v_topicPath);
 						}
 					}
 				}
 				catch (Exception exp)
 				{
 #if	DEBUG
-					mBuildProcess.ReportWarning (Name, exp.Message);
+					m_buildProcess.ReportWarning (Name, exp.Message);
 #endif
 					System.Diagnostics.Debug.Print (exp.Message);
 				}
 			}
-			return lChanged;
+			return v_changed;
 		}
 
 		#endregion

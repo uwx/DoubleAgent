@@ -20,10 +20,10 @@ namespace SandcastleBuilder.PlugIns
 	/// </summary>
 	public partial class RequestPfxPassword : OwnedWPFWindow
 	{
-		public RequestPfxPassword (String pFileName)
+		public RequestPfxPassword (String fileName)
 		{
 			InitializeComponent ();
-			PromptLabel.Content = String.Format (PromptLabel.Content as String, pFileName);
+			PromptLabel.Content = String.Format (PromptLabel.Content as String, fileName);
 		}
 
 		/// <summary>

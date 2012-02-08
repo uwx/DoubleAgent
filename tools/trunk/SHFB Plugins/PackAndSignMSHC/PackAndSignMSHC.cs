@@ -15,7 +15,7 @@ namespace SandcastleBuilder.PlugIns
 	/// This plugin packs an MS Help Viewer (Help3) MSHC file into a .CAB file and signs it
 	/// with an Authenticode digital signature.
 	/// <para>
-	/// The resulting .CAB file will be recognized by "Manage Help Settings" as signed content.
+	/// The resulting .CAB file will be recognized by "Manage Help settings" as signed content.
 	/// The user will be presented with the publisher's name and asked to accept the signature,
 	/// and the content can be installed WITHOUT administrative privileges.
 	/// </para>
@@ -41,9 +41,9 @@ namespace SandcastleBuilder.PlugIns
 		#region Private data members
 		//=====================================================================
 
-		private ExecutionPointCollection mExecutionPoints;
-		private BuildProcess mBuildProcess;
-		private String mConfiguration;
+		private ExecutionPointCollection m_executionPoints;
+		private BuildProcess m_buildProcess;
+		private String m_configuration;
 
 		#endregion
 
@@ -61,9 +61,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				FileVersionInfo lFileVersionInfo = FileVersionInfo.GetVersionInfo (lAssembly.Location);
-				return new Version (lFileVersionInfo.ProductVersion);
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				FileVersionInfo v_fileVersionInfo = FileVersionInfo.GetVersionInfo (v_assembly.Location);
+				return new Version (v_fileVersionInfo.ProductVersion);
 			}
 		}
 
@@ -72,9 +72,9 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				Assembly lAssembly = Assembly.GetExecutingAssembly ();
-				AssemblyCopyrightAttribute lCopyrightAttribute = Attribute.GetCustomAttribute (lAssembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
-				return lCopyrightAttribute.Copyright;
+				Assembly v_assembly = Assembly.GetExecutingAssembly ();
+				AssemblyCopyrightAttribute v_copyrightAttribute = Attribute.GetCustomAttribute (v_assembly, typeof (AssemblyCopyrightAttribute)) as AssemblyCopyrightAttribute;
+				return v_copyrightAttribute.Copyright;
 			}
 		}
 
@@ -99,14 +99,14 @@ namespace SandcastleBuilder.PlugIns
 		{
 			get
 			{
-				if (mExecutionPoints == null)
+				if (m_executionPoints == null)
 				{
-					mExecutionPoints = new ExecutionPointCollection
+					m_executionPoints = new ExecutionPointCollection
                     {
                         new ExecutionPoint(BuildStep.CompilingHelpFile, ExecutionBehaviors.After)
                     };
 				}
-				return mExecutionPoints;
+				return m_executionPoints;
 			}
 		}
 
@@ -118,11 +118,11 @@ namespace SandcastleBuilder.PlugIns
 		/// <inheritdoc/>
 		public string ConfigurePlugIn (SandcastleProject project, string currentConfig)
 		{
-			PackAndSignMHSCConfig lConfigDialog = new PackAndSignMHSCConfig (project);
-			lConfigDialog.Configuration = currentConfig;
-			if (lConfigDialog.ShowDialog ().GetValueOrDefault ())
+			PackAndSignMHSCConfig v_configDialog = new PackAndSignMHSCConfig (project);
+			v_configDialog.Configuration = currentConfig;
+			if (v_configDialog.ShowDialog ().GetValueOrDefault ())
 			{
-				return lConfigDialog.Configuration;
+				return v_configDialog.Configuration;
 			}
 			return currentConfig;
 		}
@@ -130,56 +130,56 @@ namespace SandcastleBuilder.PlugIns
 		/// <inheritdoc/>
 		public void Initialize (BuildProcess buildProcess, XPathNavigator configuration)
 		{
-			mBuildProcess = buildProcess;
-			mConfiguration = configuration.OuterXml;
+			m_buildProcess = buildProcess;
+			m_configuration = configuration.OuterXml;
 		}
 
 		/// <inheritdoc/>
 		public void Execute (ExecutionContext context)
 		{
-			if (mBuildProcess.CurrentFormat == HelpFileFormat.MSHelpViewer)
+			if (m_buildProcess.CurrentFormat == HelpFileFormat.MSHelpViewer)
 			{
-				PackAndSignMSHCSettings lSettings = new PackAndSignMSHCSettings (mBuildProcess.CurrentProject, mConfiguration);
-				String lDdfPath = null;
+				PackAndSignMSHCSettings v_settings = new PackAndSignMSHCSettings (m_buildProcess.CurrentProject, m_configuration);
+				String v_ddfPath = null;
 
-				mBuildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
 
-				if (CanExecute (lSettings, out lDdfPath))
+				if (CanExecute (v_settings, out v_ddfPath))
 				{
-					FilePath lMakeCabPath = new FilePath (lSettings.MakeCabPath, mBuildProcess.CurrentProject);
-					FilePath lSignToolPath = new FilePath (lSettings.SignToolPath, mBuildProcess.CurrentProject);
-					String lSourcePath = Path.Combine (mBuildProcess.OutputFolder, Path.ChangeExtension (mBuildProcess.CurrentProject.HtmlHelpName, ".mshc"));
-					String lTargetPath = Path.Combine (lSettings.CabPathName, lSettings.CabFileName);
-					String lMakeCabArgs;
-					String lSignToolArgs = null;
-					String lSignToolStamp = String.Empty;
+					FilePath v_makeCabPath = new FilePath (v_settings.MakeCabPath, m_buildProcess.CurrentProject);
+					FilePath v_signToolPath = new FilePath (v_settings.SignToolPath, m_buildProcess.CurrentProject);
+					String v_sourcePath = Path.Combine (m_buildProcess.OutputFolder, Path.ChangeExtension (m_buildProcess.CurrentProject.HtmlHelpName, ".mshc"));
+					String v_targetPath = Path.Combine (v_settings.CabPathName, v_settings.CabFileName);
+					String v_makeCabArgs;
+					String v_signToolArgs = null;
+					String v_signToolStamp = String.Empty;
 
-					lMakeCabArgs = String.Format ("/V1 /F \"{0}\" /D SourcePath='{1}' /D TargetDir='{2}' /D TargetFile='{3}'", lDdfPath, lSourcePath, lSettings.CabPathName, lSettings.CabFileName);
-					mBuildProcess.RunProcess (lMakeCabPath, lMakeCabArgs);
+					v_makeCabArgs = String.Format ("/V1 /F \"{0}\" /D SourcePath='{1}' /D TargetDir='{2}' /D TargetFile='{3}'", v_ddfPath, v_sourcePath, v_settings.CabPathName, v_settings.CabFileName);
+					m_buildProcess.RunProcess (v_makeCabPath, v_makeCabArgs);
 
-					if (File.Exists (lTargetPath))
+					if (File.Exists (v_targetPath))
 					{
-						mBuildProcess.HelpViewerFiles.Add (lTargetPath);
+						m_buildProcess.HelpViewerFiles.Add (v_targetPath);
 
-						if (!String.IsNullOrEmpty (lSettings.TimeStampUrl))
+						if (!String.IsNullOrEmpty (v_settings.TimeStampUrl))
 						{
-							lSignToolStamp = String.Format ("{0} {1} ", PackAndSignMSHCSettings.StoreTimestamperFlag, lSettings.TimeStampUrl);
+							v_signToolStamp = String.Format ("{0} {1} ", PackAndSignMSHCSettings.StoreTimestamperFlag, v_settings.TimeStampUrl);
 						}
-						if (lSettings.IsFileCertificate)
+						if (v_settings.IsFileCertificate)
 						{
-							lSignToolArgs = String.Format ("sign /f \"{0}\" {1} \"{2}\"", lSettings.FileCertificatePath, lSignToolStamp, lTargetPath);
+							v_signToolArgs = String.Format ("sign /f \"{0}\" {1} \"{2}\"", v_settings.FileCertificatePath, v_signToolStamp, v_targetPath);
 						}
-						else if (lSettings.IsStoreCertificate)
+						else if (v_settings.IsStoreCertificate)
 						{
-							lSignToolArgs = String.Format ("sign {0} {1} \"{2}\"", lSettings.CertificateSpec, lSignToolStamp, lTargetPath);
+							v_signToolArgs = String.Format ("sign {0} {1} \"{2}\"", v_settings.CertificateSpec, v_signToolStamp, v_targetPath);
 						}
 						else
 						{
-							mBuildProcess.ReportWarning (Name, "No code-signing certificate selected");
+							m_buildProcess.ReportWarning (Name, "No code-signing certificate selected");
 						}
-						if (!String.IsNullOrEmpty (lSignToolArgs))
+						if (!String.IsNullOrEmpty (v_signToolArgs))
 						{
-							mBuildProcess.RunProcess (lSignToolPath, lSignToolArgs);
+							m_buildProcess.RunProcess (v_signToolPath, v_signToolArgs);
 							FixMSHAFiles ();
 						}
 					}
@@ -194,50 +194,51 @@ namespace SandcastleBuilder.PlugIns
 		/// <summary>
 		/// Verifies that all required settings are present and valid.
 		/// </summary>
-		/// <param name="Settings">The configuration settings for this plugin.</param>
-		/// <param name="DdfPath">A path to the makecab directives template that must accompany this assembly.</param>
+		/// <param name="settings">The configuration settings for this plugin.</param>
+		/// <param name="ddfPath">A path to the makecab directives template that must accompany this assembly.</param>
 		/// <returns>True if the settings are all valid.</returns>
-		private bool CanExecute (PackAndSignMSHCSettings Settings, out String DdfPath)
+		private bool CanExecute (PackAndSignMSHCSettings settings, out String ddfPath)
 		{
-			DdfPath = Path.ChangeExtension (Assembly.GetExecutingAssembly ().Location, ".ddf");
-			FilePath lMakeCabPath = new FilePath (Settings.MakeCabPath,mBuildProcess.CurrentProject);
-			FilePath lSignToolPath = new FilePath (Settings.SignToolPath, mBuildProcess.CurrentProject);
+			FilePath v_makeCabPath = new FilePath (settings.MakeCabPath,m_buildProcess.CurrentProject);
+			FilePath v_signToolPath = new FilePath (settings.SignToolPath, m_buildProcess.CurrentProject);
 
-			if (mBuildProcess.IsPartialBuild)
+			ddfPath = Path.ChangeExtension (Assembly.GetExecutingAssembly ().Location, ".ddf");
+
+			if (m_buildProcess.IsPartialBuild)
 			{
-				mBuildProcess.ReportWarning (Name, "Skipped for partial build");
+				m_buildProcess.ReportWarning (Name, "Skipped for partial build");
 			}
-			else if (!File.Exists (DdfPath))
+			else if (!File.Exists (ddfPath))
 			{
-				mBuildProcess.ReportWarning (Name, "Missing directives file \"{0}\"", DdfPath);
+				m_buildProcess.ReportWarning (Name, "Missing directives file \"{0}\"", ddfPath);
 			}
-			else if (String.IsNullOrEmpty (Settings.CabFileName))
+			else if (String.IsNullOrEmpty (settings.CabFileName))
 			{
-				mBuildProcess.ReportWarning (Name, "Blank Cabinet file name");
+				m_buildProcess.ReportWarning (Name, "Blank Cabinet file name");
 			}
-			else if (String.IsNullOrEmpty (Settings.CabPathName))
+			else if (String.IsNullOrEmpty (settings.CabPathName))
 			{
-				mBuildProcess.ReportWarning (Name, "Blank Cabinet output path");
+				m_buildProcess.ReportWarning (Name, "Blank Cabinet output path");
 			}
-			else if (String.IsNullOrEmpty (Settings.MakeCabPath))
+			else if (String.IsNullOrEmpty (settings.MakeCabPath))
 			{
-				mBuildProcess.ReportWarning (Name, "No path specified for makecab.exe");
+				m_buildProcess.ReportWarning (Name, "No path specified for makecab.exe");
 			}
-			else if (String.IsNullOrEmpty (Settings.SignToolPath))
+			else if (String.IsNullOrEmpty (settings.SignToolPath))
 			{
-				mBuildProcess.ReportWarning (Name, "No path specified for signtool.exe");
+				m_buildProcess.ReportWarning (Name, "No path specified for signtool.exe");
 			}
-			else if (!lMakeCabPath.Exists)
+			else if (!v_makeCabPath.Exists)
 			{
-				mBuildProcess.ReportWarning (Name, "Invalid path for makecab.exe - \"{0}\"", Settings.MakeCabPath);
+				m_buildProcess.ReportWarning (Name, "Invalid path for makecab.exe - \"{0}\"", settings.MakeCabPath);
 			}
-			else if (!lSignToolPath.Exists)
+			else if (!v_signToolPath.Exists)
 			{
-				mBuildProcess.ReportWarning (Name, "Invalid path for signtool.exe - \"{0}\"", Settings.SignToolPath);
+				m_buildProcess.ReportWarning (Name, "Invalid path for signtool.exe - \"{0}\"", settings.SignToolPath);
 			}
-			else if (String.IsNullOrEmpty (Settings.TimeStampUrl))
+			else if (String.IsNullOrEmpty (settings.TimeStampUrl))
 			{
-				mBuildProcess.ReportWarning (Name, "No timestamer specified - the Cabinet file signature may not be trusted");
+				m_buildProcess.ReportWarning (Name, "No timestamer specified - the Cabinet file signature may not be trusted");
 				return true;
 			}
 			else
@@ -253,27 +254,27 @@ namespace SandcastleBuilder.PlugIns
 		/// </summary>
 		private void FixMSHAFiles ()
 		{
-			FixMSHAFile (Path.Combine (mBuildProcess.OutputFolder, "HelpContentSetup.msha"));
-			FixMSHAFile (Path.Combine (mBuildProcess.OutputFolder, mBuildProcess.CurrentProject.HtmlHelpName + ".msha"));
-			FixMSHAFile (Path.Combine (mBuildProcess.WorkingFolder, mBuildProcess.CurrentProject.HtmlHelpName + ".msha"));
+			FixMSHAFile (Path.Combine (m_buildProcess.OutputFolder, "HelpContentSetup.msha"));
+			FixMSHAFile (Path.Combine (m_buildProcess.OutputFolder, m_buildProcess.CurrentProject.HtmlHelpName + ".msha"));
+			FixMSHAFile (Path.Combine (m_buildProcess.WorkingFolder, m_buildProcess.CurrentProject.HtmlHelpName + ".msha"));
 		}
 
 		/// <summary>
 		/// Updates an MSHA file to install the Cabinet file instead of the MSHC file.
 		/// </summary>
-		/// <param name="FilePath">The full path of the MSHA file to update.</param>
-		private void FixMSHAFile (String FilePath)
+		/// <param name="filePath">The full path of the MSHA file to update.</param>
+		private void FixMSHAFile (String filePath)
 		{
 			try
 			{
-				String [] lInputLines = File.ReadAllLines (FilePath);
-				List<String> lOutputLines = new List<String> ();
+				String [] v_inputLines = File.ReadAllLines (filePath);
+				List<String> v_outputLines = new List<String> ();
 
-				foreach (String lLine in lInputLines)
+				foreach (String lLine in v_inputLines)
 				{
-					lOutputLines.Add (lLine.Replace (".mshc", ".cab").Replace (".MSHC", ".CAB"));
+					v_outputLines.Add (lLine.Replace (".mshc", ".cab").Replace (".MSHC", ".CAB"));
 				}
-				File.WriteAllLines (FilePath, lOutputLines.ToArray());
+				File.WriteAllLines (filePath, v_outputLines.ToArray());
 			}
 			catch (Exception exp)
 			{

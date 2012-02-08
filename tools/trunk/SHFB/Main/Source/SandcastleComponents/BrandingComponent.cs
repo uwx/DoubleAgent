@@ -65,8 +65,8 @@ namespace SandcastleBuilder.Components
 		private string m_catalogVersion = s_defaultCatalogVersion;
 		private string m_vendorName = String.Empty;
 		private HelpLibraryManager m_helpLibraryManager = new HelpLibraryManager ();
-		private XslCompiledTransform m_BrandingTransform = null;
-		private XsltArgumentList m_TransformArguments = null;
+		private XslCompiledTransform m_brandingTransform = null;
+		private XsltArgumentList m_transformArguments = null;
 
 		#endregion
 
@@ -76,55 +76,55 @@ namespace SandcastleBuilder.Components
 		public BrandingComponent (BuildAssembler assembler, XPathNavigator configuration)
 			: base (assembler, configuration)
 		{
-			XPathNavigator lConfigData = configuration.SelectSingleNode ("data");
+			XPathNavigator v_configData = configuration.SelectSingleNode ("data");
 
-			if (lConfigData != null)
+			if (v_configData != null)
 			{
-				String lConfigValue;
+				String v_configValue;
 
-				m_brandingContent = lConfigData.GetAttribute (s_configBrandingContent, String.Empty);
+				m_brandingContent = v_configData.GetAttribute (s_configBrandingContent, String.Empty);
 
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configLocale, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configLocale, String.Empty)))
 				{
-					m_locale = lConfigValue;
+					m_locale = v_configValue;
 				}
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configSelfBranded, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configSelfBranded, String.Empty)))
 				{
-					m_selfBranded = bool.Parse (lConfigValue);
+					m_selfBranded = bool.Parse (v_configValue);
 				}
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configBrandingPackage, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configBrandingPackage, String.Empty)))
 				{
-					m_brandingPackage = lConfigValue;
+					m_brandingPackage = v_configValue;
 				}
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configBasePackage, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configBasePackage, String.Empty)))
 				{
-					m_basePackage = lConfigValue;
+					m_basePackage = v_configValue;
 				}
 				else
 				{
-					lConfigValue = m_helpLibraryManager.HelpLibraryViewerPath;
-					if (String.IsNullOrEmpty (lConfigValue))
+					v_configValue = m_helpLibraryManager.HelpLibraryViewerPath;
+					if (String.IsNullOrEmpty (v_configValue))
 					{
 						WriteMessage (MessageLevel.Error, "The MS Help Viewer installation could not be found. A base branding package must be specified.");
 					}
 					else
 					{
-						m_basePackage = Path.Combine (lConfigValue, s_defaultBrandingPackage + s_packageExtension);
+						m_basePackage = Path.Combine (v_configValue, s_defaultBrandingPackage + s_packageExtension);
 					}
 				}
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configHelpOutput, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configHelpOutput, String.Empty)))
 				{
-					m_helpOutput = lConfigValue;
+					m_helpOutput = v_configValue;
 				}
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configCatalogProductId, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configCatalogProductId, String.Empty)))
 				{
-					m_catalogProductId = lConfigValue;
+					m_catalogProductId = v_configValue;
 				}
-				if (!String.IsNullOrEmpty (lConfigValue = lConfigData.GetAttribute (s_configCatalogVersion, String.Empty)))
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configCatalogVersion, String.Empty)))
 				{
-					m_catalogVersion = lConfigValue;
+					m_catalogVersion = v_configValue;
 				}
-				m_vendorName = lConfigData.GetAttribute (s_configVendorName, String.Empty);
+				m_vendorName = v_configData.GetAttribute (s_configVendorName, String.Empty);
 			}
 
 			if (String.Compare (m_helpOutput, "MSHelpViewer", StringComparison.OrdinalIgnoreCase) != 0)
@@ -163,7 +163,7 @@ namespace SandcastleBuilder.Components
 
 		private void ApplyBranding (XmlDocument document, string key)
 		{
-			if (m_BrandingTransform != null)
+			if (m_brandingTransform != null)
 			{
 #if DEBUG
 				try
@@ -172,6 +172,54 @@ namespace SandcastleBuilder.Components
 				}
 				catch { }
 #endif
+				try
+				{
+					XmlReader v_reader = new XmlNodeReader (document);
+					//XmlReader v_reader = new XhtmlNodeReader (document, this);
+					//Stream lStream = new MemoryStream();
+
+					//XmlNamespaceManager v_Manager = new XmlNamespaceManager (v_Reader.NameTable);
+					//WriteMessage (MessageLevel.Info, String.Format ("  DefaultNamespace [{0}]", v_Manager.DefaultNamespace));
+					//foreach (KeyValuePair<String, String> lNamespace in v_Manager.GetNamespacesInScope (XmlNamespaceScope.All))
+					//{
+					//    WriteMessage (MessageLevel.Info, String.Format ("  Namespace [{0}] [{1}]", lNamespace.Key, lNamespace.Value));
+					//}
+					//v_Manager.AddNamespace ("xhtml", "http://www.w3.org/1999/xhtml");
+					//WriteMessage (MessageLevel.Info, String.Format ("  DefaultNamespace [{0}]", v_Manager.DefaultNamespace));
+					//foreach (KeyValuePair<String, String> lNamespace in v_Manager.GetNamespacesInScope (XmlNamespaceScope.All))
+					//{
+					//    WriteMessage (MessageLevel.Info, String.Format ("  Namespace [{0}] [{1}]", lNamespace.Key, lNamespace.Value));
+					//}
+
+					XmlNode v_header = document.DocumentElement.SelectSingleNode ("head");
+					XmlElement v_meta = document.CreateElement ("meta");
+					v_meta.SetAttribute ("name", "SelfBranded");
+					v_meta.SetAttribute ("content", "true");
+					v_header.AppendChild (v_meta);
+
+					String v_tempPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\Temp"));
+					if (!Directory.Exists (v_tempPath))
+					{
+						Directory.CreateDirectory (v_tempPath);
+					}
+					v_tempPath = Path.Combine (v_tempPath, key + ".htm");
+
+					using (FileStream v_stream = new FileStream (v_tempPath, FileMode.Create, FileAccess.ReadWrite))
+					{
+						using (XmlWriter v_writer = XmlWriter.Create (v_stream, m_brandingTransform.OutputSettings))
+						{
+							m_brandingTransform.Transform (v_reader, m_transformArguments, v_writer);
+						}
+					}
+				}
+				catch (XsltException exp)
+				{
+					WriteMessage (MessageLevel.Warn, String.Format ("{0} at {1} {2} {3}", exp.Message, exp.SourceUri, exp.LineNumber, exp.LinePosition));
+				}
+				catch (Exception exp)
+				{
+					WriteMessage (MessageLevel.Error, exp.Message);
+				}
 			}
 		}
 
@@ -179,29 +227,28 @@ namespace SandcastleBuilder.Components
 		{
 			try
 			{
-				String lBrandingContentBase = null;
+				String v_brandingContentBase = null;
 
 				if (!String.IsNullOrEmpty (m_brandingContent))
 				{
-					lBrandingContentBase = Path.GetFullPath (Environment.ExpandEnvironmentVariables (m_brandingContent));
+					v_brandingContentBase = Path.GetFullPath (Environment.ExpandEnvironmentVariables (m_brandingContent));
 				}
-				if (!String.IsNullOrEmpty (lBrandingContentBase))
+				if (!String.IsNullOrEmpty (v_brandingContentBase))
 				{
-					String lBrandingTransformName = String.Format ("branding-{0}.xslt", m_locale);
-					XslCompiledTransform lBrandingTransform = new XslCompiledTransform ();
-					XsltSettings lTransformSettings = new XsltSettings (true, true);
-					XmlResolver lResolver = new XmlUrlResolver ();
+					String v_brandingTransformName = String.Format ("branding-{0}.xslt", m_locale);
+					XslCompiledTransform v_brandingTransform = new XslCompiledTransform ();
+					XmlResolver v_resolver = new XmlUrlResolver ();
 
-					m_TransformArguments = new XsltArgumentList ();
-					m_TransformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
-					m_TransformArguments.AddParam ("catalogProductFamily", String.Empty, m_catalogProductId);
-					m_TransformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
-					m_TransformArguments.AddParam ("catalogLocale", String.Empty, m_locale);
-					LoadBrandingConfig (Path.Combine (lBrandingContentBase, "branding.xml"), ref lBrandingTransformName);
+					m_transformArguments = new XsltArgumentList ();
+					m_transformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
+					m_transformArguments.AddParam ("catalogProductFamily", String.Empty, m_catalogProductId);
+					m_transformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
+					m_transformArguments.AddParam ("catalogLocale", String.Empty, m_locale);
+					LoadBrandingConfig (Path.Combine (v_brandingContentBase, "branding.xml"), ref v_brandingTransformName);
 
-					WriteMessage (MessageLevel.Info, String.Format ("Branding transform \"{0}\" catalogProductFamily={1} catalogProductVersion={2} catalogLocale={3}", Path.Combine (lBrandingContentBase, lBrandingTransformName), m_catalogProductId, m_catalogVersion, m_locale));
-					lBrandingTransform.Load (Path.Combine (lBrandingContentBase, lBrandingTransformName), lTransformSettings, lResolver);
-					m_BrandingTransform = lBrandingTransform;
+					WriteMessage (MessageLevel.Info, String.Format ("Branding transform \"{0}\" catalogProductFamily={1} catalogProductVersion={2} catalogLocale={3}", Path.Combine (v_brandingContentBase, v_brandingTransformName), m_catalogProductId, m_catalogVersion, m_locale));
+					v_brandingTransform.Load (Path.Combine (v_brandingContentBase, v_brandingTransformName), XsltSettings.TrustedXslt, v_resolver);
+					m_brandingTransform = v_brandingTransform;
 				}
 			}
 			catch (XsltCompileException exp)
@@ -214,45 +261,45 @@ namespace SandcastleBuilder.Components
 			}
 		}
 
-		private void LoadBrandingConfig (String pConfigPath, ref String pTransformName)
+		private void LoadBrandingConfig (String configPath, ref String transformName)
 		{
 			try
 			{
-				XmlDocument lBrandingConfig = new XmlDocument ();
-				XmlNamespaceManager lNamespaceManager;
-				XmlNode lArgumentsNode;
-				XmlNode lTransformNode;
+				XmlDocument v_brandingConfig = new XmlDocument ();
+				XmlNamespaceManager v_namespaceManager;
+				XmlNode v_argumentsNode;
+				XmlNode v_transformNode;
 
-				lBrandingConfig.Load (pConfigPath);
-				lNamespaceManager = new XmlNamespaceManager (lBrandingConfig.NameTable);
-				lNamespaceManager.AddNamespace ("branding", "urn:FH-Branding");
+				v_brandingConfig.Load (configPath);
+				v_namespaceManager = new XmlNamespaceManager (v_brandingConfig.NameTable);
+				v_namespaceManager.AddNamespace ("branding", "urn:FH-Branding");
 
-				lArgumentsNode = lBrandingConfig.DocumentElement.SelectSingleNode ("branding:common-parameters", lNamespaceManager);
-				lTransformNode = lBrandingConfig.DocumentElement.SelectSingleNode (String.Format ("branding:transform-parameters[@xml:lang='{0}']", m_locale), lNamespaceManager);
+				v_argumentsNode = v_brandingConfig.DocumentElement.SelectSingleNode ("branding:common-parameters", v_namespaceManager);
+				v_transformNode = v_brandingConfig.DocumentElement.SelectSingleNode (String.Format ("branding:transform-parameters[@xml:lang='{0}']", m_locale), v_namespaceManager);
 
-				if (lArgumentsNode != null)
+				if (v_argumentsNode != null)
 				{
-					foreach (XmlNode lArgumentNode in lArgumentsNode.ChildNodes)
+					foreach (XmlNode v_argumentNode in v_argumentsNode.ChildNodes)
 					{
-						if (String.Compare (lArgumentNode.LocalName, "parameter", StringComparison.OrdinalIgnoreCase) == 0)
+						if (String.Compare (v_argumentNode.LocalName, "parameter", StringComparison.OrdinalIgnoreCase) == 0)
 						{
-							XmlNode lArgumentName = lArgumentNode.Attributes.GetNamedItem ("name");
-							XmlNode lArgumentValue = lArgumentNode.Attributes.GetNamedItem ("value");
+							XmlNode v_argumentName = v_argumentNode.Attributes.GetNamedItem ("name");
+							XmlNode v_argumentValue = v_argumentNode.Attributes.GetNamedItem ("value");
 
-							if ((lArgumentName != null) && (lArgumentNode != null))
+							if ((v_argumentName != null) && (v_argumentNode != null))
 							{
-								m_TransformArguments.AddParam (lArgumentName.Value, String.Empty, lArgumentValue.Value);
+								m_transformArguments.AddParam (v_argumentName.Value, String.Empty, v_argumentValue.Value);
 							}
 						}
 					}
 				}
-				if (lTransformNode != null)
+				if (v_transformNode != null)
 				{
-					lTransformNode = lTransformNode.Attributes.GetNamedItem ("transform");
+					v_transformNode = v_transformNode.Attributes.GetNamedItem ("transform");
 				}
-				if (lTransformNode != null)
+				if (v_transformNode != null)
 				{
-					pTransformName = lTransformNode.Value;
+					transformName = v_transformNode.Value;
 				}
 			}
 			catch { }
@@ -261,6 +308,81 @@ namespace SandcastleBuilder.Components
 		void OnTransformMessageEncountered (object sender, XsltMessageEncounteredEventArgs e)
 		{
 			WriteMessage (MessageLevel.Info, e.Message);
+		}
+
+		private class XhtmlNodeReader : XmlNodeReader
+		{
+			private Microsoft.Ddue.Tools.BuildComponent m_buildComponent;
+			private XmlNamespaceManager m_namespaceManager;
+
+			public XhtmlNodeReader (XmlDocument document, Microsoft.Ddue.Tools.BuildComponent BuildComponent)
+				: base (document)
+			{
+				m_buildComponent = BuildComponent;
+				m_namespaceManager = new XmlNamespaceManager (NameTable);
+
+				m_namespaceManager.AddNamespace ("", "http://www.w3.org/1999/xhtml");
+				m_namespaceManager.AddNamespace ("xhtml", "http://www.w3.org/1999/xhtml");
+			}
+
+			public override string LookupNamespace (string prefix)
+			{
+				m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("LookupNamespace ==> {0}", prefix));
+				return base.LookupNamespace (prefix);
+			}
+
+			public override string LocalName
+			{
+				get
+				{
+					return base.LocalName;
+				}
+			}
+
+			public override String Name
+			{
+				get
+				{
+					if (!String.IsNullOrEmpty (base.Prefix))
+					{
+						m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Name ==> {0}", base.Name));
+					}
+					else
+					{
+						if (base.Name == "head")
+						{
+							m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Name ==> {0}:head", Prefix));
+						}
+						if (base.Name == "body")
+						{
+							m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Name ==> {0}:body", Prefix));
+						}
+					}
+					return base.Name;
+				}
+			}
+			public override String Prefix
+			{
+				get
+				{
+					if (!String.IsNullOrEmpty (base.Prefix))
+					{
+						m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Prefix ==> {0}", base.Prefix));
+					}
+					else
+					{
+						if (base.NodeType == XmlNodeType.Element)
+						{
+							return "xhtml";
+						}
+						if (base.NodeType == XmlNodeType.EndElement)
+						{
+							return "xhtml";
+						}
+					}
+					return base.Prefix;
+				}
+			}
 		}
 
 		#endregion
@@ -274,54 +396,54 @@ namespace SandcastleBuilder.Components
 		/// </summary>
 		private void ReformatLanguageSpecific (XmlDocument document)
 		{
-			int uniqueIdSequence = 0;
-			XmlNodeList nodeList = document.SelectNodes ("//span[@class='languageSpecificText']");
+			int v_uniqueIdSequence = 0;
+			XmlNodeList v_nodeList = document.SelectNodes ("//span[@class='languageSpecificText']");
 
-			foreach (XmlNode node in nodeList)
+			foreach (XmlNode v_node in v_nodeList)
 			{
-				XmlNodeList partList = node.SelectNodes ("span[@class]");
-				String partText = String.Empty;
+				XmlNodeList v_partList = v_node.SelectNodes ("span[@class]");
+				String v_partText = String.Empty;
 
-				if ((partList.Count > 0) && (partList.Count == node.ChildNodes.Count))
+				if ((v_partList.Count > 0) && (v_partList.Count == v_node.ChildNodes.Count))
 				{
 #if true
 					//
 					//	Option 1 - implement LST as it appears in the final page
 					//
-					String uniqueId = String.Format (CultureInfo.InvariantCulture, "IDLST{0:D6}", ++uniqueIdSequence);
-					XmlElement spanElement;
-					XmlElement scriptElement;
+					String v_uniqueId = String.Format (CultureInfo.InvariantCulture, "IDLST{0:D6}", ++v_uniqueIdSequence);
+					XmlElement v_spanElement;
+					XmlElement v_scriptElement;
 
-					foreach (XmlNode partNode in partList)
+					foreach (XmlNode v_partNode in v_partList)
 					{
-						if (!String.IsNullOrEmpty (partText))
+						if (!String.IsNullOrEmpty (v_partText))
 						{
-							partText += "|";
+							v_partText += "|";
 						}
-						partText += String.Format (CultureInfo.InvariantCulture, "{0}={1}", partNode.Attributes.GetNamedItem ("class").Value, partNode.InnerText.Trim ('\''));
+						v_partText += String.Format (CultureInfo.InvariantCulture, "{0}={1}", v_partNode.Attributes.GetNamedItem ("class").Value, v_partNode.InnerText.Trim ('\''));
 					}
 
-					spanElement = document.CreateElement ("span");
-					spanElement.SetAttribute ("id", uniqueId);
-					scriptElement = document.CreateElement ("script");
-					scriptElement.SetAttribute ("type", "text/javascript");
-					scriptElement.InnerText = String.Format (CultureInfo.InvariantCulture, "addToLanSpecTextIdSet(\"{0}?{1}\");", uniqueId, partText);
+					v_spanElement = document.CreateElement ("span");
+					v_spanElement.SetAttribute ("id", v_uniqueId);
+					v_scriptElement = document.CreateElement ("script");
+					v_scriptElement.SetAttribute ("type", "text/javascript");
+					v_scriptElement.InnerText = String.Format (CultureInfo.InvariantCulture, "addToLanSpecTextIdSet(\"{0}?{1}\");", v_uniqueId, v_partText);
 
-					node.ParentNode.InsertAfter (scriptElement, node);
-					node.ParentNode.ReplaceChild (spanElement, node);
+					v_node.ParentNode.InsertAfter (v_scriptElement, v_node);
+					v_node.ParentNode.ReplaceChild (v_spanElement, v_node);
 #else
 					//
 					//	Option 2 - implement LST as it appears in the raw page
 					//
-					XmlElement lstElement;
+					XmlElement v_lstElement;
 
-					lstElement = _document.CreateElement ("mtps:LanguageSpecificText");
+					v_lstElement = document.CreateElement ("mtps:LanguageSpecificText");
 
-					foreach (XmlNode partNode in partList)
+					foreach (XmlNode v_partNode in v_partList)
 					{
-						lstElement.SetAttribute (String.Format (CultureInfo.InvariantCulture, "devLang{0}", partNode.Attributes.GetNamedItem ("class").Value), partNode.InnerText);
+						v_lstElement.SetAttribute (String.Format (CultureInfo.InvariantCulture, "devLang{0}", v_partNode.Attributes.GetNamedItem ("class").Value), v_partNode.InnerText);
 					}
-					node.ParentNode.ReplaceChild (lstElement, node);
+					v_node.ParentNode.ReplaceChild (v_lstElement, v_node);
 #endif
 				}
 			}
@@ -342,25 +464,25 @@ namespace SandcastleBuilder.Components
 		/// </summary>
 		private void MakePlainCodeCopies (XmlDocument document)
 		{
-			XmlNodeList codeNodes = document.SelectNodes ("//div[@class='OH_CodeSnippetContainerCode']");
+			XmlNodeList v_codeNodes = document.SelectNodes ("//div[@class='OH_CodeSnippetContainerCode']");
 
-			foreach (XmlNode coloredCodeDiv in codeNodes)
+			foreach (XmlNode v_ColoredCodeDiv in v_codeNodes)
 			{
-				XmlNode codeNodeId = coloredCodeDiv.Attributes.GetNamedItem ("id");
+				XmlNode v_codeNodeId = v_ColoredCodeDiv.Attributes.GetNamedItem ("id");
 
-				if ((codeNodeId != null) && (codeNodeId.Value.Contains ("_code_Div")))
+				if ((v_codeNodeId != null) && (v_codeNodeId.Value.Contains ("_code_Div")))
 				{
-					XmlNode plainCodeDiv = coloredCodeDiv.ParentNode.SelectSingleNode (String.Format (CultureInfo.InvariantCulture, "div[@id='{0}']", codeNodeId.Value.Replace ("_code_Div", "_code_Plain_Div")));
+					XmlNode v_plainCodeDiv = v_ColoredCodeDiv.ParentNode.SelectSingleNode (String.Format (CultureInfo.InvariantCulture, "div[@id='{0}']", v_codeNodeId.Value.Replace ("_code_Div", "_code_Plain_Div")));
 
-					if (plainCodeDiv != null)
+					if (v_plainCodeDiv != null)
 					{
-						XmlNode coloredCode = coloredCodeDiv.SelectSingleNode ("descendant::pre");
-						XmlNode plainCode = plainCodeDiv.SelectSingleNode ("descendant::pre");
+						XmlNode v_coloredCode = v_ColoredCodeDiv.SelectSingleNode ("descendant::pre");
+						XmlNode v_plainCode = v_plainCodeDiv.SelectSingleNode ("descendant::pre");
 
-						if ((coloredCode != null) && (plainCode != null))
+						if ((v_coloredCode != null) && (v_plainCode != null))
 						{
-							plainCode.InnerXml = String.Empty;
-							plainCode.AppendChild (document.CreateTextNode (coloredCode.InnerText));
+							v_plainCode.InnerXml = String.Empty;
+							v_plainCode.AppendChild (document.CreateTextNode (v_coloredCode.InnerText));
 						}
 					}
 				}
