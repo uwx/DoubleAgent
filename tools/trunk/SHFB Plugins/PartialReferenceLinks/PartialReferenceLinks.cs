@@ -12,7 +12,7 @@ using SandcastleBuilder.Utils.BuildEngine;
 using SandcastleBuilder.Utils.PlugIn;
 using SandcastleBuilder.Utils.ConceptualContent;
 
-namespace SandcastleBuilder.PlugIns.CinSoft
+namespace SandcastleBuilder.PlugIns
 {
 	/// <summary>
 	/// This plugin scans MAML Conceptual content for incomplete API references and completes them.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace SandcastleBuilder.PlugIns.CinSoft
+namespace SandcastleBuilder.PlugIns
 {
 	/// <summary>
 	/// This class is a kludge that allows a WPF window to be shown as a modal dialog

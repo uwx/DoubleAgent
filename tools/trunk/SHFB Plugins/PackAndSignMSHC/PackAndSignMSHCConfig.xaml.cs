@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows;
 using SandcastleBuilder.Utils;
 
-namespace SandcastleBuilder.PlugIns.CinSoft
+namespace SandcastleBuilder.PlugIns
 {
 	/// <summary>
 	/// This is the configuration dialog for the PackAndSignMHSC plugin.

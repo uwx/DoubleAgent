@@ -808,7 +808,7 @@ namespace SandcastleBuilder.Components
 					XmlNode parent = child.ParentNode;
 					XmlAttribute parentClass = parent.Attributes["class"];
 
-					if ((parentClass != null) && (String.Compare (parentClass.InnerText, "highlight-title", StringComparison.InvariantCultureIgnoreCase) == 0))
+					if ((parentClass != null) && (String.Compare (parentClass.InnerText, "highlight-title", StringComparison.OrdinalIgnoreCase) == 0))
 					{
 						child = parent;
 						parent = child.ParentNode;

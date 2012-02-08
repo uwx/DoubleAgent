@@ -8,7 +8,7 @@
     <ProjectGuid>{74BD21CC-CD3F-49E8-BB56-C4AA16D42D22}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SandcastleBuilder.PlugIns.CinSoft</RootNamespace>
+    <RootNamespace>SandcastleBuilder.PlugIns</RootNamespace>
     <AssemblyName>TOCNamespacePlacement</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

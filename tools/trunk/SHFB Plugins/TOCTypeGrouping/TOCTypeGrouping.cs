@@ -11,7 +11,7 @@ using SandcastleBuilder.Utils;
 using SandcastleBuilder.Utils.BuildEngine;
 using SandcastleBuilder.Utils.PlugIn;
 
-namespace SandcastleBuilder.PlugIns.CinSoft
+namespace SandcastleBuilder.PlugIns
 {
 	/// <summary>
 	/// This plugin adds an extra level of hierachy to the TOC of each namespace to group types within the namespace.

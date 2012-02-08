@@ -2,7 +2,7 @@
 // System  : Sandcastle Help File Builder Components
 // File    : MSHCComponent.cs
 // Author  : Eric Woodruff  (Eric@EWoodruff.us)
-// Updated : 07/05/2010
+// Updated : 02/06/2012
 // Note    : This is a modified version of the Microsoft MSHCComponent
 //           (Copyright 2010 Microsoft Corporation).  My changes are indicated
 //           by my initials "EFW" in a comment on the changes.
@@ -28,6 +28,7 @@
 // Version     Date     Who  Comments
 // ============================================================================
 // 1.9.0.0  06/30/2010  EFW  Created the code
+// 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style
 //=============================================================================
 
 using System;
@@ -103,7 +104,6 @@ namespace SandcastleBuilder.Components
 			public const string Locale = "locale";
 			public const string SelfBranded = "self-branded";
 			public const string BrandingPackage = "branding-package";
-			public const string HelpOutput = "help-output";
 			public const string TopicVersion = "topic-version";
 			public const string TocFile = "toc-file";
 			public const string TocParent = "toc-parent";
@@ -197,7 +197,6 @@ namespace SandcastleBuilder.Components
 		{
 			public const bool SelfBranded = true;
 			public const string BrandingPackage = "dev10";
-			public const string HelpOutput = "MSHelpViewer";
 			public const string Locale = "en-us";
 			public const string Reference = "Reference";
 			public const string TopicVersion = "100";
@@ -241,7 +240,6 @@ namespace SandcastleBuilder.Components
 		private string _locale = String.Empty;
 		private bool _selfBranded = MHSDefault.SelfBranded;
 		private string _brandingPackage = MHSDefault.BrandingPackage;
-		private string _helpOutput = MHSDefault.HelpOutput;
 		private string _topicVersion = MHSDefault.TopicVersion;
 		private string _tocParent = MHSDefault.TocParent;
 		private string _tocParentVersion = MHSDefault.TocParentVersion;
@@ -274,15 +272,11 @@ namespace SandcastleBuilder.Components
 				if (!String.IsNullOrEmpty (value))
 					_selfBranded = bool.Parse (value);
 
+				// DBF - Added the branding-package configuration
 				value = data.GetAttribute (ConfigurationAttr.BrandingPackage, String.Empty);
 
 				if (!String.IsNullOrEmpty (value))
 					_brandingPackage = value;
-
-				value = data.GetAttribute (ConfigurationAttr.HelpOutput, String.Empty);
-
-				if (!String.IsNullOrEmpty (value))
-					_helpOutput = value;
 
 				value = data.GetAttribute (ConfigurationAttr.TopicVersion, String.Empty);
 
@@ -320,50 +314,37 @@ namespace SandcastleBuilder.Components
 		/// </summary>
 		/// <param name="document">The <see cref="XmlDocument"/> to apply transformation to.</param>
 		/// <param name="key">Topic key of the output document.</param>
+
 		public override void Apply (XmlDocument document, string key)
 		{
 			_document = document;
 
+			// DBF - Refactored this code into a private method (for clarity).
 			EnsureHeaderExists ();
 
-#if DEBUG
-			try
-			{
-				WriteMessage (MessageLevel.Warn, String.Format ("--- HelpOutput [{0}] SelfBranded [{1}] Package [{2}] ---", _helpOutput, _selfBranded, _brandingPackage));
-			}
-			catch { }
-#endif
-
-/////////////PATCH
-			if (String.Compare (_brandingPackage, MHSDefault.BrandingPackage, StringComparison.InvariantCultureIgnoreCase) == 0)
+			// DBF - Made this code conditional to support VS2010 presentation style
+			if (String.Compare (_brandingPackage, MHSDefault.BrandingPackage, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				ModifyAttribute ("id", "mainSection");
 				ModifyAttribute ("class", "members");
 				FixHeaderBottomBackground ("nsrBottom", "headerBottom");
 			}
-			else
-			{
-				ReformatLanguageSpecific ();
-				MakePlainCodeCopies ();
-			}
 
-			if (String.Compare (_helpOutput, MHSDefault.HelpOutput, StringComparison.InvariantCultureIgnoreCase) == 0)
-			{
-////////////END PATCH
-				AddMHSMeta (MHSMetaName.SelfBranded, _selfBranded.ToString ().ToLower ());
-				AddMHSMeta (MHSMetaName.ContentType, MHSDefault.Reference);
-				AddMHSMeta (MHSMetaName.TopicVersion, _topicVersion);
+			AddMHSMeta (MHSMetaName.SelfBranded, _selfBranded.ToString ().ToLower ());
+			AddMHSMeta (MHSMetaName.ContentType, MHSDefault.Reference);
+			AddMHSMeta (MHSMetaName.TopicVersion, _topicVersion);
 
-				String locale;
-				String id;
-				Help20MetaToHelp30Meta (out locale, out id);
+			// DBF - Refactored this code into a private method (for clarity).
+			String locale;
+			String id;
+			Help20MetaToHelp30Meta (out locale, out id);
 
-				AddMHSMeta (MHSMetaName.Locale, locale);
-				AddMHSMeta (MHSMetaName.TopicLocale, locale);
-				AddMHSMeta (MHSMetaName.Id, id);
+			AddMHSMeta (MHSMetaName.Locale, locale);
+			AddMHSMeta (MHSMetaName.TopicLocale, locale);
+			AddMHSMeta (MHSMetaName.Id, id);
 
-				EnsureDocInToc (id);
-			}
+			// DBF - Refactored this code into a private method (for clarity).
+			EnsureDocInToc (id);
 		}
 		#endregion
 
@@ -459,7 +440,7 @@ namespace SandcastleBuilder.Components
 			if (String.IsNullOrEmpty (locale))
 				locale = MHSDefault.Locale;
 
-			//PATCH
+			// DBF - Remove the MSHelp20 metadata - it's not supported by MSHC.
 #if !DEBUG
 			if (_xml != null)
 			{
@@ -467,110 +448,6 @@ namespace SandcastleBuilder.Components
 			}
 #endif
 			//END PATCH
-		}
-
-		#endregion
-
-		#region LanguageSpecific reformatting
-		//=====================================================================
-
-		/// <summary>
-		/// Reformats all LanguageSpecific spans to the format used by the
-		/// MS Help Viewer.
-		/// </summary>
-		private void ReformatLanguageSpecific ()
-		{
-			int uniqueIdSequence = 0;
-			XmlNodeList nodeList = _document.SelectNodes ("//span[@class='languageSpecificText']");
-
-			foreach (XmlNode node in nodeList)
-			{
-				XmlNodeList partList = node.SelectNodes ("span[@class]");
-				String partText = String.Empty;
-
-				if ((partList.Count > 0) && (partList.Count == node.ChildNodes.Count))
-				{
-#if true
-					//
-					//	Option 1 - implement LST as it appears in the final page
-					//
-					String uniqueId = String.Format (CultureInfo.InvariantCulture, "IDLST{0:D6}", ++uniqueIdSequence);
-					XmlElement spanElement;
-					XmlElement scriptElement;
-
-					foreach (XmlNode partNode in partList)
-					{
-						if (!String.IsNullOrEmpty(partText))
-						{
-							partText += "|";
-						}
-						partText += String.Format (CultureInfo.InvariantCulture, "{0}={1}", partNode.Attributes.GetNamedItem ("class").Value, partNode.InnerText.Trim ('\''));	
-					}
-
-					spanElement = _document.CreateElement ("span");
-					spanElement.SetAttribute ("id", uniqueId);
-					scriptElement = _document.CreateElement ("script");
-					scriptElement.SetAttribute ("type", "text/javascript");
-					scriptElement.InnerText = String.Format (CultureInfo.InvariantCulture, "addToLanSpecTextIdSet(\"{0}?{1}\");", uniqueId, partText);
-
-					node.ParentNode.InsertAfter (scriptElement, node);
-					node.ParentNode.ReplaceChild (spanElement, node);
-#else
-					//
-					//	Option 2 - implement LST as it appears in the raw page
-					//
-					XmlElement lstElement;
-
-					lstElement = _document.CreateElement ("mtps:LanguageSpecificText");
-
-					foreach (XmlNode partNode in partList)
-					{
-						lstElement.SetAttribute (String.Format (CultureInfo.InvariantCulture, "devLang{0}", partNode.Attributes.GetNamedItem ("class").Value), partNode.InnerText);
-					}
-					node.ParentNode.ReplaceChild (lstElement, node);
-#endif
-				}
-			}
-		}
-
-		#endregion
-
-		#region Code snippet finalization
-		//=====================================================================
-
-		/// <summary>
-		/// Each code snippet in an MSHC document has two formats - colorized and
-		/// plain.
-		/// The colorization happens in different places for Conceptual and
-		/// Sandcastle Reference topics, so we use this opportunity to make a
-		/// plain copy of each colorized code snippet.
-		/// The MS Help Viewer uses the plain version in its Copy and Print scripts.
-		/// </summary>
-		private void MakePlainCodeCopies ()
-		{
-			XmlNodeList codeNodes = _document.SelectNodes ("//div[@class='OH_CodeSnippetContainerCode']");
-
-			foreach (XmlNode coloredCodeDiv in codeNodes)
-			{
-				XmlNode codeNodeId = coloredCodeDiv.Attributes.GetNamedItem ("id");
-
-				if ((codeNodeId != null) && (codeNodeId.Value.Contains ("_code_Div")))
-				{
-					XmlNode plainCodeDiv = coloredCodeDiv.ParentNode.SelectSingleNode (String.Format (CultureInfo.InvariantCulture, "div[@id='{0}']", codeNodeId.Value.Replace ("_code_Div", "_code_Plain_Div")));
-
-					if (plainCodeDiv != null)
-					{
-						XmlNode coloredCode = coloredCodeDiv.SelectSingleNode ("descendant::pre");
-						XmlNode plainCode = plainCodeDiv.SelectSingleNode ("descendant::pre");
-
-						if ((coloredCode != null) && (plainCode != null))
-						{
-							plainCode.InnerXml = String.Empty;
-							plainCode.AppendChild (_document.CreateTextNode (coloredCode.InnerText));
-						}
-					}
-				}
-			}
 		}
 
 		#endregion
@@ -637,11 +514,10 @@ namespace SandcastleBuilder.Components
 
 			XmlElement elem = null;
 
-//FIX
+			// DBF - Fixed a bug that allowed duplicate metadata even when it is not desired.
 			if (!multiple)
 				elem = _document.SelectSingleNode (String.Format (CultureInfo.InvariantCulture,
 					"//meta[@name='{0}']", name)) as XmlElement;
-//END FIX
 
 			if (elem == null)
 			{

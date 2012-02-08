@@ -8,7 +8,7 @@
     <ProjectGuid>{0F85C306-6597-491A-8557-0966E8A99A13}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SandcastleBuilder.PlugIns.CinSoft</RootNamespace>
+    <RootNamespace>SandcastleBuilder.PlugIns</RootNamespace>
     <AssemblyName>PartialReferenceLinks</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

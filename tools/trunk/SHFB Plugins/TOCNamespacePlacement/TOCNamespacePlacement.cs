@@ -11,7 +11,7 @@ using SandcastleBuilder.Utils;
 using SandcastleBuilder.Utils.BuildEngine;
 using SandcastleBuilder.Utils.PlugIn;
 
-namespace SandcastleBuilder.PlugIns.CinSoft
+namespace SandcastleBuilder.PlugIns
 {
 	/// <summary>
 	/// 

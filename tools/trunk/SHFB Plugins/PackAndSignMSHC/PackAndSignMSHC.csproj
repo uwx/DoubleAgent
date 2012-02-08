@@ -8,7 +8,7 @@
     <ProjectGuid>{E70C58DA-6C83-4C0B-A163-50670589FA6B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SandcastleBuilder.PlugIns.CinSoft</RootNamespace>
+    <RootNamespace>SandcastleBuilder.PlugIns</RootNamespace>
     <AssemblyName>PackAndSignMSHC</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

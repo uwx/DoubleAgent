@@ -8,7 +8,7 @@
     <ProjectGuid>{BA6CABE4-4C3D-4C09-8C15-1E6861CE9856}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SandcastleBuilder.PlugIns.CinSoft</RootNamespace>
+    <RootNamespace>SandcastleBuilder.PlugIns</RootNamespace>
     <AssemblyName>TOCFromSitemap</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -74,6 +74,7 @@
 //                           Framework versions.
 // 1.9.3.2  08/20/2011  EFW  Updated to support selection of .NET Portable
 //                           Framework versions.
+// 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style.
 //=============================================================================
 
 using System;
@@ -1583,8 +1584,9 @@ namespace SandcastleBuilder.Utils
             }
         }
 
+		//DBF Added this option to support the VS2010 presentation style.
 		/// <summary>
-		/// This is used to get or set the name of the branding package if the help file is self-branded
+		/// This is used to get or set the name of the branding package if the help file is self-branded.
 		/// </summary>
 		/// <remarks>Typically, this should left blank to use the default package name.</remarks>
 		[Category ("MS Help Viewer"), Description ("Specify the name of the branding package.  " +

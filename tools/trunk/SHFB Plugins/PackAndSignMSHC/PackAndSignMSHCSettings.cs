@@ -10,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using SandcastleBuilder.Utils;
 using SandcastleBuilder.Utils.BuildEngine;
 
-namespace SandcastleBuilder.PlugIns.CinSoft
+namespace SandcastleBuilder.PlugIns
 {
 	/// <summary>
 	/// This class handles the configurable settings for the PackAndSignMSHC plugin.
@@ -255,7 +255,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		//=====================================================================
 
 		/// <summary>
-		/// Indicates that the <see cref="P:SandcastleBuilder.PlugIns.CinSoft.PackAndSignMSHCSettings.CertificateSpec"/> is for a certificate in a certificate store.
+		/// Indicates that the <see cref="P:SandcastleBuilder.PlugIns.PackAndSignMSHCSettings.CertificateSpec"/> is for a certificate in a certificate store.
 		/// </summary>
 		public bool IsStoreCertificate
 		{
@@ -346,7 +346,7 @@ namespace SandcastleBuilder.PlugIns.CinSoft
 		//=====================================================================
 
 		/// <summary>
-		/// Indicates that the <see cref="P:SandcastleBuilder.PlugIns.CinSoft.PackAndSignMSHCSettings.CertificateSpec"/> is for a certificate file.
+		/// Indicates that the <see cref="P:SandcastleBuilder.PlugIns.PackAndSignMSHCSettings.CertificateSpec"/> is for a certificate file.
 		/// </summary>
 		public bool IsFileCertificate
 		{

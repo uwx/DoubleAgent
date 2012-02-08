@@ -57,6 +57,7 @@
 //                           Framework versions.
 // 1.9.3.2  08/20/2011  EFW  Updated to support selection of .NET Portable
 //                           Framework versions.
+// 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style
 //=============================================================================
 
 using System;
@@ -778,7 +779,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 // "v2005", "hana", or "prototype".
                 presentationParam = project.PresentationStyle.ToLower(CultureInfo.InvariantCulture);
 
-//PATCH
+				//DBF Added the vs2010 presentation style.
 				if (presentationParam.IndexOf ("vs2005", StringComparison.Ordinal) != -1)
 					presentationParam = "vs2005";
 				else if (presentationParam.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
@@ -793,7 +794,6 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 					presentationParam = "prototype";
 				}
-//END PATCH
 
                 if(!File.Exists(templateFolder + @"..\SharedContent\" + languageFile))
                 {

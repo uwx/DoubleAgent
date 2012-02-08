@@ -46,6 +46,7 @@
 //                           Framework versions.
 // 1.9.3.2  08/20/2011  EFW  Updated to support selection of .NET Portable
 //                           Framework versions.
+// 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style.
 //=============================================================================
 
 using System;
@@ -873,13 +874,15 @@ namespace SandcastleBuilder.Utils.BuildEngine
                         HttpUtility.HtmlEncode(project.ProductTitle) : HttpUtility.HtmlEncode(project.HelpTitle);
                     break;
 
-                case "selfbranded":
+				//DBF Updated to force self branding for any style other than VS2010.
+				case "selfbranded":
 					if (project.PresentationStyle.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
 						replaceWith = project.SelfBranded.ToString ().ToLower (CultureInfo.InvariantCulture);
 					else
 						replaceWith = "true";
                     break;
 
+				//DBF Added this variable to support the VS2010 style.
 				case "brandingpackage":
 				case "brandingpackagename":
 					if (project.PresentationStyle.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
@@ -899,6 +902,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					}
 					break;
 
+				//DBF Added this variable to support the VS2010 style.
 				case "brandingpackagepath":
 					if (project.PresentationStyle.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
 					{
