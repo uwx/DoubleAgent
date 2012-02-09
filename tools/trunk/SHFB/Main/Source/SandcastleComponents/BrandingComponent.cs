@@ -68,6 +68,8 @@ namespace SandcastleBuilder.Components
 		private XslCompiledTransform m_brandingTransform = null;
 		private XsltArgumentList m_transformArguments = null;
 
+		private const string s_xhtmlNamespace = "http://www.w3.org/1999/xhtml";
+
 		#endregion
 
 		#region Constructor
@@ -140,13 +142,6 @@ namespace SandcastleBuilder.Components
 
 		public override void Apply (XmlDocument document, string key)
 		{
-#if DEBUG_NOT
-			try
-			{
-				WriteMessage (MessageLevel.Info, String.Format ("--- HelpOutput [{0}] SelfBranded [{1}] Package [{2}] Locale [{3}] ---", m_helpOutput, m_selfBranded, m_brandingPackage, m_locale));
-			}
-			catch { }
-#endif
 			ReformatLanguageSpecific (document);
 			MakePlainCodeCopies (document);
 
@@ -166,49 +161,55 @@ namespace SandcastleBuilder.Components
 			if (m_brandingTransform != null)
 			{
 #if DEBUG
-				try
-				{
-					WriteMessage (MessageLevel.Info, String.Format ("  Branding [{0}] [{1}]", key, m_locale));
-				}
-				catch { }
+				WriteMessage (MessageLevel.Info, String.Format ("  Branding topic {0} [{1}]", key, m_locale));
 #endif
 				try
 				{
-					XmlReader v_reader = new XmlNodeReader (document);
-					//XmlReader v_reader = new XhtmlNodeReader (document, this);
-					//Stream lStream = new MemoryStream();
-
-					//XmlNamespaceManager v_Manager = new XmlNamespaceManager (v_Reader.NameTable);
-					//WriteMessage (MessageLevel.Info, String.Format ("  DefaultNamespace [{0}]", v_Manager.DefaultNamespace));
-					//foreach (KeyValuePair<String, String> lNamespace in v_Manager.GetNamespacesInScope (XmlNamespaceScope.All))
-					//{
-					//    WriteMessage (MessageLevel.Info, String.Format ("  Namespace [{0}] [{1}]", lNamespace.Key, lNamespace.Value));
-					//}
-					//v_Manager.AddNamespace ("xhtml", "http://www.w3.org/1999/xhtml");
-					//WriteMessage (MessageLevel.Info, String.Format ("  DefaultNamespace [{0}]", v_Manager.DefaultNamespace));
-					//foreach (KeyValuePair<String, String> lNamespace in v_Manager.GetNamespacesInScope (XmlNamespaceScope.All))
-					//{
-					//    WriteMessage (MessageLevel.Info, String.Format ("  Namespace [{0}] [{1}]", lNamespace.Key, lNamespace.Value));
-					//}
-
-					XmlNode v_header = document.DocumentElement.SelectSingleNode ("head");
-					XmlElement v_meta = document.CreateElement ("meta");
-					v_meta.SetAttribute ("name", "SelfBranded");
-					v_meta.SetAttribute ("content", "true");
-					v_header.AppendChild (v_meta);
-
-					String v_tempPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\Temp"));
-					if (!Directory.Exists (v_tempPath))
+					document = AdjustDocumentNamespace (document);
+					SetSelfBranding (document);
+#if DEBUG
+					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\Temp\\Pre"));
+					if (!Directory.Exists (v_tempPrePath))
 					{
-						Directory.CreateDirectory (v_tempPath);
+						Directory.CreateDirectory (v_tempPrePath);
 					}
-					v_tempPath = Path.Combine (v_tempPath, key + ".htm");
-
-					using (FileStream v_stream = new FileStream (v_tempPath, FileMode.Create, FileAccess.ReadWrite))
+					v_tempPrePath = Path.Combine (v_tempPrePath, key + ".htm");
+					document.Save (v_tempPrePath);
+#endif
+#if DEBUG
+					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\Temp\\Post"));
+					if (!Directory.Exists (v_tempPostPath))
 					{
-						using (XmlWriter v_writer = XmlWriter.Create (v_stream, m_brandingTransform.OutputSettings))
+						Directory.CreateDirectory (v_tempPostPath);
+					}
+					v_tempPostPath = Path.Combine (v_tempPostPath, key + ".htm");
+					using (FileStream v_stream = new FileStream (v_tempPostPath, FileMode.Create, FileAccess.ReadWrite))
+#else
+					using (Stream v_stream = new MemoryStream ())
+#endif
+					{
+						try
 						{
-							m_brandingTransform.Transform (v_reader, m_transformArguments, v_writer);
+							XPathNavigator v_navigator = document.CreateNavigator ();
+							using (XmlWriter v_writer = XmlWriter.Create (v_stream, m_brandingTransform.OutputSettings))
+							{
+#if DEBUG
+								WriteMessage (MessageLevel.Info, "  branding...");
+#endif
+								m_brandingTransform.Transform (v_navigator, m_transformArguments, v_writer);
+#if DEBUG
+								WriteMessage (MessageLevel.Info, "  branded");
+#endif
+							}
+
+							//document.RemoveAll ();
+							//document.Load (v_stream);
+							//WriteMessage (MessageLevel.Info, "  reloaded");
+							RemoveUnusedNamespaces (document);
+						}
+						catch (Exception exp)
+						{
+							WriteMessage (MessageLevel.Warn, exp.Message);
 						}
 					}
 				}
@@ -220,6 +221,120 @@ namespace SandcastleBuilder.Components
 				{
 					WriteMessage (MessageLevel.Error, exp.Message);
 				}
+			}
+		}
+
+		/// <summary>
+		/// Make sure that the document's default namespace is the xmhtml namespace.  If not
+		/// the branding transforms will not work.
+		/// </summary>
+		/// <param name="document">The current document.</param>
+		/// <returns></returns>
+		private XmlDocument AdjustDocumentNamespace (XmlDocument document)
+		{
+			XmlNamespaceManager v_namespaceManager = new XmlNamespaceManager (document.NameTable);
+
+			if (String.IsNullOrEmpty (v_namespaceManager.DefaultNamespace))
+			{
+				try
+				{
+					Stream v_Stream = new MemoryStream ();
+					XmlReaderSettings v_readerSettings;
+					XmlParserContext v_parserContext;
+
+					v_namespaceManager = new XmlNamespaceManager (new NameTable ());
+					v_namespaceManager.AddNamespace (String.Empty, s_xhtmlNamespace);
+					v_readerSettings = new XmlReaderSettings ();
+					v_readerSettings.NameTable = v_namespaceManager.NameTable;
+					v_readerSettings.ConformanceLevel = ConformanceLevel.Fragment;
+					v_parserContext = new XmlParserContext (v_namespaceManager.NameTable, v_namespaceManager, null, XmlSpace.None);
+
+					document.Save (v_Stream);
+					v_Stream.Seek (0, SeekOrigin.Begin);
+
+					using (XmlReader v_reader = XmlReader.Create (v_Stream, v_readerSettings, v_parserContext))
+					{
+						XmlDocument v_document = new XmlDocument ();
+						v_document.Load (v_reader);
+						return v_document;
+					}
+				}
+				catch (Exception exp)
+				{
+					WriteMessage (MessageLevel.Warn, exp.Message);
+				}
+			}
+			return document;
+		}
+
+		/// <summary>
+		/// Mark the document as SelfBranded.
+		/// </summary>
+		/// <param name="document">The current document.</param>
+		private void SetSelfBranding (XmlDocument document)
+		{
+			try
+			{
+				XmlNamespaceManager v_namespaceManager;
+				XmlNode v_header;
+
+				v_namespaceManager = new XmlNamespaceManager (document.NameTable);
+				v_namespaceManager.AddNamespace ("xhtml", s_xhtmlNamespace);
+
+				v_header = document.DocumentElement.SelectSingleNode ("xhtml:head", v_namespaceManager);
+				if ((v_header != null) && (v_header.SelectSingleNode ("meta[@name='SelfBranded']") == null))
+				{
+					XmlElement v_meta = document.CreateElement ("meta", s_xhtmlNamespace);
+					v_meta.SetAttribute ("name", "SelfBranded");
+					v_meta.SetAttribute ("content", "true");
+					v_header.AppendChild (v_meta);
+				}
+			}
+			catch (Exception exp)
+			{
+				WriteMessage (MessageLevel.Warn, exp.Message);
+			}
+		}
+
+		/// <summary>
+		/// Remove extra unused namespace declarations.
+		/// </summary>
+		/// <param name="document">The current document.</param>
+		private void RemoveUnusedNamespaces (XmlDocument document)
+		{
+			try
+			{
+				XmlNamespaceManager v_namespaceManager;
+				List<XmlNode> v_attribues = new List<XmlNode> ();
+
+				WriteMessage (MessageLevel.Info, "RemoveUnusedNamespaces");
+
+				v_namespaceManager = new XmlNamespaceManager (document.NameTable);
+				v_namespaceManager.AddNamespace ("xhtml", s_xhtmlNamespace);
+
+				if ((document.DocumentElement != null) && (document.DocumentElement.Attributes != null))
+				{
+					foreach (XmlNode v_attribute in document.DocumentElement.Attributes)
+					{
+						if (String.Compare (v_attribute.Prefix, "xmlns", StringComparison.OrdinalIgnoreCase) == 0)
+						{
+							v_attribues.Add (v_attribute);
+						}
+					}
+					foreach (XmlNode v_attribute in v_attribues)
+					{
+						WriteMessage (MessageLevel.Info, String.Format ("  Check namespace [{0}]", v_attribute.LocalName));
+						XmlNode v_namespaceUsed = document.SelectSingleNode (String.Format ("(/*/{0}:*) | (/*/*[@{0}:*])", v_attribute.LocalName), v_namespaceManager);
+						if (v_namespaceUsed != null)
+						{
+							WriteMessage (MessageLevel.Info, String.Format ("    Used [{0}] [{1}] [{2}] [{3}]", v_namespaceUsed.Prefix, v_namespaceUsed.LocalName, v_namespaceUsed.Name, v_namespaceUsed.NamespaceURI));
+						}
+					}
+				}
+			}
+			catch (Exception exp)
+			{
+				WriteMessage (MessageLevel.Warn, exp.Message);
 			}
 		}
 
@@ -244,6 +359,8 @@ namespace SandcastleBuilder.Components
 					m_transformArguments.AddParam ("catalogProductFamily", String.Empty, m_catalogProductId);
 					m_transformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
 					m_transformArguments.AddParam ("catalogLocale", String.Empty, m_locale);
+					m_transformArguments.AddParam ("content-path", String.Empty, ".\\");
+
 					LoadBrandingConfig (Path.Combine (v_brandingContentBase, "branding.xml"), ref v_brandingTransformName);
 
 					WriteMessage (MessageLevel.Info, String.Format ("Branding transform \"{0}\" catalogProductFamily={1} catalogProductVersion={2} catalogLocale={3}", Path.Combine (v_brandingContentBase, v_brandingTransformName), m_catalogProductId, m_catalogVersion, m_locale));
@@ -308,81 +425,6 @@ namespace SandcastleBuilder.Components
 		void OnTransformMessageEncountered (object sender, XsltMessageEncounteredEventArgs e)
 		{
 			WriteMessage (MessageLevel.Info, e.Message);
-		}
-
-		private class XhtmlNodeReader : XmlNodeReader
-		{
-			private Microsoft.Ddue.Tools.BuildComponent m_buildComponent;
-			private XmlNamespaceManager m_namespaceManager;
-
-			public XhtmlNodeReader (XmlDocument document, Microsoft.Ddue.Tools.BuildComponent BuildComponent)
-				: base (document)
-			{
-				m_buildComponent = BuildComponent;
-				m_namespaceManager = new XmlNamespaceManager (NameTable);
-
-				m_namespaceManager.AddNamespace ("", "http://www.w3.org/1999/xhtml");
-				m_namespaceManager.AddNamespace ("xhtml", "http://www.w3.org/1999/xhtml");
-			}
-
-			public override string LookupNamespace (string prefix)
-			{
-				m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("LookupNamespace ==> {0}", prefix));
-				return base.LookupNamespace (prefix);
-			}
-
-			public override string LocalName
-			{
-				get
-				{
-					return base.LocalName;
-				}
-			}
-
-			public override String Name
-			{
-				get
-				{
-					if (!String.IsNullOrEmpty (base.Prefix))
-					{
-						m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Name ==> {0}", base.Name));
-					}
-					else
-					{
-						if (base.Name == "head")
-						{
-							m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Name ==> {0}:head", Prefix));
-						}
-						if (base.Name == "body")
-						{
-							m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Name ==> {0}:body", Prefix));
-						}
-					}
-					return base.Name;
-				}
-			}
-			public override String Prefix
-			{
-				get
-				{
-					if (!String.IsNullOrEmpty (base.Prefix))
-					{
-						m_buildComponent.BuildAssembler.MessageHandler (m_buildComponent.GetType (), MessageLevel.Info, String.Format ("Prefix ==> {0}", base.Prefix));
-					}
-					else
-					{
-						if (base.NodeType == XmlNodeType.Element)
-						{
-							return "xhtml";
-						}
-						if (base.NodeType == XmlNodeType.EndElement)
-						{
-							return "xhtml";
-						}
-					}
-					return base.Prefix;
-				}
-			}
 		}
 
 		#endregion
