@@ -433,7 +433,20 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 				//DBF Added the branding folder
 				if (Directory.Exists (presentationFolder + "branding"))
-					this.RecursiveCopy (presentationFolder + @"branding\*.*", baseFolder + @"branding\");
+				{
+					String brandingManifiest = Path.Combine (presentationFolder + "branding", "branding.manifest");
+					if (File.Exists (brandingManifiest))
+					{
+						Dictionary<String, String> manifestProperties  = new Dictionary<String, String>();
+
+						manifestProperties.Add ("helpOutput", this.CurrentFormat.ToString());
+						MSHCPackage.CopyTheseParts (baseFolder + @"branding\", brandingManifiest, true);
+					}
+					else
+					{
+						this.RecursiveCopy (presentationFolder + @"branding\*.*", baseFolder + @"branding\");
+					}
+				}
 			}
 
             this.ExecutePlugIns(ExecutionBehaviors.After);

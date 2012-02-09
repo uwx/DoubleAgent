@@ -76,12 +76,14 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				{
 					m_package.Close ();
 				}
+#if DEBUG
 				catch (Exception exp)
 				{
-#if DEBUG
 					Debug.Print (exp.Message);
-#endif
 				}
+#else
+				catch {}
+#endif
 			}
 		}
 
@@ -415,29 +417,33 @@ namespace SandcastleBuilder.Utils.BuildEngine
 						}
 					}
 				}
+#if DEBUG
 				catch (Exception exp)
 				{
-#if DEBUG
 					Debug.Print (exp.Message);
-#endif
 				}
+#else
+				catch {}
+#endif
 			}
 			return v_partCount;
 		}
 
-		public uint PutTheseParts (String sourceFolder, String manifestPath)
+		//=====================================================================
+
+		public uint PutTheseParts (String manifestPath)
 		{
-			return PutTheseParts (sourceFolder, GetManifestProject (manifestPath));
+			return PutTheseParts (GetManifestProject (manifestPath));
 		}
-		public uint PutTheseParts (String sourceFolder, String manifestPath, bool replaceTargets)
+		public uint PutTheseParts (String manifestPath, bool replaceTargets)
 		{
-			return PutTheseParts (sourceFolder, GetManifestProject (manifestPath), replaceTargets);
+			return PutTheseParts (GetManifestProject (manifestPath), replaceTargets);
 		}
-		public uint PutTheseParts (String sourceFolder, Microsoft.Build.Evaluation.Project manifest)
+		public uint PutTheseParts (Microsoft.Build.Evaluation.Project manifest)
 		{
-			return PutTheseParts (sourceFolder, manifest, false);
+			return PutTheseParts (manifest, false);
 		}
-		public uint PutTheseParts (String sourceFolder, Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
+		public uint PutTheseParts (Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
 		{
 			uint v_partCount = 0;
 
@@ -465,15 +471,92 @@ namespace SandcastleBuilder.Utils.BuildEngine
 						}
 					}
 				}
+#if DEBUG
 				catch (Exception exp)
 				{
-#if DEBUG
 					Debug.Print (exp.Message);
-#endif
 				}
+#else
+				catch {}
+#endif
 			}
 			return v_partCount;
 		}
+
+		//=====================================================================
+
+		public static uint CopyTheseParts (String targetFolder, String manifestPath)
+		{
+			return CopyTheseParts (targetFolder, manifestPath, null);
+		}
+		public static uint CopyTheseParts (String targetFolder, String manifestPath, Dictionary<String, String> manifestProperties)
+		{
+			return CopyTheseParts (targetFolder, manifestPath, manifestProperties, false);
+		}
+		public static uint CopyTheseParts (String targetFolder, String manifestPath, bool replaceTargets)
+		{
+			return CopyTheseParts (targetFolder, manifestPath, null, replaceTargets);
+		}
+		public static uint CopyTheseParts (String targetFolder, String manifestPath, Dictionary<String, String> manifestProperties, bool replaceTargets)
+		{
+			ProjectCollection v_projectCollection = new ProjectCollection (manifestProperties);
+			return CopyTheseParts (targetFolder, new Project (manifestPath, null, null, v_projectCollection), replaceTargets);
+		}
+		public static uint CopyTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest)
+		{
+			return CopyTheseParts (targetFolder, manifest, false);
+		}
+		public static uint CopyTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
+		{
+			uint v_partCount = 0;
+			if (manifest != null)
+			{
+				try
+				{
+					String v_targetFolder = Path.GetFullPath (targetFolder.Replace ('/', '\\').TrimEnd ('\\'));
+
+					foreach (ProjectItem lManifestItem in manifest.AllEvaluatedItems)
+					{
+						bool v_copyItem = true;
+						ProjectMetadata v_metaData;
+						String v_sourcePath;
+						String v_targetPath;
+
+						if ((v_metaData = lManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
+						{
+							v_copyItem = bool.Parse (v_metaData.EvaluatedValue);
+						}
+						if (v_copyItem)
+						{
+							v_sourcePath = Path.Combine (manifest.DirectoryPath, lManifestItem.EvaluatedInclude);
+							v_targetPath = Path.Combine (v_targetFolder, lManifestItem.EvaluatedInclude);
+
+							if (replaceTargets || !File.Exists (v_targetPath))
+							{
+								if (!Directory.Exists (Path.GetDirectoryName (v_targetPath)))
+								{
+									Directory.CreateDirectory (Path.GetDirectoryName (v_targetPath));
+								}
+								File.Copy (v_sourcePath, v_targetPath, replaceTargets);
+								File.SetAttributes (v_sourcePath, FileAttributes.Normal);
+								v_partCount++;
+							}
+						}
+					}
+				}
+#if DEBUG
+				catch (Exception exp)
+				{
+					Debug.Print (exp.Message);
+				}
+#else
+				catch {}
+#endif
+			}
+			return v_partCount;
+		}
+
+		//=====================================================================
 
 		private Project GetManifestProject (String manifestPath)
 		{
@@ -556,12 +639,14 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					}
 				}
 			}
+#if DEBUG
 			catch (Exception exp)
 			{
-#if DEBUG
 				Debug.Print (exp.Message);
-#endif
 			}
+#else
+			catch {}
+#endif
 			return v_partType;
 		}
 

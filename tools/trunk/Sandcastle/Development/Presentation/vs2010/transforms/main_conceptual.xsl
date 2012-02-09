@@ -84,7 +84,6 @@
 					<xsl:call-template name="t_topicTitlePlain"/>
 				</title>
 				<xsl:call-template name="t_insertMetadataHelp30" />
-				<xsl:call-template name="t_insertStylesheets" />
 				<xsl:call-template name="t_insertMetadataHelp20" />
 			</head>
 			<body>
@@ -93,8 +92,6 @@
 				<xsl:call-template name="t_bodyTitle"/>
 				<xsl:call-template name="t_bodyMain"/>
 				<xsl:call-template name="t_bodyFooter" />
-				<xsl:call-template name="t_fixupStylesheets" />
-				<xsl:call-template name="t_fixupMessedUpTags" />
 			</body>
 		</html>
 	</xsl:template>
