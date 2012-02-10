@@ -213,6 +213,45 @@
 	Common metadata
 	============================================================================================= -->
 
+	<xsl:template name="t_insertMetadata">
+		<meta name="BrandingHeader">
+			<includeAttribute name="content"
+												item="header"/>
+		</meta>
+		<meta name="BrandingFooterText">
+			<includeAttribute name="content"
+												item="footer_text"/>
+		</meta>
+		<meta name="BrandingFooterComments">
+			<includeAttribute name="content"
+												item="footer_comments"/>
+		</meta>
+		<meta name="BrandingCopyright">
+			<includeAttribute name="content"
+												item="copyright"/>
+		</meta>
+		<meta name="BrandingFeedbackAlias">
+			<includeAttribute name="content"
+												item="fb_alias"/>
+		</meta>
+		<meta name="BrandingFeedbackSubject">
+			<includeAttribute name="content"
+												item="fb_product"/>
+		</meta>
+		<meta name="BrandingFeedbackText">
+			<includeAttribute name="content"
+												item="fb_text"/>
+		</meta>
+		<meta name="BrandingFeedbackFooterText">
+			<includeAttribute name="content"
+												item="fb_footer_text"/>
+		</meta>
+		<meta name="BrandingFeedbackBody">
+			<includeAttribute name="content"
+												item="fb_body"/>
+		</meta>
+	</xsl:template>
+
 	<xsl:template name="t_insertNoIndexNoFollow">
 		<xsl:if test="/document/metadata/attribute[@name='NoSearch']">
 			<META NAME="ROBOTS"
@@ -1010,36 +1049,6 @@
 				</parameter>
 			</include>
 		</div>
-		<xsl:call-template name="t_fixupFooter"/>
-	</xsl:template>
-
-	<xsl:template name="t_fixupFooter"
-								xml:space="preserve">
-		<script type="text/javascript">
-			try
-			{
-				var footer = document.getElementById("footer");
-				if (footer)
-				{
-					var footerParent = footer.parentElement;
-					var footerParentParent;
-					if (footerParent.className == "OH_outerContent")
-					{
-						footerParentParent = footerParent.parentElement;
-						footerParent.removeChild (footer);
-						footerParentParent.appendChild (footer);
-					}
-					if (footerParent.className == "OH_outerDiv")
-					{
-						footerParentParent = footerParent.parentElement;
-						footerParent.removeChild (footer);
-						footerParentParent.appendChild (footer);
-					}
-				}
-			}
-			catch (e) {}
-			finally {}
-		</script>
 	</xsl:template>
 
 	<!-- ============================================================================================

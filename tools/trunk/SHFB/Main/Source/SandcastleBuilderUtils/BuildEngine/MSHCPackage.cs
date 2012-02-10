@@ -538,7 +538,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 									Directory.CreateDirectory (Path.GetDirectoryName (v_targetPath));
 								}
 								File.Copy (v_sourcePath, v_targetPath, replaceTargets);
-								File.SetAttributes (v_sourcePath, FileAttributes.Normal);
+								File.SetAttributes (v_targetPath, FileAttributes.Normal);
 								v_partCount++;
 							}
 						}

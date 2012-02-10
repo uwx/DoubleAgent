@@ -83,6 +83,7 @@
 				<title>
 					<xsl:call-template name="t_topicTitlePlain"/>
 				</title>
+				<xsl:call-template name="t_insertMetadata" />
 				<xsl:call-template name="t_insertMetadataHelp30" />
 				<xsl:call-template name="t_insertMetadataHelp20" />
 			</head>

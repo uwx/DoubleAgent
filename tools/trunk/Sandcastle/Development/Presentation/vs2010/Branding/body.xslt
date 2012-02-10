@@ -22,6 +22,7 @@
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates mode="self-branding"/>
+			<!--Bug Fix-->
 			<!--<xsl:if test="not(*) and not(text())">
 				<xsl:value-of select="' '"/>
 			</xsl:if>-->

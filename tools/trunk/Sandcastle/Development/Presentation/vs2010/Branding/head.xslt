@@ -16,4 +16,23 @@
 								mode="self-branding">
 		<xsl:call-template name="head"/>
 	</xsl:template>
+
+	<xsl:template match="xhtml:script"
+								mode="self-branding">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:choose>
+				<xsl:when test="@src">
+					<xsl:attribute name="src">
+						<xsl:value-of select="branding:BuildContentPath($contentFolder,@src)"/>
+					</xsl:attribute>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates mode="self-branding"/>
+					<xsl:comment/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:copy>
+	</xsl:template>
+
 </xsl:stylesheet>

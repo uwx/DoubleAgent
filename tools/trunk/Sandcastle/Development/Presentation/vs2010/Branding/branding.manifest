@@ -112,7 +112,6 @@
 		</Content>
 		<Content Include="help-??-??.htm">
 			<SubType>text/html</SubType>
-			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
@@ -188,69 +187,91 @@
 
 		<Content Include="contentnotfound1.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound1_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound2.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound2_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound2_o.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound2_o_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3a.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3a_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3a_o.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3a_o_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3b.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3b_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3b_o.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound3b_o_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound4.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound4_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound5a.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound5a_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound6.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound6_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound7.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="contentnotfound7_???.png">
 			<SubType>image/png</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 </Project>

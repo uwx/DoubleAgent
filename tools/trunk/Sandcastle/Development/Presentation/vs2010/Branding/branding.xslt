@@ -145,8 +145,6 @@
 	<xsl:variable name="topic-id1">
 		<xsl:value-of select="substring-before($topic-id2,'/')"/>
 	</xsl:variable>
-	<xsl:variable name="feedback-subject"
-								select="concat('MSDN','^*',$topic-id1,'^*',$product,'^*',$version,'^*',$locale)" />
 	<xsl:variable name="actuallocale"
 								select="branding:GetLocale($locale)"></xsl:variable>
 	<xsl:variable name="localehelp"
@@ -155,6 +153,29 @@
 								select="concat('contentnotfound-',$actuallocale,'.htm')" />
 	<xsl:variable name="contentFolder"
 								select="branding:GetDirectoryName($content-path)"/>
+
+	<!-- VARIABLES with values from the metadata in the generated document -->
+
+	<xsl:variable name="copyright" >
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyright']/@content"/>
+	</xsl:variable>
+	<xsl:variable name="feedback-subject"
+								select="concat('MSDN','^*',$topic-id1,'^*',$product,'^*',$version,'^*',$locale)" />
+	<xsl:variable name="feedback-alias">
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackAlias']/@content"/>
+	</xsl:variable>
+	<xsl:variable name="feedbackText">
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackText']/@content"/>
+	</xsl:variable>
+	<xsl:variable name="feedbackfooterText">
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterText']/@content"/>
+	</xsl:variable>
+	<xsl:variable name="feedbackprivactText">
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackBody']/@content"/>
+	</xsl:variable>
+	<xsl:variable name="feedbacklink">.</xsl:variable>
+	<xsl:variable name="feedbackpolicy"
+								select="$Dev10FeedbackPolicy" />
 
 	<!-- MAIN ENTRY POINT-->
 
@@ -239,7 +260,7 @@
 
 	<xsl:template match="@style"
 								name="style"/>
-	
+
 	<msxsl:script language="C#"
 								implements-prefix="branding">
 		<msxsl:assembly name="System" />
