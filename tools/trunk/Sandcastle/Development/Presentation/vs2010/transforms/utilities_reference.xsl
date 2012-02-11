@@ -117,7 +117,6 @@
 				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
 				<xsl:call-template name="t_bodyTitle"/>
 				<xsl:call-template name="t_bodyMain"/>
-				<xsl:call-template name="t_bodyFooter" />
 			</body>
 		</html>
 	</xsl:template>

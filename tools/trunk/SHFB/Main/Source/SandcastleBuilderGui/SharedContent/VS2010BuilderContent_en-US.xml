@@ -4,51 +4,21 @@
               so that these items override the matching items in the
               stock content files! -->
 
+	<!-- Note that the copyright item in the shared content is not used. The following items are used instead. -->
+	<item id="copyright_info">{@CopyrightInfo}</item>
+	<item id="copyright_link">{@CopyrightHref}</item>
+	<item id="copyright_text">{@CopyrightText}</item>
 
 	<item id="header">{@HeaderText} {@Preliminary}</item>
-	<item id="footer">
-		<p>
-			<a name="feedback"></a>{@FooterText}
-		</p>
-	{@Comments} {@Copyright}
-	</item>
-
 	<item id="footer_text">{@FooterText}</item>
-	<item id="footer_comments">{@Comments}</item>
 
 	<item id="fb_alias">{@FeedbackEMailAddress}</item>
   <item id="fb_product">{@ScriptHelpTitle}</item>
+  <item id="fb_topic">{0}</item>
 	<item id="fb_text">Send Feedback</item>
-  <item id="fb_footer_text"> on this topic.</item>
-	<item id="fb_body">%0\dYour%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report,%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed,%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.%0\A%0\d</item>
-
-	<item id="headerFeedback">
-		<a id="headerMailLink"
-			 href="mailto:{@feedbackemailaddress}?Subject={@urlenchelptitle}">
-			<include item="fb_headerFeedBack"/>
-		</a>
-		<script type="text/javascript">
-			var headerMailLink = document.getElementById("headerMailLink");
-			var headerMailLinkText = headerMailLink.innerHTML;
-			headerMailLink.href += ": " + document.title;
-			headerMailLink.innerHTML = headerMailLinkText;
-		</script>
-	</item>
-
-	<item id="comments">
-		<div class="OH_feedbacklink">
-			<include item="fb_text"/> <include item="fb_footer_text"/> to
-			<a id="footerMailLink"
-				 href="mailto:{@feedbackemailaddress}?Subject={@urlenchelptitle}">
-				<include item="fb_aliasName"/>
-			</a>
-			<script type="text/javascript">
-				var footerMailLink = document.getElementById("footerMailLink");
-				var footerMailLinkText = footerMailLink.innerHTML;
-				footerMailLink.href += ": " + document.title;
-				footerMailLink.innerHTML = footerMailLinkText;
-			</script>
-		</div>
-	</item>
+  <item id="fb_footer_to">{@HtmlEncFeedbackEMailAddress}</item>
+  <item id="fb_footer_text">on this topic.</item>
+  <item id="fb_footer_text_to">on this topic to {@HtmlEncFeedbackEMailAddress}.</item>
+	<item id="fb_body">Your feedback is used to improve the documentation and the product. Your e-mail address will not be used for any other purpose and is disposed of after the issue you report is resolved. While working to resolve the issue that you report, you may be contacted via e-mail to get further details or clarification on the feedback you sent. After the issue you report has been addressed, you may receive an e-mail to let you know that your feedback has been addressed.</item>
 
 </content>

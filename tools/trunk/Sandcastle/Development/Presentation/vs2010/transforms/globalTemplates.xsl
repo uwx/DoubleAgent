@@ -214,22 +214,35 @@
 	============================================================================================= -->
 
 	<xsl:template name="t_insertMetadata">
+		<meta name="BrandingCopyrightText">
+			<includeAttribute name="content"
+												item="copyright_text"/>
+		</meta>
+		<meta name="BrandingCopyrightLink">
+			<includeAttribute name="content"
+												item="copyright_link"/>
+		</meta>
+		<meta name="BrandingCopyrightInfo">
+			<span>
+				<include item="copyright_info"/>
+			</span>
+		</meta>
+
 		<meta name="BrandingHeader">
 			<includeAttribute name="content"
-												item="header"/>
+												item="nsrTitle">
+				<parameter>
+					<xsl:call-template name="t_topicTitleDecorated"/>
+				</parameter>
+			</includeAttribute>
 		</meta>
+
 		<meta name="BrandingFooterText">
-			<includeAttribute name="content"
-												item="footer_text"/>
+			<span>
+				<include item="footer_text"/>
+			</span>
 		</meta>
-		<meta name="BrandingFooterComments">
-			<includeAttribute name="content"
-												item="footer_comments"/>
-		</meta>
-		<meta name="BrandingCopyright">
-			<includeAttribute name="content"
-												item="copyright"/>
-		</meta>
+
 		<meta name="BrandingFeedbackAlias">
 			<includeAttribute name="content"
 												item="fb_alias"/>
@@ -239,16 +252,26 @@
 												item="fb_product"/>
 		</meta>
 		<meta name="BrandingFeedbackText">
-			<includeAttribute name="content"
-												item="fb_text"/>
+			<span>
+				<include item="fb_text"/>
+			</span>
+		</meta>
+		<meta name="BrandingFeedbackFooterTo">
+				<includeAttribute name="content"
+												 item="fb_footer_to"/>
 		</meta>
 		<meta name="BrandingFeedbackFooterText">
-			<includeAttribute name="content"
-												item="fb_footer_text"/>
+			<span>
+				<include item="fb_footer_text"/>
+			</span>
+		</meta>
+		<meta name="BrandingFeedbackFooterTextTo">
+			<span>
+				<include item="fb_footer_text_to"/>
+			</span>
 		</meta>
 		<meta name="BrandingFeedbackBody">
-			<includeAttribute name="content"
-												item="fb_body"/>
+			<include item="fb_body"/>
 		</meta>
 	</xsl:template>
 
@@ -1025,30 +1048,6 @@
 		<xsl:param name="p_codeLang" />
 		<MSHelp:Attr Name="p_codelang"
 								 Value="{$p_codeLang}" />
-	</xsl:template>
-
-	<!-- ============================================================================================
-	Footer
-	============================================================================================= -->
-
-	<xsl:template name="t_bodyFooter">
-		<div class="OH_footer"
-				 id="footer">
-			<include item="footer">
-				<parameter>
-					<xsl:value-of select="$key"/>
-				</parameter>
-				<parameter>
-					<xsl:call-template name="t_topicTitlePlain"/>
-				</parameter>
-				<parameter>
-					<xsl:value-of select="/document/metadata/item[@id='PBM_FileVersion']" />
-				</parameter>
-				<parameter>
-					<xsl:value-of select="/document/metadata/attribute[@name='TopicVersion']" />
-				</parameter>
-			</include>
-		</div>
 	</xsl:template>
 
 	<!-- ============================================================================================
