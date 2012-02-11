@@ -4,6 +4,7 @@
 								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
+								xmlns:mtps="http://msdn2.microsoft.com/mtps"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
    >
@@ -721,26 +722,14 @@
 						<xsl:value-of select="generate-id(.)"/>
 					</xsl:variable>
 
-					<div class="OH_CollapsibleAreaRegion">
-						<xsl:if test="ddue:title">
-							<div class="OH_regiontitle">
-								<xsl:apply-templates select="ddue:title"
-																		 mode="section"/>
-							</div>
-						</xsl:if>
-						<div class="OH_CollapsibleArea_HrDiv">
-							<hr class="OH_CollapsibleArea_Hr"
-									xmlns="" />
-						</div>
-					</div>
-					<div class="OH_clear">
-					</div>
-					<a id="sectionToggle{$sectionCount}">
-						<!---->
-						<!---->
-					</a>
-					<xsl:apply-templates select="ddue:content"/>
-					<xsl:apply-templates select="ddue:sections" />
+					<mtps:CollapsibleArea>
+						<span class="OH_regiontitle">
+							<xsl:apply-templates select="ddue:title"
+																	 mode="section"/>
+						</span>
+						<xsl:apply-templates select="ddue:content"/>
+						<xsl:apply-templates select="ddue:sections" />
+					</mtps:CollapsibleArea>
 				</xsl:when>
 				<xsl:when test="$total = 1">
 					<h3 class="subHeading">

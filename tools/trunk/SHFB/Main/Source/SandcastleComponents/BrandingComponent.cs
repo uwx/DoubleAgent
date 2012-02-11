@@ -185,7 +185,7 @@ namespace SandcastleBuilder.Components
 						v_tempDocument.LoadXml (v_tempDocument.OuterXml);
 					}
 					SetSelfBranding (v_tempDocument, m_selfBranded);
-#if DEBUG_NOT
+#if DEBUG//_NOT
 					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\..\\..\\PreBranding"));
 					if (!Directory.Exists (v_tempPrePath))
 					{

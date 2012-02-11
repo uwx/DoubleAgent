@@ -112,11 +112,11 @@
 				<xsl:call-template name="t_insertFilename" />
 				<xsl:call-template name="t_insertMetadataHelp20" />
 			</head>
-			<body>
-				<!--<div class="OH_outerDiv"> Automatically added by the Help Viewer -->
-				<!--<div class="OH_outerContent"> Automatically added by the Help Viewer -->
-				<xsl:call-template name="t_bodyTitle"/>
-				<xsl:call-template name="t_bodyMain"/>
+			<body class="primary-mtps-offline-document">
+				<div class="topic">
+					<xsl:call-template name="t_bodyTitle"/>
+					<xsl:call-template name="t_bodyMain"/>
+				</div>
 			</body>
 		</html>
 	</xsl:template>

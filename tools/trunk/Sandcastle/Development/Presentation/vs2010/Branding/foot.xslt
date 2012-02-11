@@ -19,9 +19,9 @@
 		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyrightLink']/@content"/>
 	</xsl:variable>
 	<xsl:variable name="ft_copyrightInfo"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyrightInfo']/*"/>
+								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyrightInfo']/child::node()"/>
 	<xsl:variable name="ft_footerText"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFooterText']/*"/>
+								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFooterText']/child::node()"/>
 	<xsl:variable name="ft_feedbackSubject">
 		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackSubject']/@content"/>
 	</xsl:variable>
@@ -32,21 +32,21 @@
 		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackAlias']/@content"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackText"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackText']/*"/>
+								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackText']/child::node()"/>
 	<xsl:variable name="ft_feedbackFooterTo">
 		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterTo']/@content"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackFooterText"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterText']/*"/>
+								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterText']/child::node()"/>
 	<xsl:variable name="ft_feedbackFooterTextTo"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterTextTo']/*"/>
+								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterTextTo']/child::node()"/>
 	<xsl:variable name="ft_feedbackBody">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackBody']/text()"
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackBody']/child::text()"
 									disable-output-escaping="yes"/>
 	</xsl:variable>
 
 	<xsl:variable name="ft_mailtoTopic"
-								select="concat($ft_feedbackSubject,'^*',$ft_feedbackTopic,'^*',$version,'^*',$locale)" />
+								select="concat($ft_feedbackSubject,' ',$ft_feedbackTopic,' ',$version,' ',$locale)" />
 
 	<!-- ============================================================================================
 	Remove the metadata used above so it won't show up in the document.
@@ -155,29 +155,6 @@
 				<xsl:text>&#160;</xsl:text>
 				<xsl:copy-of select="$prolog"/>
 			</xsl:if>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template name="feedback-link-bottom">
-		<xsl:param name="prolog"
-							 select="''"/>
-		<xsl:element name="div"
-								 namespace="{$xhtml}">
-			<xsl:attribute name="class">OH_feedbacklink</xsl:attribute>
-			<xsl:element name="a"
-									 namespace="{$xhtml}">
-				<xsl:attribute name="href">
-					<xsl:value-of select="'mailto:'"/>
-					<xsl:value-of select="$ft_feedbackAlias"/>
-					<xsl:value-of select="'?subject='" />
-					<xsl:value-of select="branding:GetUrlEncode2($ft_mailtoTopic)" />
-					<xsl:value-of select="'&amp;body='" />
-					<xsl:value-of select="branding:replace(branding:GetUrlEncode2($ft_feedbackBody),'+','%20')" />
-				</xsl:attribute>
-				<xsl:text/>
-				<xsl:copy-of select="$ft_feedbackText" />
-			</xsl:element>
-			<xsl:copy-of select="$prolog" />
 		</xsl:element>
 	</xsl:template>
 
