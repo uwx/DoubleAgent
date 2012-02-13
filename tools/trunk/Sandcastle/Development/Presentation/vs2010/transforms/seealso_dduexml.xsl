@@ -5,68 +5,6 @@
 				xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:msxsl="urn:schemas-microsoft-com:xslt"
         >
-	<!-- ======================================================================================== -->
-
-	<msxsl:script language="C#" implements-prefix="ddue">
-    <msxsl:using namespace="System" />
-    <msxsl:using namespace="System.Globalization"/>
-    <msxsl:using namespace="System.Text.RegularExpressions" />
-    <![CDATA[
-			public static string ToUpper(string id) {
-        return id.Trim().ToUpper(System.Globalization.CultureInfo.InvariantCulture);
-			}
-      //Regular expression to check that a string is in a valid Guid representation.
-      private static Regex guidChecker = new Regex("[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}", RegexOptions.None);
-      
-      public static string GuidChecker(string id) {
-        return guidChecker.IsMatch(id).ToString();
-      }
-      
-      public static string CompareDate(string RTMReleaseDate, string changedHistoryDate) {
-       
-        CultureInfo culture = CultureInfo.InvariantCulture;
-        DateTime dt1 = DateTime.MinValue;
-        DateTime dt2 = DateTime.MinValue;
-        
-        try {
-          dt1 = DateTime.Parse(RTMReleaseDate, culture);
-        }
-        catch (FormatException) {
-          Console.WriteLine(string.Format("Error: CompareDate: Unable to convert '{0}' for culture {1}.", RTMReleaseDate, culture.Name));
-          return "notValidDate";
-        }
-        
-        try {
-          dt2 = DateTime.Parse(changedHistoryDate,culture);
-        }
-        catch (FormatException) {
-          Console.WriteLine(string.Format("Error: CompareDate: Unable to convert '{0}' for culture {1}.", changedHistoryDate, culture.Name));
-          return "notValidDate";
-        }
-       
-        if (DateTime.Compare(dt2, dt1) > 0) return changedHistoryDate;
-        else return RTMReleaseDate;
-      }
-
-      public static string IsValidDate(string dateString) {
-       
-        CultureInfo culture = CultureInfo.InvariantCulture;
-        DateTime dt = DateTime.MinValue;
-        
-        try {
-          dt = DateTime.Parse(dateString, culture);
-        }
-        catch (FormatException) {
-          Console.WriteLine(string.Format("Error: IsValidDate: Unable to convert '{0}' for culture {1}.", dateString, culture.Name));
-          return "false";
-        }
-        
-        return "true";
-      }
-
-    ]]>
-  </msxsl:script>
-
 	<!-- ============================================================================================
 	Global Variables
 	============================================================================================= -->
@@ -160,10 +98,10 @@
     <xsl:param name="p_autoGenerateLinks"
 							 select="false()" />
     <xsl:call-template name="t_putSubSection">
-      <xsl:with-param name="title">
+      <xsl:with-param name="p_title">
         <include item="{$p_headerGroup}"/>
       </xsl:with-param>
-      <xsl:with-param name="content">
+      <xsl:with-param name="p_content">
         <xsl:if test="boolean($p_autoGenerateLinks)">
           <xsl:call-template name="t_autogenSeeAlsoLinks"/>
         </xsl:if>

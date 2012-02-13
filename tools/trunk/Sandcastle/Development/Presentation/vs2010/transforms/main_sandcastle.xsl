@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-								version="1.1">
+								version="1.1"
+								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5">
 	<!-- ======================================================================================== -->
 
 	<xsl:import href="../../shared/transforms/utilities_bibliography.xsl"/>
@@ -24,6 +25,7 @@
 	Includes
 	============================================================================================= -->
 
+	<xsl:include href="xpath_functions.xsl" />
 	<xsl:include href="utilities_reference.xsl" />
 	<xsl:include href="globalTemplates.xsl"/>
 
@@ -186,10 +188,10 @@
 
 	<xsl:template match="value">
 		<xsl:call-template name="t_putSubSection">
-			<xsl:with-param name="title">
+			<xsl:with-param name="p_title">
 				<include item="fieldValueTitle" />
 			</xsl:with-param>
-			<xsl:with-param name="content">
+			<xsl:with-param name="p_content">
 				<xsl:apply-templates />
 			</xsl:with-param>
 		</xsl:call-template>
@@ -197,36 +199,30 @@
 
 	<xsl:template match="returns">
 		<xsl:call-template name="t_putSubSection">
-			<xsl:with-param name="title">
+			<xsl:with-param name="p_title">
 				<include item="methodValueTitle" />
 			</xsl:with-param>
-			<xsl:with-param name="content">
+			<xsl:with-param name="p_content">
 				<xsl:apply-templates />
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="remarks">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'remarks'"/>
-			<xsl:with-param name="title">
-				<include item="remarksTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'remarksTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:apply-templates />
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="example">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'example'"/>
-			<xsl:with-param name="title">
-				<include item="examplesTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="title"
+											select="'examplesTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:apply-templates />
 			</xsl:with-param>
 		</xsl:call-template>
@@ -263,12 +259,10 @@
 				</xsl:variable>
 
 				<xsl:call-template name="t_putSection">
-					<xsl:with-param name="toggleSwitch"
-													select="$sectionAddress"/>
-					<xsl:with-param name="title">
+					<xsl:with-param name="p_title">
 						<xsl:value-of select="$sectionTitle" />
 					</xsl:with-param>
-					<xsl:with-param name="content">
+					<xsl:with-param name="p_content">
 						<xsl:choose>
 							<xsl:when test="$sectionTitle != ''">
 								<xsl:apply-templates select="(child::h1 | child::h2 | child::h3 | child::h4 | child::h5 | child::h6)[1]/following-sibling::*" />
@@ -287,13 +281,10 @@
 
 	<xsl:template match="syntax">
 		<xsl:if test="count(*) > 0">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'syntax'" />
-				<xsl:with-param name="title">
-					<include item="syntaxTitle"/>
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'syntaxTitle'"/>
+				<xsl:with-param name="p_content">
 					<div id="syntaxCodeBlocks"
 							 class="code">
 						<xsl:call-template name="syntaxBlocks" />
@@ -307,10 +298,10 @@
 					<!-- usage note for extension methods -->
 					<xsl:if test="/document/reference/attributes/attribute/type[@api='T:System.Runtime.CompilerServices.ExtensionAttribute'] and boolean($g_apiSubGroup='method')">
 						<xsl:call-template name="t_putSubSection">
-							<xsl:with-param name="title">
+							<xsl:with-param name="p_title">
 								<include item="extensionUsageTitle" />
 							</xsl:with-param>
-							<xsl:with-param name="content">
+							<xsl:with-param name="p_content">
 								<include item="extensionUsageText">
 									<parameter>
 										<xsl:apply-templates select="/document/reference/parameters/parameter[1]/type"
@@ -348,13 +339,10 @@
 	</xsl:template>
 
 	<xsl:template match="templates">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'templates'" />
-			<xsl:with-param name="title">
-				<include item="templatesTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'templatesTitle'" />
+			<xsl:with-param name="p_content">
 				<dl>
 					<xsl:for-each select="template">
 						<xsl:variable name="templateName"
@@ -377,13 +365,10 @@
 
 	<xsl:template name="exceptions">
 		<xsl:if test="count(/document/comments/exception) &gt; 0">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'exceptions'"/>
-				<xsl:with-param name="title">
-					<include item="exceptionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'exceptionsTitle'" />
+				<xsl:with-param name="p_content">
 					<div class="tableSection">
 						<table>
 							<tr>
@@ -413,13 +398,10 @@
 	</xsl:template>
 
 	<xsl:template match="threadsafety">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'threadSafety'" />
-			<xsl:with-param name="title">
-				<include item="threadSafetyTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'threadSafetyTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:choose>
 					<xsl:when test="normalize-space(.)">
 						<xsl:apply-templates />
@@ -445,13 +427,10 @@
 
 	<xsl:template name="permissions">
 		<xsl:if test="count(/document/comments/permission) &gt; 0">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'permissions'" />
-				<xsl:with-param name="title">
-					<include item="permissionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'permissionsTitle'" />
+				<xsl:with-param name="p_content">
 					<div class="tableSection">
 						<table>
 							<tr>
@@ -498,13 +477,10 @@
 		<xsl:variable name="pure"
 									select="/document/comments/pure" />
 		<xsl:if test="$requires or $ensures or $ensuresOnThrow or $invariants or $setter or $getter or $pure">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'contracts'"/>
-				<xsl:with-param name="title">
-					<include item="contractsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'contractsTitle'" />
+				<xsl:with-param name="p_content">
 					<!--Purity-->
 					<xsl:if test="$pure">
 						<xsl:text>This method is pure.</xsl:text>
@@ -519,10 +495,10 @@
 							<xsl:variable name="getterEnsuresOnThrow"
 														select="$getter/ensuresOnThrow"/>
 							<xsl:call-template name="t_putSubSection">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="getterTitle" />
 								</xsl:with-param>
-								<xsl:with-param name="content">
+								<xsl:with-param name="p_content">
 									<xsl:if test="$getterRequires">
 										<xsl:call-template name="contractsTable">
 											<xsl:with-param name="title">
@@ -561,10 +537,10 @@
 							<xsl:variable name="setterEnsuresOnThrow"
 														select="$setter/ensuresOnThrow"/>
 							<xsl:call-template name="t_putSubSection">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="setterTitle" />
 								</xsl:with-param>
-								<xsl:with-param name="content">
+								<xsl:with-param name="p_content">
 									<xsl:if test="$setterRequires">
 										<xsl:call-template name="contractsTable">
 											<xsl:with-param name="title">
@@ -731,13 +707,10 @@
 
 	<xsl:template name="t_putSeeAlsoSection">
 		<xsl:if test="$g_hasSeeAlsoSection">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'seeAlso'" />
-				<xsl:with-param name="title">
-					<include item="relatedTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'relatedTopicsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:call-template name="t_autogenSeeAlsoLinks"/>
 					<xsl:for-each select="/document/comments//seealso | /document/reference/elements/element/overloads//seealso">
 						<div class="seeAlsoStyle">
@@ -871,21 +844,52 @@
 	============================================================================================= -->
 
 	<xsl:template match="see[@cref]">
+		<xsl:variable name="v_ref">
+			<xsl:choose>
+				<xsl:when test="contains(@cref,'#')">
+					<xsl:value-of select="substring-before(@cref,'#')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@cref"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
 		<xsl:choose>
-			<xsl:when test="normalize-space(.)">
-				<referenceLink target="{@cref}">
-					<xsl:value-of select="." />
-				</referenceLink>
+			<xsl:when test="normalize-space(translate($v_ref,'0123456789abcdefABCDEF-',''))">
+				<xsl:choose>
+					<xsl:when test="normalize-space(.)">
+						<referenceLink target="{@cref}"
+													 class="mtps-internal-link">
+							<xsl:apply-templates />
+						</referenceLink>
+					</xsl:when>
+					<xsl:otherwise>
+						<referenceLink target="{@cref}"
+													 class="mtps-internal-link"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<referenceLink target="{@cref}"/>
+				<xsl:choose>
+					<xsl:when test="normalize-space(.)">
+						<conceptualLink class="mtps-internal-link"
+														target="{@cref}">
+							<xsl:apply-templates />
+						</conceptualLink>
+					</xsl:when>
+					<xsl:otherwise>
+						<conceptualLink class="mtps-internal-link"
+														target="{@cref}"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="see[@href]">
 		<xsl:call-template name="hyperlink">
-			<xsl:with-param name="content"
+			<xsl:with-param name="p_content"
 											select="."/>
 			<xsl:with-param name="href"
 											select="@href"/>
@@ -897,29 +901,29 @@
 	</xsl:template>
 
 	<xsl:template match="see[@langword]">
-			<xsl:choose>
-				<xsl:when test="@langword='null' or @langword='Nothing' or @langword='nullptr'">
-					<xsl:call-template name="t_nullKeyword"/>
-				</xsl:when>
-				<xsl:when test="@langword='static' or @langword='Shared'">
-					<xsl:call-template name="t_staticKeyword"/>
-				</xsl:when>
-				<xsl:when test="@langword='virtual' or @langword='Overridable'">
-					<xsl:call-template name="t_virtualKeyword"/>
-				</xsl:when>
-				<xsl:when test="@langword='true' or @langword='True'">
-					<xsl:call-template name="t_trueKeyword"/>
-				</xsl:when>
-				<xsl:when test="@langword='false' or @langword='False'">
-					<xsl:call-template name="t_falseKeyword"/>
-				</xsl:when>
-				<xsl:when test="@langword='abstract'">
-					<xsl:call-template name="t_abstractKeyword"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="@langword" />
-				</xsl:otherwise>
-			</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="@langword='null' or @langword='Nothing' or @langword='nullptr'">
+				<xsl:call-template name="t_nullKeyword"/>
+			</xsl:when>
+			<xsl:when test="@langword='static' or @langword='Shared'">
+				<xsl:call-template name="t_staticKeyword"/>
+			</xsl:when>
+			<xsl:when test="@langword='virtual' or @langword='Overridable'">
+				<xsl:call-template name="t_virtualKeyword"/>
+			</xsl:when>
+			<xsl:when test="@langword='true' or @langword='True'">
+				<xsl:call-template name="t_trueKeyword"/>
+			</xsl:when>
+			<xsl:when test="@langword='false' or @langword='False'">
+				<xsl:call-template name="t_falseKeyword"/>
+			</xsl:when>
+			<xsl:when test="@langword='abstract'">
+				<xsl:call-template name="t_abstractKeyword"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="@langword" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="seealso[@href]">
@@ -927,7 +931,7 @@
 							 select="false()" />
 		<xsl:if test="$displaySeeAlso">
 			<xsl:call-template name="hyperlink">
-				<xsl:with-param name="content"
+				<xsl:with-param name="p_content"
 												select="."/>
 				<xsl:with-param name="href"
 												select="@href"/>
@@ -961,21 +965,11 @@
 	<!-- ======================================================================================== -->
 
 	<xsl:template name="hyperlink">
-		<xsl:param name="content"/>
+		<xsl:param name="p_content"/>
 		<xsl:param name="href"/>
 		<xsl:param name="target"/>
 		<xsl:param name="alt"/>
 
-		<xsl:if test="starts-with($href,'http:')">
-			<img class="OH_offlineIcon"
-					 alt="Online"
-					 title="Online">
-				<includeAttribute name="src"
-													item="iconPath">
-					<parameter>online_icon.gif</parameter>
-				</includeAttribute>
-			</img>
-		</xsl:if>
 		<a>
 			<xsl:choose>
 				<xsl:when test="starts-with($href,'ms.help?')">
@@ -1244,13 +1238,10 @@
 
 	<xsl:template name="bibliography">
 		<xsl:if test="$g_hasCitations">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'cite'" />
-				<xsl:with-param name="title">
-					<include item="bibliographyTitle"/>
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'bibliographyTitle'"/>
+				<xsl:with-param name="p_content">
 					<xsl:call-template name="autogenBibliographyLinks"/>
 				</xsl:with-param>
 			</xsl:call-template>

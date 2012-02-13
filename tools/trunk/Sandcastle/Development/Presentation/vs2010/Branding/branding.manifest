@@ -109,9 +109,11 @@
 	<ItemGroup Label="pages">
 		<Content Include="contentnotfound-??-??.htm">
 			<SubType>text/html</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="help-??-??.htm">
 			<SubType>text/html</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 

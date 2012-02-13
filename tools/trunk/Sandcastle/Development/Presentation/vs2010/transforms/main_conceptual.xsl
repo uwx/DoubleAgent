@@ -32,6 +32,7 @@
 	Includes
 	============================================================================================= -->
 
+	<xsl:include href="xpath_functions.xsl" />
 	<xsl:include href="utilities_dduexml.xsl" />
 	<xsl:include href="seealso_dduexml.xsl" />
 	<xsl:include href="conceptualMetadataHelp30.xsl"/>
@@ -179,13 +180,10 @@
 
 	<xsl:template match="ddue:parameters">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'parameters'"/>
-				<xsl:with-param name="title">
-					<include item="parametersTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'parametersTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -196,25 +194,19 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:choose>
 				<xsl:when test="(normalize-space(ddue:content)='') and ddue:sections/ddue:section[ddue:title='Property Value']">
-					<xsl:call-template name="t_putSection">
-						<xsl:with-param name="toggleSwitch"
-														select="'returnValue'"/>
-						<xsl:with-param name="title">
-							<include item="propertyValueTitle" />
-						</xsl:with-param>
-						<xsl:with-param name="content">
+					<xsl:call-template name="t_putSectionInclude">
+						<xsl:with-param name="p_titleInclude"
+														select="'propertyValueTitle'" />
+						<xsl:with-param name="p_content">
 							<xsl:apply-templates select="ddue:sections/ddue:section[ddue:title='Property Value']/*" />
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:call-template name="t_putSection">
-						<xsl:with-param name="toggleSwitch"
-														select="'returnValue'"/>
-						<xsl:with-param name="title">
-							<include item="returnValueTitle" />
-						</xsl:with-param>
-						<xsl:with-param name="content">
+					<xsl:call-template name="t_putSectionInclude">
+						<xsl:with-param name="p_titleInclude"
+														select="'returnValueTitle'" />
+						<xsl:with-param name="p_content">
 							<xsl:apply-templates />
 						</xsl:with-param>
 					</xsl:call-template>
@@ -225,13 +217,10 @@
 
 	<xsl:template match="ddue:exceptions">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'ddueExceptions'"/>
-				<xsl:with-param name="title">
-					<include item="exceptionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'exceptionsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -240,13 +229,10 @@
 
 	<xsl:template match="ddue:relatedSections">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'relatedSections'"/>
-				<xsl:with-param name="title">
-					<include item="relatedSectionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'relatedSectionsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -255,13 +241,10 @@
 
 	<xsl:template match="ddue:relatedTopics">
 		<xsl:if test="$g_hasSeeAlsoSection">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'seeAlso'"/>
-				<xsl:with-param name="title">
-					<include item="relatedTopicsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'relatedTopicsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates select="/document/topic/*/ddue:relatedTopics"
 															 mode="seeAlso" />
 				</xsl:with-param>
@@ -272,13 +255,10 @@
 	<xsl:template match="ddue:codeExample">
 		<!-- create Example section for the first codeExample node -->
 		<xsl:if test="not(preceding-sibling::ddue:codeExample) and ../ddue:codeExample[normalize-space(.)!='']">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'example'"/>
-				<xsl:with-param name="title">
-					<include item="Example" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'Example'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 					<!-- if there are additional codeExample nodes, put them inside this section -->
 					<xsl:for-each select="following-sibling::ddue:codeExample">
@@ -499,13 +479,10 @@
 
 	<xsl:template match="ddue:bibliography">
 		<xsl:if test="$g_hasCitations">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'cite'" />
-				<xsl:with-param name="title">
-					<include item="bibliographyTitle"/>
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'bibliographyTitle'"/>
+				<xsl:with-param name="p_content">
 					<xsl:call-template name="autogenBibliographyLinks"/>
 				</xsl:with-param>
 			</xsl:call-template>

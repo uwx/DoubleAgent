@@ -31,6 +31,8 @@
 // 1.9.0.0  06/30/2010  EFW  Reworked TOC handling to support parenting of
 //                           API content to a conceptual topic for all formats.
 // 1.9.3.4  02/08/2012  DBF  Added copy of presentation style branding content.
+// 1.9.3.4  02/11/2012  DBF  Added code to ignore branding XSL files when
+//							 compiling the list of help files (HelpProjectFileList).
 //=============================================================================
 
 using System;
@@ -561,6 +563,11 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				if (!encode)
 				{
 					filename = checkName = name.Replace (folder, String.Empty);
+
+					//DBF Added check to ignore XSL transform files.
+					if (checkName.EndsWith (".xsl", StringComparison.OrdinalIgnoreCase) ||
+					  checkName.EndsWith (".xslt", StringComparison.OrdinalIgnoreCase))
+					continue;
 
 					if (checkName.EndsWith (".htm", StringComparison.OrdinalIgnoreCase) ||
 					  checkName.EndsWith (".html", StringComparison.OrdinalIgnoreCase))

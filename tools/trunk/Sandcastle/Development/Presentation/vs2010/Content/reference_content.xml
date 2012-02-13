@@ -142,7 +142,7 @@
 	<item id="familyTitle">Inheritance Hierarchy</item>
 	<item id="versionsTitle">Version Information</item>
 	<item id="platformsTitle">Platforms</item>
-  <item id="relatedTitle">See Also</item>
+  <item id="relatedTopicsTitle">See Also</item>
   <item id="ExtensionUsageTitle">Usage Note</item>
   <item id="ExtensionUsageText">In Visual Basic and C#, you can call this method as an instance method on any object of type {0}. When you use instance method syntax to call this method, omit the first parameter. For more information, see <conceptualLink target="b8020aae-374d-46a9-bcb7-8cc2390b93b6" /> or <conceptualLink target="175ce3ff-9bbf-4e64-8421-faeb81a0bb51" />.</item>
 

@@ -11,7 +11,26 @@
 
 	<xsl:import href="Dev10body.xslt"/>
 
-	<!-- pass all unbranded content through transform-->
+	<!-- ============================================================================================
+	Generic transforms (see Identity.xslt for others)
+	============================================================================================= -->
+
+	<!-- strip style attributes by default -->
+	<xsl:template match="@style"
+								name="style"/>
+
+	<!-- pass through styles for p and h elements -->
+	<xsl:template match="//xhtml:p[@style]|xhtml:h1[@style]|xhtml:h2[@style]|xhtml:h3[@style]|xhtml:h4[@style]|xhtml:h5[@style]|xhtml:h6[@style]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="style">
+				<xsl:value-of select="@style"/>
+			</xsl:attribute>
+			<xsl:apply-templates/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- pass all unbranded content through transform -->
 	<xsl:template match="*|/"
 								mode="self-branding">
 		<xsl:copy>
@@ -22,20 +41,21 @@
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates mode="self-branding"/>
-			<!--Bug Fix-->
-			<!--<xsl:if test="not(*) and not(text())">
-				<xsl:value-of select="' '"/>
-			</xsl:if>-->
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- ============================================================================================
+	Specific self-branding transforms
+	============================================================================================= -->
+
+	<!-- use the default body transform -->
 	<xsl:template match="xhtml:body"
 								mode="self-branding"
 								name="body-self-branding">
 		<xsl:call-template name="body"/>
-		<!-- loses styles -->
 	</xsl:template>
 
+	<!-- redirect image sources to the appropriate path -->
 	<xsl:template match="xhtml:img"
 								mode="self-branding">
 		<xsl:copy>

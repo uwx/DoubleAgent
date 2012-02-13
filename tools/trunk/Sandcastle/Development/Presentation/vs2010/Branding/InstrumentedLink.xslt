@@ -47,10 +47,9 @@
 						<xsl:when test="$launchingApp='VS'">
 							<xsl:choose>
 								<xsl:when test="@href='ms-xhelp:///?id=helponhelp.htm'">
-									<xsl:call-template name="ms-xhelp">
-										<xsl:with-param name="ref"
-																		select="$contentnotfound"/>
-									</xsl:call-template>
+									<span color="red">
+										<xsl:value-of select="@href"/><xsl:text>&#160;is not a valid link.</xsl:text>
+									</span>
 								</xsl:when>
 								<xsl:when test="@href='install'">
 									<xsl:value-of select="concat('ms-xhelp:///?install=2','&amp;product=', $product, '&amp;version=', $version,'&amp;locale=', $locale)"/>
@@ -70,22 +69,22 @@
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="@href='ms-xhelp:///?id=helponhelp.htm'">
-									<xsl:call-template name="ms-xhelp">
-										<xsl:with-param name="ref"
-																		select="$contentnotfound"/>
-									</xsl:call-template>
+									<span color="red">
+										<xsl:value-of select="@href"/>
+										<xsl:text>&#160;is not a valid link.</xsl:text>
+									</span>
 								</xsl:when>
 								<xsl:when test="@href='install'">
-									<xsl:call-template name="ms-xhelp">
-										<xsl:with-param name="ref"
-																		select="$contentnotfound"/>
-									</xsl:call-template>
+									<span color="red">
+										<xsl:value-of select="@href"/>
+										<xsl:text>&#160;is not a valid link.</xsl:text>
+									</span>
 								</xsl:when>
 								<xsl:when test="@href='install_setting'">
-									<xsl:call-template name="ms-xhelp">
-										<xsl:with-param name="ref"
-																		select="$contentnotfound"/>
-									</xsl:call-template>
+									<span color="red">
+										<xsl:value-of select="@href"/>
+										<xsl:text>&#160;is not a valid link.</xsl:text>
+									</span>
 								</xsl:when>
 								<xsl:when test="@class='mtps-external-link' or starts-with(@href,'#') or starts-with(@href,'http:') or starts-with(@href,'https') or starts-with(@href,'www') or starts-with(@href,'mailto')">
 									<!--external link or anchor-->

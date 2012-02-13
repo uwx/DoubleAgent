@@ -20,8 +20,8 @@
 				<xsl:attribute name="class">OH_regiontitle</xsl:attribute>
 				<!-- Fix to allow section titles to contain HTML codes -->
 				<xsl:choose>
-					<xsl:when test="xhtml:span[@class='OH_regiontitle']">
-						<xsl:apply-templates select="xhtml:span[@class='OH_regiontitle']/child::node()"/>
+					<xsl:when test="xhtml:xml/xhtml:string[@id='Title']">
+						<xsl:apply-templates select="xhtml:xml/xhtml:string[@id='Title']/child::node()"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="@Title"/>
@@ -32,7 +32,7 @@
 									 namespace="{$xhtml}">
 				<xsl:attribute name="class">OH_CollapsibleArea_HrDiv</xsl:attribute>
 				<xsl:element name="hr"
-									 namespace="{$xhtml}">
+										 namespace="{$xhtml}">
 					<xsl:attribute name="class">OH_CollapsibleArea_Hr</xsl:attribute>
 				</xsl:element>
 				<xsl:value-of select="''"/>
@@ -47,7 +47,7 @@
 	</xsl:template>
 
 	<!-- Fix to allow section titles to contain HTML codes -->
-	<xsl:template match="mtps:CollapsibleArea/xhtml:span[@class='OH_regiontitle']">
+	<xsl:template match="mtps:CollapsibleArea/xhtml:xml[xhtml:string[@id='Title']]">
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -13,57 +13,40 @@
 	The footer is composed of values specified in the document metadata
 	============================================================================================= -->
 	<xsl:variable name="ft_copyrightText">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyrightText']/@content"/>
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingCopyrightText']"/>
 	</xsl:variable>
 	<xsl:variable name="ft_copyrightLink">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyrightLink']/@content"/>
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingCopyrightLink']"/>
 	</xsl:variable>
 	<xsl:variable name="ft_copyrightInfo"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingCopyrightInfo']/child::node()"/>
+								select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingCopyrightInfo']/child::node()"/>
 	<xsl:variable name="ft_footerText"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFooterText']/child::node()"/>
+								select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFooterText']/child::node()"/>
 	<xsl:variable name="ft_feedbackSubject">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackSubject']/@content"/>
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackSubject']"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackTopic">
 		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackAlias">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackAlias']/@content"/>
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:xml/xhtml:string[@id='BrandingFeedbackAlias']"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackText"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackText']/child::node()"/>
+								select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackText']/child::node()"/>
 	<xsl:variable name="ft_feedbackFooterTo">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterTo']/@content"/>
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackFooterTo']"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackFooterText"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterText']/child::node()"/>
+								select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackFooterText']/child::node()"/>
 	<xsl:variable name="ft_feedbackFooterTextTo"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackFooterTextTo']/child::node()"/>
+								select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackFooterTextTo']/child::node()"/>
 	<xsl:variable name="ft_feedbackBody">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='BrandingFeedbackBody']/child::text()"
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackBody']"
 									disable-output-escaping="yes"/>
 	</xsl:variable>
 
 	<xsl:variable name="ft_mailtoTopic"
 								select="concat($ft_feedbackSubject,' ',$ft_feedbackTopic,' ',$version,' ',$locale)" />
-
-	<!-- ============================================================================================
-	Remove the metadata used above so it won't show up in the document.
-	============================================================================================= -->
-
-	<xsl:template match="xhtml:meta[@name='BrandingCopyrightInfo']" >
-	</xsl:template>
-	<xsl:template match="xhtml:meta[@name='BrandingFooterText']" >
-	</xsl:template>
-	<xsl:template match="xhtml:meta[@name='BrandingFeedbackText']" >
-	</xsl:template>
-	<xsl:template match="xhtml:meta[@name='BrandingFeedbackFooterText']" >
-	</xsl:template>
-	<xsl:template match="xhtml:meta[@name='BrandingFeedbackFooterTextTo']" >
-	</xsl:template>
-	<xsl:template match="xhtml:meta[@name='BrandingFeedbackBody']" >
-	</xsl:template>
 
 	<!-- ======================================================================================== -->
 

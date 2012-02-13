@@ -40,7 +40,8 @@
 // 1.9.0.0  06/06/2010  EFW  Replaced outputPath element with an outputPaths
 //                           element that supports multiple help file format
 //                           output locations.
-// 1.9.3.4  02/11/2011  DBF  Fixed a crash while adding the logo.
+// 1.9.3.4  02/11/2011  DBF  Fixed the logo insertion to remove some assumptions 
+//							 and so avoid crashes.
 //=============================================================================
 
 using System;
@@ -565,8 +566,8 @@ namespace SandcastleBuilder.Components
 
 							attr = document.CreateAttribute ("colspan");
 							attr.Value = "2";
-							//DBF Bug fix - changed	div.ChildNodes[4] to div.ChildNodes[0]
-							div.ChildNodes[0].ChildNodes[0].Attributes.Append (attr);
+							//DBF Fix - changed div.ChildNodes[4] to div.ChildNodes[div.ChildNodes.Count-1]
+							div.ChildNodes[div.ChildNodes.Count-1].ChildNodes[0].Attributes.Append (attr);
 						}
 						else
 						{
@@ -629,7 +630,7 @@ namespace SandcastleBuilder.Components
 
 							attr = document.CreateAttribute ("colspan");
 							attr.Value = "2";
-							//DBF Bug fix - changed	div.ChildNodes[3] to div.ChildNodes[div.ChildNodes.Count-1]
+							//DBF Fix - changed div.ChildNodes[3] to div.ChildNodes[div.ChildNodes.Count-1]
 							div.ChildNodes[div.ChildNodes.Count - 1].ChildNodes[0].Attributes.Append (attr);
 						}
 						else

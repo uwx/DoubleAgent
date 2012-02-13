@@ -416,13 +416,10 @@
 								mode="root">
 		<xsl:if test="count(element) > 0">
 
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'namespaces'"/>
-				<xsl:with-param name="title">
-					<include item="namespacesTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'namespacesTitle'" />
+				<xsl:with-param name="p_content">
 					<table class="members"
 								 id="memberList"
 								 frame="lhs"
@@ -489,13 +486,10 @@
 								mode="enumeration">
 		<div id="enumerationSection">
 			<xsl:if test="count(element) > 0">
-				<xsl:call-template name="t_putSection">
-					<xsl:with-param name="toggleSwitch"
-													select="'members'"/>
-					<xsl:with-param name="title">
-						<include item="enumMembersTitle" />
-					</xsl:with-param>
-					<xsl:with-param name="content">
+				<xsl:call-template name="t_putSectionInclude">
+					<xsl:with-param name="p_titleInclude"
+													select="'enumMembersTitle'" />
+					<xsl:with-param name="p_content">
 						<table class="members"
 									 id="memberList"
 									 frame="lhs"
@@ -635,13 +629,10 @@
 	<xsl:template match="elements"
 								mode="derivedType">
 		<xsl:if test="count(element) > 0">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'DerivedClasses'"/>
-				<xsl:with-param name="title">
-					<include item="derivedClasses" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'derivedClasses'" />
+				<xsl:with-param name="p_content">
 					<table class="members"
 								 id="memberList"
 								 frame="lhs"
@@ -701,13 +692,10 @@
 
 		<xsl:variable name="header"
 									select="concat($p_listSubgroup, 'TypesFilterLabel')"/>
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="$p_listSubgroup"/>
-			<xsl:with-param name="title">
-				<include item="{$header}" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="$header" />
+			<xsl:with-param name="p_content">
 				<xsl:call-template name="t_putNamespaceList">
 					<xsl:with-param name="p_listSubgroup"
 													select="$p_listSubgroup" />
@@ -752,17 +740,15 @@
 					<xsl:otherwise>exposedMembersTableText</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<p>
-				<include item="{$introTextItemId}">
-					<parameter>
-						<referenceLink target="{$g_topicTypeId}" />
-					</parameter>
-					<parameter>
-						<xsl:value-of select="$g_apiTopicSubGroup"/>
-						<xsl:text>Subgroup</xsl:text>
-					</parameter>
-				</include>
-			</p>
+			<include item="{$introTextItemId}">
+				<parameter>
+					<referenceLink target="{$g_topicTypeId}" />
+				</parameter>
+				<parameter>
+					<xsl:value-of select="$g_apiTopicSubGroup"/>
+					<xsl:text>Subgroup</xsl:text>
+				</parameter>
+			</include>
 		</xsl:if>
 	</xsl:template>
 
@@ -778,15 +764,12 @@
 			<xsl:value-of select="concat($p_headerGroup, 'Table')"/>
 		</xsl:variable>
 
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
 											select="$header" />
-			<xsl:with-param name="title">
-				<include item="{$header}" />
-			</xsl:with-param>
-			<xsl:with-param name="toplink"
+			<xsl:with-param name="p_toplink"
 											select="true()"/>
-			<xsl:with-param name="content">
+			<xsl:with-param name="p_content">
 				<table id="memberList"
 							 class="members"
 							 frame="lhs"
@@ -1467,13 +1450,10 @@
 
 	<xsl:template match="family">
 
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'family'"/>
-			<xsl:with-param name="title">
-				<include item="familyTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'familyTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:variable name="ancestorCount"
 											select="count(ancestors/*)" />
 				<xsl:variable name="childCount"
@@ -1548,10 +1528,10 @@
 	<xsl:template match="implements">
 		<xsl:if test="member">
 			<xsl:call-template name="t_putSubSection">
-				<xsl:with-param name="title">
+				<xsl:with-param name="p_title">
 					<include item="implementsTitle" />
 				</xsl:with-param>
-				<xsl:with-param name="content">
+				<xsl:with-param name="p_content">
 					<xsl:for-each select="member">
 						<referenceLink target="{@api}"
 													 qualified="true" />
@@ -1808,10 +1788,10 @@
 	<xsl:template match="parameters">
 		<div id="parameters">
 			<xsl:call-template name="t_putSubSection">
-				<xsl:with-param name="title">
+				<xsl:with-param name="p_title">
 					<include item="parametersTitle"/>
 				</xsl:with-param>
-				<xsl:with-param name="content">
+				<xsl:with-param name="p_content">
 					<xsl:for-each select="parameter">
 
 						<!-- Use the reflection-generated parameter name when non-empty, otherwise use the authored parameter name. -->
@@ -2025,13 +2005,10 @@
 	============================================================================================= -->
 
 	<xsl:template match="platforms[platform]">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'platformsTitle'"/>
-			<xsl:with-param name="title">
-				<include item="platformsTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'platformsTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:choose>
 					<xsl:when test="/document/reference/versions/versions[@name='silverlight']//version">
 						<p>
@@ -2064,13 +2041,10 @@
 
 	<xsl:template match="versions">
 		<xsl:if test="$omitVersionInformation != 'true'">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'versionsTitle'"/>
-				<xsl:with-param name="title">
-					<include item="versionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'versionsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:call-template name="t_processVersions" />
 				</xsl:with-param>
 			</xsl:call-template>

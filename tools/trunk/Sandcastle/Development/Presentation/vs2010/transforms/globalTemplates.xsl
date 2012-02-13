@@ -83,31 +83,6 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-	<msxsl:script language="C#"
-								implements-prefix="ddue">
-		<msxsl:assembly name="System" />
-		<msxsl:using namespace="System" />
-		<msxsl:assembly name="System.Web" />
-		<msxsl:using namespace="System.Web" />
-		<![CDATA[
-        public string GetUrlEncode(string input)
-        {
-            return HttpUtility.UrlEncode(input);
-        }
-        public string GetUrlDecode(string input)
-        {
-            return HttpUtility.UrlDecode(input);
-        }
-        public string GetHtmlEncode(string input)
-        {
-            return HttpUtility.HtmlEncode(input);
-        }
-        public string GetHtmlDecode(string input)
-        {
-            return HttpUtility.HtmlDecode(input);
-        }
-    ]]>
-	</msxsl:script>
 
 	<!-- ============================================================================================
 	LanguageSpecific text
@@ -239,60 +214,54 @@
 	============================================================================================= -->
 
 	<xsl:template name="t_insertMetadata">
-		<meta name="BrandingProductTitle">
-			<includeAttribute name="content"
-												item="productTitle"/>
-		</meta>
+		<xsl:element name="xml">
+			<xsl:attribute name="id">BrandingData</xsl:attribute>
+			<string id="BrandingProductTitle">
+				<include item="productTitle"/>
+			</string>
 
-		<meta name="BrandingCopyrightText">
-			<includeAttribute name="content"
-												item="copyright_text"/>
-		</meta>
-		<meta name="BrandingCopyrightLink">
-			<includeAttribute name="content"
-												item="copyright_link"/>
-		</meta>
-		<meta name="BrandingCopyrightInfo">
+			<string id="BrandingCopyrightText">
+				<include item="copyright_text"/>
+			</string>
+			<string id="BrandingCopyrightLink">
+				<include item="copyright_link"/>
+			</string>
+			<string id="BrandingCopyrightInfo">
 				<include item="copyright_info"/>
-		</meta>
+			</string>
+			<string id="BrandingHeader">
+				<include item="nsrTitle">
+					<parameter>
+						<xsl:call-template name="t_topicTitleDecorated"/>
+					</parameter>
+				</include>
+			</string>
 
-		<meta name="BrandingHeader">
-			<includeAttribute name="content"
-												item="nsrTitle">
-				<parameter>
-					<xsl:call-template name="t_topicTitleDecorated"/>
-				</parameter>
-			</includeAttribute>
-		</meta>
-
-		<meta name="BrandingFooterText">
+			<string id="BrandingFooterText">
 				<include item="footer_text"/>
-		</meta>
-
-		<meta name="BrandingFeedbackAlias">
-			<includeAttribute name="content"
-												item="fb_alias"/>
-		</meta>
-		<meta name="BrandingFeedbackSubject">
-			<includeAttribute name="content"
-												item="fb_product"/>
-		</meta>
-		<meta name="BrandingFeedbackText">
+			</string>
+			<string id="BrandingFeedbackAlias">
+				<include item="fb_alias"/>
+			</string>
+			<string id="BrandingFeedbackSubject">
+				<include item="fb_product"/>
+			</string>
+			<string id="BrandingFeedbackText">
 				<include item="fb_text"/>
-		</meta>
-		<meta name="BrandingFeedbackFooterTo">
-			<includeAttribute name="content"
-												item="fb_footer_to"/>
-		</meta>
-		<meta name="BrandingFeedbackFooterText">
+			</string>
+			<string id="BrandingFeedbackFooterTo">
+				<include item="fb_footer_to"/>
+			</string>
+			<string id="BrandingFeedbackFooterText">
 				<include item="fb_footer_text"/>
-		</meta>
-		<meta name="BrandingFeedbackFooterTextTo">
+			</string>
+			<string id="BrandingFeedbackFooterTextTo">
 				<include item="fb_footer_text_to"/>
-		</meta>
-		<meta name="BrandingFeedbackBody">
-			<include item="fb_body"/>
-		</meta>
+			</string>
+			<string id="BrandingFeedbackBody">
+				<include item="fb_body"/>
+			</string>
+		</xsl:element>
 	</xsl:template>
 
 	<xsl:template name="t_insertNoIndexNoFollow">
@@ -432,34 +401,60 @@
 	============================================================================================= -->
 
 	<xsl:template name="t_putSection">
-		<xsl:param name="toggleSwitch" />
-		<xsl:param name="title" />
-		<xsl:param name="content" />
-		<xsl:param name="toplink"
+		<xsl:param name="p_title" />
+		<xsl:param name="p_content" />
+		<xsl:param name="p_toplink"
 							 select="false()" />
 
-		<!-- The toggleSwitch parameter is currently ignored -->
 		<mtps:CollapsibleArea>
 			<xsl:attribute name="Title">
-				<xsl:value-of select="$title" />
+				<xsl:value-of select="$p_title" />
 			</xsl:attribute>
-		<xsl:copy-of select="$content" />
-		<xsl:if test="boolean($toplink)">
-			<a href="#mainBody">
-				<include item="top"/>
-			</a>
-		</xsl:if>
+			<xsl:element name="xml">
+				<string id="Title">
+					<xsl:copy-of select="$p_title" />
+				</string>
+			</xsl:element>
+			<xsl:copy-of select="$p_content" />
+			<xsl:if test="boolean($p_toplink)">
+				<a href="#mainBody">
+					<include item="top"/>
+				</a>
+			</xsl:if>
+		</mtps:CollapsibleArea>
+	</xsl:template>
+
+	<xsl:template name="t_putSectionInclude">
+		<xsl:param name="p_titleInclude" />
+		<xsl:param name="p_content" />
+		<xsl:param name="p_toplink"
+							 select="false()" />
+
+		<mtps:CollapsibleArea>
+			<includeAttribute name="Title"
+												item="{$p_titleInclude}"/>
+			<xsl:element name="xml">
+				<string id="Title">
+					<include item="{$p_titleInclude}"/>
+				</string>
+			</xsl:element>
+			<xsl:copy-of select="$p_content" />
+			<xsl:if test="boolean($p_toplink)">
+				<a href="#mainBody">
+					<include item="top"/>
+				</a>
+			</xsl:if>
 		</mtps:CollapsibleArea>
 	</xsl:template>
 
 	<xsl:template name="t_putSubSection">
-		<xsl:param name="title" />
-		<xsl:param name="content" />
+		<xsl:param name="p_title" />
+		<xsl:param name="p_content" />
 
 		<h4 class="subHeading">
-			<xsl:copy-of select="$title" />
+			<xsl:copy-of select="$p_title" />
 		</h4>
-		<xsl:copy-of select="$content" />
+		<xsl:copy-of select="$p_content" />
 	</xsl:template>
 
 	<!-- ============================================================================================

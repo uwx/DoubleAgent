@@ -24,6 +24,10 @@
 							indent="no"
 							omit-xml-declaration="yes"/>
 
+	<!-- ============================================================================================
+	Parameters
+	============================================================================================= -->
+
 	<xsl:param name="downscale-browser"
 						 select="false()"/>
 	<xsl:param name="catalogProductFamily"
@@ -38,6 +42,10 @@
 						 select="'dev10.mshc'"/>
 	<xsl:param name="content-path"
 						 select="'./'"/>
+
+	<!-- ============================================================================================
+	Global variables
+	============================================================================================= -->
 
 	<xsl:variable name="version">
 		<xsl:choose>
@@ -77,12 +85,17 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:variable name="actuallocale"
+								select="branding:GetLocale($locale)"></xsl:variable>
 
-	<xsl:variable name="js-file"
-								select="'branding.js'"/>
-	<xsl:variable name="css-file"
-								select="concat('branding-',branding:GetLocale($locale),'.css')" />
-
+	<xsl:variable name="topic-id"
+								select="/xhtml:html/xhtml:head/xhtml:meta[@http-equiv='Content-Location']/@content" />
+	<xsl:variable name="topic-id2">
+		<xsl:value-of select="substring-after($topic-id,'/content/')"/>
+	</xsl:variable>
+	<xsl:variable name="topic-id1">
+		<xsl:value-of select="substring-before($topic-id2,'/')"/>
+	</xsl:variable>
 	<xsl:variable name="title">
 		<xsl:choose>
 			<xsl:when test="/xhtml:html/xhtml:head/xhtml:meta[@name='Title']/@content">
@@ -93,42 +106,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="topic-id"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@http-equiv='Content-Location']/@content" />
-	<xsl:variable name="self-branded">
-		<xsl:choose>
-			<xsl:when test="/xhtml:html/xhtml:head/xhtml:meta[@name='SelfBranded']/@content">
-				<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='SelfBranded']/@content"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='Microsoft.Help.SelfBranded']/@content"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:variable name="sp1-error-page"
-								select="/xhtml:html/xhtml:head/xhtml:meta[@name='SP1ErrorPage']/@content"></xsl:variable>
-	<xsl:variable name="error-page"
-								select="/xhtml:html/xhtml:body/xhtml:errorLink"/>
-	<xsl:variable name="f1-error-page"
-								select="/xhtml:html/xhtml:body/xhtml:rss/opensearch:totalResults">
-	</xsl:variable>
-	<xsl:variable name="mtps"
-								select="'http://msdn2.microsoft.com/mtps'"/>
-	<xsl:variable name="collapse-all-class"
-								select="'FH-Collapse-All'"/>
-	<xsl:variable name="squote">'</xsl:variable>
-	<xsl:variable name="BrandingPath">
-		<xsl:choose>
-			<xsl:when test="$launchingApp='VS'">
-				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:variable name="xhtml"
-								select="'http://www.w3.org/1999/xhtml'"/>
 	<xsl:variable name="title1">
 		<xsl:choose>
 			<xsl:when test="contains($title,'#')">
@@ -139,33 +116,65 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="topic-id2">
-		<xsl:value-of select="substring-after($topic-id,'/content/')"/>
+
+	<xsl:variable name="self-branded">
+		<xsl:choose>
+			<xsl:when test="/xhtml:html/xhtml:head/xhtml:meta[@name='SelfBranded']/@content">
+				<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='SelfBranded']/@content"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='Microsoft.Help.SelfBranded']/@content"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="topic-id1">
-		<xsl:value-of select="substring-before($topic-id2,'/')"/>
+
+	<xsl:variable name="BrandingPath">
+		<xsl:choose>
+			<xsl:when test="$launchingApp='VS'">
+				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="actuallocale"
-								select="branding:GetLocale($locale)"></xsl:variable>
+	<xsl:variable name="js-file"
+								select="'branding.js'"/>
+	<xsl:variable name="css-file"
+								select="concat('branding-',branding:GetLocale($locale),'.css')" />
+	<xsl:variable name="contentFolder"
+								select="branding:GetDirectoryName($content-path)"/>
+
+	<xsl:variable name="collapse-all-class"
+								select="'FH-Collapse-All'"/>
+	<xsl:variable name="squote">'</xsl:variable>
+
+	<xsl:variable name="mtps"
+								select="'http://msdn2.microsoft.com/mtps'"/>
+	<xsl:variable name="xhtml"
+								select="'http://www.w3.org/1999/xhtml'"/>
+
+	<!-- The following variables are not used for self-branded content but are retained to ensure all references are resolved -->
+	<xsl:variable name="sp1-error-page"
+								select="/xhtml:html/xhtml:head/xhtml:meta[@name='SP1ErrorPage']/@content"></xsl:variable>
+	<xsl:variable name="error-page"
+								select="/xhtml:html/xhtml:body/xhtml:errorLink"/>
+	<xsl:variable name="f1-error-page"
+								select="/xhtml:html/xhtml:body/xhtml:rss/opensearch:totalResults">
+	</xsl:variable>
 	<xsl:variable name="localehelp"
 								select="concat('help-',$actuallocale,'.htm')" />
 	<xsl:variable name="contentnotfound"
 								select="concat('contentnotfound-',$actuallocale,'.htm')" />
-	<xsl:variable name="contentFolder"
-								select="branding:GetDirectoryName($content-path)"/>
 
-	<!-- MAIN ENTRY POINT-->
+	<!-- ============================================================================================
+	MAIN ENTRY POINT
+	============================================================================================= -->
 
 	<xsl:template match="xhtml:html"
 								name="html">
 		<xsl:copy>
 			<xsl:choose>
-				<xsl:when test="$error-page">
-					<!--error page-->
-					<xsl:apply-templates select="xhtml:head"/>
-					<xsl:apply-templates select="xhtml:body"
-															 mode="error"/>
-				</xsl:when>
 				<xsl:when test="not($self-branded) or $self-branded = 'true'">
 					<!--no branding required-->
 					<xsl:apply-templates select="xhtml:head"
@@ -186,7 +195,9 @@
 	<xsl:template match="mtps:MemberLink"
 								name="branding-MemberLink"/>
 
-	<!-- Helper templates-->
+	<!-- ============================================================================================
+	Helper templates
+	============================================================================================= -->
 
 	<xsl:template name="ms-xhelp" >
 		<xsl:param name="ref"
@@ -218,9 +229,7 @@
 		<xsl:value-of select="concat(' ', local-name(),'=&quot;', ., '&quot;')" />
 	</xsl:template>
 
-	<!-- copies standard attributes from element
-  It adds a class attribute always, but appends value of existing class attribute
-  -->
+	<!-- copies standard attributes from element. It adds a class attribute always, but appends value of existing class attribute -->
 	<xsl:template name="copy-std-atrs">
 		<xsl:param name="target"
 							 select="." />
@@ -235,8 +244,11 @@
 		</xsl:attribute>
 	</xsl:template>
 
-	<xsl:template match="@style"
-								name="style"/>
+	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"/>
+
+	<!-- ============================================================================================
+	Function scripts
+	============================================================================================= -->
 
 	<msxsl:script language="C#"
 								implements-prefix="branding">

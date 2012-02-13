@@ -2325,6 +2325,7 @@ XmlNode^ XmlToHtml::FormatSee (XmlNode^ pXmlNode)
 				lRefName = AllFieldsName (lRefName);
 			}
 			else
+			if	(!IsConceptualLink (lRefName))
 			{
 				XmlNode^	lMemberNode;
 				String^		lMemberName = "unknown";
@@ -2870,6 +2871,39 @@ String^ XmlToHtml::AllFieldsFileName (String^ pMemberName)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool XmlToHtml::IsConceptualLink (String^ pLink)
+{
+	bool	lRet = false;
+
+	try
+	{
+		if	(
+				(pLink->StartsWith ("&"))
+			&&	(pLink->EndsWith (";"))
+			)
+		{
+			lRet = true;
+		}
+		else
+		{
+			if	(pLink->Contains ("#"))
+			{
+				pLink = pLink->Substring (0, pLink->IndexOf ('#'));
+			}
+
+			Guid^	lGuid = gcnew Guid (pLink);
+
+			if	(lGuid != Guid::Empty)
+			{
+				lRet = true;
+			}
+		}
+	}
+	catch AnyExceptionSilent
+
+	return lRet;
+}
 
 bool XmlToHtml::IsInheritDoc (XmlNode^ pXmlNode)
 {

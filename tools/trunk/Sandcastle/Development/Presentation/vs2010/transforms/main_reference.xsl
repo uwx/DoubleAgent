@@ -31,6 +31,7 @@
 	Includes
 	============================================================================================= -->
 
+	<xsl:include href="xpath_functions.xsl" />
 	<xsl:include href="utilities_reference.xsl" />
 	<xsl:include href="utilities_dduexml.xsl" />
 	<xsl:include href="seealso_dduexml.xsl"/>
@@ -361,7 +362,7 @@
 			<xsl:otherwise>
 				<div id="returns">
 					<xsl:call-template name="t_putSubSection">
-						<xsl:with-param name="title">
+						<xsl:with-param name="p_title">
 							<include>
 								<!-- title is propertyValueTitle or methodValueTitle or fieldValueTitle -->
 								<xsl:attribute name="item">
@@ -370,7 +371,7 @@
 								</xsl:attribute>
 							</include>
 						</xsl:with-param>
-						<xsl:with-param name="content">
+						<xsl:with-param name="p_content">
 							<include item="typeLink">
 								<parameter>
 									<xsl:choose>
@@ -403,10 +404,10 @@
 	<xsl:template match="templates">
 		<div id="genericParameters">
 			<xsl:call-template name="t_putSubSection">
-				<xsl:with-param name="title">
+				<xsl:with-param name="p_title">
 					<include item="templatesTitle" />
 				</xsl:with-param>
-				<xsl:with-param name="content">
+				<xsl:with-param name="p_content">
 					<xsl:for-each select="template">
 						<xsl:variable name="parameterName"
 													select="@name" />
@@ -498,13 +499,10 @@
 
 	<xsl:template match="syntax">
 		<xsl:if test="count(*) > 0">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'syntax'" />
-				<xsl:with-param name="title">
-					<include item="syntaxTitle"/>
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'syntaxTitle'"/>
+				<xsl:with-param name="p_content">
 					<div id="syntaxCodeBlocks"
 							 class="code">
 						<xsl:call-template name="syntaxBlocks" />
@@ -522,10 +520,10 @@
 					<!-- usage note for extension methods -->
 					<xsl:if test="/document/reference/attributes/attribute/type[@api='T:System.Runtime.CompilerServices.ExtensionAttribute'] and boolean($g_apiSubGroup='method')">
 						<xsl:call-template name="t_putSubSection">
-							<xsl:with-param name="title">
+							<xsl:with-param name="p_title">
 								<include item="extensionUsageTitle" />
 							</xsl:with-param>
-							<xsl:with-param name="content">
+							<xsl:with-param name="p_content">
 								<include item="extensionUsageText">
 									<parameter>
 										<xsl:apply-templates select="/document/reference/parameters/parameter[1]/type"
@@ -545,13 +543,10 @@
 
 	<xsl:template match="ddue:exceptions">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'ddueExceptions'"/>
-				<xsl:with-param name="title">
-					<include item="exceptionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'exceptionsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:choose>
 						<xsl:when test="ddue:exception">
 							<div class="tableSection">
@@ -591,13 +586,10 @@
 		<xsl:variable name="showAptcaBoilerplate"
 									select="boolean(/document/reference/containers/library/noAptca and $omitAptcaBoilerplate!='true')"/>
 		<xsl:if test="/document/comments/ddue:dduexml/ddue:permissions[normalize-space(.)] or $showAptcaBoilerplate">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'permissions'" />
-				<xsl:with-param name="title">
-					<include item="permissionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'permissionsTitle'" />
+				<xsl:with-param name="p_content">
 					<ul>
 						<xsl:for-each select="/document/comments/ddue:dduexml/ddue:permissions/ddue:permission">
 							<li>
@@ -650,13 +642,10 @@
 	<xsl:template name="t_putSeeAlsoSection">
 
 		<xsl:if test="$g_hasSeeAlsoSection">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'seeAlso'"/>
-				<xsl:with-param name="title">
-					<include item="relatedTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'relatedTopicsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:choose>
 						<xsl:when test="count(/document/comments/ddue:dduexml/ddue:relatedTopics/*) > 0">
 							<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:relatedTopics"
@@ -667,10 +656,10 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:call-template name="t_putSubSection">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="SeeAlsoReference"/>
 								</xsl:with-param>
-								<xsl:with-param name="content">
+								<xsl:with-param name="p_content">
 									<xsl:call-template name="t_autogenSeeAlsoLinks"/>
 								</xsl:with-param>
 							</xsl:call-template>

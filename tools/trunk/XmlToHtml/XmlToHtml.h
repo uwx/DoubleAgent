@@ -93,6 +93,7 @@ protected:
 	String^ AllFieldsName (String^ pMemberName);
 	String^ AllFieldsFileName (String^ pMemberName);
 
+	bool IsConceptualLink (String^ pLink);
 	bool IsInheritDoc (System::Xml::XmlNode^ pXmlNode);
 
 	void FixMethodSignatures (System::Xml::XmlDocument^ pXmlDocument);

@@ -47,13 +47,10 @@
 
 	<xsl:template match="ddue:codeExamples">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'example'"/>
-				<xsl:with-param name="title">
-					<include item="examplesTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'examplesTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 					<xsl:call-template name="moreCodeSection"/>
 				</xsl:with-param>
@@ -130,13 +127,10 @@
 	</xsl:template>
 
 	<xsl:template name="threadSafety">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'threadSafety'"/>
-			<xsl:with-param name="title">
-				<include item="threadSafetyTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'threadSafetyTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:choose>
 					<xsl:when test="/document/comments/ddue:dduexml/ddue:threadSafety">
 						<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:threadSafety"/>
@@ -722,14 +716,16 @@
 						<xsl:value-of select="generate-id(.)"/>
 					</xsl:variable>
 
-					<mtps:CollapsibleArea>
-						<span class="OH_regiontitle">
+					<xsl:call-template name="t_putSection">
+						<xsl:with-param name="p_title">
 							<xsl:apply-templates select="ddue:title"
 																	 mode="section"/>
-						</span>
-						<xsl:apply-templates select="ddue:content"/>
-						<xsl:apply-templates select="ddue:sections" />
-					</mtps:CollapsibleArea>
+						</xsl:with-param>
+						<xsl:with-param name="p_content">
+							<xsl:apply-templates select="ddue:content"/>
+							<xsl:apply-templates select="ddue:sections" />
+						</xsl:with-param>
+					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="$total = 1">
 					<h3 class="subHeading">
@@ -854,13 +850,10 @@
 
 
 	<xsl:template match="ddue:inThisSection">
-		<xsl:call-template name="t_putSection">
-			<xsl:with-param name="toggleSwitch"
-											select="'inThisSection'"/>
-			<xsl:with-param name="title">
-				<include item="inThisSectionTitle" />
-			</xsl:with-param>
-			<xsl:with-param name="content">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'inThisSectionTitle'" />
+			<xsl:with-param name="p_content">
 				<xsl:apply-templates />
 			</xsl:with-param>
 		</xsl:call-template>
@@ -868,13 +861,10 @@
 
 	<xsl:template match="ddue:buildInstructions">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'buildInstructions'"/>
-				<xsl:with-param name="title">
-					<include item="buildInstructionsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'buildInstructionsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -883,13 +873,10 @@
 
 	<xsl:template match="ddue:nextSteps">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'nextSteps'"/>
-				<xsl:with-param name="title">
-					<include item="nextStepsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'nextStepsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -898,13 +885,10 @@
 
 	<xsl:template match="ddue:requirements">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'requirementsTitle'"/>
-				<xsl:with-param name="title">
-					<include item="requirementsTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'requirementsTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1003,14 +987,6 @@
 	<!-- links -->
 
 	<xsl:template match="ddue:externalLink">
-		<img class="OH_offlineIcon"
-				 alt="Online"
-				 title="Online">
-			<includeAttribute name="src"
-												item="iconPath">
-				<parameter>online_icon.gif</parameter>
-			</includeAttribute>
-		</img>
 		<a class="mtps-external-link">
 			<xsl:attribute name="href">
 				<xsl:value-of select="normalize-space(ddue:linkUri)" />
@@ -1088,13 +1064,10 @@
 
 	<xsl:template match="ddue:languageReferenceRemarks">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'languageReferenceRemarks'"/>
-				<xsl:with-param name="title">
-					<include item="remarksTitle" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'remarksTitle'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1103,13 +1076,10 @@
 
 	<xsl:template match="ddue:attributesandElements">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'attributesAndElements'"/>
-				<xsl:with-param name="title">
-					<include item="attributesAndElements" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'attributesAndElements'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1155,13 +1125,10 @@
 
 	<xsl:template match="ddue:textValue">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'textValue'"/>
-				<xsl:with-param name="title">
-					<include item="textValue" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'textValue'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1170,13 +1137,10 @@
 
 	<xsl:template match="ddue:elementInformation">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'elementInformation'"/>
-				<xsl:with-param name="title">
-					<include item="elementInformation" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'elementInformation'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1185,13 +1149,10 @@
 
 	<xsl:template match="ddue:dotNetFrameworkEquivalent">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'dotNetFrameworkEquivalent'"/>
-				<xsl:with-param name="title">
-					<include item="dotNetFrameworkEquivalent" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'dotNetFrameworkEquivalent'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1200,13 +1161,10 @@
 
 	<xsl:template match="ddue:prerequisites">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'prerequisites'"/>
-				<xsl:with-param name="title">
-					<include item="prerequisites" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'prerequisites'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1219,13 +1177,10 @@
 
 	<xsl:template match="ddue:robustProgramming">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'robustProgramming'"/>
-				<xsl:with-param name="title">
-					<include item="robustProgramming" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'robustProgramming'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1234,13 +1189,10 @@
 
 	<xsl:template match="ddue:security">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'security'"/>
-				<xsl:with-param name="title">
-					<include item="securitySection" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'securitySection'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1249,13 +1201,10 @@
 
 	<xsl:template match="ddue:externalResources">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'externalResources'"/>
-				<xsl:with-param name="title">
-					<include item="externalResources" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'externalResources'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1264,13 +1213,10 @@
 
 	<xsl:template match="ddue:demonstrates">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'demonstrates'"/>
-				<xsl:with-param name="title">
-					<include item="demonstrates" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'demonstrates'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1279,13 +1225,10 @@
 
 	<xsl:template match="ddue:appliesTo">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'appliesTo'"/>
-				<xsl:with-param name="title">
-					<include item="appliesTo" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'appliesTo'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1298,13 +1241,10 @@
 
 	<xsl:template match="ddue:background">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'background'"/>
-				<xsl:with-param name="title">
-					<include item="background" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'background'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1313,13 +1253,10 @@
 
 	<xsl:template match="ddue:whatsNew">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'whatsNew'"/>
-				<xsl:with-param name="title">
-					<include item="whatsNew" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'whatsNew'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1328,13 +1265,10 @@
 
 	<xsl:template match="ddue:reference">
 		<xsl:if test="normalize-space(.)">
-			<xsl:call-template name="t_putSection">
-				<xsl:with-param name="toggleSwitch"
-												select="'reference'"/>
-				<xsl:with-param name="title">
-					<include item="reference" />
-				</xsl:with-param>
-				<xsl:with-param name="content">
+			<xsl:call-template name="t_putSectionInclude">
+				<xsl:with-param name="p_titleInclude"
+												select="'reference'" />
+				<xsl:with-param name="p_content">
 					<xsl:apply-templates />
 				</xsl:with-param>
 			</xsl:call-template>
@@ -1536,13 +1470,10 @@
 					</xsl:choose>
 				</xsl:variable>
 				<xsl:if test="normalize-space($changeHistoryContent)">
-					<xsl:call-template name="t_putSection">
-						<xsl:with-param name="toggleSwitch"
-														select="'changeHistory'"/>
-						<xsl:with-param name="title">
-							<include item="changeHistory" />
-						</xsl:with-param>
-						<xsl:with-param name="content">
+					<xsl:call-template name="t_putSectionInclude">
+						<xsl:with-param name="p_titleInclude"
+														select="'changeHistory'" />
+						<xsl:with-param name="p_content">
 							<xsl:copy-of select="$changeHistoryContent" />
 						</xsl:with-param>
 					</xsl:call-template>
@@ -1584,13 +1515,10 @@
 		<xsl:if test="$hasRemarks='true'">
 			<xsl:choose>
 				<xsl:when test="not($g_apiTopicGroup = 'namespace')">
-					<xsl:call-template name="t_putSection">
-						<xsl:with-param name="toggleSwitch"
-														select="'remarks'"/>
-						<xsl:with-param name="title">
-							<include item="remarksTitle" />
-						</xsl:with-param>
-						<xsl:with-param name="content">
+					<xsl:call-template name="t_putSectionInclude">
+						<xsl:with-param name="p_titleInclude"
+														select="'remarksTitle'" />
+						<xsl:with-param name="p_content">
 							<xsl:apply-templates select="$node/ddue:remarks/*" />
 							<!-- HostProtectionAttribute -->
 							<xsl:if test="/document/reference/attributes/attribute/type[@api='T:System.Security.Permissions.HostProtectionAttribute']">
