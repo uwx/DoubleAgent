@@ -51,7 +51,7 @@
         <Topic id="e08466cb-419c-11e1-9d4f-002421116fb2" visible="True" title="SAPI5 English Normalization Contexts" />
       </Topic>
     </Topic>
-    <Topic id="e08466d4-419c-11e1-9d4f-002421116fb2" visible="True" noFile="true" isExpanded="true" title="Notes">
+    <Topic id="e08466d4-419c-11e1-9d4f-002421116fb2" visible="True" title="Notes">
       <Topic id="e08466cc-419c-11e1-9d4f-002421116fb2" visible="True" title="Notable differences between Double Agent and Microsoft Agent" />
       <Topic id="e08466cd-419c-11e1-9d4f-002421116fb2" visible="True" title="Moving from Microsoft Agent to Double Agent" />
       <Topic id="e08466ce-419c-11e1-9d4f-002421116fb2" visible="True" title="Targeting 64-bit Windows" />

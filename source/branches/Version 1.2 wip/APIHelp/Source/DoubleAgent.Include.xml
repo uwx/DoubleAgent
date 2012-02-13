@@ -19,8 +19,8 @@
 			<filename>right</filename> button (bit 1) (&hexprefix;0002), and
 			<filename>middle</filename> button (bit 2) (&hexprefix;0004).
 			Only one of the bits is set, indicating the mouse button that caused the event. If the character has a
-			<a class="see" href="&daniref;">&daniname;</a>, and bit 13 (&hexprefix;1000) is also set, the click occurred on the
-			<a class="see" href="&daniref;">&daniname;</a>.
+			<see cref="&daniref;">&daniname;</see>, and bit 13 (&hexprefix;1000) is also set, the click occurred on the
+			<see cref="&daniref;">&daniname;</see>.
 		</param>
 		<param name="Shift">
 			A <typename>numeric</typename> value that corresponds to the state of the <filename>Shift</filename>, <filename>Ctrl</filename>, and <filename>Alt</filename> keys
@@ -75,7 +75,7 @@
 				<item>
 					<term>bit 13 (&hexprefix;1000)</term>
 					<description>
-						the click occurred on the  <a class="see" href="&daniref;">&daniname;</a>
+						the click occurred on the  <see cref="&daniref;">&daniname;</see>
 					</description>
 				</item>
 			</list>
@@ -117,10 +117,10 @@
 		<note name="SlowSoundLoad">Querying this property does not typically return an error. However, if the speech engine takes an abnormally long time to load, you may get an error indicating that the query timed out.</note>
 		<note name="ReadOnlySetting">The property setting affects all characters and is read-only; only the user can set this property value.</note>
 		<note name="StandAloneOnly">
-			This property only applies to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">stand-alone</a> mode.
+			This property only applies to <see cref="e084673a-419c-11e1-9d4f-002421116fb2">stand-alone</see> mode.
 		</note>
 		<note name="ContainedOnly">
-			This property is relevant only when the control is visible (i.e. when it's used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a> mode).
+			This property is relevant only when the control is visible (i.e. when it's used in <see cref="e084673a-419c-11e1-9d4f-002421116fb2">contained</see> mode).
 		</note>
 		<para name="Color">
 			The valid range for a normal RGB color is 0 to 16,777,215 (&hexprefix;FFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&hexprefix;FF).
@@ -129,7 +129,7 @@
 			If the high byte of an OLECOLOR is &hexprefix;80, the lower 3 bytes contain a <glossary>system color index</glossary>.
 		</para>
 		<para name="DefaultBalloonFont">
-			The default values for the font of a character's <a class="see" href="&dawbref;">&dawbname;</a> are set in the Microsoft<sup>®</sup> Agent Character Editor. In addition, the user can override font settings for all characters in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
+			The default values for the font of a character's <see cref="&dawbref;">&dawbname;</see> are set in the Microsoft<sup>®</sup> Agent Character Editor. In addition, the user can override font settings for all characters in the <see cref="&dapsref;#Output">&dapsname;</see> window.
 		</para>
 		<details name="VoiceCaption">
 			<h4 class="details">Format</h4>

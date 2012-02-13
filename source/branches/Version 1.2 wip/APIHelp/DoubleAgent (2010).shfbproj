@@ -522,7 +522,7 @@
       </PlugInConfig>
 <PlugInConfig id="Pack and Sign MSHC files" enabled="True"><configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" /></PlugInConfig>
 <PlugInConfig id="Resolve Partial Reference Links" enabled="True"><configuration /></PlugInConfig>
-<PlugInConfig id="Table of Contents Type Grouping" enabled="True"><configuration /></PlugInConfig></PlugInConfigurations>
+<PlugInConfig id="Table of Contents Type Grouping" enabled="False"><configuration /></PlugInConfig></PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
     <FooterText>Double Agent is open source software licensed under the &amp;lt%3ba target=&amp;quot%3b_blank&amp;quot%3b href=&amp;quot%3bhttp://www.gnu.org/licenses/gpl.html&amp;quot%3b&amp;gt%3bGNU General Public License&amp;lt%3b/a&amp;gt%3b</FooterText>
@@ -610,7 +610,7 @@
           <!-- Logo image file (optional).  Filename is required. The height,
                  width, altText, placement, and alignment attributes are
                  optional. -->
-          <logoFile filename="" height="0" width="0" altText="" placement="left" alignment="left" />
+          <logoFile filename="C:\Dev\Images\Cinnamon.png" height="75" width="75" altText="" placement="left" alignment="left" />
         </component>
       </ComponentConfig>
       <ComponentConfig id="API Token Resolution" enabled="True">
@@ -647,7 +647,7 @@
     <MSHelpViewerSdkLinkType>Id</MSHelpViewerSdkLinkType>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>The Double Agent Class Library</RootNamespaceTitle>
-    <SelfBranded>False</SelfBranded>
+    <SelfBranded>True</SelfBranded>
     <IncludeFavorites>True</IncludeFavorites>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="DoubleAgent.AxControl" isDocumented="True" xmlns="">The Double Agent Control for Windows Forms</NamespaceSummaryItem>
@@ -655,6 +655,10 @@
       <NamespaceSummaryItem name="DoubleAgent.Server" isDocumented="True" xmlns="">The Double Agent Server</NamespaceSummaryItem>
     </NamespaceSummaries>
     <IndentHtml>False</IndentHtml>
+    <CopyrightText>
+    </CopyrightText>
+    <CopyrightHref>
+    </CopyrightHref>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
@@ -688,6 +692,7 @@
     <Folder Include="Reference-MAML\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Reference-MAML\Notes.aml" />
     <None Include="Programming-MAML\Svr_Programming_Upgrade.aml" />
     <None Include="Programming-MAML\Svr_Programming_Speech.aml" />
     <None Include="Programming-MAML\Svr_Programming_Sink.aml" />

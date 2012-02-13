@@ -15,17 +15,17 @@
 	<!ENTITY typelisttype "table">
 	<!ENTITY typelistwidth "275ex">
 
-	<!ENTITY dapsref "../Reference/UI_PropSheet.htm">
+	<!ENTITY dapsref "e08466be-419c-11e1-9d4f-002421116fb2">
 	<!ENTITY dapsname "Advanced Character Options">
-	<!ENTITY davcref "../Reference/UI_Intro.htm#VoiceCommands">
+	<!ENTITY davcref "e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
-	<!ENTITY dacmref "../Reference/UI_Intro.htm#Menu">
+	<!ENTITY dacmref "e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 	<!ENTITY dacmname "pop-up menu">
-	<!ENTITY dawbref "../Reference/UI_Intro.htm#Balloon">
+	<!ENTITY dawbref "e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
 	<!ENTITY dawbname "word balloon">
-	<!ENTITY daniref "../Reference/UI_Intro.htm#Icon">
+	<!ENTITY daniref "e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
 	<!ENTITY daniname "notification icon">
-	<!ENTITY daltref "../Reference/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltref "e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
 	<!ENTITY daltname "Listening tip">
 ]>
 
@@ -723,7 +723,7 @@
 				</codeSample>
 				<para>
 					You can load the default character by passing an empty <keyword>VARIANT</keyword> for the <token>Provider</token>
-					parameter. This will load the <a class="see" href="&dapsref;#Gallery">default character</a> from the <see class="see" cref="P:&dans;.CharacterFiles.DefaultFilePath" text="default file path" />.
+					parameter. This will load the <see cref="&dapsref;#Gallery">default character</see> from the <see class="see" cref="P:&dans;.CharacterFiles.DefaultFilePath" text="default file path" />.
 				</para>
 				<codeSample>
 					<code xml:space="preserve" language="cpp">VARIANT EmptyProvider;
@@ -773,7 +773,7 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary> <keyword>IConnectionPoint</keyword>
+					The <see cref="T:&darootobj;" suffix="Object" /> also implements the standard <glossary>COM</glossary>&#160;<keyword>IConnectionPoint</keyword>
 					protocol for <glossary>notification sinks</glossary>.
 				</para>
 				<para>
@@ -790,7 +790,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&darootobj;.ShowDefaultCharacterProperties">
 			<summary>
 				<para>
-					Shows the <a class="see" href="&dapsref;#Gallery">Gallery</a> page of the <a class="see" href="&dapsref;">&dapsname;</a>
+					Shows the <see cref="&dapsref;#Gallery">Gallery</see> page of the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</summary>
@@ -823,7 +823,7 @@ VariantInit (&amp;EmptyProvider);
 			</param>
 			<remarks>
 				<para>
-					This method is obsolete, but is still supported for backward compatibility. Calling it shows the <a class="see" href="&dapsref;">&dapsname;</a>
+					This method is obsolete, but is still supported for backward compatibility. Calling it shows the <see cref="&dapsref;">&dapsname;</see>
 					window. New applications should use the <see cref="T:&dans;.PropertySheet" suffix="Object" /> instead.
 				</para>
 			</remarks>
@@ -1084,7 +1084,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="E:&darootobj;.BalloonVisibleState">
 			<summary>
 				<para>
-					Signalled when a character's <a class="see" href="&dawbref;">&dawbname;</a> is shown or hidden.
+					Signalled when a character's <see cref="&dawbref;">&dawbname;</see> is shown or hidden.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -1105,11 +1105,11 @@ VariantInit (&amp;EmptyProvider);
 </vbscript>
 </syntax>
 			<param name="CharacterID">
-				The unique identifier of the character who's <a class="see" href="&dawbref;">&dawbname;</a>
+				The unique identifier of the character who's <see cref="&dawbref;">&dawbname;</see>
 				was shown or hidden.
 			</param>
 			<param name="Visible">
-				<keyword>True</keyword> if the <a class="see" href="&dawbref;">&dawbname;</a>
+				<keyword>True</keyword> if the <see cref="&dawbref;">&dawbname;</see>
 				was shown or <keyword>False</keyword> it was hidden.
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='E:&dactlns;.Control.BalloonShow']/remarks" />
@@ -2521,7 +2521,7 @@ VariantInit (&amp;EmptyProvider);
 			<remarks>
 				<para>
 					The <self>CharsPerLine</self> property is the average number of characters (letters) displayed in
-					the <a class="see" href="&dawbref;">&dawbname;</a>.
+					the <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -2584,7 +2584,7 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Balloon.NumberOfLines']/value" />
 			<remarks>
 				<para>
-					The <self>NumberOfLines</self> property is only used if the <a class="see" href="&dawbref;">&dawbname;</a>
+					The <self>NumberOfLines</self> property is only used if the <see cref="&dawbref;">&dawbname;</see>
 					doesn't have the <keyword>AutoSize</keyword> style.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -2608,8 +2608,8 @@ VariantInit (&amp;EmptyProvider);
 					Agent Character Editor.
 				</para>
 				<note>
-					The <self>Style</self> property can be set even if the user has disabled <a class="see" href="&dawbref;">&dawbname;</a>s
-					in the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					The <self>Style</self> property can be set even if the user has disabled <see cref="&dawbref;">&dawbname;</see>s
+					in the <see cref="&dapsref;">&dapsname;</see> window.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -2645,7 +2645,7 @@ VariantInit (&amp;EmptyProvider);
 				<para>
 					Calling the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" />
 					methods automatically makes the balloon visible, setting the <self>Visible</self> property to <keyword>True</keyword>.
-					If the balloon's <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> <see cref="P:&dans;.Balloon.Style" />
+					If the balloon's <see cref="F:&dans;.BalloonStyleFlags.AutoHide" />&#160;<see cref="P:&dans;.Balloon.Style" />
 					is set, the balloon is automatically hidden after the text output is complete. Clicking or dragging a
 					character that is not currently speaking also automatically hides the balloon, even if its <see cref="F:&dans;.BalloonStyleFlags.AutoHide" />
 					<see cref="P:&dans;.Balloon.Style" /> is not set.
@@ -2969,7 +2969,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.Character.GetIconIdentity">
 			<summary>
 				<para>
-					Retrieves the identity that Windows will use to remember the character's <a class="see" href="&daniref;">&daniname;</a>.
+					Retrieves the identity that Windows will use to remember the character's <see cref="&daniref;">&daniname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2988,7 +2988,7 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<param name="IconIdentity">
 				The <typename>GUID</typename> value that Windows uses to uniquely identify this
-				character's <a class="see" href="&daniref;">&daniname;</a>.
+				character's <see cref="&daniref;">&daniname;</see>.
 			</param>
 			<remarks>
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para[1]" />
@@ -3513,7 +3513,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.Character.SetIconIdentity">
 			<summary>
 				<para>
-					Sets the identity that Windows will use to remember the character's <a class="see" href="&daniref;">&daniname;</a>.
+					Sets the identity that Windows will use to remember the character's <see cref="&daniref;">&daniname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -3532,7 +3532,7 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<param name="IconIdentity">
 				A <typename>GUID</typename> value that allows Windows to uniquely identify this
-				character's <a class="see" href="&daniref;">&daniname;</a>. It must be either a value <typename>GUID</typename>
+				character's <see cref="&daniref;">&daniname;</see>. It must be either a value <typename>GUID</typename>
 				or <keyword>GUID_NULL</keyword>.
 			</param>
 			<remarks>
@@ -3735,7 +3735,7 @@ VariantInit (&amp;EmptyProvider);
 			<remarks>
 				<para>
 					If the character's <see cref="P:&dans;.Character.Style" /> property includes <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu" />,
-					Double Agent automatically displays the character's <a class="see" href="&dacmref;">&dacmname;</a> when the
+					Double Agent automatically displays the character's <see cref="&dacmref;">&dacmname;</see> when the
 					user right-clicks the character. If you set the <see cref="P:&dans;.Character.Style" /> property without <see cref="F:&dans;.CharacterStyleFlags.AutoPopupMenu" />,
 					you can use <self>ShowPopupMenu</self> to display the menu.
 				</para>
@@ -4022,16 +4022,16 @@ VariantInit (&amp;EmptyProvider);
 				<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Character.IconIdentity']/remarks/para" />
 				<list type="bullet">
 					<item>
-						A character's <a class="see" href="&daniref;">&daniname;</a> will be associated with the Double
+						A character's <see cref="&daniref;">&daniname;</see> will be associated with the Double
 						Agent server by default.
 					</item>
 					<item>
-						You can supply a <em>single</em> GUID for all characters you load. All of their <a class="see" href="&daniref;">&daniname;s</a>
+						You can supply a <em>single</em> GUID for all characters you load. All of their <see cref="&daniref;">&daniname;s</see>
 						will be associated with that single identity.
 					</item>
 					<item>
 						You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each
-						character's <a class="see" href="&daniref;">&daniname;</a> uniquely.
+						character's <see cref="&daniref;">&daniname;</see> uniquely.
 					</item>
 				</list>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -5548,14 +5548,14 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<param name="Caption">
 				A <typename>string</typename> value specifying the name that will appear in the
-				character's <a class="see" href="&dacmref;">&dacmname;</a>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+				character's <see cref="&dacmref;">&dacmname;</see>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Caption" />
 				property.
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='VoiceGrammar']" />
 			<param name="VoiceCaption">
 				A <typename>string</typename> value specifying the name that will appear in
-				the <a class="see" href="&davcref;">&davcname;</a> window when the client application is <glossary>input-active</glossary>.
-				For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.VoiceCaption" />
+				the <see cref="&davcref;">&davcname;</see> window when the client application is <glossary>input-active</glossary>.
+				For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.VoiceCaption" />
 				property.
 			</param>
 			<include file="&dactlxml;" path="/doc/members/member[@name='M:&dactlns;.Commands.Add']/param[@name='Enabled']" />
@@ -6079,7 +6079,7 @@ VariantInit (&amp;EmptyProvider);
 </syntax>
 			<value name="CommandID">
 				The <see cref="P:&dans;.Command.CommandID" /> of the <see cref="T:&dans;.Command" />
-				that's shown bold in the <a class="see" href="&dacmref;">&dacmname;</a> (or zero if none).
+				that's shown bold in the <see cref="&dacmref;">&dacmname;</see> (or zero if none).
 			</value>
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.Commands.DefaultCommand']/remarks" />
 		</member>
@@ -6328,7 +6328,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.CommandsWindow.GetPosition">
 			<summary>
 				<para>
-					Returns the current position of the <a class="see" href="&davcref;">&davcname;</a> window.
+					Returns the current position of the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6359,7 +6359,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.CommandsWindow.GetSize">
 			<summary>
 				<para>
-					Returns the current size of the <a class="see" href="&davcref;">&davcname;</a> window.
+					Returns the current size of the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6561,7 +6561,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.PropertySheet.GetPosition">
 			<summary>
 				<para>
-					Returns the current position of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					Returns the current position of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6592,7 +6592,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.PropertySheet.GetSize">
 			<summary>
 				<para>
-					Returns the current size of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					Returns the current size of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6654,7 +6654,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="M:&dans;.PropertySheet.SetPosition">
 			<summary>
 				<para>
-					Sets the position of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					Sets the position of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -7344,7 +7344,7 @@ VariantInit (&amp;EmptyProvider);
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlns;.UserInput.Count']/value" />
 			<remarks>
 				<para>
-					A count of zero indicates that the command was chosen from the character's <a class="see" href="&dacmref;">&dacmname;</a>
+					A count of zero indicates that the command was chosen from the character's <see cref="&dacmref;">&dacmname;</see>
 					The first <see cref="P:&dans;.UserInput.ItemCommandID" /> property returns the chosen command's <see cref="P:&dans;.Command.CommandID" />.
 				</para>
 				<para>
@@ -7386,7 +7386,7 @@ VariantInit (&amp;EmptyProvider);
 		<member name="P:&dans;.UserInput.ItemCommandID">
 			<summary>
 				<para>
-					Identifies the chosen <see cref="T:&dans;.Command" />, if chosen from the <a class="see" href="&dacmref;">&dacmname;</a>,
+					Identifies the chosen <see cref="T:&dans;.Command" />, if chosen from the <see cref="&dacmref;">&dacmname;</see>,
 					or a matching <see cref="T:&dans;.Command" />, if voice input triggers the <see cref="E:&darootobj;.Command" />
 					event.
 				</para>

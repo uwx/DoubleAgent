@@ -13,7 +13,7 @@
 			<list class="bullet">
 				<listItem>
 					<para>
-						The <token>MA</token> hotfix <legacyBold>must</legacyBold> be installed <legacyBold>before</legacyBold> <token>DA</token>. If you&#39;ve
+						The <token>MA</token> hotfix <legacyBold>must</legacyBold> be installed <legacyBold>before</legacyBold>&#160;<token>DA</token>. If you&#39;ve
 						already installed <token>DA</token>, you must remove it <legacyBold>before</legacyBold> installing the
 						<token>MA</token> hotfix. You can reinstall <token>DA</token> after the hotfix is installed.
 					</para>

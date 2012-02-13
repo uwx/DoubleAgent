@@ -17,17 +17,17 @@
 	<!ENTITY typelisttype "table">
 	<!ENTITY typelistwidth "275ex">
 
-	<!ENTITY dapsref "../Reference/UI_PropSheet.htm">
+	<!ENTITY dapsref "e08466be-419c-11e1-9d4f-002421116fb2">
 	<!ENTITY dapsname "Advanced Character Options">
-	<!ENTITY davcref "../Reference/UI_Intro.htm#VoiceCommands">
+	<!ENTITY davcref "e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
-	<!ENTITY dacmref "../Reference/UI_Intro.htm#Menu">
+	<!ENTITY dacmref "e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 	<!ENTITY dacmname "pop-up menu">
-	<!ENTITY dawbref "../Reference/UI_Intro.htm#Balloon">
+	<!ENTITY dawbref "e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
 	<!ENTITY dawbname "word balloon">
-	<!ENTITY daniref "../Reference/UI_Intro.htm#Icon">
+	<!ENTITY daniref "e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
 	<!ENTITY daniname "notification icon">
-	<!ENTITY daltref "../Reference/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltref "e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
 	<!ENTITY daltname "Listening tip">
 ]>
 
@@ -2722,7 +2722,7 @@
 						<description>
 							<para>
 								The <self>AxControl Object</self> supports the following ActiveX<sup>®</sup> <glossary>appearance</glossary>
-								properties when the control is used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm">contained</a>
+								properties when the control is used in <see cref="e084673a-419c-11e1-9d4f-002421116fb2">contained</see>
 								mode:
 							</para>
 						</description>

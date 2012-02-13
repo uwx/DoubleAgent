@@ -13,17 +13,17 @@
 	<!ENTITY typelisttype "table">
 	<!ENTITY typelistwidth "275ex">
 
-	<!ENTITY dapsref "../Reference/UI_PropSheet.htm">
+	<!ENTITY dapsref "e08466be-419c-11e1-9d4f-002421116fb2">
 	<!ENTITY dapsname "Advanced Character Options">
-	<!ENTITY davcref "../Reference/UI_Intro.htm#VoiceCommands">
+	<!ENTITY davcref "e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
 	<!ENTITY davcname "Voice Commands">
-	<!ENTITY dacmref "../Reference/UI_Intro.htm#Menu">
+	<!ENTITY dacmref "e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
 	<!ENTITY dacmname "pop-up menu">
-	<!ENTITY dawbref "../Reference/UI_Intro.htm#Balloon">
+	<!ENTITY dawbref "e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
 	<!ENTITY dawbname "word balloon">
-	<!ENTITY daniref "../Reference/UI_Intro.htm#Icon">
+	<!ENTITY daniref "e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
 	<!ENTITY daniname "notification icon">
-	<!ENTITY daltref "../Reference/UI_Intro.htm#ListeningTip">
+	<!ENTITY daltref "e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
 	<!ENTITY daltname "Listening tip">
 ]>
 
@@ -60,7 +60,7 @@
 			<value>4</value>
 			<remarks>
 				<para>
-					This state applies only to a control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					This state applies only to a control in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</para>
 			</remarks>
@@ -71,7 +71,7 @@
 			<value>5</value>
 			<remarks>
 				<para>
-					This state applies only to a control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					This state applies only to a control in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</para>
 			</remarks>
@@ -85,7 +85,7 @@
 			<value>6</value>
 			<remarks>
 				<para>
-					This state applies only to a control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					This state applies only to a control in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</para>
 			</remarks>
@@ -177,7 +177,7 @@
 
 		<member name="F:&dans;.AudioStatusType.Disabled">
 			<summary>
-				Text-to-speech is disabled in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
+				Text-to-speech is disabled in the <see cref="&dapsref;#Output">&dapsname;</see> window.
 			</summary>
 			<value>1</value>
 		</member>
@@ -263,13 +263,13 @@
 
 		<member name="F:&dans;.BalloonStyleFlags.AutoHide">
 			<summary>
-				The <a class="see" href="&dawbref;">&dawbname;</a> is hidden automatically after a short delay.
+				The <see cref="&dawbref;">&dawbname;</see> is hidden automatically after a short delay.
 			</summary>
 			<value>&hexprefix;00000004</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
-					automatically hides when spoken output completes. When it's not set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					When the <see cref="F:&dans;.BalloonStyleFlags.AutoHide" /> style is set, the <see cref="&dawbref;">&dawbname;</see>
+					automatically hides when spoken output completes. When it's not set, the <see cref="&dawbref;">&dawbname;</see>
 					remains displayed until the next <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
 					call, the character is hidden, or the user clicks or drags the character.
 				</para>
@@ -279,14 +279,14 @@
 
 		<member name="F:&dans;.BalloonStyleFlags.AutoPace">
 			<summary>
-				The text in the <a class="see" href="&dawbref;">&dawbname;</a> is shown one word at a time.
+				The text in the <see cref="&dawbref;">&dawbname;</see> is shown one word at a time.
 			</summary>
 			<value>&hexprefix;00000008</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					When the <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> style is set, the <see cref="&dawbref;">&dawbname;</see>
 					paces its text output based on the current output rate, for example one word at a time. When output exceeds
-					the size of the <a class="see" href="&dawbref;">&dawbname;</a>, the text is automatically scrolled. When
+					the size of the <see cref="&dawbref;">&dawbname;</see>, the text is automatically scrolled. When
 					it's not set, all text included in a <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
 					request is displayed at once.
 				</para>
@@ -296,15 +296,15 @@
 
 		<member name="F:&dans;.BalloonStyleFlags.Enabled">
 			<summary>
-				The <a class="see" href="&dawbref;">&dawbname;</a> is enabled.
+				The <see cref="&dawbref;">&dawbname;</see> is enabled.
 			</summary>
 			<value>&hexprefix;00000001</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.Enabled" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					When the <see cref="F:&dans;.BalloonStyleFlags.Enabled" /> style is set, the <see cref="&dawbref;">&dawbname;</see>
 					appears when the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" /> method
-					is used, unless the user overrides this setting in the <a class="see" href="&dapsref;">&dapsname;</a>
-					window. When it's not set, the <a class="see" href="&dawbref;">&dawbname;</a> does not appear.
+					is used, unless the user overrides this setting in the <see cref="&dapsref;">&dapsname;</see>
+					window. When it's not set, the <see cref="&dawbref;">&dawbname;</see> does not appear.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Balloon.Enabled" suffix="Property" prefix="The" />
@@ -312,14 +312,14 @@
 
 		<member name="F:&dans;.BalloonStyleFlags.NoAppend">
 			<summary>
-				Prevents the <a class="see" href="&dawbref;">&dawbname;</a> from appending text when it's
-				already visible (for a <a class="see" href="&dawbref;">&dawbname;</a> that's <em>not</em> <keyword>SizeToText</keyword>).
+				Prevents the <see cref="&dawbref;">&dawbname;</see> from appending text when it's
+				already visible (for a <see cref="&dawbref;">&dawbname;</see> that's <em>not</em>&#160;<keyword>SizeToText</keyword>).
 			</summary>
 			<value>&hexprefix;00000010</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.NoAppend" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
-					will not append new text to existing text. When it's not set, new text is appended if the <a class="see" href="&dawbref;">&dawbname;</a>
+					When the <see cref="F:&dans;.BalloonStyleFlags.NoAppend" /> style is set, the <see cref="&dawbref;">&dawbname;</see>
+					will not append new text to existing text. When it's not set, new text is appended if the <see cref="&dawbref;">&dawbname;</see>
 					is visible. This style only applies when the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is
 					<em>not</em> set.
 				</para>
@@ -329,13 +329,13 @@
 
 		<member name="F:&dans;.BalloonStyleFlags.ShowPartialLines">
 			<summary>
-				Partial lines are shown when the <a class="see" href="&dawbref;">&dawbname;</a> text scrolls (for
-				a <a class="see" href="&dawbref;">&dawbname;</a> that's <em>not</em> <keyword>SizeToText</keyword>).
+				Partial lines are shown when the <see cref="&dawbref;">&dawbname;</see> text scrolls (for
+				a <see cref="&dawbref;">&dawbname;</see> that's <em>not</em>&#160;<keyword>SizeToText</keyword>).
 			</summary>
 			<value>&hexprefix;00000020</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.ShowPartialLines" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
+					When the <see cref="F:&dans;.BalloonStyleFlags.ShowPartialLines" /> style is set, the <see cref="&dawbref;">&dawbname;</see>
 					will show partial lines at the bottom as it scrolls its text. When it's not set, only full lines are
 					shown. This style only applies when the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is <em>not</em>
 					set.
@@ -346,16 +346,16 @@
 
 		<member name="F:&dans;.BalloonStyleFlags.SizeToText">
 			<summary>
-				The <a class="see" href="&dawbref;">&dawbname;</a> is automatically resized to fit the speech or
+				The <see cref="&dawbref;">&dawbname;</see> is automatically resized to fit the speech or
 				thought text.
 			</summary>
 			<value>&hexprefix;00000002</value>
 			<remarks>
 				<para>
-					When the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is set, the <a class="see" href="&dawbref;">&dawbname;</a>
-					automatically adjusts the height of the <a class="see" href="&dawbref;">&dawbname;</a> to the current size
+					When the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" /> style is set, the <see cref="&dawbref;">&dawbname;</see>
+					automatically adjusts the height of the <see cref="&dawbref;">&dawbname;</see> to the current size
 					of the text for the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.Think" />
-					request. When it's not set, the <a class="see" href="&dawbref;">&dawbname;'s</a> height is based on the
+					request. When it's not set, the <see cref="&dawbref;">&dawbname;'s</see> height is based on the
 					<see cref="P:&dans;.Balloon.NumberOfLines" /> property. If this style is set and you attempt to set the
 					<see cref="P:&dans;.Balloon.NumberOfLines" /> property, Double Agent raises an error.
 				</para>
@@ -368,7 +368,7 @@
 		<member name="T:&dans;.BalloonStyleFlags" kind="Enumeration">
 			<summary>
 				<para>
-					Specifies settings that affect a <a class="see" href="&dawbref;">&dawbname;'s</a> appearance and behaviour.
+					Specifies settings that affect a <see cref="&dawbref;">&dawbname;'s</see> appearance and behaviour.
 				</para>
 			</summary>
 			<syntax>
@@ -432,8 +432,8 @@
 
 		<member name="F:&dans;.CharacterStyleFlags.AutoPopupMenu">
 			<summary>
-				A right-click on the character or it's <a class="see" href="&daniref;">&daniname;</a> automatically shows
-				a <a class="see" href="&dacmref;">&dacmname;</a>.
+				A right-click on the character or it's <see cref="&daniref;">&daniname;</see> automatically shows
+				a <see cref="&dacmref;">&dacmname;</see>.
 			</summary>
 			<value>&hexprefix;00000004</value>
 			<seealso cref="P:&dans;.Character.AutoPopupMenu" suffix="Property" prefix="The" />
@@ -441,7 +441,7 @@
 
 		<member name="F:&dans;.CharacterStyleFlags.IconShown">
 			<summary>
-				The character has a <a class="see" href="&daniref;">&daniname;</a> in the taskbar notification area.
+				The character has a <see cref="&daniref;">&daniname;</see> in the taskbar notification area.
 			</summary>
 			<value>&hexprefix;00000008</value>
 			<seealso cref="P:&dans;.Character.IconShown" suffix="Property" prefix="The" />
@@ -480,7 +480,7 @@
 					both be set.
 				</para>
 				<note name="StandAloneOnly">
-					This flag only applies to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					This flag only applies to <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</note>
 			</remarks>
@@ -496,7 +496,7 @@
 					both be set.
 				</para>
 				<note name="StandAloneOnly">
-					This flag only applies to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					This flag only applies to <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</note>
 			</remarks>
@@ -512,7 +512,7 @@
 					flag must also be set.
 				</para>
 				<note name="StandAloneOnly">
-					This flag only applies to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					This flag only applies to <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</note>
 			</remarks>
@@ -618,7 +618,7 @@
 
 		<member name="F:&dans;.ListenCompleteType.DefaultCharacterChanged">
 			<summary>
-				The default character was changed in the <a class="see" href="&dapsref;#Gallery">&dapsname;</a>
+				The default character was changed in the <see cref="&dapsref;#Gallery">&dapsname;</see>
 				window.
 			</summary>
 			<value>7</value>
@@ -642,7 +642,7 @@
 
 		<member name="F:&dans;.ListenCompleteType.UserDisabled">
 			<summary>
-				Speech recognition was disabled in the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a>
+				Speech recognition was disabled in the <see cref="&dapsref;#SpeechInput">&dapsname;</see>
 				window.
 			</summary>
 			<value>8</value>
@@ -780,7 +780,7 @@
 
 		<member name="F:&dans;.ListeningStatusType.InputDisabled">
 			<summary>
-				The user has disabled speech input in the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a>
+				The user has disabled speech input in the <see cref="&dapsref;#SpeechInput">&dapsname;</see>
 				window.
 			</summary>
 			<value>5</value>
@@ -1266,7 +1266,7 @@
 
 		<member name="F:&dans;.VisibilityCauseType.UserHid">
 			<summary>
-				The user hid the character using the command on the character's <a class="see" href="&daniref;">&daniname;</a>
+				The user hid the character using the command on the character's <see cref="&daniref;">&daniname;</see>
 				or using speech input.
 			</summary>
 			<value>1</value>
@@ -1274,7 +1274,7 @@
 
 		<member name="F:&dans;.VisibilityCauseType.UserShowed">
 			<summary>
-				The user showed the character using the command on the character's <a class="see" href="&daniref;">&daniname;</a>
+				The user showed the character using the command on the character's <see cref="&daniref;">&daniname;</see>
 				or using speech input.
 			</summary>
 			<value>2</value>
@@ -1632,7 +1632,7 @@
 		<member name="M:&darootobj;.ShowDefaultCharacterProperties">
 			<summary>
 				<para>
-					Shows the <a class="see" href="&dapsref;#Gallery">Gallery</a> page of the <a class="see" href="&dapsref;">&dapsname;</a>
+					Shows the <see cref="&dapsref;#Gallery">Gallery</see> page of the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</summary>
@@ -1662,7 +1662,7 @@
 			</param>
 			<remarks>
 				<para>
-					This method is obsolete, but is still supported for backward compatibility. Calling it shows the <a class="see" href="&dapsref;">&dapsname;</a>
+					This method is obsolete, but is still supported for backward compatibility. Calling it shows the <see cref="&dapsref;">&dapsname;</see>
 					window. New applications should use the <see cref="T:&dans;.PropertySheet" suffix="Object"></see> instead.
 				</para>
 				<para>
@@ -1775,15 +1775,15 @@
 			<remarks>
 				<para>
 					If this property is <keyword>non-zero</keyword>, then the control will automatically establish a
-					connection with the server the first time it's required. To use the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					connection with the server the first time it's required. To use the control in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode, you must set this property to <keyword>zero</keyword>.
 				</para>
 				<para>
 					This property is only used the <em>first time</em> a server connection is required.  After that, any change to this property will be ignored.
 				</para>
 				<note>
-					The <a class="see" href="..\Programming\Ctl_Programming_Web.htm#ControlOCX">downloadable stand-alone</a> control always runs in
-					<a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.  Therefore, when using <filename>DaControl.OCX</filename>, this
+					The <see cref="e0846736-419c-11e1-9d4f-002421116fb2#ControlOCX">downloadable stand-alone</see> control always runs in
+					<see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see> mode.  Therefore, when using <filename>DaControl.OCX</filename>, this
 					property is always <keyword>zero</keyword>.
 				</note>
 			</remarks>
@@ -1797,7 +1797,7 @@
 					On 64-bit systems, this provides compatibility
 					with 32-bit Microsoft<sup>®</sup> Agent for <em>Windows XP</em>, rather than 64-bit Microsoft<sup>®</sup> Agent.
 					Connecting by default to the 32-bit server (if installed) allows
-					applications to use 32-bit <a class="see" href="..\Programming\Ctl_Programming_Speech.htm">SAPI4</a> voices
+					applications to use 32-bit <see cref="e0846739-419c-11e1-9d4f-002421116fb2">SAPI4</see> voices
 					consistently across all platforms.
 				</para>
 			</details>
@@ -2209,7 +2209,7 @@
 				</para>
 				<note>
 					For compatibility with Microsoft<sup>®</sup> Agent, the <see class="" cref="F:&dans;.CharacterStyleFlags.IconShown" />
-					flag is set by default. To load a <see cref="T:&dans;.Character" /> without showing it's <a class="see" href="&daniref;">&daniname;</a>,
+					flag is set by default. To load a <see cref="T:&dans;.Character" /> without showing it's <see cref="&daniref;">&daniname;</see>,
 					set the <see class="" cref="F:&dans;.CharacterStyleFlags.IconShown" /> flag off.
 				</note>
 			</remarks>
@@ -2253,7 +2253,7 @@
 				</para>
 				<para>
 					The Double Agent control will work whether or not it's connected to the server, but there are are special
-					considerations in each case. See <a href="..\Programming\Ctl_Programming_Modes.htm">Connected, Stand-Alone, and Contained</a>
+					considerations in each case. See <see cref="e084673a-419c-11e1-9d4f-002421116fb2">Connected, Stand-Alone, and Contained</see>
 					for more information.
 				</para>
 			</summary>
@@ -2286,8 +2286,8 @@
 					properties or methods will fail.
 				</para>
 				<note>
-					The <a class="see" href="..\Programming\Ctl_Programming_Web.htm#ControlOCX">downloadable stand-alone</a> control always runs in
-					<a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a> mode.  Therefore, when using <filename>DaControl.OCX</filename>, this
+					The <see cref="e0846736-419c-11e1-9d4f-002421116fb2#ControlOCX">downloadable stand-alone</see> control always runs in
+					<see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see> mode.  Therefore, when using <filename>DaControl.OCX</filename>, this
 					property is always <keyword>false</keyword>.
 				</note>
 			</remarks>
@@ -2345,7 +2345,7 @@
 		<member name="P:&darootobj;.ControlCharacter">
 			<summary>
 				<para>
-					Specifies the control's <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> character.
+					Specifies the control's <see cref="e084673a-419c-11e1-9d4f-002421116fb2#contained">contained</see> character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2373,10 +2373,10 @@
 			<remarks>
 				<para>
 					Setting the <self>ControlCharacter</self> property to a <see cref="T:&dans;.Character" suffix="Object" />
-					changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
-					mode to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a> mode. Setting
-					<self>ControlCharacter</self> to an empty reference changes the control from <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a>
-					mode back to <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					changes the control from <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
+					mode to <see cref="e084673a-419c-11e1-9d4f-002421116fb2#contained">contained</see> mode. Setting
+					<self>ControlCharacter</self> to an empty reference changes the control from <see cref="e084673a-419c-11e1-9d4f-002421116fb2#contained">contained</see>
+					mode back to <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode.
 				</para>
 				<para>
@@ -2455,7 +2455,7 @@
 				<para>
 					When a method that returns a <see cref="T:&dans;.Request" suffix="Object" /> fails, there are two ways
 					to detect the error. If <self>RaiseRequestErrors</self> is set, the Double Agent control will raise an
-					error condition. If it's not set, you can check the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Status" />
+					error condition. If it's not set, you can check the <see cref="T:&dans;.Request" suffix="Object's" />&#160;<see cref="P:&dans;.Request.Status" />
 					property. An example of a request error is when you specify an animation name that doesn't exist for
 					the <see cref="M:&dans;.Character.Play" /> method.
 				</para>
@@ -2613,8 +2613,8 @@
 				</para>
 				<para>
 					This event can occur when the user uses your <see cref="T:&dans;.Commands" suffix="Collection" />,
-					for example, by choosing a <see cref="T:&dans;.Commands" suffix="Collection" /> entry in the <a class="see" href="&davcref;">&davcname;</a>
-					window or in the <a class="see" href="&dacmref;">&dacmname;</a> window for a character. It can also occur
+					for example, by choosing a <see cref="T:&dans;.Commands" suffix="Collection" /> entry in the <see cref="&davcref;">&davcname;</see>
+					window or in the <see cref="&dacmref;">&dacmname;</see> window for a character. It can also occur
 					when the user selects a character (by clicking or speaking its name), when a character becomes visible,
 					or when the character of another client application becomes hidden.
 				</para>
@@ -2678,7 +2678,7 @@
 				</para>
 				<para>
 					A client application may receive this event when the user selects one of the client's entries in the
-					character's <a class="see" href="&dacmref;">&dacmname;</a> or by voice command, when the client application changes
+					character's <see cref="&dacmref;">&dacmname;</see> or by voice command, when the client application changes
 					its active status, or when another client terminates.
 				</para>
 				<para>
@@ -2705,7 +2705,7 @@
 		<member name="E:&darootobj;.AgentPropertyChange">
 			<summary>
 				<para>
-					Signalled when the user changes a property in the <a class="see" href="&dapsref;">&dapsname;</a>
+					Signalled when the user changes a property in the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</summary>
@@ -2728,7 +2728,7 @@
 </syntax>
 			<remarks>
 				<para>
-					This event indicates that the user has changed and applied any property in the <a class="see" href="&dapsref;">&dapsname;</a>
+					This event indicates that the user has changed and applied any property in the <see cref="&dapsref;">&dapsname;</see>
 					window. You can use the <see cref="T:&dans;.Settings" suffix="Object" /> to query the specific property settings.
 				</para>
 			</remarks>
@@ -2748,7 +2748,7 @@
 		<member name="E:&darootobj;.BalloonHide">
 			<summary>
 				<para>
-					Signalled when a character's <a class="see" href="&dawbref;">&dawbname;</a> is hidden.
+					Signalled when a character's <see cref="&dawbref;">&dawbname;</see> is hidden.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2769,7 +2769,7 @@
 </vbscript>
 </syntax>
 			<param name="CharacterID">
-				The unique identifier of the character who's <a class="see" href="&dawbref;">&dawbname;</a>
+				The unique identifier of the character who's <see cref="&dawbref;">&dawbname;</see>
 				was hidden.
 			</param>
 			<remarks>
@@ -2794,7 +2794,7 @@
 		<member name="E:&darootobj;.BalloonShow">
 			<summary>
 				<para>
-					Signalled when a character's <a class="see" href="&dawbref;">&dawbname;</a> is shown.
+					Signalled when a character's <see cref="&dawbref;">&dawbname;</see> is shown.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2815,7 +2815,7 @@
 </vbscript>
 </syntax>
 			<param name="CharacterID">
-				The unique identifier of the character who's <a class="see" href="&dawbref;">&dawbname;</a>
+				The unique identifier of the character who's <see cref="&dawbref;">&dawbname;</see>
 				was shown.
 			</param>
 			<remarks>
@@ -2864,7 +2864,7 @@
 			<remarks>
 				<para>
 					To specify a bookmark event, use the <see cref="M:&dans;.Character.Speak" /> or <see cref="M:&dans;.Character.SpeakFormatted" />
-					method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
+					method with a <keyword>Mrk</keyword> tag in your supplied text. For more information about tags, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2">Speech Output Tags</see>.
 				</para>
 			</remarks>
 			<seealso cref="M:&dans;.Character.Speak" prefix="The" suffix="Method" />
@@ -2884,7 +2884,7 @@
 		<member name="E:&darootobj;.Click">
 			<summary>
 				<para>
-					Signalled when the user clicks a character, or the character's <a class="see" href="&daniref;">&daniname;</a>.
+					Signalled when the user clicks a character, or the character's <see cref="&daniref;">&daniname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -2912,16 +2912,16 @@
 			<remarks>
 				<para>
 					This event is sent only to the <glossary>input-active</glossary> client of a character. When the user
-					clicks a character or its <a class="see" href="&daniref;">&daniname;</a> with no <glossary>input-active</glossary>
+					clicks a character or its <see cref="&daniref;">&daniname;</see> with no <glossary>input-active</glossary>
 					client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:&dans;.Character.Visible" />
 					is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary>
 					client as the last <glossary>input-active</glossary> client, sending the <see cref="E:&darootobj;.ActivateInput" />
 					event to that client, and then sending the <keyword>Click</keyword> event. If the character is hidden (<see cref="P:&dans;.Character.Visible" />
-					is <keyword>False</keyword>), and the user clicks the character's <a class="see" href="&daniref;">&daniname;</a>
+					is <keyword>False</keyword>), and the user clicks the character's <see cref="&daniref;">&daniname;</see>
 					using button 1, the character is also automatically shown.
 				</para>
 				<note>
-					Clicking a character does not disable all other character output. However, pressing the <glossary>Listening key</glossary> <em>does</em>
+					Clicking a character does not disable all other character output. However, pressing the <glossary>Listening key</glossary>&#160;<em>does</em>
 					flush the <glossary>input-active</glossary> character's output and triggers the <see cref="E:&darootobj;.RequestComplete" />
 					event, passing a <see cref="P:&dans;.Request.Status" /> that indicates that the client's queue was interrupted.
 				</note>
@@ -2969,7 +2969,7 @@
 			<remarks>
 				<para>
 					Double Agent sends this event when your application is <glossary>input-active</glossary> and the user
-					chooses a command from the character's <a class="see" href="&dacmref;">&dacmname;</a>, or by spoken input.
+					chooses a command from the character's <see cref="&dacmref;">&dacmname;</see>, or by spoken input.
 				</para>
 			</remarks>
 			<seealso cref="T:&dans;.UserInput" prefix="The" suffix="Object" />
@@ -3016,12 +3016,12 @@
 			<remarks>
 				<para>
 					This event is sent only to the <glossary>input-active</glossary> client of a character. When the user
-					double-clicks a character or its <a class="see" href="&daniref;">&daniname;</a> with no <glossary>input-active</glossary>
+					double-clicks a character or its <see cref="&daniref;">&daniname;</see> with no <glossary>input-active</glossary>
 					client, Double Agent sends the event to its active client. If the character is visible (<see cref="P:&dans;.Character.Visible" />
 					is <keyword>True</keyword>), the user's action also sets the character's current <glossary>input-active</glossary>
 					client as the last <glossary>input-active</glossary> client, sending the <see cref="E:&darootobj;.ActivateInput" />
 					event to that client, and then sending the <keyword>DblClick</keyword> event. If the character is hidden (<see cref="P:&dans;.Character.Visible" />
-					is <keyword>False</keyword>), and the user double-clicks the character's <a class="see" href="&daniref;">&daniname;</a>
+					is <keyword>False</keyword>), and the user double-clicks the character's <see cref="&daniref;">&daniname;</see>
 					using button 1, the character is also automatically shown.
 				</para>
 			</remarks>
@@ -3072,8 +3072,8 @@
 				</para>
 				<para>
 					This event is signalled when your client application is <glossary>input-active</glossary> and the user
-					chooses a another client's <see cref="T:&dans;.Command" /> in a character's <a class="see" href="&dacmref;">&dacmname;</a>
-					or the <a class="see" href="&davcref;">&davcname;</a> window, or you call the <see cref="M:&dans;.Character.Activate" />
+					chooses a another client's <see cref="T:&dans;.Command" /> in a character's <see cref="&dacmref;">&dacmname;</see>
+					or the <see cref="&davcref;">&davcname;</see> window, or you call the <see cref="M:&dans;.Character.Activate" />
 					method and set the <paramref name="State" /> parameter to <keyword xml:space="preserve"><copy path="/doc/members/member[@name='F:&dans;.ActiveStateType.Inactive']/value" /></keyword>
 					(<see class="see" cref="F:&dans;.ActiveStateType.Inactive" />). It may also occur when the user selects the
 					name of another character by clicking or speaking. You also get this event when your character is
@@ -4205,8 +4205,8 @@
 					<item>
 						<description>
 							<para>
-								The <self>Control Object</self> supports following ActiveX<sup>®</sup> <glossary>appearance</glossary>
-								properties when the control is used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a>
+								The <self>Control Object</self> supports following ActiveX<sup>®</sup>&#160;<glossary>appearance</glossary>
+								properties when the control is used in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#contained">contained</see>
 								mode:
 							</para>
 						</description>
@@ -4501,7 +4501,7 @@
 			<remarks>
 				<para>
 					Some programming environments may assign additional design-time or run-time properties. For example, Visual
-					Basic adds a <a class="see keyword" href="../Programming/Ctl_Control_Name.htm">Name</a> property that identifies
+					Basic adds a <see cref="8d5fdecd-2580-4545-8a88-0d231385c4ba">Name</see> property that identifies
 					the control, and also <keyword>Left</keyword> and <keyword>Top</keyword> properties that define the location
 					of the control on a form, even if the control doesn't appear on the form's page at run time.
 				</para>
@@ -4629,7 +4629,7 @@
 					<code xml:space="preserve" language="vbscript">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "Genie", "MyCharacters\Genie.acs"</code>
 				<para>
 					You can load the default character by omitting the second parameter of the <self>Load</self> method, or
-					passing an empty string. This will load the <a class="see" href="&dapsref;#Gallery">default character</a>
+					passing an empty string. This will load the <see cref="&dapsref;#Gallery">default character</see>
 					from the <see class="see" cref="P:&dans;.CharacterFiles.DefaultFilePath" text="default file path" />.
 				</para>
 					<code xml:space="preserve" language="vbscript">&darootref;.<keyword>Characters</keyword>.<keyword>Load</keyword> "DefChar"</code>
@@ -4942,7 +4942,7 @@
 			</syntax>
 			<remarks>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" /> <see class="" cref="P:&darootobj;.Characters" />
+					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" />&#160;<see class="" cref="P:&darootobj;.Characters" />
 					property.
 				</para>
 			</remarks>
@@ -5123,7 +5123,7 @@
 		<member name="M:&dans;.Character.GenerateIcon">
 			<summary>
 				<para>
-					Generates a <a class="see" href="&daniref;">&daniname;</a> from one frame of the character's animations.
+					Generates a <see cref="&daniref;">&daniname;</see> from one frame of the character's animations.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -5169,11 +5169,11 @@
 					removed).
 				</para>
 				<note>
-					You can only use this method once per character. Once a <a class="see" href="&daniref;">&daniname;</a>
+					You can only use this method once per character. Once a <see cref="&daniref;">&daniname;</see>
 					has been generated, it cannot be changed.
 				</note>
 				<note>
-					If you use this method for a character that has a <a class="see" href="&daniref;">&daniname;</a>
+					If you use this method for a character that has a <see cref="&daniref;">&daniname;</see>
 					in its definition, the defined icon is replaced by the generated icon for as long as the character is
 					loaded.
 				</note>
@@ -5443,7 +5443,7 @@
 				<para>
 					<self>Listen</self> also fails if there is no compatible speech engine available that matches the
 					character's <see cref="P:&dans;.Character.LanguageID" /> setting, the user has disabled speech input using
-					the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a> window, or the audio device is busy.
+					the <see cref="&dapsref;#SpeechInput">&dapsname;</see> window, or the audio device is busy.
 				</para>
 				<para>
 					When you successfully set this method to <keyword>True</keyword>, the Double Agent signals the <see cref="E:&darootobj;.ListenStart" />
@@ -5640,7 +5640,7 @@
 			<details>
 				<para>
 					You can declare an object reference and set it to the method's <see cref="T:&dans;.Request" suffix="Object" />
-					return value. If the associated animation fails to load, Double Agent sets the <see cref="T:&dans;.Request" suffix="Object's" /> <see cref="P:&dans;.Request.Status" />
+					return value. If the associated animation fails to load, Double Agent sets the <see cref="T:&dans;.Request" suffix="Object's" />&#160;<see cref="P:&dans;.Request.Status" />
 					property to 1 (Failed) with an appropriate error <see cref="P:&dans;.Request.Number" />. You can use the
 					<see cref="E:&darootobj;.RequestComplete" /> event to check the status and determine what action to take.
 				</para>
@@ -5756,7 +5756,7 @@
 		<member name="M:&dans;.Character.ShowPopupMenu">
 			<summary>
 				<para>
-					Displays the character's <a class="see" href="&dacmref;">&dacmname;</a> at the specified location.
+					Displays the character's <see cref="&dacmref;">&dacmname;</see> at the specified location.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -5781,7 +5781,7 @@
 			<remarks>
 				<para>
 					If the <see cref="P:&dans;.Character.AutoPopupMenu" /> property is set to <keyword>True</keyword>,
-					Double Agent automatically displays the character's <a class="see" href="&dacmref;">&dacmname;</a> when the
+					Double Agent automatically displays the character's <see cref="&dacmref;">&dacmname;</see> when the
 					user right-clicks the character. If you set <see cref="P:&dans;.Character.AutoPopupMenu" /> to <keyword>False</keyword>,
 					you can use <self>ShowPopupMenu</self> to display the menu.
 				</para>
@@ -5845,9 +5845,9 @@
 			<remarks>
 				<para>
 					At least one of the <paramref name="Text" /> and <paramref name="Url" /> parameters must be supplied. To
-					use this method with a character configured to speak only in its <a class="see" href="&dawbref;">&dawbname;</a>
+					use this method with a character configured to speak only in its <see cref="&dawbref;">&dawbname;</see>
 					or using a text-to-speech (TTS) engine, simply provide the <paramref name="Text" /> parameter. Include a
-					space between words to define appropriate word breaks in the <a class="see" href="&dawbref;">&dawbname;</a>,
+					space between words to define appropriate word breaks in the <see cref="&dawbref;">&dawbname;</see>,
 					even for languages that do not traditionally include spaces.
 				</para>
 				<para>
@@ -5860,7 +5860,7 @@
 				<h4 class="details">Text-To-Speech</h4>
 				<para>
 					Support for TTS output is defined when the character is authored. To generate TTS output, a compatible TTS
-					engine must already be installed before calling this method. For further information, see <a href="../Programming/Ctl_Programming_Speech.htm">Using Speech Services</a>.
+					engine must already be installed before calling this method. For further information, see <see cref="e0846739-419c-11e1-9d4f-002421116fb2">Using Speech Services</see>.
 				</para>
 				<para>
 					Unlike Microsoft<sup>®</sup> Agent, Double Agents supports the <self>Speak</self> method for characters that
@@ -5869,7 +5869,7 @@
 				</para>
 				<para>
 					You can vary parameters of the speech output with special tags that you include in the <paramref name="Text" />
-					parameter. For more information, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
+					parameter. For more information, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2">Speech Output Tags</see>.
 				</para>
 				<codeSample>
 					<para>
@@ -5885,12 +5885,12 @@
        <keyword>Msgbox</keyword> "Tada!"
     <keyword>End If</keyword>
 <keyword>End Sub</keyword></code>
-					For more information on the bookmark speech tag, see <a href="../Reference/Ref_SpeechTags.htm#Mrk">Speech Output Tags</a>.
+					For more information on the bookmark speech tag, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2#Mrk">Speech Output Tags</see>.
 				</codeSample>
 				<para>
-					Agent's automatic word breaking in the <a class="see" href="&dawbref;">&dawbname;</a> breaks words using
+					Agent's automatic word breaking in the <see cref="&dawbref;">&dawbname;</see> breaks words using
 					<glossary>white-space</glossary> characters (for example, Space or Tab). However, if it cannot, it may break
-					a word to fit the <a class="see" href="&dawbref;">&dawbname;</a>. In languages like Japanese, Chinese, and
+					a word to fit the <see cref="&dawbref;">&dawbname;</see>. In languages like Japanese, Chinese, and
 					Thai, where spaces are not used to break words, insert a Unicode zero-width space character (0x200B)
 					between characters to define logical word breaks.
 				</para>
@@ -5907,18 +5907,18 @@
 				</para>
 				<para>
 					When using recorded sound file output, you can still use the <paramref name="Text" /> parameter to
-					specify the words that appear in the character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					specify the words that appear in the character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 				<para>
 					If you call <self>Speak</self> and the audio channel is busy, the character's audio output will not
-					be heard, but the text will display in the <a class="see" href="&dawbref;">&dawbname;</a>.
+					be heard, but the text will display in the <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</details>
 			<details>
 				<h4 class="details">Animation</h4>
 				<para>
 					The <self>Speak</self> method uses the last action played to determine which speaking animation to
-					play. For example, if you preceded the <self>Speak</self> command with <keyword>Play</keyword> <literal>"GestureRight"</literal>,
+					play. For example, if you preceded the <self>Speak</self> command with <keyword>Play</keyword>&#160;<literal>"GestureRight"</literal>,
 					Double Agent will play <glossary>GestureRight</glossary> and then the <glossary>GestureRight</glossary>
 					speaking animation. If the last animation played has no speaking animation, Double Agent plays the
 					animation assigned to the character's <glossary>Speaking</glossary> state.
@@ -5929,12 +5929,12 @@
 					return value.
 				</note>
 				<note>
-					The <a class="see" href="&dawbref;">&dawbname;'s</a> <see cref="P:&dans;.Balloon.Enabled" />
+					The <see cref="&dawbref;">&dawbname;'s</see>&#160;<see cref="P:&dans;.Balloon.Enabled" />
 					property must also be <keyword>True</keyword> for text to display.
 				</note>
 				<note>
 					Set the character's <see cref="P:&dans;.Character.LanguageID" /> before using the <self>Speak</self>
-					method to ensure appropriate text display within the <a class="see" href="&dawbref;">&dawbname;</a>.
+					method to ensure appropriate text display within the <see cref="&dawbref;">&dawbname;</see>.
 				</note>
 			</details>
 			<seealso cref="P:&dans;.Character.LanguageID" prefix="The" suffix="Property" />
@@ -6088,7 +6088,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="M:&dans;.Character.Think">
 			<summary>
 				<para>
-					Displays the specified text in the character's <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
+					Displays the specified text in the character's <glossary>thought</glossary>&#160;<see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6115,20 +6115,20 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			<remarks>
 				<para>
 					Like the <see cref="M:&dans;.Character.Speak" /> method, the <self>Think</self> method is a queued request
-					that displays text in a <a class="see" href="&dawbref;">&dawbname;</a>, except that the <self>Think</self> <a class="see" href="&dawbref;">&dawbname;</a>
-					differs visually. In addition, the <a class="see" href="&dawbref;">&dawbname;</a> supports only the bookmark
+					that displays text in a <see cref="&dawbref;">&dawbname;</see>, except that the <self>Think</self>&#160;<see cref="&dawbref;">&dawbname;</see>
+					differs visually. In addition, the <see cref="&dawbref;">&dawbname;</see> supports only the bookmark
 					speech control tag (<keyword>Mrk</keyword>) and ignores any other speech control tags. Unlike <see cref="M:&dans;.Character.Speak" />,
 					the <self>Think</self> method does not change the character's animation state.
 				</para>
 				<para>
 					The <see cref="T:&dans;.Balloon" suffix="Object's" /> properties affect the output of both the <see cref="M:&dans;.Character.Speak" />
-					and <self>Think</self> methods. For example, the <see cref="T:&dans;.Balloon" suffix="Object's" /> <see cref="P:&dans;.Balloon.Enabled" />
+					and <self>Think</self> methods. For example, the <see cref="T:&dans;.Balloon" suffix="Object's" />&#160;<see cref="P:&dans;.Balloon.Enabled" />
 					property must be <keyword>True</keyword> for text to display.
 				</para>
 				<para>
-					Agent's automatic word breaking in the <a class="see" href="&dawbref;">&dawbname;</a> breaks words using
+					Agent's automatic word breaking in the <see cref="&dawbref;">&dawbname;</see> breaks words using
 					<glossary>white-space</glossary> characters (for example, SPACE or TAB). However, if it cannot, it may break
-					a word to fit the <a class="see" href="&dawbref;">&dawbname;</a>. In languages like Japanese, Chinese, and
+					a word to fit the <see cref="&dawbref;">&dawbname;</see>. In languages like Japanese, Chinese, and
 					Thai where spaces are not used to break words, insert a Unicode zero-width space character (0x200B) between
 					characters to define logical word breaks.
 				</para>
@@ -6138,7 +6138,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 				</note>
 				<note>
 					Set the character's <see cref="P:&dans;.Character.LanguageID" /> before using the <self>Think</self>
-					method to ensure appropriate text display within the <a class="see" href="&dawbref;">&dawbname;</a>.
+					method to ensure appropriate text display within the <see cref="&dawbref;">&dawbname;</see>.
 				</note>
 			</remarks>
 			<seealso cref="P:&dans;.Character.LanguageID" prefix="The" suffix="Property" />
@@ -6353,8 +6353,8 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.AutoPopupMenu">
 			<summary>
 				<para>
-					Specifies if right-clicking the character or its <a class="see" href="&daniref;">&daniname;</a>
-					automatically displays the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					Specifies if right-clicking the character or its <see cref="&daniref;">&daniname;</see>
+					automatically displays the character's <see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6373,7 +6373,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 </syntax>
 			<value name="Enabled">
 				A <typename>boolean</typename> value specifying whether Double Agent automatically displays
-				the character's <a class="see" href="&dacmref;">&dacmname;</a> on right-click.
+				the character's <see cref="&dacmref;">&dacmname;</see> on right-click.
 			</value>
 			<remarks>
 				<para>
@@ -6480,7 +6480,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.Connected">
 			<summary>
 				<para>
-					Indicates if the <see cref="T:&dans;.Character" suffix="Object" /> is <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#connected">connected</a>
+					Indicates if the <see cref="T:&dans;.Character" suffix="Object" /> is <see cref="e084673a-419c-11e1-9d4f-002421116fb2#connected">connected</see>
 					to the Double Agent server.
 				</para>
 			</summary>
@@ -6501,9 +6501,9 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			</value>
 			<remarks>
 				<para>
-					When the control is being used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					When the control is being used in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode, any <see cref="T:&dans;.Character" /> you load <em>will</em> be <self>Connected</self>. When the control
-					is being used in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
+					is being used in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
 					mode, any <see cref="T:&dans;.Character" /> you load <em>will not</em> be <self>Connected</self>.
 				</para>
 			</remarks>
@@ -6668,7 +6668,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.HasIcon">
 			<summary>
 				<para>
-					Indicates if the character has a <a class="see" href="&daniref;">&daniname;</a> in its definition.
+					Indicates if the character has a <see cref="&daniref;">&daniname;</see> in its definition.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6684,7 +6684,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 </syntax>
 			<value name="HasIcon">
 				A <typename>boolean</typename> value that indicates if the character definition includes
-				a <a class="see" href="&daniref;">&daniname;</a>.
+				a <see cref="&daniref;">&daniname;</see>.
 			</value>
 			<remarks>
 				<para>
@@ -6800,7 +6800,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.IconIdentity">
 			<summary>
 				<para>
-					Specifies the identity that Windows will use to remember the character's <a class="see" href="&daniref;">&daniname;</a>.
+					Specifies the identity that Windows will use to remember the character's <see cref="&daniref;">&daniname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6819,13 +6819,13 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 </syntax>
 			<value name="IconIdentity">
 				A <typename>string</typename> value that allows Windows to uniquely identify this
-				character's <a class="see" href="&daniref;">&daniname;</a>. It must be either a valid GUID string or an
+				character's <see cref="&daniref;">&daniname;</see>. It must be either a valid GUID string or an
 				empty string.
 			</value>
 			<remarks>
 				<para>
-					Every <a class="see" href="&daniref;">&daniname;</a> has an identity that allows Windows to remember it's
-					state (shown, hidden, active, etc.). By default, Windows associates a <a class="see" href="&daniref;">&daniname;</a>
+					Every <see cref="&daniref;">&daniname;</see> has an identity that allows Windows to remember it's
+					state (shown, hidden, active, etc.). By default, Windows associates a <see cref="&daniref;">&daniname;</see>
 					with the application that creates it.
 				</para>
 				<para>
@@ -6833,21 +6833,21 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 				</para>
 				<list type="bullet">
 					<item>
-						If the character was loaded by the Double Agent server, it's <a class="see" href="&daniref;">&daniname;</a>
+						If the character was loaded by the Double Agent server, it's <see cref="&daniref;">&daniname;</see>
 						will be associated with the server by default.
 					</item>
 					<item>
-						If you're using the control in <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#standalone">stand-alone</a>
-						mode, the character's <a class="see" href="&daniref;">&daniname;</a> will be associated with your client application
+						If you're using the control in <see cref="e084673a-419c-11e1-9d4f-002421116fb2#standalone">stand-alone</see>
+						mode, the character's <see cref="&daniref;">&daniname;</see> will be associated with your client application
 						by default.
 					</item>
 					<item>
-						You can supply a <em>single</em> GUID for all characters you load. All of their <a class="see" href="&daniref;">&daniname;s</a>
+						You can supply a <em>single</em> GUID for all characters you load. All of their <see cref="&daniref;">&daniname;s</see>
 						will be associated with that single identity.
 					</item>
 					<item>
 						You can supply a <em>unique</em> GUID for each character you load. Windows will then identify each
-						character's <a class="see" href="&daniref;">&daniname;</a> uniquely.
+						character's <see cref="&daniref;">&daniname;</see> uniquely.
 					</item>
 				</list>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -6861,7 +6861,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.IconShown">
 			<summary>
 				<para>
-					Specifies if the character's <a class="see" href="&daniref;">&daniname;</a> is shown in the Windows notification
+					Specifies if the character's <see cref="&daniref;">&daniname;</see> is shown in the Windows notification
 					area.
 				</para>
 			</summary>
@@ -6884,12 +6884,12 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			</value>
 			<remarks>
 				<para>
-					This property only specifies if the <a class="see" href="&daniref;">&daniname;</a> is added to the
+					This property only specifies if the <see cref="&daniref;">&daniname;</see> is added to the
 					Windows notification area. The user decides whether it's visible or hidden. See the <see cref="P:&dans;.Character.IconIdentity" />
 					property for more details.
 				</para>
 				<note>
-					This property has no effect if the character doesn't have a <a class="see" href="&daniref;">&daniname;</a>.
+					This property has no effect if the character doesn't have a <see cref="&daniref;">&daniname;</see>.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -6907,7 +6907,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.IconTip">
 			<summary>
 				<para>
-					Specifies the tip text associated with the character's <a class="see" href="&daniref;">&daniname;</a>.
+					Specifies the tip text associated with the character's <see cref="&daniref;">&daniname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -6925,12 +6925,12 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 </vb>
 </syntax>
 			<value name="IconTip">
-				A <typename>string</typename> value that specifies the <a class="see" href="&daniref;">&daniname;'s</a>
+				A <typename>string</typename> value that specifies the <see cref="&daniref;">&daniname;'s</see>
 				tip text. An empty string means that the default tip (the character's name) is used.
 			</value>
 			<remarks>
 				<para>
-					By default, the character's <see cref="P:&dans;.Character.Name" /> is shown in the <a class="see" href="&daniref;">&daniname;</a>
+					By default, the character's <see cref="P:&dans;.Character.Name" /> is shown in the <see cref="&daniref;">&daniname;</see>
 					tip. You can use <em>this</em> property to show your own tip.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -6945,7 +6945,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="P:&dans;.Character.IconVisible">
 			<summary>
 				<para>
-					Indicates if the character has a <a class="see" href="&daniref;">&daniname;</a> in the Windows notification
+					Indicates if the character has a <see cref="&daniref;">&daniname;</see> in the Windows notification
 					area.
 				</para>
 			</summary>
@@ -6962,18 +6962,18 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 </syntax>
 			<value name="IconVisible">
 				A <typename>boolean</typename> value that indicates if the character is showing
-				a <a class="see" href="&daniref;">&daniname;</a>.
+				a <see cref="&daniref;">&daniname;</see>.
 			</value>
 			<remarks>
 				<para>
-					This property only indicates if the <a class="see" href="&daniref;">&daniname;</a> has been created. The
+					This property only indicates if the <see cref="&daniref;">&daniname;</see> has been created. The
 					user decides if the icon is actually visible or hidden.
 				</para>
 				<para>
 					The <see cref="F:&dans;.CharacterStyleFlags.IconShown" /> style only applies to your client application, so
 					it is only in effect when you application is the character's active client. When your application is
 					<em>not</em> the character's active client, you can use this property to determine if another client has
-					shown or hidden the <a class="see" href="&daniref;">&daniname;</a>.
+					shown or hidden the <see cref="&daniref;">&daniname;</see>.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='AllClients']" />
 			</remarks>
@@ -7100,14 +7100,14 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					If you do not set the character's <self>LanguageID</self>, it defaults to the current system language.
 				</para>
 				<para>
-					This property also determines the language for <a class="see" href="&dawbref;">&dawbname;</a> text,
-					the commands in the character's <a class="see" href="&dacmref;">&dacmname;</a>,
+					This property also determines the language for <see cref="&dawbref;">&dawbname;</see> text,
+					the commands in the character's <see cref="&dacmref;">&dacmname;</see>,
 					the default language for text-to-speech output,
 					and the default speech recognition language.
 				</para>
 				<para>
 					If an appropriate Agent language DLL for the specified <self>LanguageID</self> is <em>not</em> installed, the
-					commands in the character's <a class="see" href="&dacmref;">&dacmname;</a> and <a class="see" href="&davcref;">&davcname;</a> window
+					commands in the character's <see cref="&dacmref;">&dacmname;</see> and <see cref="&davcref;">&davcname;</see> window
 					will be in English.
 				</para>
 			</remarks>
@@ -7131,7 +7131,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 				<note>
 					If you set <self>LanguageID</self> to a language that supports bidirectional text (such as Arabic
 					or Hebrew), but the system running your application does not have bidirectional support installed,
-					text in the <a class="see" href="&dawbref;">&dawbname;</a> may appear in logical rather than display order.
+					text in the <see cref="&dawbref;">&dawbname;</see> may appear in logical rather than display order.
 				</note>
 
 			</details>
@@ -7211,11 +7211,11 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 			<details>
 				<h4 class="details">Details</h4>
 				<para>
-					When speech input is enabled in the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a> window,
+					When speech input is enabled in the <see cref="&dapsref;#SpeechInput">&dapsname;</see> window,
 					querying this property will load the associated engine, if it is not already loaded, and start
-					speech services. That is, the <glossary>Listening key</glossary> is available, and the <a class="see" href="&daltref;">&daltname;</a>
-					is automatically displayable. (The <glossary>Listening key</glossary> and <a class="see" href="&daltref;">&daltname;</a>
-					are only enabled if they are also enabled in the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a>
+					speech services. That is, the <glossary>Listening key</glossary> is available, and the <see cref="&daltref;">&daltname;</see>
+					is automatically displayable. (The <glossary>Listening key</glossary> and <see cref="&daltref;">&daltname;</see>
+					are only enabled if they are also enabled in the <see cref="&dapsref;#SpeechInput">&dapsname;</see>
 					window.) However, if you query the property when speech is disabled, Double Agent does not start speech
 					services.
 				</para>
@@ -7389,7 +7389,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					Although your application cannot write this value, you can include <keyword>Pit</keyword> (pitch) tags
 					in your speech output text that will temporarily change the pitch for a particular utterance. However,
 					using the <keyword>Pit</keyword> tag to change the pitch will not change the <self>Pitch</self> property value.
-					For further information, see <a href="../Reference/Ref_SpeechTags.htm#Pit">Speech Output Tags</a>.
+					For further information, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2#Pit">Speech Output Tags</see>.
 				</para>
 			</remarks>
 		</member>
@@ -7508,7 +7508,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 				<note>
-					This settings can be overridden by the user in the <a class="see" href="&dapsref;#Output">&dapsname;</a>
+					This settings can be overridden by the user in the <see cref="&dapsref;#Output">&dapsname;</see>
 					window.
 				</note>
 			</remarks>
@@ -7565,7 +7565,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					Although your application cannot write this value, you can include <keyword>Spd</keyword> (speed) tags
 					in your speech output text that will temporarily change the output speed for a particular utterance.
 					However, using the <keyword>Spd</keyword> tag to change the character's spoken output does not affect the
-					<self>Speed</self> property value. For further information, see <a href="../Reference/Ref_SpeechTags.htm#Spd">Speech Output Tags</a>.
+					<self>Speed</self> property value. For further information, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2#Spd">Speech Output Tags</see>.
 				</para>
 			</remarks>
 		</member>
@@ -7664,8 +7664,8 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 				<para>
 					When speech input is enabled, querying or setting this property will load the associated engine (if
 					it is not already loaded), and start speech services. That is, the <glossary>Listening key</glossary>
-					is available, and the <a class="see" href="&daltref;">&daltname;</a> is displayable. (The <glossary>Listening key</glossary>
-					and <a class="see" href="&daltref;">&daltname;</a> are enabled only if they are also enabled in the <a class="see" href="&dapsref;#SpeechInput">&dapsname;</a>
+					is available, and the <see cref="&daltref;">&daltname;</see> is displayable. (The <glossary>Listening key</glossary>
+					and <see cref="&daltref;">&daltname;</see> are enabled only if they are also enabled in the <see cref="&dapsref;#SpeechInput">&dapsname;</see>
 					window.) However, if you query the property when speech is disabled, Double Agent does not start speech
 					services.
 				</para>
@@ -7906,7 +7906,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					Setting this property overrides Double Agent's attempt to load an engine based on the character's compiled
 					TTS setting and the character's current <see cref="P:&dans;.Character.LanguageID" /> setting. However, if
 					you specify a mode ID for an engine that isn't installed or if the user has disabled speech output
-					in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window, Double Agent raises an error.
+					in the <see cref="&dapsref;#Output">&dapsname;</see> window, Double Agent raises an error.
 				</para>
 				<para>
 					If you do not (or have not successfully) set the character's <self>TTSModeID</self>, Double Agent checks
@@ -7916,7 +7916,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					the character's <see cref="P:&dans;.Character.LanguageID" /> and gender. If you have not set the character's <see cref="P:&dans;.Character.LanguageID" />,
 					the current user language is used. If no matching engine can be found, this property returns an
 					empty string. Similarly, if you query this property when the user has disabled speech output in
-					the <a class="see" href="&dapsref;#Output">&dapsname;</a> window, the value will be an empty string.
+					the <see cref="&dapsref;#Output">&dapsname;</see> window, the value will be an empty string.
 				</para>
 				<para>
 					Querying or setting this property will load the associated engine (if it is not already loaded). However,
@@ -8235,7 +8235,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 		<member name="M:&dans;.Character.ThinkFormatted">
 			<summary>
 				<para>
-					Displays the specified text in the character's <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
+					Displays the specified text in the character's <glossary>thought</glossary>&#160;<see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -8325,7 +8325,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 						<item>the current animation (if any) is paused;</item>
 						<item>the current speech output (if any) is paused;</item>
 						<item>
-							the current <a class="see" href="&dawbref;">&dawbname;</a> output (if any) is paused;
+							the current <see cref="&dawbref;">&dawbname;</see> output (if any) is paused;
 						</item>
 						<item>
 							<glossary>Listening mode</glossary> is paused (if it's active).
@@ -8385,7 +8385,7 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 						<item>the current animation (if any) is stopped;</item>
 						<item>the current speech output (if any) is stopped;</item>
 						<item>
-							the current <a class="see" href="&dawbref;">&dawbname;</a> output (if any) is stopped;
+							the current <see cref="&dawbref;">&dawbname;</see> output (if any) is stopped;
 						</item>
 						<item>
 							<glossary>Listening mode</glossary> is stopped (if it's active).
@@ -8442,16 +8442,16 @@ Genie.<keyword>Stop</keyword> MyRequest</code>
 					When <self>SuspendHide</self> is <keyword>True</keyword> and the user switches away from your application:
 					<list type="bullet" class="close">
 						<item>
-							the character window is hidden, if it's visible and not <a class="see" href="..\Programming\Ctl_Programming_Modes.htm#contained">contained</a>;
+							the character window is hidden, if it's visible and not <see cref="e084673a-419c-11e1-9d4f-002421116fb2#contained">contained</see>;
 						</item>
 						<item>
-							the <a class="see" href="&dawbref;">&dawbname;</a> is hidden, if it's visible;
+							the <see cref="&dawbref;">&dawbname;</see> is hidden, if it's visible;
 						</item>
 						<item>
-							the <a class="see" href="&daltref;">&daltname;</a> is hidden, if it's visible;
+							the <see cref="&daltref;">&daltname;</see> is hidden, if it's visible;
 						</item>
 						<item>
-							the <a class="see" href="&davcref;">&davcname;</a> window is hidden, if it's visible.
+							the <see cref="&davcref;">&davcname;</see> window is hidden, if it's visible.
 						</item>
 					</list>
 					When the user switches back to your application, everything that was hidden is shown again.
@@ -9229,24 +9229,24 @@ Genie.<keyword>Show</keyword>();
 			</param>
 			<param name="Caption">
 				A <typename>string</typename> value specifying the name that will appear in the
-				character's <a class="see" href="&dacmref;">&dacmname;</a> and in the <a class="see" href="&davcref;">&davcname;</a>
-				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+				character's <see cref="&dacmref;">&dacmname;</see> and in the <see cref="&davcref;">&davcname;</see>
+				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Caption" />
 				property.
 			</param>
 			<param name="VoiceGrammar">
 				A <typename>string</typename> value specifying the words or phrase used by
 				the speech engine for recognizing this command. For more information on formatting alternatives for
-				the string, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.VoiceGrammar" />
+				the string, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.VoiceGrammar" />
 				property.
 			</param>
 			<param name="Enabled">
 				A <typename>boolean</typename> value indicating whether the command is enabled. The
-				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Enabled" />
+				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Enabled" />
 				property.
 			</param>
 			<param name="Visible">
 				A <typename>boolean</typename> value indicating whether the command is visible in
-				the character's <a class="see" href="&dacmref;">&dacmname;</a> when the client application is <glossary>input-active</glossary>.
+				the character's <see cref="&dacmref;">&dacmname;</see> when the client application is <glossary>input-active</glossary>.
 				The default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
 				<see cref="P:&dans;.Command.Visible" /> property.
 			</param>
@@ -9256,7 +9256,7 @@ Genie.<keyword>Show</keyword>();
 			</returns>
 			<remarks>
 				<para>
-					The value of a <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Name" />
+					The value of a <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Name" />
 					property must be unique within its <see cref="T:&dans;.Commands" suffix="Collection" />. You must remove a
 					<see cref="T:&dans;.Command" /> before you can create a new <see cref="T:&dans;.Command" /> with the same
 					<see cref="P:&dans;.Command.Name" /> property. Attempting to create a <see cref="T:&dans;.Command" />
@@ -9267,7 +9267,7 @@ Genie.<keyword>Show</keyword>();
 					object and assign a <see cref="T:&dans;.Command" /> to it when you call the <self>Add</self> method.
 				</para>
 				<codeSample>
-					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command1 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command1 <keyword>as</keyword>&#160;<keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
 <keyword>Set</keyword> Command1 = Genie.<keyword>Commands</keyword>.<keyword>Add</keyword> ("my first command", "Test", "Test", True, True)
 Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</codeSample>
@@ -9354,24 +9354,24 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</param>
 			<param name="Caption">
 				A <typename>string</typename> value specifying the name that will appear in the
-				character's <a class="see" href="&dacmref;">&dacmname;</a> and in the <a class="see" href="&davcref;">&davcname;</a>
-				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
+				character's <see cref="&dacmref;">&dacmname;</see> and in the <see cref="&davcref;">&davcname;</see>
+				window when the client application is <glossary>input-active</glossary>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Caption" />
 				property.
 			</param>
 			<param name="VoiceGrammar">
 				A <typename>string</typename> value specifying the words or phrase used by
 				the speech engine for recognizing this command. For more information on formatting alternatives for
-				the string, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.VoiceGrammar" />
+				the string, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.VoiceGrammar" />
 				property.
 			</param>
 			<param name="Enabled">
 				A <typename>boolean</typename> value indicating whether the command is enabled. The
-				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Enabled" />
+				default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Enabled" />
 				property.
 			</param>
 			<param name="Visible">
 				A <typename>boolean</typename> value indicating whether the command is visible in
-				the character's <a class="see" href="&dacmref;">&dacmname;</a> when the client application is <glossary>input-active</glossary>.
+				the character's <see cref="&dacmref;">&dacmname;</see> when the client application is <glossary>input-active</glossary>.
 				The default value is <keyword>True</keyword>. For more information, see the <see cref="T:&dans;.Command" suffix="Object's" />
 				<see cref="P:&dans;.Command.Visible" /> property.
 			</param>
@@ -9381,7 +9381,7 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</returns>
 			<remarks>
 				<para>
-					The value of a <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Name" />
+					The value of a <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Name" />
 					property must be unique within its <see cref="T:&dans;.Commands" suffix="Collection" />. You must remove a
 					<see cref="T:&dans;.Command" /> before you can create a new <see cref="T:&dans;.Command" /> with the same
 					<see cref="P:&dans;.Command.Name" /> property setting. Attempting to create a <see cref="T:&dans;.Command" />
@@ -9392,7 +9392,7 @@ Command1.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 					object and assign a <see cref="T:&dans;.Command" /> to it when you call the <self>Insert</self> method.
 				</para>
 				<codeSample>
-					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command2 <keyword>as</keyword> <keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
+					<code xml:space="preserve" language="vbscript"><keyword>Dim</keyword> Command2 <keyword>as</keyword>&#160;<keyword>DaControl</keyword>.<keyword>DaCtlCommand</keyword>
 <keyword>Set</keyword> Command2 = Genie.<keyword>Commands</keyword>.<keyword>Insert</keyword> ("my second command", "my first command", True, "Test", "Test", True, True)
 Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				</codeSample>
@@ -9432,7 +9432,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<remarks>
 				<para>
 					When a <see cref="T:&dans;.Command" suffix="Object" /> is removed from the collection, it no longer appears
-					when the character's <a class="see" href="&dacmref;">&dacmname;</a> is displayed, nor in the <a class="see" href="&davcref;">&davcname;</a>
+					when the character's <see cref="&dacmref;">&dacmname;</see> is displayed, nor in the <see cref="&davcref;">&davcname;</see>
 					window when your client application is <glossary>input-active</glossary>.
 				</para>
 			</remarks>
@@ -9463,8 +9463,8 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </syntax>
 			<remarks>
 				<para>
-					An empty <see cref="T:&dans;.Commands" suffix="Collection" /> no longer appears when the character's <a class="see" href="&dacmref;">&dacmname;</a>
-					is displayed, nor in the <a class="see" href="&davcref;">&davcname;</a> window when your client application is
+					An empty <see cref="T:&dans;.Commands" suffix="Collection" /> no longer appears when the character's <see cref="&dacmref;">&dacmname;</see>
+					is displayed, nor in the <see cref="&davcref;">&davcname;</see> window when your client application is
 					<glossary>input-active</glossary>.
 				</para>
 			</remarks>
@@ -9484,7 +9484,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<summary>
 				<para>
 					Specifies the text displayed for the <see cref="T:&dans;.Commands" suffix="Collection" /> in the character's
-					<a class="see" href="&dacmref;">&dacmname;</a>.
+					<see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9507,7 +9507,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<remarks>
 				<para>
 					Setting the <self>Caption</self> property for your <see cref="T:&dans;.Commands" suffix="Collection" />
-					defines how it will appear on the character's <a class="see" href="&dacmref;">&dacmname;</a> when its <see cref="P:&dans;.Commands.Visible" />
+					defines how it will appear on the character's <see cref="&dacmref;">&dacmname;</see> when its <see cref="P:&dans;.Commands.Visible" />
 					property is set to <keyword>True</keyword> and your application is <em>not</em> the <glossary>input-active</glossary>
 					client. To specify an access key (underlined mnemonic) for your <self>Caption</self>, include an ampersand (&amp;)
 					before the mnemonic character.
@@ -9545,7 +9545,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<remarks>
 				<para>
 					<self>Count</self> includes only the number of <see cref="T:&dans;.Command" suffix="Objects" />
-					you define in <em>your</em> <see cref="T:&dans;.Commands" suffix="Collection" />. Pre-defined entries or
+					you define in <em>your</em>&#160;<see cref="T:&dans;.Commands" suffix="Collection" />. Pre-defined entries or
 					entries defined by other clients are not included.
 				</para>
 			</remarks>
@@ -9575,7 +9575,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </syntax>
 			<value name="DefaultCommand">
 				The <see cref="P:&dans;.Command.Name" /> of the <see cref="T:&dans;.Command" />
-				that's shown bold in the <a class="see" href="&dacmref;">&dacmname;</a> (or an empty string if none).
+				that's shown bold in the <see cref="&dacmref;">&dacmname;</see> (or an empty string if none).
 			</value>
 			<remarks>
 				<para>
@@ -9591,7 +9591,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Commands.FontName">
 			<summary>
 				<para>
-					Specifies the font used in the <a class="see" href="&davcref;">&davcname;</a> window.
+					Specifies the font used in the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9613,7 +9613,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</value>
 			<remarks>
 				<para>
-					The <self>FontName</self> property defines the font used to display text in the <a class="see" href="&davcref;">&davcname;</a>
+					The <self>FontName</self> property defines the font used to display text in the <see cref="&davcref;">&davcname;</see>
 					window. The default value for the font setting is based on the <em>menu font</em> for the character's <see cref="P:&dans;.Character.LanguageID" />
 					or, if that's not set, the user default language.
 				</para>
@@ -9626,7 +9626,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Commands.FontSize">
 			<summary>
 				<para>
-					Specifies the font size used in the <a class="see" href="&davcref;">&davcname;</a> window.
+					Specifies the font size used in the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9648,7 +9648,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</value>
 			<remarks>
 				<para>
-					The <self>FontSize</self> property defines the point size of the font used to display text in the <a class="see" href="&davcref;">&davcname;</a>
+					The <self>FontSize</self> property defines the point size of the font used to display text in the <see cref="&davcref;">&davcname;</see>
 					window. The default value for the font setting is based on the <em>menu font</em> for the character's <see cref="P:&dans;.Character.LanguageID" />
 					or, if that's not set, the user default language.
 				</para>
@@ -9661,7 +9661,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Commands.GlobalVoiceCommandsEnabled">
 			<summary>
 				<para>
-					Specifies if pre-defined commands appear in the <a class="see" href="&davcref;">&davcname;</a> window.
+					Specifies if pre-defined commands appear in the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9684,7 +9684,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</value>
 			<remarks>
 				<para>
-					Double Agent automatically adds voice commands (grammar) for opening and closing the <a class="see" href="&davcref;">&davcname;</a>
+					Double Agent automatically adds voice commands (grammar) for opening and closing the <see cref="&davcref;">&davcname;</see>
 					window and for showing and hiding the character. If you set <self>GlobalVoiceCommandsEnabled</self> to
 					<keyword>False</keyword>, Agent disables any voice parameters for these voice commands as well as the voice
 					commands for the <see cref="P:&dans;.Commands.Caption" /> of other clients' <see cref="T:&dans;.Commands" suffix="Collection" />.
@@ -9693,8 +9693,8 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 					the user's voice input.
 				</para>
 				<para>
-					Disabling the property does not affect the character's <a class="see" href="&dacmref;">&dacmname;</a>.
-					The global commands added by Double Agent will still appear; you cannot remove them from the <a class="see" href="&dacmref;">&dacmname;</a>.
+					Disabling the property does not affect the character's <see cref="&dacmref;">&dacmname;</see>.
+					The global commands added by Double Agent will still appear; you cannot remove them from the <see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</remarks>
 		</member>
@@ -9785,7 +9785,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Commands.Visible">
 			<summary>
 				<para>
-					Specifies if the <see cref="T:&dans;.Commands" suffix="Collection" /> appears in the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					Specifies if the <see cref="T:&dans;.Commands" suffix="Collection" /> appears in the character's <see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -9803,16 +9803,16 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </vb>
 </syntax>
 			<value name="Visible">
-				A <typename>boolean</typename> value that indiciates if the <see cref="T:&dans;.Commands" /> <see cref="P:&dans;.Commands.Caption" />
+				A <typename>boolean</typename> value that indiciates if the <see cref="T:&dans;.Commands" />&#160;<see cref="P:&dans;.Commands.Caption" />
 				is visible.
 			</value>
 			<remarks>
 				<para>
-					For the caption to appear in the character's <a class="see" href="&dacmref;">&dacmname;</a> when your
+					For the caption to appear in the character's <see cref="&dacmref;">&dacmname;</see> when your
 					application is not the <glossary>input-active</glossary> client, this property must be set to <keyword>True</keyword>
 					and the <see cref="P:&dans;.Commands.Caption" /> property set for your <see cref="T:&dans;.Commands" suffix="Collection" />.
 					In addition, this property must be set to <keyword>True</keyword> for commands in your collection to appear
-					in the <a class="see" href="&dacmref;">&dacmname;</a> when your application is <glossary>input-active</glossary>.
+					in the <see cref="&dacmref;">&dacmname;</see> when your application is <glossary>input-active</glossary>.
 				</para>
 			</remarks>
 		</member>
@@ -9838,7 +9838,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Commands.VoiceCaption">
 			<summary>
 				<para>
-					Specifies the text displayed for the <see cref="T:&dans;.Commands" suffix="Collection" /> in the <a class="see" href="&davcref;">&davcname;</a>
+					Specifies the text displayed for the <see cref="T:&dans;.Commands" suffix="Collection" /> in the <see cref="&davcref;">&davcname;</see>
 					window.
 				</para>
 			</summary>
@@ -9861,15 +9861,15 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</value>
 			<remarks>
 				<para>
-					The <self>VoiceCaption</self> text appears in the <a class="see" href="&davcref;">&davcname;</a>
+					The <self>VoiceCaption</self> text appears in the <see cref="&davcref;">&davcname;</see>
 					window when your client application is <glossary>input-active</glossary> and the character is visible. If
 					this property is not set, the <see cref="P:&dans;.Commands.Caption" /> property is used instead. When neither
 					the <self>VoiceCaption</self> nor <see cref="P:&dans;.Commands.Caption" /> property is set, then commands in
-					the collection appear in the <a class="see" href="&davcref;">&davcname;</a> window under an <em>(undefined command)</em>
+					the collection appear in the <see cref="&davcref;">&davcname;</see> window under an <em>(undefined command)</em>
 					title when your client application becomes <glossary>input-active</glossary>.
 				</para>
 				<para>
-					The <self>VoiceCaption</self> setting also determines the text displayed in the <a class="see" href="&daltref;">&daltname;</a>
+					The <self>VoiceCaption</self> setting also determines the text displayed in the <see cref="&daltref;">&daltname;</see>
 					to indicate the commands for which the character listens.
 				</para>
 				<para>
@@ -9909,7 +9909,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<remarks>
 				<para>
 					If you do not supply this parameter, the <see cref="P:&dans;.Commands.VoiceCaption" /> for your <see cref="T:&dans;.Commands" suffix="Collection" />
-					will not appear in the <a class="see" href="&davcref;">&davcname;</a> window.
+					will not appear in the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</remarks>
 			<include file="&dainclude;" path="/doc/properties/details[@name='VoiceCaption']" />
@@ -10074,15 +10074,15 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</syntax>
 			<remarks>
 				<para>
-					The <self>Commands Collection</self> can appear in both the <a class="see" href="&dacmref;">&dacmname;</a>
-					and the <a class="see" href="&davcref;">&davcname;</a> window for a character. To include commands in the
-					<a class="see" href="&dacmref;">&dacmname;</a>, set its <see cref="P:&dans;.Commands.Caption" /> property. To
-					include commands in the <a class="see" href="&davcref;">&davcname;</a> window, set its <see cref="P:&dans;.Commands.VoiceCaption" />
+					The <self>Commands Collection</self> can appear in both the <see cref="&dacmref;">&dacmname;</see>
+					and the <see cref="&davcref;">&davcname;</see> window for a character. To include commands in the
+					<see cref="&dacmref;">&dacmname;</see>, set its <see cref="P:&dans;.Commands.Caption" /> property. To
+					include commands in the <see cref="&davcref;">&davcname;</see> window, set its <see cref="P:&dans;.Commands.VoiceCaption" />
 					property (for backward compatibility, if there is no <see cref="P:&dans;.Commands.VoiceCaption" />, the
 					<see cref="P:&dans;.Commands.Caption" /> setting is used).
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&dans;.Character" text="Character's" /> <see class="" cref="P:&dans;.Character.Commands" />
+					This object can be accessed using the <see class="" cref="T:&dans;.Character" text="Character's" />&#160;<see class="" cref="P:&dans;.Character.Commands" />
 					property.
 				</para>
 			</remarks>
@@ -10095,7 +10095,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Command.Caption">
 			<summary>
 				<para>
-					Specifies the text displayed for a <see cref="T:&dans;.Command" /> in the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					Specifies the text displayed for a <see cref="T:&dans;.Command" /> in the character's <see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10148,7 +10148,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Command.ConfidenceText">
 			<summary>
 				<para>
-					Specifies the text that appears in the <a class="see" href="&daltref;">&daltname;</a>.
+					Specifies the text that appears in the <see cref="&daltref;">&daltname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10167,13 +10167,13 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </syntax>
 			<value name="ConfidenceText">
 				A <typename>string</typename> value that specifies the text displayed in
-				the <a class="see" href="&daltref;">&daltname;</a>.
+				the <see cref="&daltref;">&daltname;</see>.
 			</value>
 			<remarks>
 				<para>
 					When the <see cref="P:&dans;.UserInput.Confidence" /> value of the best match <em>does not exceed</em>
 					the command's <see cref="P:&dans;.Command.ConfidenceThreshold" /> property, Double Agent displays the text
-					specified in <self>ConfidenceText</self> in the <a class="see" href="&daltref;">&daltname;</a>.
+					specified in <self>ConfidenceText</self> in the <see cref="&daltref;">&daltname;</see>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Command.ConfidenceThreshold" prefix="The" suffix="Property" />
@@ -10184,7 +10184,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Command.ConfidenceThreshold">
 			<summary>
 				<para>
-					Specifies if the command's <see cref="P:&dans;.Command.ConfidenceText" /> appears in the <a class="see" href="&daltref;">&daltname;</a>.
+					Specifies if the command's <see cref="P:&dans;.Command.ConfidenceText" /> appears in the <see cref="&daltref;">&daltname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10209,7 +10209,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 				<para>
 					If the <see cref="P:&dans;.UserInput.Confidence" /> value of the best match <em>does not exceed</em>
 					the value you set for the <self>ConfidenceThreshold</self> property, the text supplied in <see cref="P:&dans;.Command.ConfidenceText" />
-					is displayed in the <a class="see" href="&daltref;">&daltname;</a>.
+					is displayed in the <see cref="&daltref;">&daltname;</see>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Command.ConfidenceText" prefix="The" suffix="Property" />
@@ -10220,7 +10220,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Command.Enabled">
 			<summary>
 				<para>
-					Specifies if the <see cref="T:&dans;.Command" /> is enabled in the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					Specifies if the <see cref="T:&dans;.Command" /> is enabled in the character's <see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10242,8 +10242,8 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</value>
 			<remarks>
 				<para>
-					If the <self>Enabled</self> property is set to <keyword>True</keyword>, the <see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" />
-					appears as normal text in the character's <a class="see" href="&dacmref;">&dacmname;</a> when the client application
+					If the <self>Enabled</self> property is set to <keyword>True</keyword>, the <see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Caption" />
+					appears as normal text in the character's <see cref="&dacmref;">&dacmname;</see> when the client application
 					is <glossary>input-active</glossary>. If the <self>Enabled</self> property is <keyword>False</keyword>,
 					the <see cref="P:&dans;.Command.Caption" /> appears as unavailable (disabled) text. A disabled <see cref="T:&dans;.Command" />
 					is also not accessible for voice input.
@@ -10295,7 +10295,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Command.Visible">
 			<summary>
 				<para>
-					Specifies if the <see cref="T:&dans;.Command" /> is visible in the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					Specifies if the <see cref="T:&dans;.Command" /> is visible in the character's <see cref="&dacmref;">&dacmname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -10318,9 +10318,9 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<remarks>
 				<para>
 					Set this property to <keyword>False</keyword> when you want to include voice input for your command without
-					having it appear in the <a class="see" href="&dacmref;">&dacmname;</a> for the character. If you set a
-					<see cref="T:&dans;.Command" suffix="Object's" /> <see cref="P:&dans;.Command.Caption" /> property to the
-					empty string (""), the caption text will not appear in the <a class="see" href="&dacmref;">&dacmname;</a>
+					having it appear in the <see cref="&dacmref;">&dacmname;</see> for the character. If you set a
+					<see cref="T:&dans;.Command" suffix="Object's" />&#160;<see cref="P:&dans;.Command.Caption" /> property to the
+					empty string (""), the caption text will not appear in the <see cref="&dacmref;">&dacmname;</see>
 					(for example, as a blank line), regardless of its <self>Visible</self> property setting.
 				</para>
 				<para>
@@ -10351,7 +10351,7 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 		<member name="P:&dans;.Command.VoiceCaption">
 			<summary>
 				<para>
-					Specifies the text displayed for the <see cref="T:&dans;.Command" suffix="Object" /> in the <a class="see" href="&davcref;">&davcname;</a>
+					Specifies the text displayed for the <see cref="T:&dans;.Command" suffix="Object" /> in the <see cref="&davcref;">&davcname;</see>
 					window.
 				</para>
 			</summary>
@@ -10370,19 +10370,19 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 </vb>
 </syntax>
 			<value name="VoiceCaption">
-				A <typename>string</typename> value that specifies the <a class="see" href="&davcref;">&davcname;</a> window text.
+				A <typename>string</typename> value that specifies the <see cref="&davcref;">&davcname;</see> window text.
 			</value>
 			<remarks>
 				<para>
-					This text will appear in the <a class="see" href="&davcref;">&davcname;</a> window when your client application
+					This text will appear in the <see cref="&davcref;">&davcname;</see> window when your client application
 					is <glossary>input-active</glossary> and the character is visible. If this property is not set, the <see cref="P:&dans;.Command.Caption" />
 					property is used instead. When neither the <self>VoiceCaption</self> nor <see cref="P:&dans;.Command.Caption" />
-					property is set, the command does not appear in the <a class="see" href="&davcref;">&davcname;</a> window.
+					property is set, the command does not appear in the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 				<para>
 					If you define a <see cref="T:&dans;.Command" suffix="Object" /> in a <see cref="T:&dans;.Commands" suffix="Collection" />
 					with a non-blank <see cref="P:&dans;.Commands.VoiceCaption" /> property, you will typically also set the
-					<see cref="T:&dans;.Command" suffix="Object's" /> <self>VoiceCaption</self> property.
+					<see cref="T:&dans;.Command" suffix="Object's" />&#160;<self>VoiceCaption</self> property.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.Command.Caption" prefix="The" suffix="Property" />
@@ -10417,9 +10417,9 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			<remarks>
 				<para>
 					If you do not supply this parameter, the <see cref="P:&dans;.Command.VoiceCaption" /> for your <see cref="T:&dans;.Command" suffix="Object" />
-					will not appear in the <a class="see" href="&davcref;">&davcname;</a> window. If you specify a <self>VoiceGrammar</self>
+					will not appear in the <see cref="&davcref;">&davcname;</see> window. If you specify a <self>VoiceGrammar</self>
 					parameter but not a <see cref="P:&dans;.Command.VoiceCaption" /> (or <see cref="P:&dans;.Command.Caption" />),
-					the command will not appear in the <a class="see" href="&davcref;">&davcname;</a> window, but it will be
+					the command will not appear in the <see cref="&davcref;">&davcname;</see> window, but it will be
 					voice-accessible when the client application becomes <glossary>input-active</glossary>.
 				</para>
 			</remarks>
@@ -10519,12 +10519,12 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 			</syntax>
 			<remarks>
 				<para>
-					A command may appear in either the character's <a class="see" href="&dacmref;">&dacmname;</a> and the
-					<a class="see" href="&davcref;">&davcname;</a> window, or in both. To appear in the <a class="see" href="&dacmref;">&dacmname;</a>
+					A command may appear in either the character's <see cref="&dacmref;">&dacmname;</see> and the
+					<see cref="&davcref;">&davcname;</see> window, or in both. To appear in the <see cref="&dacmref;">&dacmname;</see>
 					it must have a <see cref="P:&dans;.Command.Caption" /> and have the <see cref="P:&dans;.Command.Visible" />
 					property set to <keyword>True</keyword>. In addition, its <see cref="T:&dans;.Commands" suffix="Collection's" />
 					<see cref="P:&dans;.Command.Visible" /> property must also be set to <keyword>True</keyword>. To appear in
-					the <a class="see" href="&davcref;">&davcname;</a> window, a <self>Command</self> must have its <see cref="P:&dans;.Command.Caption" />
+					the <see cref="&davcref;">&davcname;</see> window, a <self>Command</self> must have its <see cref="P:&dans;.Command.Caption" />
 					and <see cref="P:&dans;.Command.VoiceGrammar" /> properties set.
 				</para>
 				<para>
@@ -10533,9 +10533,9 @@ Command2.<keyword>VoiceCaption</keyword> = "this is a test"</code>
 					You can then use conditional statements to match and process the <self>Command</self>.
 				</para>
 				<para>
-					Note that a character's <a class="see" href="&dacmref;">&dacmname;</a> entries do not change while the
-					menu is displayed. If you add or remove commands or change their properties while the character's <a class="see" href="&dacmref;">&dacmname;</a>
-					is displayed, the menu reflects those changes whenever the user next shows it. However, the <a class="see" href="&davcref;">&davcname;</a>
+					Note that a character's <see cref="&dacmref;">&dacmname;</see> entries do not change while the
+					menu is displayed. If you add or remove commands or change their properties while the character's <see cref="&dacmref;">&dacmname;</see>
+					is displayed, the menu reflects those changes whenever the user next shows it. However, the <see cref="&davcref;">&davcname;</see>
 					window dynamically reflects any changes you make.
 				</para>
 			</remarks>
@@ -10631,11 +10631,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 						</th>
 						<th align="left" valign="top" width="18%">
 							Appears
-							in the Character's <a href="&dacmref;">&dacmname;</a>
+							in the Character's <see cref="&dacmref;">&dacmname;</see>
 						</th>
 						<th align="left" valign="top" width="20%">
 							Appears
-							in the <a href="&davcref;">&davcname;</a> window
+							in the <see cref="&davcref;">&davcname;</see> window
 						</th>
 					</tr>
 					<tr valign="top">
@@ -10992,7 +10992,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.BackColor">
 			<summary>
 				<para>
-					Specifies the background color of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the background color of a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11023,7 +11023,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.BorderColor">
 			<summary>
 				<para>
-					Specifies the border color of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the border color of a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11054,7 +11054,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.CharsPerLine">
 			<summary>
 				<para>
-					Specifies the characters per line used for a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the characters per line used for a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11078,7 +11078,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<remarks>
 				<para>
 					The <self>CharsPerLine</self> property is the average number of characters (letters) displayed in
-					the <a class="see" href="&dawbref;">&dawbname;</a>. For backward compatibility, you can also set the value
+					the <see cref="&dawbref;">&dawbname;</see>. For backward compatibility, you can also set the value
 					using the <see cref="P:&dans;.Balloon.Style" /> property.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
@@ -11091,7 +11091,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.Enabled">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> is enabled for a character.
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> is enabled for a character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11113,11 +11113,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				<include path="/doc/members/member[@name='F:&dans;.BalloonStyleFlags.Enabled']/remarks/para" />
 				<para>
 					The default enabled style is set as part of a character's definition when the character is compiled in
-					the Microsoft<sup>®</sup> Agent Character Editor. If a character is defined to not support the <a class="see" href="&dawbref;">&dawbname;</a>,
+					the Microsoft<sup>®</sup> Agent Character Editor. If a character is defined to not support the <see cref="&dawbref;">&dawbname;</see>,
 					this property will always be <keyword>False</keyword> for the character.
 				</para>
 				<para>
-					The user can override the enabled style for <em>all</em> characters in the <a class="see" href="&dapsref;#Output">&dapsname;</a>
+					The user can override the enabled style for <em>all</em> characters in the <see cref="&dapsref;#Output">&dapsname;</see>
 					window.
 				</para>
 			</remarks>
@@ -11130,7 +11130,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontCharSet">
 			<summary>
 				<para>
-					Specifies the character set for the font used in a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the character set for the font used in a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11157,7 +11157,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					If you're using a character that you didn't compile, check the <see cref="P:&dans;.Balloon.FontName" />
 					and <self>FontCharSet</self> properties for the character to determine whether they are appropriate for
 					your locale. You may need to set these values before using the <see cref="M:&dans;.Character.Speak" />
-					method to ensure appropriate text display within the <a class="see" href="&dawbref;">&dawbname;</a>.
+					method to ensure appropriate text display within the <see cref="&dawbref;">&dawbname;</see>.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -11170,7 +11170,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontName">
 			<summary>
 				<para>
-					Specifies the font used in the <a class="see" href="&dawbref;">&dawbname;</a> for the specified character.
+					Specifies the font used in the <see cref="&dawbref;">&dawbname;</see> for the specified character.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11196,7 +11196,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					If you're using a character that you didn't compile, check the <self>FontName</self> and <see cref="P:&dans;.Balloon.FontCharSet" />
 					properties for the character to determine whether they are appropriate for your locale. You may need
 					to set these values before using the <see cref="M:&dans;.Character.Speak" /> method to ensure appropriate text
-					display within the <a class="see" href="&dawbref;">&dawbname;</a>.
+					display within the <see cref="&dawbref;">&dawbname;</see>.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</remarks>
@@ -11209,7 +11209,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontBold">
 			<summary>
 				<para>
-					Specifies the font style of a character's the <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the font style of a character's the <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11241,7 +11241,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontItalic">
 			<summary>
 				<para>
-					Specifies the font style of a character's the <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the font style of a character's the <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11273,7 +11273,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontSize">
 			<summary>
 				<para>
-					Specifies the font size supported for the <a class="see" href="&dawbref;">&dawbname;</a> for the specified
+					Specifies the font size supported for the <see cref="&dawbref;">&dawbname;</see> for the specified
 					character.
 				</para>
 			</summary>
@@ -11306,7 +11306,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontStrikethru">
 			<summary>
 				<para>
-					Specifies the font style of a character's the <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the font style of a character's the <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11339,7 +11339,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.FontUnderline">
 			<summary>
 				<para>
-					Specifies the font style of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the font style of a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11387,7 +11387,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.TextColor">
 			<summary>
 				<para>
-					Returns the text color displayed in a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Returns the text color displayed in a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11417,7 +11417,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.NumberOfLines">
 			<summary>
 				<para>
-					Specifies the number of lines used for a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the number of lines used for a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11436,11 +11436,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="NumberOfLines">
 				A <typename>numeric</typename> value that specifies the number of lines in
-				a fixed-size <a class="see" href="&dawbref;">&dawbname;</a>.
+				a fixed-size <see cref="&dawbref;">&dawbname;</see>.
 			</value>
 			<remarks>
 				<para>
-					The <self>NumberOfLines</self> property is only used if the <a class="see" href="&dawbref;">&dawbname;</a>
+					The <self>NumberOfLines</self> property is only used if the <see cref="&dawbref;">&dawbname;</see>
 					doesn't have the <keyword>AutoSize</keyword> style. For backward compatibility, you can also set the value
 					using the <see cref="P:&dans;.Balloon.Style" /> property.
 				</para>
@@ -11454,7 +11454,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.Style">
 			<summary>
 				<para>
-					Specifies the character's <a class="see" href="&dawbref;">&dawbname;</a> output style.
+					Specifies the character's <see cref="&dawbref;">&dawbname;</see> output style.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11472,7 +11472,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Style">
-				An <typename>numeric</typename> value that represents the <a class="see" href="&dawbref;">&dawbname;'s</a>
+				An <typename>numeric</typename> value that represents the <see cref="&dawbref;">&dawbname;'s</see>
 				output style. The style value is a bit field with bits defined as follows:
 				<list type="table">
 					<item>
@@ -11566,8 +11566,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					</item>
 				</list>
 				<note>
-					The <self>Style</self> property can be set even if the user has disabled <a class="see" href="&dawbref;">&dawbname;s</a>
-					in the <a class="see" href="&dapsref;#Output">&dapsname;</a> window.
+					The <self>Style</self> property can be set even if the user has disabled <see cref="&dawbref;">&dawbname;s</see>
+					in the <see cref="&dapsref;#Output">&dapsname;</see> window.
 				</note>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ThisClientOnly']" />
 			</details>
@@ -11587,7 +11587,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.Visible">
 			<summary>
 				<para>
-					Specifies the visibility of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					Specifies the visibility of a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11605,7 +11605,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Visible">
-				A <typename>boolean</typename> value that indicates if the <a class="see" href="&dawbref;">&dawbname;</a>
+				A <typename>boolean</typename> value that indicates if the <see cref="&dawbref;">&dawbname;</see>
 				is visible.
 			</value>
 			<remarks>
@@ -11622,11 +11622,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</para>
 				<para>
 					Calling the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" />
-					methods automatically makes the <a class="see" href="&dawbref;">&dawbname;</a> visible, setting the <self>Visible</self>
-					property to <keyword>True</keyword>. If the <see cref="T:&dans;.Balloon" text="Balloon's" /> <see cref="P:&dans;.Balloon.AutoHide" />
-					property is enabled, the <a class="see" href="&dawbref;">&dawbname;</a> is automatically hidden after the
+					methods automatically makes the <see cref="&dawbref;">&dawbname;</see> visible, setting the <self>Visible</self>
+					property to <keyword>True</keyword>. If the <see cref="T:&dans;.Balloon" text="Balloon's" />&#160;<see cref="P:&dans;.Balloon.AutoHide" />
+					property is enabled, the <see cref="&dawbref;">&dawbname;</see> is automatically hidden after the
 					text output is complete. Clicking or dragging a character that is not currently speaking also automatically
-					hides the <a class="see" href="&dawbref;">&dawbname;</a>, even if its <see cref="P:&dans;.Balloon.AutoHide" />
+					hides the <see cref="&dawbref;">&dawbname;</see>, even if its <see cref="P:&dans;.Balloon.AutoHide" />
 					setting is disabled.
 				</para>
 			</remarks>
@@ -11639,7 +11639,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.AutoHide">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> will be automatically hidden after all
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> will be automatically hidden after all
 					of its text has been shown.
 				</para>
 			</summary>
@@ -11672,7 +11672,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.AutoPace">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> paces its text display to the speech output.
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> paces its text display to the speech output.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11704,7 +11704,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.NoAppend">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> appends text when it's visible.
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> appends text when it's visible.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11736,7 +11736,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.ShowPartialLines">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> shows partial lines when it scrolls.
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> shows partial lines when it scrolls.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -11768,7 +11768,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Balloon.SizeToText">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> is automatically resized to fit it's
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> is automatically resized to fit it's
 					contents.
 				</para>
 			</summary>
@@ -11803,11 +11803,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<summary>
 				<para>
 					Double Agent supports textual captioning of the <see cref="M:&dans;.Character.Speak" /> method using
-					a cartoon <a class="see" href="&dawbref;">&dawbname;</a>. The <see cref="M:&dans;.Character.Think" />
-					method lets you display text without audio output in a <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
+					a cartoon <see cref="&dawbref;">&dawbname;</see>. The <see cref="M:&dans;.Character.Think" />
+					method lets you display text without audio output in a <glossary>thought</glossary>&#160;<see cref="&dawbref;">&dawbname;</see>.
 				</para>
 				<para>
-					The <self>Balloon Object</self> allows you to customize the appearance and behaviour of a character's <a class="see" href="&dawbref;">&dawbname;</a>.
+					The <self>Balloon Object</self> allows you to customize the appearance and behaviour of a character's <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax>
@@ -11987,15 +11987,15 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</syntax>
 			<remarks>
 				<para>
-					A character's initial <a class="see" href="&dawbref;">&dawbname;</a> defaults are defined and compiled in
-					the Microsoft<sup>®</sup> Agent Character Editor. Once running, the <self>Balloon Object's</self> <keyword>Enabled</keyword>
+					A character's initial <see cref="&dawbref;">&dawbname;</see> defaults are defined and compiled in
+					the Microsoft<sup>®</sup> Agent Character Editor. Once running, the <self>Balloon Object's</self>&#160;<keyword>Enabled</keyword>
 					and <keyword>Font</keyword> properties may be overridden by the user. If a user changes the balloon's
 					properties, they affect all characters. Both the <see cref="M:&dans;.Character.Speak" /> and <see cref="M:&dans;.Character.Think" /> balloons
-					use the same property settings for size. You can access the properties for a character's <a class="see" href="&dawbref;">&dawbname;</a>
+					use the same property settings for size. You can access the properties for a character's <see cref="&dawbref;">&dawbname;</see>
 					through the <self>Balloon Object</self>, which is a child of the <see cref="T:&dans;.Character" suffix="Object" />.
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&dans;.Character" suffix="Object's" /> <see class="" cref="P:&dans;.Character.Balloon" />
+					This object can be accessed using the <see class="" cref="T:&dans;.Character" suffix="Object's" />&#160;<see class="" cref="P:&dans;.Character.Balloon" />
 					property.
 				</para>
 			</remarks>
@@ -12053,7 +12053,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					For the values and meanings of the <self>Number</self> property, see <a href="../Reference/Ref_Errors.htm">Double Agent Error Codes</a>.
+					For the values and meanings of the <self>Number</self> property, see <see cref="e08466c9-419c-11e1-9d4f-002421116fb2">Double Agent Error Codes</see>.
 				</para>
 			</remarks>
 		</member>
@@ -12246,7 +12246,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Alt1Confidence">
 				The relative confidence scoring of second-best match, from -100 to 100 (0
-				if the <see cref="T:&dans;.Command" /> was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>)
+				if the <see cref="T:&dans;.Command" /> was chosen from the <see cref="&dacmref;">&dacmname;</see>)
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -12320,7 +12320,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Alt2Confidence">
 				The relative confidence scoring of third-best match, from -100 to 100 (0
-				if the <see cref="T:&dans;.Command" /> was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>)
+				if the <see cref="T:&dans;.Command" /> was chosen from the <see cref="&dacmref;">&dacmname;</see>)
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -12421,7 +12421,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Confidence">
 				The relative confidence scoring of the best match, from -100 to 100 (100 if
-				the <see cref="T:&dans;.Command" /> was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>).
+				the <see cref="T:&dans;.Command" /> was chosen from the <see cref="&dacmref;">&dacmname;</see>).
 			</value>
 			<seealso cref="E:&darootobj;.Command" prefix="The" suffix="Event" />
 		</member>
@@ -12448,7 +12448,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<value name="Count">The number of possible matching commands, from 0 to 3.</value>
 			<remarks>
 				<para>
-					A count of zero indicates that the command was chosen from the character's <a class="see" href="&dacmref;">&dacmname;</a>.
+					A count of zero indicates that the command was chosen from the character's <see cref="&dacmref;">&dacmname;</see>.
 					The <see cref="P:&dans;.UserInput.Name" /> property returns the chosen command's <see cref="P:&dans;.Command.Name" />.
 				</para>
 				<para>
@@ -12464,7 +12464,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.UserInput.Name">
 			<summary>
 				<para>
-					Identifies the chosen <see cref="T:&dans;.Command" />, if chosen from the <a class="see" href="&dacmref;">&dacmname;</a>,
+					Identifies the chosen <see cref="T:&dans;.Command" />, if chosen from the <see cref="&dacmref;">&dacmname;</see>,
 					or the best matching <see cref="T:&dans;.Command" />, if voice input triggers the <see cref="E:&darootobj;.Command" />
 					event.
 				</para>
@@ -12508,7 +12508,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Voice">
 				The best matching voice text (or an empty string if the <see cref="T:&dans;.Command" />
-				was chosen from the <a class="see" href="&dacmref;">&dacmname;</a>).
+				was chosen from the <see cref="&dacmref;">&dacmname;</see>).
 			</value>
 			<remarks>
 				<para>
@@ -12525,7 +12525,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<summary>
 				<para>
 					Double Agent sends the <see cref="E:&darootobj;.Command" /> event when your application is <glossary>input-active</glossary>
-					and the user chooses a command from the character's <a class="see" href="&dacmref;">&dacmname;</a> or by
+					and the user chooses a command from the character's <see cref="&dacmref;">&dacmname;</see> or by
 					spoken input. The event passes a <self>UserInput Object</self> that identifies the number of possible matching
 					commands as well as the name, confidence scoring, and voice text for those matches.
 				</para>
@@ -12654,7 +12654,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 				</para>
 				<para>
 					If voice input was <strong>not</strong> the source for the command, for example, if the user selected the
-					command from the character's <a class="see" href="&dacmref;">&dacmname;</a>, Double Agent returns the name
+					command from the character's <see cref="&dacmref;">&dacmname;</see>, Double Agent returns the name
 					of the selected command in the <see cref="P:&dans;.UserInput.Name" /> property. It also returns the value
 					of the <see cref="P:&dans;.UserInput.Confidence" /> parameter as 100, and the value of the <see cref="P:&dans;.UserInput.Voice" />
 					parameters as an empty string (""). <see cref="P:&dans;.UserInput.Alt1Name" /> and <see cref="P:&dans;.UserInput.Alt2Name" />
@@ -12681,7 +12681,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CommandsWindow.Height">
 			<summary>
 				<para>
-					Returns the current height, in pixels, of the <a class="see" href="&davcref;">&davcname;</a> window.
+					Returns the current height, in pixels, of the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -12697,7 +12697,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Height">
 				A <typename>numeric</typename> value that indicates the height, in pixels, of the
-				<a class="see" href="&davcref;">&davcname;</a> window.
+				<see cref="&davcref;">&davcname;</see> window.
 			</value>
 			<remarks>
 				<para>
@@ -12711,7 +12711,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CommandsWindow.Left">
 			<summary>
 				<para>
-					Returns the horizontal location, in pixels, of the <a class="see" href="&davcref;">&davcname;</a>
+					Returns the horizontal location, in pixels, of the <see cref="&davcref;">&davcname;</see>
 					window.
 				</para>
 			</summary>
@@ -12728,7 +12728,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Left">
 				A <typename>numeric</typename> value that specifies the left edge, in pixels, of
-				the <a class="see" href="&davcref;">&davcname;</a> window.
+				the <see cref="&davcref;">&davcname;</see> window.
 			</value>
 			<remarks>
 				<para>
@@ -12742,7 +12742,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CommandsWindow.Top">
 			<summary>
 				<para>
-					Returns the vertical location, in pixels, of the <a class="see" href="&davcref;">&davcname;</a>
+					Returns the vertical location, in pixels, of the <see cref="&davcref;">&davcname;</see>
 					window.
 				</para>
 			</summary>
@@ -12759,7 +12759,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Top">
 				A <typename>numeric</typename> value that specifies the top edge, in pixels, of the
-				<a class="see" href="&davcref;">&davcname;</a> window.
+				<see cref="&davcref;">&davcname;</see> window.
 			</value>
 			<remarks>
 				<para>
@@ -12773,7 +12773,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CommandsWindow.Visible">
 			<summary>
 				<para>
-					Specifies if the <a class="see" href="&davcref;">&davcname;</a> window is visible.
+					Specifies if the <see cref="&davcref;">&davcname;</see> window is visible.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -12791,7 +12791,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Visible">
-				A <typename>boolean</typename> value indicating whether or not the <a class="see" href="&davcref;">&davcname;</a>
+				A <typename>boolean</typename> value indicating whether or not the <see cref="&davcref;">&davcname;</see>
 				window is visible.
 			</value>
 		</member>
@@ -12801,7 +12801,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.CommandsWindow.Width">
 			<summary>
 				<para>
-					Returns current width, in pixels, of the <a class="see" href="&davcref;">&davcname;</a> window.
+					Returns current width, in pixels, of the <see cref="&davcref;">&davcname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -12817,7 +12817,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Width">
 				A <typename>numeric</typename> value that indicates the width, in pixels, of the
-				<a class="see" href="&davcref;">&davcname;</a> window.
+				<see cref="&davcref;">&davcname;</see> window.
 			</value>
 			<remarks>
 				<para>
@@ -12832,7 +12832,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="T:&dans;.CommandsWindow">
 			<summary>
 				<para>
-					The <self>CommandsWindow Object</self> provides access to Double Agent's <a class="see" href="&davcref;">&davcname;</a>
+					The <self>CommandsWindow Object</self> provides access to Double Agent's <see cref="&davcref;">&davcname;</see>
 					window. It allows you to show and hide the window, and retrieve the window's location and size.
 				</para>
 			</summary>
@@ -12893,11 +12893,11 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</syntax>
 			<remarks>
 				<para>
-					The <a class="see" href="&davcref;">&davcname;</a> window is shared among all Double Agent clients. Changes
+					The <see cref="&davcref;">&davcname;</see> window is shared among all Double Agent clients. Changes
 					to the window's visibility should be made with this in mind.
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" /> <see class="" cref="P:&darootobj;.CommandsWindow" />
+					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" />&#160;<see class="" cref="P:&darootobj;.CommandsWindow" />
 					property.
 				</para>
 			</remarks>
@@ -12910,7 +12910,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.PropertySheet.Height">
 			<summary>
 				<para>
-					Returns the current height, in pixels, of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					Returns the current height, in pixels, of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -12926,7 +12926,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Height">
 				A <typename>numeric</typename> value that indicates the height, in pixels, of the
-				<a class="see" href="&dapsref;">&dapsname;</a> window.
+				<see cref="&dapsref;">&dapsname;</see> window.
 			</value>
 		</member>
 
@@ -12935,7 +12935,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.PropertySheet.Left">
 			<summary>
 				<para>
-					Specifies the horizontal location, in pixels, of the <a class="see" href="&dapsref;">&dapsname;</a>
+					Specifies the horizontal location, in pixels, of the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</summary>
@@ -12955,7 +12955,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Left">
 				A <typename>numeric</typename> value that specifies the left edge, in pixels, of
-				the <a class="see" href="&dapsref;">&dapsname;</a> window.
+				the <see cref="&dapsref;">&dapsname;</see> window.
 			</value>
 			<remarks>
 				<para>
@@ -12969,7 +12969,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.PropertySheet.Page">
 			<summary>
 				<para>
-					Specifies the page displayed in the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					Specifies the page displayed in the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -12994,7 +12994,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 							<literal>"Output"</literal>
 						</term>
 						<description>
-							Selects the <a class="see" href="&dapsref;#Output">Output</a> page.
+							Selects the <see cref="&dapsref;#Output">Output</see> page.
 						</description>
 					</item>
 					<item>
@@ -13002,7 +13002,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 							<literal>"Speech"</literal>
 						</term>
 						<description>
-							Selects the <a class="see" href="&dapsref;#SpeechInput">Speech Input</a> page.
+							Selects the <see cref="&dapsref;#SpeechInput">Speech Input</see> page.
 						</description>
 					</item>
 					<item>
@@ -13010,7 +13010,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 							<literal>"Character"</literal>
 						</term>
 						<description>
-							Selects the <a class="see" href="&dapsref;#Gallery">Gallery</a> (default character selection)
+							Selects the <see cref="&dapsref;#Gallery">Gallery</see> (default character selection)
 							page.
 						</description>
 					</item>
@@ -13019,7 +13019,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 							<literal>"Copyright"</literal>
 						</term>
 						<description>
-							Selects the <a class="see" href="&dapsref;#Copyright">Copyright</a> page.
+							Selects the <see cref="&dapsref;#Copyright">Copyright</see> page.
 						</description>
 					</item>
 				</list>
@@ -13039,7 +13039,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.PropertySheet.Top">
 			<summary>
 				<para>
-					Specifies the vertical location, in pixels, of the <a class="see" href="&dapsref;">&dapsname;</a>
+					Specifies the vertical location, in pixels, of the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</summary>
@@ -13059,7 +13059,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Top">
 				A <typename>numeric</typename> value that specifies the top edge, in pixels, of the
-				<a class="see" href="&dapsref;">&dapsname;</a> window.
+				<see cref="&dapsref;">&dapsname;</see> window.
 			</value>
 			<remarks>
 				<para>
@@ -13073,7 +13073,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.PropertySheet.Visible">
 			<summary>
 				<para>
-					Specifies if the <a class="see" href="&dapsref;">&dapsname;</a> window is visible (open).
+					Specifies if the <see cref="&dapsref;">&dapsname;</see> window is visible (open).
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -13091,7 +13091,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="Visible">
-				A <typename>boolean</typename> value indicating whether or not the <a class="see" href="&dapsref;">&dapsname;</a>
+				A <typename>boolean</typename> value indicating whether or not the <see cref="&dapsref;">&dapsname;</see>
 				window is visible.
 			</value>
 		</member>
@@ -13101,7 +13101,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.PropertySheet.Width">
 			<summary>
 				<para>
-					Returns current width, in pixels, of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					Returns current width, in pixels, of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -13117,7 +13117,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="Width">
 				A <typename>numeric</typename> value that indicates the width, in pixels, of the
-				<a class="see" href="&dapsref;">&dapsname;</a> window.
+				<see cref="&dapsref;">&dapsname;</see> window.
 			</value>
 		</member>
 
@@ -13127,7 +13127,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="T:&dans;.PropertySheet">
 			<summary>
 				<para>
-					The <self>PropertySheet Object</self> provides access to the <a class="see" href="&dapsref;">&dapsname;</a>
+					The <self>PropertySheet Object</self> provides access to the <see cref="&dapsref;">&dapsname;</see>
 					window. It allows you to show and hide the window, and retrieve and update the window's location and
 					current page.
 				</para>
@@ -13197,15 +13197,15 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</syntax>
 			<remarks>
 				<para>
-					The <a class="see" href="&dapsref;">&dapsname;</a> window is shared among all Double Agent clients. Changes
+					The <see cref="&dapsref;">&dapsname;</see> window is shared among all Double Agent clients. Changes
 					to the window's location and visibility should be made with this in mind.
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" /> <see class="" cref="P:&darootobj;.PropertySheet" />
+					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" />&#160;<see class="" cref="P:&darootobj;.PropertySheet" />
 					property.
 				</para>
 				<note>
-					The <a class="see" href="&dapsref;">&dapsname;</a> window combines the Microsoft<sup>®</sup>
+					The <see cref="&dapsref;">&dapsname;</see> window combines the Microsoft<sup>®</sup>
 					Agent <glossary>Advanced Character Options</glossary> and <glossary>Default Character Properties</glossary>
 					windows.
 				</note>
@@ -13255,7 +13255,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Settings.BalloonEnabled">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&dawbref;">&dawbname;</a> for the <see cref="M:&dans;.Character.Speak" />
+					Indicates if the <see cref="&dawbref;">&dawbname;</see> for the <see cref="M:&dans;.Character.Speak" />
 					and <see cref="M:&dans;.Character.Think" /> methods is enabled.
 				</para>
 			</summary>
@@ -13271,13 +13271,13 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="BalloonEnabled">
-				A <typename>boolean</typename> value that indicates if the <a class="see" href="&dawbref;">&dawbname;</a>
+				A <typename>boolean</typename> value that indicates if the <see cref="&dawbref;">&dawbname;</see>
 				is enabled.
 			</value>
 			<remarks>
 				<para>
 					This property reflects the <literal>"Display spoken output in word balloon …"</literal> option on
-					the <a class="see" href="&dapsref;#Output">Output</a> page of the <a class="see" href="&dapsref;">&dapsname;</a>
+					the <see cref="&dapsref;#Output">Output</see> page of the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
@@ -13292,7 +13292,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Settings.BalloonFont">
 			<summary>
 				<para>
-					Returns the font that will be used for all <a class="see" href="&dawbref;">&dawbname;s</a>, if any.
+					Returns the font that will be used for all <see cref="&dawbref;">&dawbname;s</see>, if any.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -13308,12 +13308,12 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="BalloonFont">
 				An optional <typename>font</typename> object that specifies the font the user
-				has chosen to override all <a class="see" href="&dawbref;">&dawbname;</a> fonts.
+				has chosen to override all <see cref="&dawbref;">&dawbname;</see> fonts.
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"A single font for all characters"</literal> option on the <a class="see" href="&dapsref;#Output">Output</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"A single font for all characters"</literal> option on the <see cref="&dapsref;#Output">Output</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13352,8 +13352,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"Play character sound effects"</literal> option on the <a class="see" href="&dapsref;#Output">Output</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"Play character sound effects"</literal> option on the <see cref="&dapsref;#Output">Output</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13385,8 +13385,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"Characters listen for input"</literal> option on the <a class="see" href="&dapsref;#SpeechInput">Speech Input</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"Characters listen for input"</literal> option on the <see cref="&dapsref;#SpeechInput">Speech Input</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13418,8 +13418,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"When you press the … key"</literal> option on the <a class="see" href="&dapsref;#SpeechInput">Speech Input</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"When you press the … key"</literal> option on the <see cref="&dapsref;#SpeechInput">Speech Input</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13452,8 +13452,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"And continue for … seconds …"</literal> option on the <a class="see" href="&dapsref;#SpeechInput">Speech Input</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"And continue for … seconds …"</literal> option on the <see cref="&dapsref;#SpeechInput">Speech Input</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13486,8 +13486,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"Play tone when you can speak"</literal> option on the <a class="see" href="&dapsref;#SpeechInput">Speech Input</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"Play tone when you can speak"</literal> option on the <see cref="&dapsref;#SpeechInput">Speech Input</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13500,7 +13500,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.Settings.SRListeningTip">
 			<summary>
 				<para>
-					Indicates if the <a class="see" href="&daltref;">&daltname;</a> is shown when <glossary>Listening mode</glossary>
+					Indicates if the <see cref="&daltref;">&daltname;</see> is shown when <glossary>Listening mode</glossary>
 					is active.
 				</para>
 			</summary>
@@ -13516,13 +13516,13 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </vb>
 </syntax>
 			<value name="SRListeningTip">
-				A <typename>boolean</typename> value that indicates if the <a class="see" href="&daltref;">&daltname;</a>
+				A <typename>boolean</typename> value that indicates if the <see cref="&daltref;">&daltname;</see>
 				is enabled.
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"Display listening tips"</literal> option on the <a class="see" href="&dapsref;#SpeechInput">Speech Input</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"Display listening tips"</literal> option on the <see cref="&dapsref;#SpeechInput">Speech Input</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13554,8 +13554,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"Play spoken audio"</literal> option on the <a class="see" href="&dapsref;#Output">Output</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"Play spoken audio"</literal> option on the <see cref="&dapsref;#Output">Output</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13588,8 +13588,8 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					This property reflects the <literal>"Speaking speed"</literal> option on the <a class="see" href="&dapsref;#Output">Output</a>
-					page of the <a class="see" href="&dapsref;">&dapsname;</a> window.
+					This property reflects the <literal>"Speaking speed"</literal> option on the <see cref="&dapsref;#Output">Output</see>
+					page of the <see cref="&dapsref;">&dapsname;</see> window.
 				</para>
 				<include file="&dainclude;" path="/doc/properties/note[@name='ReadOnlySetting']" />
 			</remarks>
@@ -13604,7 +13604,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<summary>
 				<para>
 					The <self>Settings Object</self> provides access to various settings maintained by Double Agent. The
-					properties are read-only for client applications, but the user can change them in the <a class="see" href="&dapsref;">&dapsname;</a>
+					properties are read-only for client applications, but the user can change them in the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</summary>
@@ -13716,7 +13716,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					The <self>Settings Object</self> replaces and extends the <see cref="T:&dans;.AudioOutput" /> and <see cref="T:&dans;.SpeechInput" suffix="Objects" />.
 				</para>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" /> <see class="" cref="P:&darootobj;.Settings" />
+					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" />&#160;<see class="" cref="P:&darootobj;.Settings" />
 					property.
 				</para>
 				<note>
@@ -13934,7 +13934,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					Any supported SAPI4 tags are converted to SAPI5 tags.
 				</para>
 				<para>
-					For more information about speech tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
+					For more information about speech tags, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2">Speech Output Tags</see>.
 				</para>
 				<note>
 					This method will fail if the <see cref="T:&dans;.FormattedText" suffix=" Object" /> is currently being
@@ -13951,7 +13951,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 		<member name="P:&dans;.FormattedText.DisplayText">
 			<summary>
 				<para>
-					Returns the text displayed in the <a class="see" href="&dawbref;">&dawbname;</a>.
+					Returns the text displayed in the <see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax xml:space="preserve">
@@ -13971,9 +13971,9 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The value of this property does <em>not</em> depend on the <see cref="T:&dans;.Balloon" text="Balloon's" /> <see cref="P:&dans;.Balloon.Style" />,
-					or even if a <a class="see" href="&dawbref;">&dawbname;</a> is shown. It reflects what <em>would</em>
-					be displayed in a <a class="see" href="&dawbref;">&dawbname;</a> with the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" />
+					The value of this property does <em>not</em> depend on the <see cref="T:&dans;.Balloon" text="Balloon's" />&#160;<see cref="P:&dans;.Balloon.Style" />,
+					or even if a <see cref="&dawbref;">&dawbname;</see> is shown. It reflects what <em>would</em>
+					be displayed in a <see cref="&dawbref;">&dawbname;</see> with the <see cref="F:&dans;.BalloonStyleFlags.SizeToText" />
 					and <see cref="F:&dans;.BalloonStyleFlags.AutoPace" /> styles.
 				</para>
 			</remarks>
@@ -14039,7 +14039,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 </syntax>
 			<value name="ParsedText">
 				A <typename>string</typename> value containing the text formatted for displaying in
-				a <a class="see" href="&dawbref;">&dawbname;</a>.
+				a <see cref="&dawbref;">&dawbname;</see>.
 			</value>
 			<seealso cref="P:&dans;.FormattedText.RawText" suffix="Property" prefix="The" />
 			<seealso cref="P:&dans;.FormattedText.SpeechText" suffix="Property" prefix="The" />
@@ -14112,7 +14112,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 					when the <see cref="T:&dans;.FormattedText" suffix=" Object" /> was created.
 				</para>
 				<para>
-					For more information about speech tags, see <a href="../Reference/Ref_SpeechTags.htm">Speech Output Tags</a>.
+					For more information about speech tags, see <see cref="e08466ca-419c-11e1-9d4f-002421116fb2">Speech Output Tags</see>.
 				</para>
 			</remarks>
 			<seealso cref="P:&dans;.FormattedText.RawText" suffix="Property" prefix="The" />
@@ -14146,7 +14146,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The <self>WordCount</self> reflects how text is displayed in the <a class="see" href="&dawbref;">&dawbname;</a>
+					The <self>WordCount</self> reflects how text is displayed in the <see cref="&dawbref;">&dawbname;</see>
 					and how the <see cref="P:&dans;.FormattedText.DisplayText" /> is synchronized with the speech output.
 				</para>
 			</remarks>
@@ -14194,7 +14194,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<summary>
 				<para>
 					The <self>FormattedText</self> object is used to pre-format text that is to be spoken, or shown in
-					a <glossary>thought</glossary> <a class="see" href="&dawbref;">&dawbname;</a>.
+					a <glossary>thought</glossary>&#160;<see cref="&dawbref;">&dawbname;</see>.
 				</para>
 			</summary>
 			<syntax>
@@ -14377,7 +14377,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The <em>default</em> character is specified by the user in the <a class="see" href="&dapsref;">&dapsname;</a>
+					The <em>default</em> character is specified by the user in the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</remarks>
@@ -14408,7 +14408,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</value>
 			<remarks>
 				<para>
-					The <em>default</em> character is specified by the user in the <a class="see" href="&dapsref;">&dapsname;</a>
+					The <em>default</em> character is specified by the user in the <see cref="&dapsref;">&dapsname;</see>
 					window.
 				</para>
 			</remarks>
@@ -14922,7 +14922,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			</syntax>
 			<remarks>
 				<para>
-					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" /> <see class="" cref="P:&darootobj;.CharacterFiles" />
+					This object can be accessed using the <see class="" cref="T:&darootobj;" suffix="Object's" />&#160;<see class="" cref="P:&darootobj;.CharacterFiles" />
 					property.
 				</para>
 			</remarks>
@@ -15149,7 +15149,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<remarks>
 				<para>
 					This property corresponds to the <see cref="T:&dans;.Character" />.<see cref="P:&dans;.Character.SRModeID" />
-					property. To use <em>this</em> <see cref="T:&dans;.SREngine" suffix="Object" />, set the character's <see cref="P:&dans;.Character.SRModeID" />
+					property. To use <em>this</em>&#160;<see cref="T:&dans;.SREngine" suffix="Object" />, set the character's <see cref="P:&dans;.Character.SRModeID" />
 					property to <em>this</em> value.
 				</para>
 			</remarks>
@@ -15590,7 +15590,7 @@ Command1.<keyword>Enabled</keyword> = True</code>
 			<remarks>
 				<para>
 					This property corresponds to the <see cref="T:&dans;.Character" />.<see cref="P:&dans;.Character.TTSModeID" />
-					property. To use <em>this</em> <see cref="T:&dans;.TTSEngine" suffix="Object" />, set the character's <see cref="P:&dans;.Character.TTSModeID" />
+					property. To use <em>this</em>&#160;<see cref="T:&dans;.TTSEngine" suffix="Object" />, set the character's <see cref="P:&dans;.Character.TTSModeID" />
 					property to <em>this</em> value.
 				</para>
 			</remarks>

@@ -95,8 +95,8 @@ id=AgentControl&gt;
 				</para>
 
 				<code xml:space="preserve" language="none" title="HTML">&lt;OBJECT width=0 height=0
-CLASSID=&quot;CLSID: C348<legacyItalic>XXXX</legacyItalic>-A7F8-11D1-AA75-00C04FA34D72&quot;
-CODEBASE=&quot;http://your server/agt<legacyItalic>XXXX</legacyItalic>.dll&quot;&gt;
+CLASSID=&quot;CLSID: C348<i>XXXX</i>-A7F8-11D1-AA75-00C04FA34D72&quot;
+CODEBASE=&quot;http://your server/agt<i>XXXX</i>.dll&quot;&gt;
 &lt;/OBJECT&gt;</code>
 				<para>
 					where <legacyItalic>XXXX</legacyItalic> is replaced with a Language ID. The <token>MA</token> language components are no longer available on the Microsoft Web site, so
