@@ -130,7 +130,7 @@
 
 	<xsl:variable name="BrandingPath">
 		<xsl:choose>
-			<xsl:when test="$launchingApp='VS'">
+			<xsl:when test="$downscale-browser">
 				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -154,7 +154,7 @@
 	<xsl:variable name="xhtml"
 								select="'http://www.w3.org/1999/xhtml'"/>
 
-	<!-- The following variables are not used for self-branded content but are retained to ensure all references are resolved -->
+	<!-- The following variables are not used for branded content but are retained to ensure all references are resolved -->
 	<xsl:variable name="sp1-error-page"
 								select="/xhtml:html/xhtml:head/xhtml:meta[@name='SP1ErrorPage']/@content"></xsl:variable>
 	<xsl:variable name="error-page"
@@ -243,8 +243,6 @@
 			<xsl:value-of select="normalize-space(concat(local-name($target), ' behavior-removed ', @class))" />
 		</xsl:attribute>
 	</xsl:template>
-
-	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"/>
 
 	<!-- ============================================================================================
 	Function scripts

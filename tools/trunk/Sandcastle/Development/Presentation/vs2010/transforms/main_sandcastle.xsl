@@ -232,6 +232,10 @@
 		<xsl:call-template name="t_putCodeSection">
 			<xsl:with-param name="p_codeLang"
 											select="@language" />
+			<xsl:with-param name="p_codeTitle"
+											select="@title" />
+			<xsl:with-param name="p_code"
+											select="." />
 		</xsl:call-template>
 	</xsl:template>
 

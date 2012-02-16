@@ -457,6 +457,31 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					{
 						this.RecursiveCopy (presentationFolder + @"branding\*.*", brandingTarget);
 					}
+
+					if (!baseFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+					{
+						DirectoryInfo brandingDir = new DirectoryInfo (brandingTarget);
+						String transformsPath = Path.Combine (WorkingFolder, "branding");
+						String targetPath;
+						if (!Directory.Exists (transformsPath))
+							Directory.CreateDirectory (transformsPath);
+						foreach (FileInfo fileInfo in brandingDir.EnumerateFiles ("branding.xml"))
+						{
+							targetPath = Path.Combine (transformsPath, fileInfo.Name);
+							if (File.Exists (targetPath))
+								File.Delete (fileInfo.FullName);
+							else
+								File.Move (fileInfo.FullName, targetPath);
+						}
+						foreach (FileInfo fileInfo in brandingDir.EnumerateFiles ("*.xslt"))
+						{
+							targetPath = Path.Combine (transformsPath, fileInfo.Name);
+							if (File.Exists (targetPath))
+								File.Delete (fileInfo.FullName);
+							else
+								File.Move (fileInfo.FullName, targetPath);
+						}
+					}
 				}
 			}
 
@@ -563,11 +588,6 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				if (!encode)
 				{
 					filename = checkName = name.Replace (folder, String.Empty);
-
-					//DBF Added check to ignore XSL transform files.
-					if (checkName.EndsWith (".xsl", StringComparison.OrdinalIgnoreCase) ||
-					  checkName.EndsWith (".xslt", StringComparison.OrdinalIgnoreCase))
-					continue;
 
 					if (checkName.EndsWith (".htm", StringComparison.OrdinalIgnoreCase) ||
 					  checkName.EndsWith (".html", StringComparison.OrdinalIgnoreCase))

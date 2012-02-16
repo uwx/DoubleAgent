@@ -50,11 +50,11 @@ namespace SandcastleBuilder.Components
 		private const string s_configVendorName = "vendor-name";
 
 		private const string s_defaultLocale = "en-us";
-		private const string s_defaultBrandingPackage = "dev10";
+		private static string s_defaultBrandingPackage = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultBrandingPackage;
 		private const string s_defaultHelpOutput = "MSHelpViewer";
-		private const string s_defaultCatalogProductId = "VS";
-		private const string s_defaultCatalogVersion = "100";
-		private const string s_packageExtension = ".mshc";
+		private static string s_defaultCatalogProductId = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductId;
+		private static string s_defaultCatalogVersion = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductVersion;
+		private static string s_packageExtension = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.Help3PackageExtension;
 
 		private bool m_selfBranded = true;
 		private string m_locale = s_defaultLocale;
@@ -66,7 +66,6 @@ namespace SandcastleBuilder.Components
 		private string m_catalogVersion = s_defaultCatalogVersion;
 		private string m_catalogHelpTitle = String.Empty;
 		private string m_vendorName = String.Empty;
-		private HelpLibraryManager m_helpLibraryManager = new HelpLibraryManager ();
 		private XslCompiledTransform m_brandingTransform = null;
 		private XsltArgumentList m_transformArguments = null;
 
@@ -106,7 +105,7 @@ namespace SandcastleBuilder.Components
 				}
 				else
 				{
-					v_configValue = m_helpLibraryManager.HelpLibraryViewerPath;
+					v_configValue = HelpLibraryManager.HelpViewerInstallPath;
 					if (String.IsNullOrEmpty (v_configValue))
 					{
 						WriteMessage (MessageLevel.Error, "The MS Help Viewer installation could not be found. A base branding package must be specified.");
@@ -132,16 +131,13 @@ namespace SandcastleBuilder.Components
 				m_vendorName = v_configData.GetAttribute (s_configVendorName, String.Empty);
 			}
 
-			if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
+			if (m_selfBranded)
 			{
-				if (m_selfBranded)
-				{
-					LoadBrandingTransform ();
-				}
-				else
-				{
-					WriteMessage (MessageLevel.Error, String.Format ("Self-branding is required for {0} help format.", m_helpOutput));
-				}
+				LoadBrandingTransform ();
+			}
+			else if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
+			{
+				WriteMessage (MessageLevel.Error, String.Format ("Self-branding is required for {0} help format.", m_helpOutput));
 			}
 		}
 
@@ -152,10 +148,20 @@ namespace SandcastleBuilder.Components
 
 		public override void Apply (XmlDocument document, string key)
 		{
-			ReformatLanguageSpecific (document);
 			MakePlainCodeCopies (document);
 
-			if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
+			if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) == 0)
+			{
+				if (m_selfBranded)
+				{
+					ApplyBranding (document, key);
+				}
+				else
+				{
+					ReformatLanguageSpecific (document);
+				}
+			}
+			else
 			{
 				ApplyBranding (document, key);
 			}
@@ -186,7 +192,7 @@ namespace SandcastleBuilder.Components
 					}
 					SetSelfBranding (v_tempDocument, m_selfBranded);
 #if DEBUG//_NOT
-					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\..\\..\\PreBranding"));
+					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PreBranding"));
 					if (!Directory.Exists (v_tempPrePath))
 					{
 						Directory.CreateDirectory (v_tempPrePath);
@@ -195,7 +201,7 @@ namespace SandcastleBuilder.Components
 					v_tempDocument.Save (v_tempPrePath);
 #endif
 #if DEBUG_NOT
-					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\..\\..\\PostBranding"));
+					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PostBranding"));
 					if (!Directory.Exists (v_tempPostPath))
 					{
 						Directory.CreateDirectory (v_tempPostPath);
@@ -231,7 +237,7 @@ namespace SandcastleBuilder.Components
 								document.Load (v_reader);
 							}
 #if DEBUG_NOT
-							String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\..\\..\\PostBranding"));
+							String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PostBranding"));
 							if (!Directory.Exists (v_tempPrePath))
 							{
 								Directory.CreateDirectory (v_tempPrePath);
@@ -382,12 +388,13 @@ namespace SandcastleBuilder.Components
 
 						m_transformArguments = new XsltArgumentList ();
 						m_transformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
+						m_transformArguments.AddParam ("branding-package", String.Empty, m_brandingPackage);
 						m_transformArguments.AddParam ("catalogProductFamily", String.Empty, m_catalogProductId);
 						m_transformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
 						m_transformArguments.AddParam ("catalogHelpTitle", String.Empty, m_catalogHelpTitle);
 						m_transformArguments.AddParam ("catalogLocale", String.Empty, m_locale);
 						m_transformArguments.AddParam ("content-path", String.Empty, ".\\");
-						if (String.Compare (m_helpOutput, "HtmlHelp1", StringComparison.OrdinalIgnoreCase) == 0)
+						if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
 						{
 							m_transformArguments.AddParam ("downscale-browser", String.Empty, true);
 						}

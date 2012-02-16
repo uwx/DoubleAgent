@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <branding xmlns="urn:FH-Branding">
-  <common-parameters>
-    <parameter name="branding-package" value="\content\microsoft\store\dev10.mshc" />
-  </common-parameters>
   <transform-parameters xml:lang="en-us" transform="branding-en-us.xslt" />
   <transform-parameters xml:lang="ja-jp" transform="branding-ja-jp.xslt" />
   <transform-parameters xml:lang="cs-cz" transform="branding-cs-cz.xslt" />

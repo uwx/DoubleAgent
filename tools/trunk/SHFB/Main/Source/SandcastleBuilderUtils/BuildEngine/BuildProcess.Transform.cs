@@ -65,6 +65,7 @@ using Microsoft.Build.Evaluation;
 using SandcastleBuilder.Utils.BuildComponent;
 using SandcastleBuilder.Utils.Design;
 using SandcastleBuilder.Utils.PlugIn;
+using SandcastleBuilder.MicrosoftHelpViewer;
 
 namespace SandcastleBuilder.Utils.BuildEngine
 {
@@ -848,11 +849,17 @@ namespace SandcastleBuilder.Utils.BuildEngine
                     break;
 
                 case "catalogproductid":
-                    replaceWith = project.CatalogProductId;
+					if (String.IsNullOrEmpty (project.CatalogProductId))
+						replaceWith = HelpLibraryManager.DefaultCatalogProductId;
+					else
+						replaceWith = project.CatalogProductId;
                     break;
 
                 case "catalogversion":
-                    replaceWith = project.CatalogVersion;
+					if (String.IsNullOrEmpty (project.CatalogVersion))
+						replaceWith = HelpLibraryManager.DefaultCatalogProductVersion;
+					else
+						replaceWith = project.CatalogVersion;
                     break;
 
                 case "vendorname":
@@ -876,7 +883,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 				//DBF Updated to force self branding for any style other than VS2010.
 				case "selfbranded":
-					if (project.PresentationStyle.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
+					if (project.PresentationStyle.ToLower ().Contains ("vs2010"))
 						replaceWith = project.SelfBranded.ToString ().ToLower (CultureInfo.InvariantCulture);
 					else
 						replaceWith = "true";
@@ -885,11 +892,15 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				//DBF Added this variable to support the VS2010 style.
 				case "brandingpackage":
 				case "brandingpackagename":
-					if (project.PresentationStyle.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
+					if (project.PresentationStyle.ToLower ().Contains ("vs2010"))
 					{
-						if (String.IsNullOrEmpty (project.BrandingPackageName))
+						if (project.CatalogProductId == HelpLibraryManager.DefaultCatalogProductId)
 						{
-							replaceWith = project.HtmlHelpName;
+							replaceWith = HelpLibraryManager.DefaultBrandingPackage;
+						}
+						else if (String.IsNullOrEmpty (project.BrandingPackageName))
+						{
+							replaceWith = project.HtmlHelpName + "Branding";
 						}
 						else
 						{
@@ -898,26 +909,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					}
 					else
 					{
-						replaceWith = "Dev10";
-					}
-					break;
-
-				//DBF Added this variable to support the VS2010 style.
-				case "brandingpackagepath":
-					if (project.PresentationStyle.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
-					{
-						if (String.IsNullOrEmpty (project.BrandingPackageName))
-						{
-							replaceWith = Path.Combine (project.OutputPath, project.HtmlHelpName + ".mshc");
-						}
-						else
-						{
-							replaceWith = Path.Combine (project.OutputPath, project.BrandingPackageName + ".mshc");
-						}
-					}
-					else
-					{
-						replaceWith = "Dev10.mshc";
+						replaceWith = HelpLibraryManager.DefaultBrandingPackage;
 					}
 					break;
 

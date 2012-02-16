@@ -17,6 +17,8 @@
 // Version     Date     Who  Comments
 // ============================================================================
 // 1.0.0.0  07/03/2010  EFW  Created the code
+// 1.9.3.4  02/06/2010  DBF  Updated to support branding packages
+// 1.9.3.4  02/15/2010  DBF  Made public properties and constructor static
 //=============================================================================
 
 using System;
@@ -71,29 +73,73 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
         /// <summary>
         /// This read-only property returns the path to the local store folder.
         /// </summary>
-        public string LocalStorePath { get; private set; }
-
-		/// <summary>
-		/// This read-only property returns the path to the MS Help Viewer
-		/// installation folder.
-		/// </summary>
-		public string HelpLibraryViewerPath { get; private set; }
-
-        /// <summary>
-        /// This read-only property returns the path to the Help Library Manager
-        /// executable.
-        /// </summary>
-        public string HelpLibraryManagerPath { get; private set; }
+        public static string LocalStorePath { get; private set; }
 
         /// <summary>
         /// This read-only property is used to see if the local store has been
         /// initialized.
         /// </summary>
-        public bool LocalStoreInitialized
+		public static bool LocalStoreInitialized
         {
-            get { return (!String.IsNullOrEmpty(this.LocalStorePath) && Directory.Exists(this.LocalStorePath)); }
+			get { return (!String.IsNullOrEmpty (HelpLibraryManager.LocalStorePath) && Directory.Exists (HelpLibraryManager.LocalStorePath)); }
         }
-        #endregion
+
+		//DBF Added this property
+		/// <summary>
+		/// This read-only property returns the path to the MS Help Viewer
+		/// installation folder.
+		/// </summary>
+		public static string HelpViewerInstallPath { get; private set; }
+
+		//DBF Added this property
+		/// <summary>
+		/// This read-only property returns the path to the MS Help Viewer
+		/// application.
+		/// </summary>
+		public static string HelpViewerPath { get; private set; }
+
+        /// <summary>
+        /// This read-only property returns the path to the Help Library Manager
+        /// executable.
+        /// </summary>
+		public static string HelpLibraryManagerPath { get; private set; }
+
+		//DBF Added this property
+		/// <summary>
+		/// The the default MS Help Viewer Product ID.
+		/// </summary>
+		public static string DefaultCatalogProductId
+		{
+			get { return "VS"; }
+		}
+
+		//DBF Added this property
+		/// <summary>
+		/// The the default MS Help Viewer Product Version.
+		/// </summary>
+		public static string DefaultCatalogProductVersion
+		{
+			get { return "100"; }
+		}
+
+		//DBF Added this property
+		/// <summary>
+		/// The name of the default branding package used by the MS Help Viewer.
+		/// </summary>
+		public static string DefaultBrandingPackage
+		{
+			get { return "Dev10"; }
+		}
+
+		//DBF Added this property
+		/// <summary>
+		/// The file extension for MS Help Viewer packages.
+		/// </summary>
+		public static string Help3PackageExtension
+		{
+			get { return ".mshc"; }
+		}
+		#endregion
 
         #region Constructor
         //=====================================================================
@@ -101,24 +147,27 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
         /// <summary>
         /// Constructor
         /// </summary>
-        public HelpLibraryManager()
+        static HelpLibraryManager()
         {
             string appRoot;
+			string appName;
 
-            this.LocalStorePath = UnsafeNativeMethods.GetRegistryValue(@"SOFTWARE\Microsoft\Help\v1.0", "LocalStore");
-
+			HelpLibraryManager.LocalStorePath = UnsafeNativeMethods.GetRegistryValue (@"SOFTWARE\Microsoft\Help\v1.0", "LocalStore");
             appRoot = UnsafeNativeMethods.GetRegistryValue(@"SOFTWARE\Microsoft\Help\v1.0", "AppRoot");
 
-            if(appRoot != null)
-            {
+			if (!String.IsNullOrEmpty (appRoot))
+			{
 				if (Directory.Exists (appRoot))
-					this.HelpLibraryViewerPath = appRoot;
+					HelpLibraryManager.HelpViewerInstallPath = appRoot;
 
-				appRoot = Path.Combine (appRoot, "HelpLibManager.exe");
+				appName = Path.Combine (appRoot, "HlpViewer.exe");
+				if (File.Exists (appName))
+					HelpLibraryManager.HelpViewerPath = appName;
 
-                if(File.Exists(appRoot))
-                    this.HelpLibraryManagerPath = appRoot;
-            }
+				appName = Path.Combine (appRoot, "HelpLibManager.exe");
+				if (File.Exists (appName))
+					HelpLibraryManager.HelpLibraryManagerPath = appName;
+			}
         }
         #endregion
 
@@ -139,11 +188,11 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
             List<Catalog> allInstalledCatalogs = new List<Catalog>();
             string locale = null;
 
-            if(String.IsNullOrEmpty(this.LocalStorePath))
+			if (String.IsNullOrEmpty (HelpLibraryManager.LocalStorePath))
                 return null;
 
             // I suppose it's possible there may be more than one so we'll look at all of them
-            foreach(string file in Directory.GetFiles(Path.Combine(this.LocalStorePath, "manifest"),
+			foreach (string file in Directory.GetFiles (Path.Combine (HelpLibraryManager.LocalStorePath, "manifest"),
               "queryManifest.*.xml"))
             {
                 manifest = new XmlDocument();
@@ -175,7 +224,7 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
             XmlDocument manifest;
             string filename = Path.GetFileNameWithoutExtension(contentFilename);
 
-            if(String.IsNullOrEmpty(this.LocalStorePath))
+			if (String.IsNullOrEmpty (HelpLibraryManager.LocalStorePath))
                 return false;
 
             // Periods in the filename aren't allowed.  SHFB replaces them with an
@@ -186,7 +235,7 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
             filename += Path.GetExtension(contentFilename);
 
             // I suppose it's possible there may be more than one so we'll look at all of them
-            foreach(string file in Directory.GetFiles(Path.Combine(this.LocalStorePath, "manifest"),
+			foreach (string file in Directory.GetFiles (Path.Combine (HelpLibraryManager.LocalStorePath, "manifest"),
               "queryManifest.*.xml"))
             {
                 manifest = new XmlDocument();
@@ -213,7 +262,7 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = this.HelpLibraryManagerPath,
+					FileName = HelpLibraryManager.HelpLibraryManagerPath,
                     Arguments = arguments,
                     CreateNoWindow = true,
                     WindowStyle = windowStyle
@@ -240,7 +289,7 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
                 StartInfo =
                 {
                     UseShellExecute = true,
-                    FileName = this.HelpLibraryManagerPath,
+					FileName = HelpLibraryManager.HelpLibraryManagerPath,
                     Arguments = arguments,
                     CreateNoWindow = true,
                     WindowStyle = windowStyle
@@ -270,7 +319,7 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
                 StartInfo =
                 {
                     UseShellExecute = true,
-                    FileName = this.HelpLibraryManagerPath,
+					FileName = HelpLibraryManager.HelpLibraryManagerPath,
                     Arguments = arguments,
                     WindowStyle = ProcessWindowStyle.Normal
                 }

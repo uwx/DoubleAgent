@@ -430,7 +430,7 @@
 		<xsl:param name="p_toplink"
 							 select="false()" />
 
-		<mtps:CollapsibleArea>
+		<mtps:CollapsibleArea runat="server">
 			<includeAttribute name="Title"
 												item="{$p_titleInclude}"/>
 			<xsl:element name="xml">
@@ -464,6 +464,76 @@
 	<xsl:template name="t_putCodeSection">
 		<xsl:param name="p_codeLang" />
 		<xsl:param name="p_codeTitle" />
+		<xsl:param name="p_code" />
+		<xsl:param name="p_formatCode"
+							 select="false()" />
+		<xsl:param name="p_enableCopyCode"
+							 select="'true'" />
+
+		<xsl:variable name="v_codeLangUnique">
+			<xsl:call-template name="t_codeLang">
+				<xsl:with-param name="p_codeLang"
+												select="$p_codeLang"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="v_codeLangName">
+			<xsl:choose>
+				<xsl:when test="(($v_codeLangUnique = 'other') or ($v_codeLangUnique = 'none')) and (normalize-space($p_codeTitle) != '')">
+					<xsl:value-of select="$p_codeTitle"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$v_codeLangUnique"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="v_codeLangLabel">
+			<xsl:choose>
+				<xsl:when test="(($v_codeLangUnique = 'other') or ($v_codeLangUnique = 'none')) and (normalize-space($p_codeTitle) != '')">
+					<xsl:value-of select="$p_codeTitle"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="t_codeLangLabel">
+						<xsl:with-param name="p_codeLang"
+														select="$v_codeLangUnique"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:element name="mtps:CodeSnippet">
+			<xsl:attribute name="runat">server</xsl:attribute>
+			<xsl:attribute name="Language">
+				<xsl:value-of select="$v_codeLangName"/>
+			</xsl:attribute>
+			<xsl:attribute name="DisplayLanguage">
+				<xsl:value-of select="$v_codeLangLabel"/>
+			</xsl:attribute>
+			<xsl:attribute name="ContainsMarkup">
+				<xsl:value-of select="string($p_formatCode)"/>
+			</xsl:attribute>
+			<xsl:attribute name="EnableCopyCode">
+				<xsl:value-of select="$p_enableCopyCode"/>
+			</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="boolean($p_formatCode)">
+					<xsl:apply-templates select="$p_code"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text xml:space="preserve">
+</xsl:text>
+					<xsl:value-of select="$p_code"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Code formatting (direct to branded)
+	============================================================================================= -->
+
+	<xsl:template name="t_putCodeSectionBranded">
+		<xsl:param name="p_codeLang" />
+		<xsl:param name="p_codeTitle" />
 		<xsl:param name="p_formatCode"
 							 select="false()" />
 		<xsl:param name="p_enableCopyCode"
@@ -480,7 +550,7 @@
 		</xsl:variable>
 		<xsl:variable name="v_codeLangName">
 			<xsl:choose>
-				<xsl:when test="($v_codeLangUnique = 'none') and (normalize-space($p_codeTitle) != '')">
+				<xsl:when test="(($v_codeLangUnique = 'other') or ($v_codeLangUnique = 'none')) and (normalize-space($p_codeTitle) != '')">
 					<xsl:value-of select="$p_codeTitle"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -574,32 +644,6 @@
 					<xsl:with-param name="p_enableCopyCode"
 													select="$p_enableCopyCode"/>
 				</xsl:call-template>
-				<!--<div id="{$sectionId}_tab1"
-						 class="OH_CodeSnippetContainerTabActive"
-						 EnableCopyCode="false">
-					<a href="javascript:ChangeTab('{$sectionId}','Visual Basic','1','5')">VB</a>
-				</div>
-				<div id="{$sectionId}_tab2"
-						 class="OH_CodeSnippetContainerTab"
-						 EnableCopyCode="false">
-					<a href="javascript:ChangeTab('{$sectionId}','C#','2','5')">C#</a>
-				</div>
-				<div id="{$sectionId}_tab3"
-						 class="OH_CodeSnippetContainerTab"
-						 EnableCopyCode="false">
-					<a href="javascript:ChangeTab('{$sectionId}','Visual C++','3','5')">C++</a>
-				</div>
-				<div id="{$sectionId}_tab4"
-						 class="OH_CodeSnippetContainerTab"
-						 EnableCopyCode="false">
-					<a href="javascript:ChangeTab('{$sectionId}','F#','4','5')">F#</a>
-				</div>
-				<div id="{$sectionId}_tab5"
-						 class="OH_CodeSnippetContainerTabDisabledNotFirst"
-						 EnableCopyCode="false"
-						 disabled="true">
-					<a>JScript</a>
-				</div>-->
 				<div class="OH_CodeSnippetContainerTabRight"
 						 id="{$sectionId}_tabimgright"></div>
 			</div>
@@ -691,7 +735,7 @@
 										select="@title"/>
 			<xsl:variable name="v_codeLangName">
 				<xsl:choose>
-					<xsl:when test="($v_codeLang = 'none') and (normalize-space($v_codeTitle) != '')">
+					<xsl:when test="(($v_codeLang = 'other') or ($v_codeLang = 'none')) and (normalize-space($v_codeTitle) != '')">
 						<xsl:value-of select="$v_codeTitle"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -704,7 +748,7 @@
 			</xsl:variable>
 			<xsl:variable name="v_labelLang">
 				<xsl:choose>
-					<xsl:when test="($v_codeLang = 'none') and (normalize-space($v_codeTitle) != '')">
+					<xsl:when test="(($v_codeLang = 'other') or ($v_codeLang = 'none')) and (normalize-space($v_codeTitle) != '')">
 						<xsl:value-of select="$v_codeTitle"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -834,8 +878,11 @@
 			<xsl:when test="$v_codeLangLC = 'vbs' or $v_codeLangLC = 'vbscript'">
 				<xsl:text>VBScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangLC = 'vb' or $v_codeLangLC = 'vb#' or $v_codeLangLC = 'kblangvb' or $v_codeLangLC = 'visualbasicdeclaration' or $v_codeLangLC = 'visualbasic'" >
+			<xsl:when test="$v_codeLangLC = 'vb' or $v_codeLangLC = 'vb#' or $v_codeLangLC = 'kblangvb' or $v_codeLangLC = 'visualbasic'" >
 				<xsl:text>VisualBasic</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangLC = 'visualbasicdeclaration'" >
+				<xsl:text>VisualBasicDeclaration</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'visualbasicusage'" >
 				<xsl:text>VisualBasicUsage</xsl:text>
@@ -891,7 +938,7 @@
 			<xsl:when test="$v_codeLangUnique = 'VBScript'">
 				<xsl:text>VBScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasic' or $v_codeLangUnique = 'VisualBasicUsage'" >
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic' or $v_codeLangUnique = 'VisualBasicUsage' or $v_codeLangUnique = 'VisualBasicDeclaration'" >
 				<xsl:text>VB</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
@@ -940,14 +987,14 @@
 			<xsl:when test="$v_codeLangUnique = 'VBScript'">
 				<xsl:text>Visual Basic Script</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasic'" >
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic' or $v_codeLangUnique = 'VisualBasicDeclaration'" >
 				<xsl:text>Visual Basic</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'VisualBasicUsage'" >
 				<xsl:text>Visual Basic Usage</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
-				<xsl:text>Visual C#</xsl:text>
+				<xsl:text>C#</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'visualbasicANDcsharp'" >
 				<xsl:text>Visual Basic and C#</xsl:text>
@@ -956,10 +1003,10 @@
 				<xsl:text>Visual C++</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'JSharp'">
-				<xsl:text>Visual J#</xsl:text>
+				<xsl:text>J#</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'FSharp'" >
-				<xsl:text>Visual F#</xsl:text>
+				<xsl:text>F#</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'JScript'">
 				<xsl:text>JScript</xsl:text>

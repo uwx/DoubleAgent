@@ -107,10 +107,10 @@
 				<title>
 					<xsl:call-template name="t_topicTitlePlain"/>
 				</title>
-				<xsl:call-template name="t_insertMetadata" />
 				<xsl:call-template name="t_insertMetadataHelp30" />
 				<xsl:call-template name="t_insertFilename" />
 				<xsl:call-template name="t_insertMetadataHelp20" />
+				<xsl:call-template name="t_insertMetadata" />
 			</head>
 			<body class="primary-mtps-offline-document">
 				<div class="topic">

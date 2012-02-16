@@ -446,6 +446,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 rootContentContainerId = value;
             }
         }
+
         #endregion
 
         #region Events

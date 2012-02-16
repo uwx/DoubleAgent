@@ -75,6 +75,9 @@
 // 1.9.3.2  08/20/2011  EFW  Updated to support selection of .NET Portable
 //                           Framework versions.
 // 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style.
+// 1.9.3.4	02/15/2010	DBF	 Updated documentation of the Language,
+//							 CatalogProductId, CatalogVersion,
+//							 and SelfBranded properties. 
 //=============================================================================
 
 using System;
@@ -1040,11 +1043,15 @@ namespace SandcastleBuilder.Utils
         /// This is used to get or set the language option for the help file
         /// and to determine which set of presentation resource files to use.
         /// </summary>
-        /// <value>If a matching set of presentation resources cannot be
+		/// <remarks>If a matching set of presentation resources cannot be
         /// found for the specified language, the US English set will be
-        /// used.</value>
-        [Category("Help File"), Description("The language for the help file"),
-            DefaultValue(typeof(CultureInfo), "en-US"),
+        /// used.
+		/// <para>The MS Help Viewer Catalog ID is composed of the <see cref="CatalogProductId"/>,
+		/// the <see cref="CatalogVersion"/>, and the <c>Language</c> code. For example,
+		/// the English Visual Studio 10 catalog is \"VS_100_EN-US\".</para>
+		/// </remarks>
+		[Category ("Help File"), Description ("The help file language.  For the MS Help Viewer, this is "+
+			"the Locale portion of the Catalog ID."), DefaultValue(typeof(CultureInfo), "en-US"),
             TypeConverter(typeof(LanguageResourceConverter))]
         public CultureInfo Language
         {
@@ -1482,21 +1489,25 @@ namespace SandcastleBuilder.Utils
         }
 
         /// <summary>
-        /// This is used to get or set the catalog product ID to use for the
-        /// installation script.
+        /// This is used to get or set the Product ID portion of the MS Help Viewer Catalog ID.
         /// </summary>
-        /// <remarks>The default if not specified will be "VS"</remarks>
-        [Category("MS Help Viewer"), Description("Specify the catalog product ID to use for the installation " +
-            "script.  If not set, it defaults to \"VS\"."), DefaultValue("VS"), EscapeValue]
+		/// <remarks>Tf not specified, the default is "VS".
+		/// <para>The MS Help Viewer Catalog ID is composed of the <c>CatalogProductId</c>
+		/// the <see cref="CatalogVersion"/>, and the <see cref="Language"/> code. For example,
+		/// the English Visual Studio 10 catalog is \"VS_100_EN-US\".</para>
+		/// </remarks>
+        [Category("MS Help Viewer"), Description("Specify the Product ID portion of the MS Help Viewer Catalog ID.  " +
+            "If not set, the default is \"VS\" (for \"Visual Studio\")."), DefaultValue("VS"), EscapeValue]
         public string CatalogProductId
         {
             get { return catalogProductId; }
             set
             {
                 if(value == null || value.Trim().Length == 0)
-                    value = "VS";
+					value = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductId;
                 else
-                    value = value.Trim();
+					//DBF Added filtering of forbidden characters.
+					value = Uri.EscapeDataString (Uri.UnescapeDataString (value.Trim ()));
 
                 this.SetProjectProperty("CatalogProductId", value);
                 catalogProductId = value;
@@ -1504,21 +1515,23 @@ namespace SandcastleBuilder.Utils
         }
 
         /// <summary>
-        /// This is used to get or set the catalog version number to use for the
-        /// installation script.
-        /// </summary>
-        /// <remarks>The default if not specified will be "100"</remarks>
-        [Category("MS Help Viewer"), Description("Specify the catalog version number to use for the installation " +
-            "script.  If not set, it defaults to \"100\"."), DefaultValue("100"), EscapeValue]
+		/// This is used to get or set the Version portion of the MS Help Viewer Catalog ID.
+		/// </summary>
+		/// <para>The MS Help Viewer Catalog ID is composed of the <see cref="CatalogProductId"/>,
+		/// the <c>CatalogVersion</c>, and the <see cref="Language"/> code. For example,
+		/// the English Visual Studio 10 catalog is \"VS_100_EN-US\".</para>
+		/// <remarks>If not specified, the default is "100"</remarks>
+		[Category ("MS Help Viewer"), Description ("Specify the Version portion of the MS Help Viewer Catalog ID.  " +
+			"If not set, the default is \"100\" (meaning \"10.0\")."), DefaultValue ("100"), EscapeValue]
         public string CatalogVersion
         {
             get { return catalogVersion; }
             set
             {
                 if(value == null || value.Trim().Length == 0)
-                    value = "100";
+					value = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductVersion;
                 else
-                    value = value.Trim();
+					value = value.Trim ();
 
                 this.SetProjectProperty("CatalogVersion", value);
                 catalogVersion = value;
@@ -1528,7 +1541,9 @@ namespace SandcastleBuilder.Utils
         /// <summary>
         /// This is used to get or set the vendor name for the help viewer file
         /// </summary>
-        /// <remarks>The default if not specified will be "Vendor Name"</remarks>
+        /// <remarks>The default if not specified will be "Vendor Name"
+		/// <para>The value must not contain the ':', '\', '/', '.', or '#' characters.</para>
+		/// </remarks>
         [Category("MS Help Viewer"), Description("Specify the vendor name for the help file.  If not set, " +
           "'Vendor Name' will be used at build time."), DefaultValue(""), EscapeValue]
         public string VendorName
@@ -1539,7 +1554,8 @@ namespace SandcastleBuilder.Utils
                 if(value == null || value.Trim().Length == 0)
                     value = String.Empty;
                 else
-                    value = value.Trim();
+					//DBF Added filtering of forbidden characters.
+					value = Uri.EscapeDataString (Uri.UnescapeDataString (value.Trim ().Replace ('.', '_'))).Replace ("%20", " ");
 
                 this.SetProjectProperty("VendorName", value);
                 vendorName = value;
@@ -1569,18 +1585,38 @@ namespace SandcastleBuilder.Utils
         }
 
         /// <summary>
-        /// This is used to get or set whether or not the help file is self-branded
+        /// This is used to get or set whether or not the MS Help Viewer (MSHC) content is self-branded.
         /// </summary>
-        /// <remarks>Typically, this should be set to true.</remarks>
-        [Category("MS Help Viewer"), Description("Indicate whether or not the help file is self-branded.  " +
-          "Typically, this will be set to True."), DefaultValue(true)]
+        /// <remarks>Typically, this should be set to False for the VS2010 style and True for other styles.
+		/// <para>This value determines how the MS Help Viewer will apply it's branding package at run-time.</para>
+		/// <list type="bullet">
+		/// <item>If the default catalog (VS_100) and/or branding package (Dev10) are used:</item>
+		/// <list type="bullet">
+		/// <item></item>
+		/// </list>
+		/// <item>If a custom catalog and branding package are used:</item>
+		/// </list>
+		/// <para>For the Help1 and Website targets, this value determines how the <see cref="T:SandcastleBuilder.Components.BrandingComponent"/>
+		/// </para>will apply the branding package.
+		/// </remarks>
+        [Category("MS Help Viewer"), Description("Indicate whether or not the help content is self-branded.  " +
+          "For the VS2010 style, typically \"False\" if the \"VS\" catalog is used and \"True\" otherwise.  "+ 
+		  "Always \"True\" for other styles."), DefaultValue(true)]
         public bool SelfBranded
         {
             get { return selfBranded; }
             set
             {
-                this.SetProjectProperty("SelfBranded", value);
-                selfBranded = value;
+				//DBF Added filtering for the VS2010 presentation style.
+				if (this.PresentationStyle.ToLower().Contains("vs2010"))
+				{
+					selfBranded = value;
+				}
+				else
+				{
+					selfBranded = true;
+				}
+				this.SetProjectProperty ("SelfBranded", selfBranded);
             }
         }
 
@@ -1596,8 +1632,15 @@ namespace SandcastleBuilder.Utils
 			get { return brandingPackageName; }
 			set
 			{
-				this.SetProjectProperty ("BrandingPackageName", value);
-				brandingPackageName = value;
+				if (this.CatalogProductId == SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductId)
+					brandingPackageName = String.Empty;
+				else
+				{
+					brandingPackageName = value.Trim ();
+					if (String.IsNullOrEmpty (brandingPackageName))
+						brandingPackageName = this.HtmlHelpName + "Branding";
+				}
+				this.SetProjectProperty ("BrandingPackageName", brandingPackageName);
 			}
 		}
 
@@ -1605,8 +1648,9 @@ namespace SandcastleBuilder.Utils
         /// This is used to get or set the topic version for each topic in the help file
         /// </summary>
         /// <remarks>The default is "100".</remarks>
-        [Category("MS Help Viewer"), Description("Specify the topic version for each topic in the help file."),
-          DefaultValue("100"), EscapeValue]
+        [Category("MS Help Viewer"), Description("Specify the topic version for each topic in the help file. "+
+			"If not set, the default is \"100\" (meaning \"10.0\")."),
+			DefaultValue("100"), EscapeValue]
         public string TopicVersion
         {
             get { return topicVersion; }
@@ -1650,8 +1694,9 @@ namespace SandcastleBuilder.Utils
         /// This is used to get or set the topic version of the <see cref="TocParentId" /> topic
         /// </summary>
         /// <remarks>The default is "100".</remarks>
-        [Category("MS Help Viewer"), Description("Specify the topic version of the TOC parent topic."),
-          DefaultValue("100"), EscapeValue]
+        [Category("MS Help Viewer"), Description("Specify the topic version of the TOC parent topic. "+
+			"If not set, the default is \"100\" (meaning \"10.0\")."),
+			DefaultValue("100"), EscapeValue]
         public string TocParentVersion
         {
             get { return tocParentVersion; }

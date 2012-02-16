@@ -449,22 +449,14 @@
 			<xsl:when test="local-name(../*[$currentPos - 1]) != $currentName">
 				<xsl:choose>
 					<xsl:when test="local-name(../*[$currentPos + 1]) != $currentName">
-						<xsl:choose>
-							<xsl:when test="normalize-space(@language) = 'none' and normalize-space(@title) != ''">
 								<xsl:call-template name="t_putCodeSection">
 									<xsl:with-param name="p_codeLang"
 																	select="@language" />
 									<xsl:with-param name="p_codeTitle"
 																	select="@title" />
+									<xsl:with-param name="p_code"
+																	select="." />
 								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:call-template name="t_putCodeSection">
-									<xsl:with-param name="p_codeLang"
-																	select="@language" />
-								</xsl:call-template>
-							</xsl:otherwise>
-						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="endNodePos">
@@ -1333,11 +1325,15 @@
 
 	<xsl:template match="ddue:snippets">
 		<xsl:if test="ddue:snippet">
-			<div name="snippetGroup">
+			<div id="snippetGroup">
 				<xsl:for-each select="ddue:snippet">
 					<xsl:call-template name="t_putCodeSection">
 						<xsl:with-param name="p_codeLang"
 														select="@language" />
+						<xsl:with-param name="p_codeTitle"
+														select="@title" />
+						<xsl:with-param name="p_code"
+														select="." />
 					</xsl:call-template>
 				</xsl:for-each>
 			</div>

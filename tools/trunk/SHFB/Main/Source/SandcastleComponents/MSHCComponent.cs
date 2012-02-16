@@ -196,7 +196,7 @@ namespace SandcastleBuilder.Components
 		private static class MHSDefault
 		{
 			public const bool SelfBranded = true;
-			public const string BrandingPackage = "dev10";
+			public const string BrandingPackage = "Dev10";
 			public const string Locale = "en-us";
 			public const string Reference = "Reference";
 			public const string TopicVersion = "100";

@@ -12,11 +12,48 @@
 >
 	<xsl:import href="Dev10head.xslt"/>
 
+	<!-- use the default head transform (note - mode="self-branding" will no longer apply to it's contents) -->
 	<xsl:template match="xhtml:head"
 								mode="self-branding">
 		<xsl:call-template name="head"/>
 	</xsl:template>
 
+	<xsl:template match="xhtml:head/*[last()]"
+								name="appendToHead">
+		<xsl:apply-templates/>
+
+		<!-- tweak some of the styles for targets other than MS Help Viewer -->
+		<xsl:if test="$downscale-browser">
+			<xsl:element name="style"
+									 namespace="{$xhtml}">
+				<xsl:attribute name="type">text/css</xsl:attribute>
+				body
+				{
+				background-color:#e6e6e6;
+				overflow-x:visible;
+				overflow-y:scroll;
+				}
+				.OH_outerDiv
+				{
+				margin-left:4px;
+				background-color:#ffffff;
+				width:100%;
+				height:100%;
+				overflow-x:auto;
+				}
+				.OH_outerContent
+				{
+				background-color:#ffffff;
+				}
+				.OH_footer
+				{
+				background-color:#ffffff;
+				}
+			</xsl:element>
+		</xsl:if>
+	</xsl:template>
+
+	<!-- update script paths -->
 	<xsl:template match="xhtml:script"
 								mode="self-branding">
 		<xsl:copy>
@@ -34,5 +71,8 @@
 			</xsl:choose>
 		</xsl:copy>
 	</xsl:template>
+
+	<!-- remove branding data from the header - it's no longer required -->
+	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"/>
 
 </xsl:stylesheet>

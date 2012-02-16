@@ -8,7 +8,6 @@
 								xmlns:branding="urn:FH-Branding"
 								xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-
 	<xsl:import href="Dev10body.xslt"/>
 
 	<!-- ============================================================================================
@@ -16,11 +15,12 @@
 	============================================================================================= -->
 
 	<!-- strip style attributes by default -->
-	<xsl:template match="@style"
+	<xsl:template match="@style[normalize-space(.)!='display:none']"
 								name="style"/>
 
 	<!-- pass through styles for p and h elements -->
-	<xsl:template match="//xhtml:p[@style]|xhtml:h1[@style]|xhtml:h2[@style]|xhtml:h3[@style]|xhtml:h4[@style]|xhtml:h5[@style]|xhtml:h6[@style]">
+	<xsl:template match="//xhtml:p[@style]|xhtml:h1[@style]|xhtml:h2[@style]|xhtml:h3[@style]|xhtml:h4[@style]|xhtml:h5[@style]|xhtml:h6[@style]"
+								name="allowStyles">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:attribute name="style">
@@ -30,7 +30,7 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- pass all unbranded content through transform -->
+	<!-- pass all self-branded content through transform -->
 	<xsl:template match="*|/"
 								mode="self-branding">
 		<xsl:copy>
@@ -48,7 +48,7 @@
 	Specific self-branding transforms
 	============================================================================================= -->
 
-	<!-- use the default body transform -->
+	<!-- use the default body transform (note - mode="self-branding" will no longer apply to it's contents) -->
 	<xsl:template match="xhtml:body"
 								mode="self-branding"
 								name="body-self-branding">
