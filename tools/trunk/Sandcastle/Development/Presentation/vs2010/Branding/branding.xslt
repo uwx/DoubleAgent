@@ -10,13 +10,11 @@
 								xmlns:branding="urn:FH-Branding"
 								xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-	<!-- unsupported controls-->
-	<xsl:import href="UnsupportedControls.xslt"/>
 	<!-- generic support -->
 	<xsl:import href="Identity.xslt"/>
-	<xsl:import href="body.xslt"/>
-	<xsl:import href="head.xslt"/>
-	<xsl:import href="foot.xslt"/>
+	<xsl:import href="ps-body.xslt"/>
+	<xsl:import href="ps-head.xslt"/>
+	<xsl:import href="ps-foot.xslt"/>
 
 	<xsl:output version ="1.0"
 							encoding="utf-8"
@@ -31,15 +29,15 @@
 	<xsl:param name="downscale-browser"
 						 select="false()"/>
 	<xsl:param name="catalogProductFamily"
-						 select="''"/>
+						 select="'{@CatalogProductId}'"/>
 	<xsl:param name="catalogProductVersion"
-						 select="''"/>
+						 select="'{@CatalogVersion}'"/>
 	<xsl:param name="catalogLocale"
-						 select="''"/>
+						 select="'{@Locale}'"/>
+	<xsl:param name="branding-package"
+						 select="'{@BrandingPackage}.mshc'"/>
 	<xsl:param name="launchingApp"
 						 select="''"/>
-	<xsl:param name="branding-package"
-						 select="'dev10.mshc'"/>
 	<xsl:param name="content-path"
 						 select="'./'"/>
 
@@ -128,33 +126,29 @@
 		</xsl:choose>
 	</xsl:variable>
 
-	<xsl:variable name="BrandingPath">
-		<xsl:choose>
-			<xsl:when test="$downscale-browser">
-				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
 	<xsl:variable name="js-file"
 								select="'branding.js'"/>
 	<xsl:variable name="css-file"
 								select="concat('branding-',branding:GetLocale($locale),'.css')" />
 	<xsl:variable name="contentFolder"
 								select="branding:GetDirectoryName($content-path)"/>
-
-	<xsl:variable name="collapse-all-class"
-								select="'FH-Collapse-All'"/>
-	<xsl:variable name="squote">'</xsl:variable>
+ 	<xsl:variable name="BrandingPath">
+		<xsl:choose>
+			<xsl:when test="$downscale-browser">
+				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:variable name="mtps"
 								select="'http://msdn2.microsoft.com/mtps'"/>
 	<xsl:variable name="xhtml"
 								select="'http://www.w3.org/1999/xhtml'"/>
 
-	<!-- The following variables are not used for branded content but are retained to ensure all references are resolved -->
+	<!-- The following variables are not used but are retained to ensure all references are resolved -->
 	<xsl:variable name="sp1-error-page"
 								select="/xhtml:html/xhtml:head/xhtml:meta[@name='SP1ErrorPage']/@content"></xsl:variable>
 	<xsl:variable name="error-page"
@@ -162,6 +156,8 @@
 	<xsl:variable name="f1-error-page"
 								select="/xhtml:html/xhtml:body/xhtml:rss/opensearch:totalResults">
 	</xsl:variable>
+	<xsl:variable name="errorTitle"
+								select="''"/>
 	<xsl:variable name="localehelp"
 								select="concat('help-',$actuallocale,'.htm')" />
 	<xsl:variable name="contentnotfound"
@@ -192,8 +188,18 @@
 
 	<xsl:template match="xhtml:base"
 								name="branding-base"/>
+	<xsl:template match="xhtml:link[@rel='stylesheet']"
+								name="branding-stylesheet"/>
+	<xsl:template match="xhtml:script"
+								name="branding-script"/>
+
 	<xsl:template match="mtps:MemberLink"
 								name="branding-MemberLink"/>
+	<xsl:template match="mtps:*"
+								priority="-10"
+								name="unSupportedControl">
+		<xsl:call-template name="comment-mtps"/>
+	</xsl:template>
 
 	<!-- ============================================================================================
 	Helper templates
@@ -205,13 +211,7 @@
 		<xsl:value-of select="concat($BrandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
 	</xsl:template>
 
-	<xsl:template match="xhtml:link[@rel='stylesheet']"
-								name="branding-stylesheet"/>
-	<xsl:template match="xhtml:script"
-								name="branding-script"/>
-
-	<!-- generates comment to replace mtps control element
-  and keep its original information-->
+	<!-- generates comment to replace mtps control element and keep its original information-->
 	<xsl:template name="comment-mtps">
 		<xsl:comment>
 			<xsl:value-of select="concat('[', local-name(namespace::*[.=namespace-uri(current())]),':', local-name())" />
@@ -229,19 +229,8 @@
 		<xsl:value-of select="concat(' ', local-name(),'=&quot;', ., '&quot;')" />
 	</xsl:template>
 
-	<!-- copies standard attributes from element. It adds a class attribute always, but appends value of existing class attribute -->
-	<xsl:template name="copy-std-atrs">
-		<xsl:param name="target"
-							 select="." />
-		<xsl:if test="$target/@id">
-			<xsl:copy-of select="$target/@id" />
-		</xsl:if>
-		<xsl:if test="$target/@title">
-			<xsl:copy-of select="$target/@title" />
-		</xsl:if>
-		<xsl:attribute name="class">
-			<xsl:value-of select="normalize-space(concat(local-name($target), ' behavior-removed ', @class))" />
-		</xsl:attribute>
+	<!-- The following templates are not used but are retained to ensure all references are resolved -->
+	<xsl:template name="MTDisclaimer">
 	</xsl:template>
 
 	<!-- ============================================================================================

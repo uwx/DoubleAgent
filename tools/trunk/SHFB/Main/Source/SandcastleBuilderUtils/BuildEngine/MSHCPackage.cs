@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Packaging;
+using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.Build.Evaluation;
+using System.Xml.XPath;
 
 namespace SandcastleBuilder.Utils.BuildEngine
 {
@@ -16,10 +17,8 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		#region Private data members
 		//=====================================================================
 
-		String m_packagePath;
 		Package m_package = null;
 		XmlDocument m_defaultContentTypes = null;
-		ProjectCollection m_projectCollection = null;
 		Dictionary<String, String> m_globalProperties = new Dictionary<String, String> ();
 		CompressionOption m_compression = CompressionOption.Maximum;
 		String m_loggingPrefix = String.Empty;
@@ -58,13 +57,6 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		public MSHCPackage (String PackagePath, System.IO.FileMode OpenMode)
 			: this (PackagePath, OpenMode, (OpenMode == FileMode.Open) ? FileAccess.Read : FileAccess.ReadWrite)
 		{ }
-		/// <summary>
-		/// Opens an MSHC package with the <value>FileMode.Open</value>, <value>FileAccess.Read</value>, and <value>FileShare.None</value> 
-		/// </summary>
-		/// <param name="PackagePath">The package to open.</param>
-		public MSHCPackage (String PackagePath)
-			: this (PackagePath, FileMode.Open)
-		{ }
 
 		/// <summary>
 		/// Opens an MSHC package with the specified modes.
@@ -102,8 +94,17 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <param name="PackageName">The file name of the package to open.</param>
 		/// <param name="PackagePath">The folder containing the package file.</param>
 		public MSHCPackage (String PackageName, String PackagePath)
-			: this (Path.Combine (PackagePath, PackageName))
+			: this (Path.Combine (PackagePath, PackageName), FileMode.Open)
 		{ }
+
+		/// <summary>
+		/// Represents the uncompressed contents of an MSHC package.
+		/// </summary>
+		/// <param name="PackagePath">The folder that contains the package contents.</param>
+		public MSHCPackage (String PackagePath)
+		{
+			this.PackagePath = Path.GetFullPath (PackagePath.TrimEnd ('\\', '/') + "\\");
+		}
 
 		#endregion
 
@@ -151,7 +152,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <summary>
 		/// <value>True</value> if the package is open.
 		/// </summary>
-		bool IsOpen
+		public bool IsOpen
 		{
 			get { return (m_package != null); }
 		}
@@ -159,27 +160,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <summary>
 		/// The full path of the package file.
 		/// </summary>
-		/// <remarks>
-		/// If you set this property using a file name without the <value>.mshc</value> extension, the <value>.mshc</value> extension will be added.
-		/// </remarks>
-		public String PackagePath
-		{
-			get
-			{
-				return m_packagePath;
-			}
-			protected set
-			{
-				m_packagePath = value;
-				if (!String.IsNullOrEmpty (m_packagePath))
-				{
-					if (!Path.HasExtension (m_packagePath) || (String.Compare (Path.GetExtension (m_packagePath), ".mshc", StringComparison.OrdinalIgnoreCase) != 0))
-					{
-						m_packagePath += ".mshc";
-					}
-				}
-			}
-		}
+		public String PackagePath {get; protected set;}
 
 		/// <summary>
 		/// The package file name (without the <value>.mshc</value> extension);
@@ -242,7 +223,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 		#endregion
 
-		#region Public Methods
+		#region Methods
 		#region Contents Queries
 		//=====================================================================
 
@@ -322,7 +303,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 						if (LoggingTarget != null)
 						{
-							LoggingTarget.WriteLine ("{0}  Extracting \"{1}\" to \"{2}\"", LoggingPrefix, PartUri (partName), targetPath);
+							LoggingTarget.WriteLine ("{0}  {1}{2} to {3}", LoggingPrefix, PackagePath, PartUri (partName), targetPath);
 						}
 						if (!Directory.Exists (v_targetFolder))
 						{
@@ -338,7 +319,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					}
 					else if ((LoggingTarget != null) && !replaceTarget && File.Exists (targetPath))
 					{
-						LoggingTarget.WriteLine ("{0}  Target file \"{1}\" already exists", LoggingPrefix, targetPath);
+						LoggingTarget.WriteLine ("{0}  Target file {1} already exists", LoggingPrefix, targetPath);
 					}
 				}
 				catch (Exception exp)
@@ -451,19 +432,19 @@ namespace SandcastleBuilder.Utils.BuildEngine
 						{
 							if (LoggingTarget != null)
 							{
-								LoggingTarget.WriteLine ("{0}  Storing \"{1}\" as \"{2}\"", LoggingPrefix, sourcePath, PartUri (partName));
+								LoggingTarget.WriteLine ("{0}  {1} to {2}{3}", LoggingPrefix, sourcePath, PackagePath, PartUri (partName));
 							}
 							v_ret = PutPart (partName, v_stream, replaceTarget, targetType);
 							v_stream.Close ();
 						}
 						else if (LoggingTarget != null)
 						{
-							LoggingTarget.WriteLine ("{0}  Source file \"{1}\" not found", LoggingPrefix, sourcePath);
+							LoggingTarget.WriteLine ("{0}  Source file {1} not found", LoggingPrefix, sourcePath);
 						}
 					}
 					else if ((LoggingTarget != null) && !replaceTarget && PartExists (partName))
 					{
-						LoggingTarget.WriteLine ("{0}  Target part \"{1}\" already exists", LoggingPrefix, PartUri (partName));
+						LoggingTarget.WriteLine ("{0}  Target part {1} already exists", LoggingPrefix, PartUri (partName));
 					}
 				}
 			}
@@ -603,7 +584,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					}
 					if (LoggingTarget != null)
 					{
-						LoggingTarget.WriteLine ("{0}  Extracting \"{1}\" to \"{2}\"", LoggingPrefix, PackagePath, targetFolder);
+						LoggingTarget.WriteLine ("{0}{1} to {2}", LoggingPrefix, PackagePath, targetFolder);
 					}
 
 					foreach (PackagePart v_part in m_package.GetParts ())
@@ -692,7 +673,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 			{
 				if (LoggingTarget != null)
 				{
-					LoggingTarget.WriteLine ("{0}Storing \"{1}\" in \"{2}\"", LoggingPrefix, sourceFolder, PackagePath);
+					LoggingTarget.WriteLine ("{0}{1} to {2}", LoggingPrefix, sourceFolder, PackagePath);
 				}
 
 				DirectoryInfo v_sourceFolder = new DirectoryInfo (sourceFolder);
@@ -718,9 +699,15 @@ namespace SandcastleBuilder.Utils.BuildEngine
 						{
 							v_targetPath = Path.Combine (targetPath, v_targetPath);
 						}
-						LoggingPrefix += "  ";
-						v_partCount += PutAllParts (v_folder.FullName, recursive, replaceTargets, v_targetPath);
-						LoggingPrefix = v_loggingPrefix;
+						try
+						{
+							LoggingPrefix += "  ";
+							v_partCount += PutAllParts (v_folder.FullName, recursive, replaceTargets, v_targetPath);
+						}
+						finally
+						{
+							LoggingPrefix = v_loggingPrefix;
+						}
 					}
 				}
 			}
@@ -753,7 +740,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <remarks>If a part already has a file in the target folder it will not be extracted.</remarks>
 		public uint GetTheseParts (String targetFolder, String manifestPath)
 		{
-			return GetTheseParts (targetFolder, GetManifestProject (manifestPath));
+			return GetTheseParts (targetFolder, new PackageManifest (manifestPath));
 		}
 		/// <summary>
 		/// Extracts the contents of a package according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
@@ -764,16 +751,16 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <returns>The number of parts extracted.</returns>
 		public uint GetTheseParts (String targetFolder, String manifestPath, bool replaceTargets)
 		{
-			return GetTheseParts (targetFolder, GetManifestProject (manifestPath), replaceTargets);
+			return GetTheseParts (targetFolder, new PackageManifest (manifestPath), replaceTargets);
 		}
 		/// <summary>
 		/// Extracts the contents of a package according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
 		/// <param name="targetFolder">The full path of the target folder.</param>
-		/// <param name="manifest">The evaluated MSBuild project that specifies the parts to extract.</param>
+		/// <param name="manifest">The manifest that specifies the parts to extract.</param>
 		/// <returns>The number of parts extracted.</returns>
 		/// <remarks>If a part already has a file in the target folder it will not be extracted.</remarks>
-		public uint GetTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest)
+		protected uint GetTheseParts (String targetFolder, PackageManifest manifest)
 		{
 			return GetTheseParts (targetFolder, manifest, false);
 		}
@@ -781,10 +768,10 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// Extracts the contents of a package according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
 		/// <param name="targetFolder">The full path of the target folder.</param>
-		/// <param name="manifest">The evaluated MSBuild project that specifies the parts to extract.</param>
+		/// <param name="manifest">The manifest that specifies the parts to extract.</param>
 		/// <param name="replaceTargets"><value>True to replace existing files in the target folder.</value></param>
 		/// <returns>The number of parts extracted.</returns>
-		public uint GetTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
+		protected uint GetTheseParts (String targetFolder, PackageManifest manifest, bool replaceTargets)
 		{
 			uint v_partCount = 0;
 
@@ -792,18 +779,21 @@ namespace SandcastleBuilder.Utils.BuildEngine
 			{
 				if (IsOpen && (manifest != null))
 				{
-					foreach (ProjectItem v_ManifestItem in manifest.AllEvaluatedItems)
-					{
-						bool v_copyItem = true;
-						ProjectMetadata v_metaData;
+					manifest.Evaluate (ManifestProperties, GetPartNames ());
 
-						if ((v_metaData = v_ManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
+					foreach (PackageManifestItem v_manifestItem in manifest.Items)
+					{
+						if (v_manifestItem.CopyToOutputDirectory)
 						{
-							v_copyItem = bool.Parse (v_metaData.EvaluatedValue);
-						}
-						if (v_copyItem && GetPart (v_ManifestItem.EvaluatedInclude, Path.Combine (targetFolder, v_ManifestItem.EvaluatedInclude), replaceTargets))
-						{
-							v_partCount++;
+							foreach (String v_partName in v_manifestItem)
+							{
+								String v_targetPath = Path.Combine (targetFolder, v_partName);
+
+								if (GetPart (v_partName, v_targetPath, replaceTargets))
+								{
+									v_partCount++;
+								}
+							}
 						}
 					}
 				}
@@ -835,7 +825,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// </remarks>
 		public uint PutTheseParts (String manifestPath)
 		{
-			return PutTheseParts (GetManifestProject (manifestPath));
+			return PutTheseParts (new PackageManifest (manifestPath));
 		}
 		/// <summary>
 		/// Stores files in the package according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
@@ -846,28 +836,28 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <remarks>The package parts' mime types are derived from the source file extensions.</remarks>
 		public uint PutTheseParts (String manifestPath, bool replaceTargets)
 		{
-			return PutTheseParts (GetManifestProject (manifestPath), replaceTargets);
+			return PutTheseParts (new PackageManifest (manifestPath), replaceTargets);
 		}
 		/// <summary>
 		/// Stores files in the package according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
-		/// <param name="manifest">The evaluated MSBuild project that specifies the parts to store.</param>
+		/// <param name="manifest">The manifest that specifies the parts to store.</param>
 		/// <returns>The number of files stored in the package.</returns>
 		/// <remarks>If a part already exists in the package, it will not be replaced.
 		/// <para>The package parts' mime types are derived from the source file extensions.</para>
 		/// </remarks>
-		public uint PutTheseParts (Microsoft.Build.Evaluation.Project manifest)
+		protected uint PutTheseParts (PackageManifest manifest)
 		{
 			return PutTheseParts (manifest, false);
 		}
 		/// <summary>
 		/// Stores files in the package according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
-		/// <param name="manifest">The evaluated MSBuild project that specifies the parts to store.</param>
+		/// <param name="manifest">The manifest that specifies the parts to store.</param>
 		/// <param name="replaceTargets"><value>True to replace existing package parts.</value></param>
 		/// <returns>The number of files stored in the package.</returns>
 		/// <remarks>The package parts' mime types are derived from the source file extensions.</remarks>
-		public uint PutTheseParts (Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
+		protected uint PutTheseParts (PackageManifest manifest, bool replaceTargets)
 		{
 			uint v_partCount = 0;
 
@@ -875,23 +865,21 @@ namespace SandcastleBuilder.Utils.BuildEngine
 			{
 				if (IsOpen && (manifest != null))
 				{
-					foreach (ProjectItem lManifestItem in manifest.AllEvaluatedItems)
-					{
-						bool v_copyItem = true;
-						String v_itemType = null;
-						ProjectMetadata v_metaData;
+					manifest.Evaluate (ManifestProperties);
 
-						if ((v_metaData = lManifestItem.GetMetadata ("SubType")) != null)
+					foreach (PackageManifestItem v_manifestItem in manifest.Items)
+					{
+						if (v_manifestItem.CopyToOutputDirectory)
 						{
-							v_itemType = v_metaData.EvaluatedValue;
-						}
-						if ((v_metaData = lManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
-						{
-							v_copyItem = bool.Parse (v_metaData.EvaluatedValue);
-						}
-						if (v_copyItem && PutPart (lManifestItem.EvaluatedInclude, Path.Combine (manifest.DirectoryPath, lManifestItem.EvaluatedInclude), replaceTargets, v_itemType))
-						{
-							v_partCount++;
+							foreach (String v_partName in v_manifestItem)
+							{
+								String v_sourcePath = Path.Combine (manifest.SourceDir, v_partName);
+
+								if (PutPart (v_partName, v_sourcePath, replaceTargets, v_manifestItem.SubType))
+								{
+									v_partCount++;
+								}
+							}
 						}
 					}
 				}
@@ -916,69 +904,40 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <summary>
 		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
-		/// <param name="targetFolder">The full path of the target folder.</param>
 		/// <param name="manifestPath">The full path of the manifest file.</param>
 		/// <returns>The number of files copied.</returns>
 		/// <remarks>If a file already exists in the target folder it will not be copied.</remarks>
-		public static uint CopyTheseParts (String targetFolder, String manifestPath)
+		public uint CopyTheseParts (String manifestPath)
 		{
-			return CopyTheseParts (targetFolder, manifestPath, null);
+			return CopyTheseParts (new PackageManifest (manifestPath));
 		}
 		/// <summary>
 		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
-		/// <param name="targetFolder">The full path of the target folder.</param>
 		/// <param name="manifestPath">The full path of the manifest file.</param>
-		/// <param name="manifestProperties">The property names and values used to evaluate consitions in the manifest file.</param>
+		/// <param name="replaceTargets"><value>True to replace existing files in the target folder.</value></param>
+		/// <returns>The number of files copied.</returns>
+		public uint CopyTheseParts (String manifestPath, bool replaceTargets)
+		{
+			return CopyTheseParts (new PackageManifest (manifestPath), replaceTargets);
+		}
+		/// <summary>
+		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
+		/// </summary>
+		/// <param name="manifest">The manifest that specifies the files to copy.</param>
 		/// <returns>The number of files copied.</returns>
 		/// <remarks>If a file already exists in the target folder it will not be copied.</remarks>
-		public static uint CopyTheseParts (String targetFolder, String manifestPath, Dictionary<String, String> manifestProperties)
+		protected uint CopyTheseParts (PackageManifest manifest)
 		{
-			return CopyTheseParts (targetFolder, manifestPath, manifestProperties, false);
+			return CopyTheseParts (manifest, false);
 		}
 		/// <summary>
 		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
 		/// </summary>
-		/// <param name="targetFolder">The full path of the target folder.</param>
-		/// <param name="manifestPath">The full path of the manifest file.</param>
+		/// <param name="manifest">The manifest that specifies the files to copy.</param>
 		/// <param name="replaceTargets"><value>True to replace existing files in the target folder.</value></param>
 		/// <returns>The number of files copied.</returns>
-		public static uint CopyTheseParts (String targetFolder, String manifestPath, bool replaceTargets)
-		{
-			return CopyTheseParts (targetFolder, manifestPath, null, replaceTargets);
-		}
-		/// <summary>
-		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
-		/// </summary>
-		/// <param name="targetFolder">The full path of the target folder.</param>
-		/// <param name="manifestPath">The full path of the manifest file.</param>
-		/// <param name="manifestProperties">The property names and values used to evaluate consitions in the manifest file.</param>
-		/// <param name="replaceTargets"><value>True to replace existing files in the target folder.</value></param>
-		/// <returns>The number of files copied.</returns>
-		public static uint CopyTheseParts (String targetFolder, String manifestPath, Dictionary<String, String> manifestProperties, bool replaceTargets)
-		{
-			ProjectCollection v_projectCollection = new ProjectCollection (manifestProperties);
-			return CopyTheseParts (targetFolder, new Project (manifestPath, null, null, v_projectCollection), replaceTargets);
-		}
-		/// <summary>
-		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
-		/// </summary>
-		/// <param name="targetFolder">The full path of the target folder.</param>
-		/// <param name="manifest">The evaluated MSBuild project that specifies the files to copy.</param>
-		/// <returns>The number of files copied.</returns>
-		/// <remarks>If a file already exists in the target folder it will not be copied.</remarks>
-		public static uint CopyTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest)
-		{
-			return CopyTheseParts (targetFolder, manifest, false);
-		}
-		/// <summary>
-		/// Copies files according to a manifest composed of MSBuild <value>ItemGroup</value> and <value>Item</value> elements.
-		/// </summary>
-		/// <param name="targetFolder">The full path of the target folder.</param>
-		/// <param name="manifest">The evaluated MSBuild project that specifies the files to copy.</param>
-		/// <param name="replaceTargets"><value>True to replace existing files in the target folder.</value></param>
-		/// <returns>The number of files copied.</returns>
-		public static uint CopyTheseParts (String targetFolder, Microsoft.Build.Evaluation.Project manifest, bool replaceTargets)
+		protected uint CopyTheseParts (PackageManifest manifest, bool replaceTargets)
 		{
 			uint v_partCount = 0;
 
@@ -986,33 +945,37 @@ namespace SandcastleBuilder.Utils.BuildEngine
 			{
 				if (manifest != null)
 				{
-					String v_targetFolder = Path.GetFullPath (targetFolder.Replace ('/', '\\').TrimEnd ('\\'));
+					String v_targetFolder = Path.GetFullPath (PackagePath.Replace ('/', '\\').TrimEnd ('\\'));
 
-					foreach (ProjectItem lManifestItem in manifest.AllEvaluatedItems)
+					manifest.Evaluate (ManifestProperties);
+
+					foreach (PackageManifestItem v_manifestItem in manifest.Items)
 					{
-						bool v_copyItem = true;
-						ProjectMetadata v_metaData;
-						String v_sourcePath;
-						String v_targetPath;
-
-						if ((v_metaData = lManifestItem.GetMetadata ("CopyToOutputDirectory")) != null)
+						if (v_manifestItem.CopyToOutputDirectory)
 						{
-							v_copyItem = bool.Parse (v_metaData.EvaluatedValue);
-						}
-						if (v_copyItem)
-						{
-							v_sourcePath = Path.Combine (manifest.DirectoryPath, lManifestItem.EvaluatedInclude);
-							v_targetPath = Path.Combine (v_targetFolder, lManifestItem.EvaluatedInclude);
-
-							if (replaceTargets || !File.Exists (v_targetPath))
+							foreach (String v_partName in v_manifestItem)
 							{
-								if (!Directory.Exists (Path.GetDirectoryName (v_targetPath)))
+								String v_sourcePath = Path.Combine (manifest.SourceDir, v_partName);
+								String v_targetPath = Path.Combine (v_targetFolder, v_partName);
+
+								if (replaceTargets || !File.Exists (v_targetPath))
 								{
-									Directory.CreateDirectory (Path.GetDirectoryName (v_targetPath));
+									if (!Directory.Exists (Path.GetDirectoryName (v_targetPath)))
+									{
+										Directory.CreateDirectory (Path.GetDirectoryName (v_targetPath));
+									}
+									if (LoggingTarget != null)
+									{
+										LoggingTarget.WriteLine ("{0}  {1} -> {2}", LoggingPrefix, v_sourcePath, v_targetPath);
+									}
+									File.Copy (v_sourcePath, v_targetPath, replaceTargets);
+									File.SetAttributes (v_targetPath, FileAttributes.Normal);
+									v_partCount++;
 								}
-								File.Copy (v_sourcePath, v_targetPath, replaceTargets);
-								File.SetAttributes (v_targetPath, FileAttributes.Normal);
-								v_partCount++;
+								else if (LoggingTarget != null)
+								{
+									LoggingTarget.WriteLine ("{0}  File {1} already exists", LoggingPrefix, v_targetPath);
+								}
 							}
 						}
 					}
@@ -1027,26 +990,6 @@ namespace SandcastleBuilder.Utils.BuildEngine
 			catch {}
 #endif
 			return v_partCount;
-		}
-
-		//=====================================================================
-
-		/// <summary>
-		/// Opens a file manifest that is formatted as an MSBuild project.
-		/// </summary>
-		/// <param name="manifestPath">The full path of the manifest file.</param>
-		/// <returns>The MSBuild project.</returns>
-		/// <remarks>The <see cref="P:SandcastleBuilder.Utils.BuildEngine.MSHCPackage.ManifestProperties"/> are applied
-		/// when the package is opened. The property values can be used for condition checks on the manifest's 
-		/// <value>ItemGroup</value> elements.
-		/// </remarks>
-		private Project GetManifestProject (String manifestPath)
-		{
-			if (m_projectCollection == null)
-			{
-				m_projectCollection = new ProjectCollection (ManifestProperties);
-			}
-			return new Project (manifestPath, null, null, m_projectCollection);
 		}
 
 		#endregion
@@ -1137,6 +1080,164 @@ namespace SandcastleBuilder.Utils.BuildEngine
 			return v_partType;
 		}
 
+		#endregion
+
+		#region Manifest Classes
+		//=====================================================================
+
+		protected class PackageManifestItem : List<String>
+		{
+			public PackageManifestItem (XmlNode node)
+			{
+				this.Node = node;
+			}
+
+			public XmlNode Node { get; protected set; }
+
+			public String Include
+			{
+				get
+				{
+					XmlNode v_node = this.Node.Attributes.GetNamedItem ("Include");
+					if (v_node != null)
+					{
+						return v_node.Value;
+					}
+					return String.Empty;
+				}
+			}
+
+			public String SubType
+			{
+				get
+				{
+					XmlNode v_node = this.Node.SelectSingleNode ("SubType");
+					if (v_node != null)
+					{
+						return v_node.InnerText;
+					}
+					return String.Empty;
+				}
+			}
+
+			public bool CopyToOutputDirectory
+			{
+				get
+				{
+					XmlNode v_node = this.Node.SelectSingleNode ("CopyToOutputDirectory");
+					if (v_node != null)
+					{
+						return Boolean.Parse (v_node.InnerText);
+					}
+					return true;
+				}
+			}
+		}
+
+		//=====================================================================
+
+		protected class PackageManifest : XmlDocument
+		{
+			public PackageManifest (String filePath)
+			{
+				SourceDir = Path.GetDirectoryName (filePath);
+				Items = new List<PackageManifestItem> ();
+				base.Load (filePath);
+			}
+
+			public String SourceDir { get; set; }
+
+			public List<PackageManifestItem> Items { get; protected set; }
+
+			public void Evaluate (Dictionary<String, String> properties)
+			{
+				DirectoryInfo v_DirectoryInfo = new DirectoryInfo (SourceDir);
+
+				Items.Clear ();
+
+				foreach (XmlNode v_itemGroup in DocumentElement.SelectNodes ("ItemGroup"))
+				{
+					if (EvaluateCondition (v_itemGroup, properties))
+					{
+						foreach (XmlNode v_item in v_itemGroup.SelectNodes ("Content"))
+						{
+							PackageManifestItem v_manifestItem = new PackageManifestItem (v_item);
+
+							foreach (FileInfo v_fileInfo in v_DirectoryInfo.GetFiles (v_manifestItem.Include))
+							{
+								v_manifestItem.Add (v_fileInfo.Name);
+							}
+							if (v_manifestItem.Count > 0)
+							{
+								Items.Add (v_manifestItem);
+							}
+						}
+					}
+				}
+			}
+
+			public void Evaluate (Dictionary<String, String> properties, String[] packageParts)
+			{
+				Items.Clear ();
+
+				foreach (XmlNode v_itemGroup in DocumentElement.SelectNodes ("ItemGroup"))
+				{
+					if (EvaluateCondition (v_itemGroup, properties))
+					{
+						foreach (XmlNode v_item in v_itemGroup.SelectNodes ("Content"))
+						{
+							PackageManifestItem v_manifestItem = new PackageManifestItem (v_item);
+
+							foreach (String v_partName in packageParts)
+							{
+								if (Regex.IsMatch (v_partName.ToLower(), v_manifestItem.Include.Replace ("*", ".*").Replace ("?", ".").ToLower()))
+								{
+									v_manifestItem.Add (v_partName);
+								}
+							}
+							if (v_manifestItem.Count > 0)
+							{
+								Items.Add (v_manifestItem);
+							}
+						}
+					}
+				}
+			}
+
+			private XPathNavigator Navigator { get; set; }
+
+			private bool EvaluateCondition (XmlNode node, Dictionary<String, String> properties)
+			{
+				if (Navigator == null)
+				{
+					Navigator = base.CreateNavigator ();
+				}
+				if (node.Attributes != null)
+				{
+					XmlNode v_condition = node.Attributes.GetNamedItem ("Condition");
+					if (v_condition != null)
+					{
+						try
+						{
+							foreach (KeyValuePair<String, String> v_property in properties)
+							{
+								String v_conditionValue = v_condition.Value.Replace ("$(" + v_property.Key + ")", v_property.Value);
+								if (!v_conditionValue.Contains ("$("))
+								{
+									Object v_result = Navigator.Evaluate (v_conditionValue);
+									if (v_result is Boolean)
+									{
+										return (Boolean)v_result;
+									}
+								}
+							}
+						}
+						catch { }
+					}
+				}
+				return true;
+			}
+		}
 		#endregion
 	}
 }

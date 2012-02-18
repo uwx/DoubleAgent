@@ -434,58 +434,133 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				this.RecursiveCopy (presentationFolder + @"styles\*.*", baseFolder + @"styles\");
 
 				//DBF Added the branding folder
-				if (Directory.Exists (presentationFolder + "branding"))
-				{
-					String brandingManifiest = Path.GetFullPath (Path.Combine (presentationFolder + "branding", "branding.manifest"));
-					String brandingTarget = Path.Combine (baseFolder, "branding");
-
-					if (baseFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
-					{
-						brandingTarget = Path.Combine (baseFolder, @"..\" + HelpFileFormat.MSHelpViewer.ToString () + "_Branding\\branding");
-					}
-					brandingTarget = Path.GetFullPath (brandingTarget) + @"\";
-
-					if (File.Exists (brandingManifiest))
-					{
-						Dictionary<String, String> manifestProperties = new Dictionary<String, String> ();
-
-						manifestProperties.Add ("helpOutput", this.CurrentFormat.ToString ());
-						this.ReportProgress ("{0} -> {1}", Path.GetFullPath (presentationFolder + "branding"), brandingTarget);
-						MSHCPackage.CopyTheseParts (brandingTarget, brandingManifiest, true);
-					}
-					else
-					{
-						this.RecursiveCopy (presentationFolder + @"branding\*.*", brandingTarget);
-					}
-
-					if (!baseFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
-					{
-						DirectoryInfo brandingDir = new DirectoryInfo (brandingTarget);
-						String transformsPath = Path.Combine (WorkingFolder, "branding");
-						String targetPath;
-						if (!Directory.Exists (transformsPath))
-							Directory.CreateDirectory (transformsPath);
-						foreach (FileInfo fileInfo in brandingDir.EnumerateFiles ("branding.xml"))
-						{
-							targetPath = Path.Combine (transformsPath, fileInfo.Name);
-							if (File.Exists (targetPath))
-								File.Delete (fileInfo.FullName);
-							else
-								File.Move (fileInfo.FullName, targetPath);
-						}
-						foreach (FileInfo fileInfo in brandingDir.EnumerateFiles ("*.xslt"))
-						{
-							targetPath = Path.Combine (transformsPath, fileInfo.Name);
-							if (File.Exists (targetPath))
-								File.Delete (fileInfo.FullName);
-							else
-								File.Move (fileInfo.FullName, targetPath);
-						}
-					}
-				}
+				CopyHelpBranding (baseFolder);
 			}
 
 			this.ExecutePlugIns (ExecutionBehaviors.After);
+		}
+
+		//DBF Added this method
+		/// <summary>
+		/// For presentation styles designed for MS Help Viewer, the branding files are copied
+		/// from <b>{@PresentationPath}\branding</b> to the working folder.
+		/// </summary>
+		/// <param name="helpFormatOutputFolder">The working folder for the current HelpFormat.</param>
+		/// <remarks>The existance of the <b>{@PresentationPath}\branding</b> folder indicates
+		/// that the presentation style is designed for MS Help Viewer.
+		/// <para>The <b>{@PresentationPath}\branding</b> folder must containd a file named
+		/// <b>branding.manifest</b> that specifies the files to copy (in MSBuild project format).</para>
+		/// <para>The branding files that are copied and their target folder depends on the
+		/// current contents of <b>branding.manifest</b> and the current HelpFormat.
+		/// </para>
+		/// <para>
+		/// The <b>branding.manifest</b> can also contain a reference to a .mshc package that is
+		/// used as the basis for the presentation style branding.  If so, its contents are also
+		/// extracted.
+		/// </para>
+		/// </remarks>
+		private void CopyHelpBranding (string helpFormatOutputFolder)
+		{
+			String brandingSource = Path.GetFullPath (presentationFolder + "branding");
+			if (Directory.Exists (brandingSource))
+			{
+				const String manifestPropertyHelpOutput = "helpOutput";
+				const String manifestPropertyPreBranding = "preBranding";
+				const String manifestPropertyNoTransforms = "noTransforms";
+				const String manifestPropertyOnlyTransforms = "onlyTransforms";
+
+				String brandingTarget = Path.Combine (helpFormatOutputFolder, "branding");
+				String brandingTransformsTarget = Path.Combine (WorkingFolder, "branding");
+				String brandingName = CurrentProject.BrandingPackageName;
+				String brandingManifiest = Path.Combine (brandingSource, "branding.manifest");
+				MSHCPackage brandingPackage;
+				bool isDefaultBranding;
+				bool isPreBranding;
+
+				this.ReportProgress (BuildStep.CopyStandardContent, "Copying help branding...");
+				if (!File.Exists (brandingManifiest))
+				{
+					throw (new BuilderException (String.Format ("Branding manifest \"{0}\" not found.", brandingManifiest)));
+				}
+
+				if (String.IsNullOrEmpty (brandingName))
+				{
+					brandingName = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultBrandingPackage;
+				}
+				isDefaultBranding = String.Compare (brandingName, SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultBrandingPackage, StringComparison.OrdinalIgnoreCase) == 0;
+
+				if (helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+				{
+					brandingTarget = Path.Combine (helpFormatOutputFolder, @"..\" + HelpFileFormat.MSHelpViewer.ToString () + "_Branding");
+					isPreBranding = isDefaultBranding || CurrentProject.SelfBranded;
+				}
+				else
+				{
+					isPreBranding = isDefaultBranding;
+				}
+				brandingTarget = Path.GetFullPath (brandingTarget) + @"\";
+
+				foreach (FileInfo v_fileInfo in (new DirectoryInfo (brandingSource)).EnumerateFiles ("*.manifest"))
+				{
+					if (v_fileInfo.Name.ToLower () == Path.GetFileName (brandingManifiest).ToLower ())
+					{
+						continue;
+					}
+					brandingPackage = new MSHCPackage (Path.ChangeExtension (v_fileInfo.FullName, SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.Help3PackageExtension), FileMode.Open);
+					if (brandingPackage.IsOpen)
+					{
+						brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, this.CurrentFormat.ToString ());
+						brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isPreBranding.ToString ());
+						if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+						{
+							brandingPackage.ManifestProperties.Add (manifestPropertyNoTransforms, Boolean.TrueString);
+						}
+						brandingPackage.LoggingTarget = swLog;
+						brandingPackage.LoggingPrefix = "  ";
+
+						this.ReportProgress ("{0} -> {1}", brandingPackage.PackagePath, brandingTarget);
+						brandingPackage.GetTheseParts (brandingTarget, v_fileInfo.FullName, true);
+
+						if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+						{
+							brandingPackage.ManifestProperties.Remove (manifestPropertyNoTransforms);
+							brandingPackage.ManifestProperties.Add (manifestPropertyOnlyTransforms, Boolean.TrueString);
+
+							this.ReportProgress ("{0} -> {1}", brandingPackage.PackagePath, brandingTransformsTarget);
+							brandingPackage.GetTheseParts (brandingTransformsTarget, v_fileInfo.FullName, true);
+						}
+					}
+				}
+
+				brandingPackage = new MSHCPackage (brandingTarget);
+				brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, this.CurrentFormat.ToString ());
+				brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isPreBranding.ToString ());
+				if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+				{
+					brandingPackage.ManifestProperties.Add (manifestPropertyNoTransforms, Boolean.TrueString);
+				}
+				brandingPackage.LoggingTarget = swLog;
+				brandingPackage.LoggingPrefix = "  ";
+
+				this.ReportProgress ("{0} -> {1}", brandingSource, brandingTarget);
+				brandingPackage.CopyTheseParts (brandingManifiest, true);
+
+				if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+				{
+					brandingPackage = new MSHCPackage (brandingTransformsTarget);
+					brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, this.CurrentFormat.ToString ());
+					brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isDefaultBranding.ToString ());
+					brandingPackage.ManifestProperties.Add (manifestPropertyOnlyTransforms, Boolean.TrueString);
+					brandingPackage.LoggingTarget = swLog;
+					brandingPackage.LoggingPrefix = "  ";
+
+					this.ReportProgress ("{0} -> {1}", brandingSource, brandingTransformsTarget);
+					brandingPackage.CopyTheseParts (brandingManifiest, true);
+				}
+
+				//The main branding transform contains variable values
+				TransformTemplate ("branding.xslt", brandingSource, brandingTarget);
+			}
 		}
 
 		/// <summary>

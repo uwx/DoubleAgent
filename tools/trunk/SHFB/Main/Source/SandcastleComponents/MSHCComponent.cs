@@ -196,7 +196,6 @@ namespace SandcastleBuilder.Components
 		private static class MHSDefault
 		{
 			public const bool SelfBranded = true;
-			public const string BrandingPackage = "Dev10";
 			public const string Locale = "en-us";
 			public const string Reference = "Reference";
 			public const string TopicVersion = "100";
@@ -239,7 +238,7 @@ namespace SandcastleBuilder.Components
 
 		private string _locale = String.Empty;
 		private bool _selfBranded = MHSDefault.SelfBranded;
-		private string _brandingPackage = MHSDefault.BrandingPackage;
+		private string _brandingPackage = String.Empty;
 		private string _topicVersion = MHSDefault.TopicVersion;
 		private string _tocParent = MHSDefault.TocParent;
 		private string _tocParentVersion = MHSDefault.TocParentVersion;
@@ -323,7 +322,7 @@ namespace SandcastleBuilder.Components
 			EnsureHeaderExists ();
 
 			// DBF - Made this code conditional to support VS2010 presentation style
-			if (String.Compare (_brandingPackage, MHSDefault.BrandingPackage, StringComparison.OrdinalIgnoreCase) == 0)
+			if (String.IsNullOrEmpty (_brandingPackage))
 			{
 				ModifyAttribute ("id", "mainSection");
 				ModifyAttribute ("class", "members");

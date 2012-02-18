@@ -42,7 +42,6 @@ namespace SandcastleBuilder.Components
 		private const string s_configLocale = "locale";
 		private const string s_configBrandingContent = "branding-content";
 		private const string s_configBrandingPackage = "branding-package";
-		private const string s_configBasePackage = "base-package";
 		private const string s_configHelpOutput = "help-output";
 		private const string s_configCatalogProductId = "catalog-product-id";
 		private const string s_configCatalogVersion = "catalog-version";
@@ -60,7 +59,6 @@ namespace SandcastleBuilder.Components
 		private string m_locale = s_defaultLocale;
 		private string m_brandingContent = String.Empty;
 		private string m_brandingPackage = s_defaultBrandingPackage;
-		private string m_basePackage = String.Empty;
 		private string m_helpOutput = s_defaultHelpOutput;
 		private string m_catalogProductId = s_defaultCatalogProductId;
 		private string m_catalogVersion = s_defaultCatalogVersion;
@@ -98,22 +96,6 @@ namespace SandcastleBuilder.Components
 				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configBrandingPackage, String.Empty)))
 				{
 					m_brandingPackage = v_configValue;
-				}
-				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configBasePackage, String.Empty)))
-				{
-					m_basePackage = v_configValue;
-				}
-				else
-				{
-					v_configValue = HelpLibraryManager.HelpViewerInstallPath;
-					if (String.IsNullOrEmpty (v_configValue))
-					{
-						WriteMessage (MessageLevel.Error, "The MS Help Viewer installation could not be found. A base branding package must be specified.");
-					}
-					else
-					{
-						m_basePackage = Path.Combine (v_configValue, s_defaultBrandingPackage + s_packageExtension);
-					}
 				}
 				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configHelpOutput, String.Empty)))
 				{
