@@ -53,6 +53,7 @@
 	<xsl:template name="footer">
 		<xsl:element name="div"
 								 namespace="{$xhtml}">
+			<xsl:attribute name="id">OH_footer</xsl:attribute>
 			<xsl:attribute name="class">OH_footer</xsl:attribute>
 			<xsl:element name="p"
 									 namespace="{$xhtml}">
@@ -112,6 +113,10 @@
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:element>
+
+		<xsl:if test="not($downscale-browser)">
+			<xsl:call-template name="footer-fix-parent"/>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="feedback-link">
@@ -138,6 +143,48 @@
 				<xsl:text>&#160;</xsl:text>
 				<xsl:copy-of select="$prolog"/>
 			</xsl:if>
+		</xsl:element>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	The footer can be misplaced when it is added before the body is transformed	(or even after)
+	============================================================================================= -->
+	<xsl:template name="footer-fix-parent">
+		<xsl:element name="script"
+								 namespace="{$xhtml}"
+								 xml:space="preserve"><xsl:attribute name="type"><xsl:value-of select="'text/javascript'"/></xsl:attribute>
+			try
+			{
+				var footer = document.getElementById("OH_footer")
+				if (footer)
+				{
+					var footerParent = undefined;
+//					var divs = document.getElementsByTagName("div");  
+//					if (divs != undefined)
+//					{
+//						var divNdx;
+//						for (divNdx = 0; divNdx != divs.length; divNdx++)
+//						{
+//							if (divs[divNdx].className == "OH_outerDiv")
+//							{
+//								footerParent = divs[divNdx];
+//								break;
+//							}
+//						}
+//					}
+					if (!footerParent)
+					{
+						footerParent = document.body;
+					}
+					if (footer.parentElement != footerParent)
+					{ 
+						footer.parentElement.removeChild (footer);
+						footerParent.appendChild (footer); 
+					}
+				}
+			} catch (e)
+			{}
+			finally {}
 		</xsl:element>
 	</xsl:template>
 

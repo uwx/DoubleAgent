@@ -8,7 +8,8 @@
 								xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
 								xmlns:mshelp="http://help.microsoft.com"
 								xmlns:branding="urn:FH-Branding"
-								xmlns:xs="http://www.w3.org/2001/XMLSchema">
+								xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
 
 	<!-- generic support -->
 	<xsl:import href="Identity.xslt"/>
@@ -27,6 +28,8 @@
 	============================================================================================= -->
 
 	<xsl:param name="downscale-browser"
+						 select="false()"/>
+	<xsl:param name="pre-branding"
 						 select="false()"/>
 	<xsl:param name="catalogProductFamily"
 						 select="'{@CatalogProductId}'"/>
@@ -132,7 +135,7 @@
 								select="concat('branding-',branding:GetLocale($locale),'.css')" />
 	<xsl:variable name="contentFolder"
 								select="branding:GetDirectoryName($content-path)"/>
- 	<xsl:variable name="BrandingPath">
+	<xsl:variable name="BrandingPath">
 		<xsl:choose>
 			<xsl:when test="$downscale-browser">
 				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
@@ -172,7 +175,6 @@
 		<xsl:copy>
 			<xsl:choose>
 				<xsl:when test="not($self-branded) or $self-branded = 'true'">
-					<!--no branding required-->
 					<xsl:apply-templates select="xhtml:head"
 															 mode="self-branding"/>
 					<xsl:apply-templates select="xhtml:body"
@@ -185,6 +187,51 @@
 			</xsl:choose>
 		</xsl:copy>
 	</xsl:template>
+
+	<!-- ============================================================================================
+	Process mtps elements even for self-branding
+	============================================================================================= -->
+
+	<xsl:template match="mtps:CollapsibleArea"
+								mode="self-branding">
+		<xsl:apply-templates />
+	</xsl:template>
+
+	<xsl:template match="mtps:LanguageSpecificText"
+								mode="self-branding">
+		<xsl:apply-templates />
+	</xsl:template>
+
+	<xsl:template match="mtps:CodeSnippet"
+								priority ="-2"
+								mode="self-branding">
+		<xsl:comment>Apply CodeSnippet self-branding</xsl:comment>
+		<xsl:apply-templates />
+		<xsl:comment>Applied CodeSnippet self-branding</xsl:comment>
+	</xsl:template>
+
+	<xsl:template match="key('code-snippet-use', 'lead-snippet')"
+								mode="self-branding">
+		<xsl:comment>Apply leadsnippet self-branding</xsl:comment>
+		<xsl:call-template name="leadsnippet"/>
+		<xsl:comment>Applied leadsnippet self-branding</xsl:comment>
+	</xsl:template>
+
+	<xsl:template match="key('code-snippet-use', 'free-standing-snippet')"
+								mode="self-branding">
+		<xsl:comment>Apply standalonesnippet self-branding</xsl:comment>
+		<xsl:call-template name="standalonesnippet"/>
+		<xsl:comment>Applied standalonesnippet self-branding</xsl:comment>
+	</xsl:template>
+
+	<xsl:template match="mtps:MultiViewTable"
+								mode="self-branding">
+		<xsl:apply-templates />
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Null templates
+	============================================================================================= -->
 
 	<xsl:template match="xhtml:base"
 								name="branding-base"/>
@@ -208,7 +255,14 @@
 	<xsl:template name="ms-xhelp" >
 		<xsl:param name="ref"
 							 select="@href|@src"/>
-		<xsl:value-of select="concat($BrandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
+		<xsl:choose>
+			<xsl:when test="not(boolean($pre-branding))">
+				<xsl:value-of select="concat($BrandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$ref"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- generates comment to replace mtps control element and keep its original information-->

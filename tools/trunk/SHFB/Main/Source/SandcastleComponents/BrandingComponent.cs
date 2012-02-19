@@ -182,7 +182,7 @@ namespace SandcastleBuilder.Components
 					v_tempPrePath = Path.Combine (v_tempPrePath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
 					v_tempDocument.Save (v_tempPrePath);
 #endif
-#if DEBUG_NOT
+#if DEBUG//_NOT
 					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PostBranding"));
 					if (!Directory.Exists (v_tempPostPath))
 					{
@@ -370,7 +370,7 @@ namespace SandcastleBuilder.Components
 
 						m_transformArguments = new XsltArgumentList ();
 						m_transformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
-						m_transformArguments.AddParam ("branding-package", String.Empty, m_brandingPackage);
+						m_transformArguments.AddParam ("branding-package", String.Empty, m_brandingPackage + s_packageExtension);
 						m_transformArguments.AddParam ("catalogProductFamily", String.Empty, m_catalogProductId);
 						m_transformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
 						m_transformArguments.AddParam ("catalogHelpTitle", String.Empty, m_catalogHelpTitle);
@@ -379,6 +379,10 @@ namespace SandcastleBuilder.Components
 						if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
 						{
 							m_transformArguments.AddParam ("downscale-browser", String.Empty, true);
+						}
+						else if (String.Compare (m_brandingPackage, s_defaultBrandingPackage, StringComparison.OrdinalIgnoreCase) == 0)
+						{
+							m_transformArguments.AddParam ("pre-branding", String.Empty, true);
 						}
 
 						LoadBrandingConfig (Path.Combine (v_brandingContentBase, "branding.xml"), ref v_brandingTransformName);

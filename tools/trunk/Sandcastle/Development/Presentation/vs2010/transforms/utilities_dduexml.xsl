@@ -210,47 +210,10 @@
 					 class="code">
 				<xsl:for-each select="ddue:legacySyntax">
 					<xsl:variable name="v_codeLang">
-						<xsl:choose>
-							<xsl:when test="@language = 'vbs'">
-								<xsl:text>VBScript</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'vb' or @language = 'vb#'  or @language = 'VB'" >
-								<xsl:text>VisualBasic</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'c#' or @language = 'cs' or @language = 'C#'" >
-								<xsl:text>CSharp</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'cpp' or @language = 'cpp#' or @language = 'c' or @language = 'c++' or @language = 'C++'" >
-								<xsl:text>ManagedCPlusPlus</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'j#' or @language = 'jsharp'">
-								<xsl:text>JSharp</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'js' or @language = 'jscript#' or @language = 'jscript' or @language = 'JScript'">
-								<xsl:text>JScript</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'f#' or @language = 'fs' or @language = 'F#'" >
-								<xsl:text>FSharp</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'xml'">
-								<xsl:text>xmlLang</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'html'">
-								<xsl:text>html</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'vb-c#'">
-								<xsl:text>visualbasicANDcsharp</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'xaml' or @language = 'XAML'">
-								<xsl:text>XAML</xsl:text>
-							</xsl:when>
-							<xsl:when test="@language = 'javascript' or @language = 'JavaScript'">
-								<xsl:text>JavaScript</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:text>other</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:call-template name="t_codeLang">
+							<xsl:with-param name="p_codeLang"
+															select="@language"/>
+						</xsl:call-template>
 					</xsl:variable>
 
 					<span codeLanguage="{$v_codeLang}">
@@ -449,14 +412,7 @@
 			<xsl:when test="local-name(../*[$currentPos - 1]) != $currentName">
 				<xsl:choose>
 					<xsl:when test="local-name(../*[$currentPos + 1]) != $currentName">
-								<xsl:call-template name="t_putCodeSection">
-									<xsl:with-param name="p_codeLang"
-																	select="@language" />
-									<xsl:with-param name="p_codeTitle"
-																	select="@title" />
-									<xsl:with-param name="p_code"
-																	select="." />
-								</xsl:call-template>
+						<xsl:call-template name="t_putCodeSection" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="endNodePos">
@@ -1325,18 +1281,14 @@
 
 	<xsl:template match="ddue:snippets">
 		<xsl:if test="ddue:snippet">
-			<div id="snippetGroup">
+			<xsl:element name="div">
+				<xsl:attribute name="id">
+					<xsl:value-of select="concat('snippetGroup_',generate-id())"/>
+				</xsl:attribute>
 				<xsl:for-each select="ddue:snippet">
-					<xsl:call-template name="t_putCodeSection">
-						<xsl:with-param name="p_codeLang"
-														select="@language" />
-						<xsl:with-param name="p_codeTitle"
-														select="@title" />
-						<xsl:with-param name="p_code"
-														select="." />
-					</xsl:call-template>
+					<xsl:call-template name="t_putCodeSection" />
 				</xsl:for-each>
-			</div>
+			</xsl:element>
 		</xsl:if>
 	</xsl:template>
 

@@ -109,7 +109,7 @@
 					</xsl:choose>
 				</xsl:attribute>
 			</xsl:if>
-			<xsl:apply-templates />
+			<xsl:apply-templates select="node()" />
 			<xsl:if test="not(*) and not(text())">
 				<xsl:comment/>
 			</xsl:if>

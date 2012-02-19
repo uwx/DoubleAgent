@@ -25,8 +25,9 @@
 	Includes
 	============================================================================================= -->
 
-	<xsl:include href="xpath_functions.xsl" />
+	<xsl:include href="xpathFunctions.xsl" />
 	<xsl:include href="utilities_reference.xsl" />
+	<xsl:include href="codeTemplates.xsl"/>
 	<xsl:include href="globalTemplates.xsl"/>
 
 	<!-- ============================================================================================
@@ -229,14 +230,7 @@
 	</xsl:template>
 
 	<xsl:template match="code">
-		<xsl:call-template name="t_putCodeSection">
-			<xsl:with-param name="p_codeLang"
-											select="@language" />
-			<xsl:with-param name="p_codeTitle"
-											select="@title" />
-			<xsl:with-param name="p_code"
-											select="." />
-		</xsl:call-template>
+		<xsl:call-template name="t_putCodeSection" />
 	</xsl:template>
 
 	<!-- Details (nonstandard) -->

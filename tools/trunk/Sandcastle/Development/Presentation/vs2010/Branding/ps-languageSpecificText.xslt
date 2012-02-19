@@ -8,19 +8,13 @@
 	<xsl:import href="LanguageSpecificText.xslt"/>
 
 	<!-- Convert old-style LST to new style -->
-	<xsl:template match="xhtml:span[@class='languageSpecificText']">
+	<xsl:template match="xhtml:span[@class='languageSpecificText']"
+								name="old-lst">
 		<xsl:choose>
 			<xsl:when test="count(xhtml:span[@class]) = count(*)">
 				<xsl:variable name="v_id"
 											select="generate-id(.)"/>
 
-				<!--<xsl:element name="span"
-										 namespace="{$xhtml}">
-					<xsl:attribute name="id">
-						<xsl:value-of select="$v_id"/>
-					</xsl:attribute>
-					<xsl:value-of select="xhtml:span"/>
-				</xsl:element>-->
 				<xsl:element name="span"
 										 namespace="{$xhtml}"
 										 xml:space="preserve"><xsl:attribute name="id"><xsl:value-of select="$v_id"/></xsl:attribute><xsl:text> </xsl:text></xsl:element>
@@ -43,6 +37,12 @@
 				<xsl:copy-of select="."/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="xhtml:span[@class='languageSpecificText']"
+								mode="self-branding"
+								name="old-lst-self-branding">
+		<xsl:call-template name="old-lst" />
 	</xsl:template>
 
 </xsl:stylesheet>

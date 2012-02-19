@@ -31,10 +31,11 @@
 	Includes
 	============================================================================================= -->
 
-	<xsl:include href="xpath_functions.xsl" />
+	<xsl:include href="xpathFunctions.xsl" />
 	<xsl:include href="utilities_reference.xsl" />
 	<xsl:include href="utilities_dduexml.xsl" />
 	<xsl:include href="seealso_dduexml.xsl"/>
+	<xsl:include href="codeTemplates.xsl"/>
 	<xsl:include href="globalTemplates.xsl"/>
 
 	<!-- ============================================================================================

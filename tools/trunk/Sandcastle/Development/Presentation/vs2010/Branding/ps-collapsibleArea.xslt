@@ -7,7 +7,6 @@
 								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:branding="urn:FH-Branding"
 								xmlns:xs="http://www.w3.org/2001/XMLSchema"
-
 >
 
 	<xsl:template match="mtps:CollapsibleArea"
@@ -43,11 +42,12 @@
 			<xsl:attribute name="class">OH_clear</xsl:attribute>
 			<xsl:text> </xsl:text>
 		</xsl:element>
-		<xsl:apply-templates/>
+		<xsl:apply-templates select="node()"/>
 	</xsl:template>
 
 	<!-- Fix to allow section titles to contain HTML codes -->
-	<xsl:template match="mtps:CollapsibleArea/xhtml:xml[xhtml:string[@id='Title']]">
-	</xsl:template>
+	<xsl:template match="mtps:CollapsibleArea/xhtml:xml[xhtml:string[@id='Title']]"/>
+	<xsl:template match="mtps:CollapsibleArea/xhtml:xml[xhtml:string[@id='Title']]"
+								mode="self-branding"/>
 
 </xsl:stylesheet>

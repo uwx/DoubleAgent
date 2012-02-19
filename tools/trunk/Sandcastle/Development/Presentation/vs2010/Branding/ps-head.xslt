@@ -13,18 +13,19 @@
 	<xsl:import href="head.xslt"/>
 
 	<xsl:template match="xhtml:head"
-								mode="self-branding">
+								mode="self-branding"
+								name="ps-head-self-branding">
 		<xsl:copy>
-			<xsl:call-template name="headFavIcon"/>
-			<xsl:if test="!boolean($pre-branding)">
-				<xsl:call-template name="headStyleSheet"/>
+			<xsl:call-template name="head-favicon"/>
+			<xsl:if test="not(boolean($pre-branding))">
+				<xsl:call-template name="head-stylesheet"/>
 			</xsl:if>
-			<xsl:call-template name="headStyleUrls"/>
+			<xsl:call-template name="head-style-urls"/>
 			<xsl:if test="$downscale-browser">
-				<xsl:call-template name="headStyleAdjustments"/>
+				<xsl:call-template name="head-style-adjustments"/>
 			</xsl:if>
-			<xsl:if test="!boolean($pre-branding)">
-				<xsl:call-template name="headScript"/>
+			<xsl:if test="not(boolean($pre-branding))">
+				<xsl:call-template name="head-script"/>
 			</xsl:if>
 
 			<xsl:apply-templates select="@*"/>
@@ -35,12 +36,14 @@
 
 	<!-- Remove branding data from the header - it's no longer required -->
 	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"/>
+	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"
+								mode="self-branding"/>
 
 	<!-- ============================================================================================
 	Header Parts
 	============================================================================================= -->
 
-	<xsl:template name="headFavIcon">
+	<xsl:template name="head-favicon">
 		<xsl:element name="link"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="rel">
@@ -55,7 +58,7 @@
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template name="headStyleSheet">
+	<xsl:template name="head-stylesheet">
 		<xsl:element name="link"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="rel">
@@ -73,7 +76,7 @@
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template name="headStyleUrls">
+	<xsl:template name="head-style-urls">
 		<xsl:element name="style"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="type">text/css</xsl:attribute>
@@ -98,34 +101,24 @@
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template name="headStyleAdjustments">
+	<xsl:template name="head-style-adjustments">
 		<xsl:element name="style"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="type">text/css</xsl:attribute>
 			body
 			{
-			background-color:#e6e6e6;
+			border-left:5px solid #e6e6e6;
 			overflow-x:visible;
 			overflow-y:scroll;
 			}
 			.OH_outerDiv
 			{
-			margin-left:4px;
-			background-color:#ffffff;
 			overflow-x:auto;
-			}
-			.OH_outerContent
-			{
-			background-color:#ffffff;
-			}
-			.OH_footer
-			{
-			background-color:#ffffff;
 			}
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template name="headScript">
+	<xsl:template name="head-script">
 		<xsl:element name="script"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="src">
