@@ -10,78 +10,8 @@
 >
 	<xsl:import href="body.xslt"/>
 
-	<!-- ============================================================================================
-	Generic transforms (see Identity.xslt for others)
-	============================================================================================= -->
-
-	<!-- strip style attributes by default -->
-	<xsl:template match="@style[normalize-space(.)!='display:none']"
-								name="style"/>
-
-	<!-- pass through styles for p and h elements -->
-	<xsl:template match="//xhtml:p[@style]|xhtml:h1[@style]|xhtml:h2[@style]|xhtml:h3[@style]|xhtml:h4[@style]|xhtml:h5[@style]|xhtml:h6[@style]"
-								name="allowStyles">
-		<xsl:copy>
-			<xsl:apply-templates select="@*"/>
-			<xsl:attribute name="style">
-				<xsl:value-of select="@style"/>
-			</xsl:attribute>
-			<xsl:apply-templates/>
-		</xsl:copy>
-	</xsl:template>
-
-	<!-- pass all self-branded content through transform -->
-	<xsl:template match="*|/"
-								mode="self-branding">
-		<xsl:copy>
-			<xsl:apply-templates select="@*"/>
-			<xsl:if test="@style">
-				<xsl:attribute name="style">
-					<xsl:value-of select="@style"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates mode="self-branding"/>
-		</xsl:copy>
-	</xsl:template>
-
-	<!-- ============================================================================================
-	Specific transforms
-	============================================================================================= -->
-
 	<xsl:template match="xhtml:body"
 								name="ps-body">
-		<xsl:copy>
-			<xsl:attribute name="onload">onLoad()</xsl:attribute>
-			<xsl:attribute name="class">OH_body</xsl:attribute>
-			<xsl:apply-templates select="@*"/>
-
-			<xsl:if test="not($downscale-browser)">
-				<xsl:element name="span"
-										 namespace="{$xhtml}">
-					<xsl:attribute name="id">HCColorTest</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</xsl:element>
-			</xsl:if>
-
-			<xsl:element name="div"
-									 namespace="{$xhtml}">
-				<xsl:attribute name="class">OH_outerDiv</xsl:attribute>
-				<xsl:if test="not($downscale-browser)">
-					<xsl:call-template name="displayLeftNav"/>
-				</xsl:if>
-				<xsl:element name="div"
-										 namespace="{$xhtml}">
-					<xsl:attribute name="class">OH_outerContent</xsl:attribute>
-					<xsl:apply-templates select="node()"/>
-				</xsl:element>
-			</xsl:element>
-			<xsl:call-template name="footer"/>
-		</xsl:copy>
-	</xsl:template>
-
-	<xsl:template match="xhtml:body"
-								mode="self-branding"
-								name="ps-body-self-branding">
 		<xsl:copy>
 			<xsl:if test="not(boolean($pre-branding))">
 				<xsl:attribute name="onload">onLoad()</xsl:attribute>
@@ -92,7 +22,6 @@
 			<xsl:choose>
 				<xsl:when test="not(boolean($pre-branding))">
 					<xsl:if test="not($downscale-browser)">
-						<!-- high contrast color test-->
 						<xsl:element name="span"
 												 namespace="{$xhtml}">
 							<xsl:attribute name="id">HCColorTest</xsl:attribute>
@@ -109,42 +38,71 @@
 						<xsl:element name="div"
 												 namespace="{$xhtml}">
 							<xsl:attribute name="class">OH_outerContent</xsl:attribute>
-							<xsl:comment>Apply body content self-branding</xsl:comment>
-							<xsl:apply-templates select="node()"
-																	 mode="self-branding"/>
-							<xsl:comment>Apply body content self-branding</xsl:comment>
+							<xsl:apply-templates select="node()"/>
 						</xsl:element>
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="node()"
-															 mode="self-branding"/>
+					<xsl:apply-templates select="node()"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:call-template name="footer"/>
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- redirect image sources to the appropriate path -->
-	<xsl:template match="xhtml:img"
-								mode="self-branding"
-								name="ps-img-self-branding">
+	<!-- ============================================================================================
+	Generic transforms (see Identity.xslt for others)
+	============================================================================================= -->
+
+	<!-- strip style attributes by default -->
+	<xsl:template match="@style[normalize-space(.)!='display:none']"
+								name="ps-style"/>
+
+	<!-- pass through styles for p and h elements -->
+	<xsl:template match="//xhtml:p[@style]|xhtml:h1[@style]|xhtml:h2[@style]|xhtml:h3[@style]|xhtml:h4[@style]|xhtml:h5[@style]|xhtml:h6[@style]"
+								name="ps-allow-styles">
 		<xsl:copy>
-			<xsl:if test="not(boolean($pre-branding))">
-				<xsl:attribute name="src">
-					<xsl:value-of select="branding:BuildContentPath($contentFolder,@src)"/>
-				</xsl:attribute>
-				<xsl:if test="@style">
-					<xsl:attribute name="style">
-						<xsl:value-of select="@style"/>
-					</xsl:attribute>
-				</xsl:if>
-			</xsl:if>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="style">
+				<xsl:value-of select="@style"/>
+			</xsl:attribute>
+			<xsl:apply-templates/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- ============================================================================================
-	Override for formatting the page title.
+	Specific transforms
+	============================================================================================= -->
+
+	<!-- redirect image sources to the appropriate path -->
+	<xsl:template match="xhtml:img"
+								name="ps-img">
+		<xsl:copy>
+			<xsl:choose>
+				<xsl:when test="not(boolean($pre-branding))">
+					<xsl:for-each select="@*">
+						<xsl:choose>
+							<xsl:when test="name()='src'">
+								<xsl:attribute name="src">
+									<xsl:value-of select="branding:BuildContentPath($contentFolder,.)"/>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="."/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="@*"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Override for formatting the page title
 	============================================================================================= -->
 
 	<xsl:variable name="hd_productTitle">
@@ -212,27 +170,7 @@
 		<xsl:call-template name="feedback-link"/>
 	</xsl:template>
 
-	<xsl:template match="*[@class='title']"
-								mode="self-branding"
-								name="ps-body-title-self-branding">
-		<xsl:call-template name="ps-body-title"/>
-	</xsl:template>
-
-	<xsl:template match="*[@class='majorTitle']"
-								mode="self-branding"
-								name="ps-body-majorTitle-self-branding">
-		<xsl:call-template name="body-majorTitle"/>
-	</xsl:template>
-
-	<xsl:template match="*[@class='topic']"
-								mode="self-branding"
-								name="ps-body-topic-self-branding">
-		<xsl:call-template name="body-topic"/>
-	</xsl:template>
-
 	<!-- Remove the generated body title table -->
 	<xsl:template match="xhtml:table[@id='topTable']" />
-	<xsl:template match="xhtml:table[@id='topTable']"
-								mode="self-branding" />
 
 </xsl:stylesheet>

@@ -13,8 +13,7 @@
 	<xsl:import href="head.xslt"/>
 
 	<xsl:template match="xhtml:head"
-								mode="self-branding"
-								name="ps-head-self-branding">
+								name="ps-head-self">
 		<xsl:copy>
 			<xsl:call-template name="head-favicon"/>
 			<xsl:if test="not(boolean($pre-branding))">
@@ -29,15 +28,12 @@
 			</xsl:if>
 
 			<xsl:apply-templates select="@*"/>
-			<xsl:apply-templates select="node()"
-													 mode="self-branding"/>
+			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Remove branding data from the header - it's no longer required -->
 	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"/>
-	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml[@id='BrandingData']"
-								mode="self-branding"/>
 
 	<!-- ============================================================================================
 	Header Parts

@@ -174,7 +174,7 @@ namespace SandcastleBuilder.Components
 					}
 					SetSelfBranding (v_tempDocument, m_selfBranded);
 #if DEBUG//_NOT
-					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PreBranding"));
+					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PreBranding"));
 					if (!Directory.Exists (v_tempPrePath))
 					{
 						Directory.CreateDirectory (v_tempPrePath);
@@ -182,8 +182,8 @@ namespace SandcastleBuilder.Components
 					v_tempPrePath = Path.Combine (v_tempPrePath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
 					v_tempDocument.Save (v_tempPrePath);
 #endif
-#if DEBUG//_NOT
-					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PostBranding"));
+#if DEBUG_NOT
+					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PostBranding"));
 					if (!Directory.Exists (v_tempPostPath))
 					{
 						Directory.CreateDirectory (v_tempPostPath);
@@ -219,7 +219,7 @@ namespace SandcastleBuilder.Components
 								document.Load (v_reader);
 							}
 #if DEBUG_NOT
-							String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, "..\\PostBranding"));
+							String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PostBranding"));
 							if (!Directory.Exists (v_tempPrePath))
 							{
 								Directory.CreateDirectory (v_tempPrePath);
@@ -375,7 +375,7 @@ namespace SandcastleBuilder.Components
 						m_transformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
 						m_transformArguments.AddParam ("catalogHelpTitle", String.Empty, m_catalogHelpTitle);
 						m_transformArguments.AddParam ("catalogLocale", String.Empty, m_locale);
-						m_transformArguments.AddParam ("content-path", String.Empty, ".\\");
+						m_transformArguments.AddParam ("content-path", String.Empty, @".\");
 						if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
 						{
 							m_transformArguments.AddParam ("downscale-browser", String.Empty, true);

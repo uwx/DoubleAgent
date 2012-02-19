@@ -39,10 +39,4 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="xhtml:span[@class='languageSpecificText']"
-								mode="self-branding"
-								name="old-lst-self-branding">
-		<xsl:call-template name="old-lst" />
-	</xsl:template>
-
 </xsl:stylesheet>

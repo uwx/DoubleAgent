@@ -206,7 +206,7 @@
 	<xsl:template match="ddue:syntaxSection">
 		<div id="syntaxSection"
 				 class="section">
-			<div id="syntaxCodeBlocks"
+			<div id="snippetGroup_Syntax"
 					 class="code">
 				<xsl:for-each select="ddue:legacySyntax">
 					<xsl:variable name="v_codeLang">

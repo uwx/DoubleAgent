@@ -10,7 +10,7 @@
 >
 
 	<xsl:template match="mtps:CollapsibleArea"
-								name="CollapsibleArea">
+								name="ps-collapsible-area">
 		<xsl:element name="div"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="class">OH_CollapsibleAreaRegion</xsl:attribute>
@@ -47,7 +47,5 @@
 
 	<!-- Fix to allow section titles to contain HTML codes -->
 	<xsl:template match="mtps:CollapsibleArea/xhtml:xml[xhtml:string[@id='Title']]"/>
-	<xsl:template match="mtps:CollapsibleArea/xhtml:xml[xhtml:string[@id='Title']]"
-								mode="self-branding"/>
 
 </xsl:stylesheet>

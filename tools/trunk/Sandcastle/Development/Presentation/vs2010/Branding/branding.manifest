@@ -31,10 +31,10 @@
 		<Content Include="ps-instrumentedLink.xslt">
 			<SubType>text/richtext</SubType>
 		</Content>
-		<Content Include="ps-instrumentedlink-??-??.xslt">
+		<Content Include="ps-languageSpecificText.xslt">
 			<SubType>text/richtext</SubType>
 		</Content>
-		<Content Include="ps-languageSpecificText.xslt">
+		<Content Include="ps-codesnippet.xslt">
 			<SubType>text/richtext</SubType>
 		</Content>
 	</ItemGroup>

@@ -283,7 +283,7 @@
 				<xsl:with-param name="p_titleInclude"
 												select="'syntaxTitle'"/>
 				<xsl:with-param name="p_content">
-					<div id="syntaxCodeBlocks"
+					<div id="snippetGroup_Syntax"
 							 class="code">
 						<xsl:call-template name="syntaxBlocks" />
 					</div>

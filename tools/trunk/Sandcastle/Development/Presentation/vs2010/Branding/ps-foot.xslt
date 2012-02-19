@@ -149,6 +149,7 @@
 	<!-- ============================================================================================
 	The footer can be misplaced when it is added before the body is transformed	(or even after)
 	============================================================================================= -->
+
 	<xsl:template name="footer-fix-parent">
 		<xsl:element name="script"
 								 namespace="{$xhtml}"

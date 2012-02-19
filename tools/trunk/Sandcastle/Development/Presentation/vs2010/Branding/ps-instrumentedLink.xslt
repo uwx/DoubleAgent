@@ -116,15 +116,8 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="xhtml:a"
-								mode="self-branding"
-								name="insLink-self-branding">
-		<xsl:call-template name="insLink"/>
-	</xsl:template>
-
-	<xsl:template match="xhtml:span[@sdata='link']"
-								mode="self-branding">
-		<xsl:apply-templates mode="self-branding"/>
+	<xsl:template match="xhtml:span[@sdata='link']">
+		<xsl:apply-templates/>
 	</xsl:template>
 
 </xsl:stylesheet>

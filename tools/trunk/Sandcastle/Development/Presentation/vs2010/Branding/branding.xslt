@@ -10,8 +10,6 @@
 								xmlns:branding="urn:FH-Branding"
 								xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-
-	<!-- generic support -->
 	<xsl:import href="Identity.xslt"/>
 	<xsl:import href="ps-body.xslt"/>
 	<xsl:import href="ps-head.xslt"/>
@@ -173,60 +171,9 @@
 	<xsl:template match="xhtml:html"
 								name="html">
 		<xsl:copy>
-			<xsl:choose>
-				<xsl:when test="not($self-branded) or $self-branded = 'true'">
-					<xsl:apply-templates select="xhtml:head"
-															 mode="self-branding"/>
-					<xsl:apply-templates select="xhtml:body"
-															 mode="self-branding"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="xhtml:head"/>
-					<xsl:apply-templates select="xhtml:body"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:apply-templates select="xhtml:head"/>
+			<xsl:apply-templates select="xhtml:body"/>
 		</xsl:copy>
-	</xsl:template>
-
-	<!-- ============================================================================================
-	Process mtps elements even for self-branding
-	============================================================================================= -->
-
-	<xsl:template match="mtps:CollapsibleArea"
-								mode="self-branding">
-		<xsl:apply-templates />
-	</xsl:template>
-
-	<xsl:template match="mtps:LanguageSpecificText"
-								mode="self-branding">
-		<xsl:apply-templates />
-	</xsl:template>
-
-	<xsl:template match="mtps:CodeSnippet"
-								priority ="-2"
-								mode="self-branding">
-		<xsl:comment>Apply CodeSnippet self-branding</xsl:comment>
-		<xsl:apply-templates />
-		<xsl:comment>Applied CodeSnippet self-branding</xsl:comment>
-	</xsl:template>
-
-	<xsl:template match="key('code-snippet-use', 'lead-snippet')"
-								mode="self-branding">
-		<xsl:comment>Apply leadsnippet self-branding</xsl:comment>
-		<xsl:call-template name="leadsnippet"/>
-		<xsl:comment>Applied leadsnippet self-branding</xsl:comment>
-	</xsl:template>
-
-	<xsl:template match="key('code-snippet-use', 'free-standing-snippet')"
-								mode="self-branding">
-		<xsl:comment>Apply standalonesnippet self-branding</xsl:comment>
-		<xsl:call-template name="standalonesnippet"/>
-		<xsl:comment>Applied standalonesnippet self-branding</xsl:comment>
-	</xsl:template>
-
-	<xsl:template match="mtps:MultiViewTable"
-								mode="self-branding">
-		<xsl:apply-templates />
 	</xsl:template>
 
 	<!-- ============================================================================================

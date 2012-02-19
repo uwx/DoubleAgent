@@ -5,10 +5,12 @@
 								xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:import href="branding.xslt" />
 	<xsl:import href="ps-collapsiblearea.xslt" />
-	<xsl:import href="ps-instrumentedlink-en-US.xslt" />
+	<xsl:import href="instrumentedlink-en-US.xslt" />
+	<xsl:import href="ps-instrumentedlink.xslt" />
 	<xsl:import href="ps-languageSpecificText.xslt" />
 	<xsl:import href="nestedtable.xslt" />
 	<xsl:import href="codesnippet-en-US.xslt" />
+	<xsl:import href="ps-codesnippet.xslt" />
 	<xsl:import href="MultiViewTable-en-US.xslt" />
 	<xsl:import href="search-en-US.xslt" />
 	<xsl:import href="index-en-US.xslt" />
