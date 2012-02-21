@@ -130,7 +130,7 @@ namespace SandcastleBuilder.Components
 
 		public override void Apply (XmlDocument document, string key)
 		{
-			MakePlainCodeCopies (document);
+			//MakePlainCodeCopies (document);
 
 			if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) == 0)
 			{
@@ -158,8 +158,9 @@ namespace SandcastleBuilder.Components
 		{
 			if (m_brandingTransform != null)
 			{
+#if DEBUG
 				WriteMessage (MessageLevel.Info, String.Format ("  Branding topic {0} ({1}) SelfBranded={2}", key, m_locale, m_selfBranded));
-
+#endif
 				try
 				{
 					XmlDocument v_tempDocument = new XmlDocument ();

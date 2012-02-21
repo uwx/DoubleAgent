@@ -84,7 +84,14 @@
 						<xsl:choose>
 							<xsl:when test="name()='src'">
 								<xsl:attribute name="src">
-									<xsl:value-of select="branding:BuildContentPath($contentFolder,.)"/>
+									<xsl:choose>
+										<xsl:when test="$downscale-browser">
+											<xsl:value-of select="branding:BackslashesToFrontslashes(concat($contentFolder,'/',.))"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="branding:BuildContentPath($contentFolder,.)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
@@ -97,6 +104,15 @@
 					<xsl:apply-templates select="@*"/>
 				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="xhtml:pre"
+								name="ps-pre">
+		<xsl:comment>matched pre</xsl:comment>
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>

@@ -1159,8 +1159,8 @@
 		<xsl:call-template name="t_memberIntroBoilerplate"/>
 	</xsl:template>
 
-	<xsl:template name="codelangAttributes">
-		<xsl:call-template name="mshelpCodelangAttributes">
+	<xsl:template name="t_codelangAttributes">
+		<xsl:call-template name="t_mshelpCodelangAttributes">
 			<xsl:with-param name="snippets"
 											select="/document/comments/example/code" />
 		</xsl:call-template>

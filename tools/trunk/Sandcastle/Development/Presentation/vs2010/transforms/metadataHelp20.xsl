@@ -6,27 +6,28 @@
 				xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:msxsl="urn:schemas-microsoft-com:xslt"
    >
+	<!-- ======================================================================================== -->
 
-  <xsl:import href="../../shared/transforms/utilities_metadata.xsl" />
+	<xsl:import href="../../shared/transforms/utilities_metadata.xsl" />
 
   <xsl:template name="t_insertMetadataHelp20">
 		<xsl:if test="$metadata='true'">
 		<xml>
       <MSHelp:Attr Name="AssetID" Value="{$key}" />
       <!-- toc title, rl title, etc. -->
-      <xsl:call-template name="mshelpTitles" />
+      <xsl:call-template name="t_mshelpTitles" />
       <!-- keywords for the A (link target) index -->
-			<xsl:call-template name="linkMetadata" />
+			<xsl:call-template name="t_linkMetadata" />
       <!-- keywords for the K (index) index -->
-      <xsl:call-template name="indexMetadata" />
+      <xsl:call-template name="t_indexMetadata" />
       <!-- keywords for the F (F1 help) index -->
-			<xsl:call-template name="helpMetadata" />
+			<xsl:call-template name="t_helpMetadata" />
       <!-- help priority settings -->
-      <xsl:call-template name="helpPriorityMetadata" />
+      <xsl:call-template name="t_helpPriorityMetadata" />
       <!-- attributes for api identification -->
-			<xsl:call-template name="apiTaggingMetadata" />
+			<xsl:call-template name="t_apiTaggingMetadata" />
       <!-- atributes for filtering -->
-      <xsl:call-template name="mshelpDevlangAttributes" />
+      <xsl:call-template name="t_mshelpDevlangAttributes" />
 			<MSHelp:Attr Name="Locale">
 				<includeAttribute name="Value" item="locale" />
 			</MSHelp:Attr>
@@ -49,19 +50,22 @@
         <MSHelp:Attr Name="AssemblyVersion" Value="{/document/reference/containers/library/assemblydata/@version}" />
       </xsl:if>
       
-      <xsl:call-template name="codelangAttributes" />
-			<xsl:call-template name="versionMetadata" />
-      <xsl:call-template name="authoredMetadata" />
+      <xsl:call-template name="t_codelangAttributes" />
+			<xsl:call-template name="t_versionMetadata" />
+      <xsl:call-template name="t_authoredMetadata" />
 		</xml>
 		</xsl:if>
 	</xsl:template>
 
-  <!-- add DocSet and Technology attributes depending on the versions that support this api -->
-  <xsl:template name="versionMetadata">
-    <xsl:variable name="supportedOnCf">
+	<!-- ============================================================================================
+	Add DocSet and Technology attributes depending on the versions that support this api
+	============================================================================================= -->
+  
+	<xsl:template name="t_versionMetadata">
+    <xsl:variable name="v_supportedOnCf">
       <xsl:call-template name="t_isMemberSupportedOnCf"/>
     </xsl:variable>
-    <xsl:variable name="supportedOnXNA">
+    <xsl:variable name="v_supportedOnXNA">
       <xsl:call-template name="t_isMemberSupportedOnXna" />
     </xsl:variable>
     <xsl:if test="count(/document/reference/versions/versions[@name='netfw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='netfw']//version) &gt; 0 ">
@@ -74,7 +78,7 @@
             memberlist topics where topicdata/versions has netcfw version nodes
             overload list topics where any of the elements has netcfw version nodes
     -->
-    <xsl:if test="count(/document/reference/versions/versions[@name='netcfw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='netcfw']//version) &gt; 0  or count(/document/reference[topicdata[@subgroup='overload']]/elements//element/versions/versions[@name='netcfw']//version) &gt; 0 or normalize-space($supportedOnCf)!=''">
+    <xsl:if test="count(/document/reference/versions/versions[@name='netcfw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='netcfw']//version) &gt; 0  or count(/document/reference[topicdata[@subgroup='overload']]/elements//element/versions/versions[@name='netcfw']//version) &gt; 0 or normalize-space($v_supportedOnCf)!=''">
       <MSHelp:Attr Name="Technology">
         <includeAttribute name="Value" item="netcfTechnologyAttribute" />
       </MSHelp:Attr>
@@ -87,7 +91,7 @@
             memberlist topics where topicdata/versions has xnafw version nodes
             overload list topics where any of the elements has xnafw version nodes
     -->
-    <xsl:if test="count(/document/reference/versions/versions[@name='xnafw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='xnafw']//version) &gt; 0  or count(/document/reference[topicdata[@subgroup='overload']]/elements//element/versions/versions[@name='xnafw']//version) &gt; 0 or normalize-space($supportedOnXNA)!=''">
+    <xsl:if test="count(/document/reference/versions/versions[@name='xnafw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='xnafw']//version) &gt; 0  or count(/document/reference[topicdata[@subgroup='overload']]/elements//element/versions/versions[@name='xnafw']//version) &gt; 0 or normalize-space($v_supportedOnXNA)!=''">
       <MSHelp:Attr Name="Technology">
         <includeAttribute name="Value" item="xnaTechnologyAttribute" />
       </MSHelp:Attr>
@@ -96,10 +100,12 @@
       </MSHelp:Attr>
     </xsl:if>
   </xsl:template>
-  
-  <!-- attributes and keywords added to topics by authors -->
-  
-  <xsl:template name="authoredMetadata">
+
+	<!-- ============================================================================================
+	Attributes and keywords added to topics by authors
+	============================================================================================= -->
+
+	<xsl:template name="t_authoredMetadata">
 
     <!-- authored attributes -->
     <xsl:for-each select="/document/metadata/attribute">
@@ -169,10 +175,12 @@
     </xsl:for-each>
 
   </xsl:template>
+
+	<!-- ============================================================================================
+	toc title and rl title
+	============================================================================================= -->
   
-  <!-- toc title and rl title -->
-  
-  <xsl:template name="mshelpTitles">
+  <xsl:template name="t_mshelpTitles">
     
     <!-- Toc List title-->
     <MSHelp:TOCTitle>
@@ -188,7 +196,7 @@
       <includeAttribute name="Title" item="rlTitle">
         <parameter>
           <xsl:call-template name="t_topicTitlePlain">
-            <xsl:with-param name="qualifyMembers" select="true()" />
+            <xsl:with-param name="p_qualifyMembers" select="true()" />
           </xsl:call-template>
         </parameter>
         <parameter>
@@ -199,13 +207,13 @@
     
   </xsl:template>
 
-	<xsl:template name="apiTaggingMetadata">
+	<xsl:template name="t_apiTaggingMetadata">
 		<xsl:if test="$g_topicGroup='api' and ($g_apiGroup='type' or $g_apiGroup='member')">
 			<MSHelp:Attr Name="APIType" Value="Managed" />
 			<MSHelp:Attr Name="APILocation" Value="{/document/reference/containers/library/@assembly}.dll" />
 			<xsl:choose>
 				<xsl:when test="$g_apiGroup='type'">
-					<xsl:variable name="apiTypeName">
+					<xsl:variable name="v_apiTypeName">
             <xsl:choose>
               <xsl:when test="/document/reference/containers/namespace/apidata/@name != ''">
                 <xsl:value-of select="concat(/document/reference/containers/namespace/apidata/@name,'.',/document/reference/apidata/@name)" />
@@ -219,13 +227,13 @@
 						</xsl:if>
 					</xsl:variable>
 					<!-- Namespace + Type -->
-					<MSHelp:Attr Name="APIName" Value="{$apiTypeName}" />
+					<MSHelp:Attr Name="APIName" Value="{$v_apiTypeName}" />
 					<xsl:choose>
 						<xsl:when test="boolean($g_apiSubGroup='delegate')">
-							<MSHelp:Attr Name="APIName" Value="{concat($apiTypeName,'..ctor')}" />
-							<MSHelp:Attr Name="APIName" Value="{concat($apiTypeName,'.','Invoke')}" />
-							<MSHelp:Attr Name="APIName" Value="{concat($apiTypeName,'.','BeginInvoke')}" />
-							<MSHelp:Attr Name="APIName" Value="{concat($apiTypeName,'.','EndInvoke')}" />
+							<MSHelp:Attr Name="APIName" Value="{concat($v_apiTypeName,'..ctor')}" />
+							<MSHelp:Attr Name="APIName" Value="{concat($v_apiTypeName,'.','Invoke')}" />
+							<MSHelp:Attr Name="APIName" Value="{concat($v_apiTypeName,'.','BeginInvoke')}" />
+							<MSHelp:Attr Name="APIName" Value="{concat($v_apiTypeName,'.','EndInvoke')}" />
 						</xsl:when>
 						<xsl:when test="$g_apiSubGroup='enumeration'">
 							<xsl:for-each select="/document/reference/elements/element">
@@ -236,37 +244,37 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="$g_apiGroup='member'">
-          <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
-          <xsl:variable name="type">
+          <xsl:variable name="v_namespace" select="/document/reference/containers/namespace/apidata/@name" />
+          <xsl:variable name="v_type">
             <xsl:for-each select="/document/reference/containers/type[1]">
               <xsl:call-template name="typeNameWithTicks" />
             </xsl:for-each>
           </xsl:variable>
-          <xsl:variable name="member" select="/document/reference/apidata/@name" />
+          <xsl:variable name="v_member" select="/document/reference/apidata/@name" />
           <!-- Namespace + Type + Member -->
-          <MSHelp:Attr Name="APIName" Value="{concat($namespace, '.', $type, '.', $member)}" />
+          <MSHelp:Attr Name="APIName" Value="{concat($v_namespace, '.', $v_type, '.', $v_member)}" />
 					<xsl:choose>
             <!-- for properties, add APIName attribute get/set accessor methods -->
 						<xsl:when test="boolean($g_apiSubGroup='property')">
               <xsl:if test="/document/reference/propertydata[@get='true']">
-                <MSHelp:Attr Name="APIName" Value="{concat($namespace, '.', $type, '.get_', $member)}" />
+                <MSHelp:Attr Name="APIName" Value="{concat($v_namespace, '.', $v_type, '.get_', $v_member)}" />
               </xsl:if>
               <xsl:if test="/document/reference/propertydata[@set='true']">
-                <MSHelp:Attr Name="APIName" Value="{concat($namespace, '.', $type, '.set_', $member)}" />
+                <MSHelp:Attr Name="APIName" Value="{concat($v_namespace, '.', $v_type, '.set_', $v_member)}" />
               </xsl:if>
 						</xsl:when>
             <!-- for events, add APIName attribute add/remove accessor methods -->
 						<xsl:when test="boolean($g_apiSubGroup='event')">
               <xsl:if test="/document/reference/eventdata[@add='true']">
-                <MSHelp:Attr Name="APIName" Value="{concat($namespace, '.', $type, '.add_', $member)}" />
+                <MSHelp:Attr Name="APIName" Value="{concat($v_namespace, '.', $v_type, '.add_', $v_member)}" />
               </xsl:if>
               <xsl:if test="/document/reference/eventdata[@remove='true']">
-                <MSHelp:Attr Name="APIName" Value="{concat($namespace, '.', $type, '.remove_', $member)}" />
+                <MSHelp:Attr Name="APIName" Value="{concat($v_namespace, '.', $v_type, '.remove_', $v_member)}" />
               </xsl:if>
 						</xsl:when>
             <!-- for operators, add APIName attribute op accessor methods -->
             <xsl:when test="boolean($g_apiSubSubGroup='operator')">
-              <MSHelp:Attr Name="APIName" Value="{concat($namespace, '.', $type, '.op_', $member)}" />
+              <MSHelp:Attr Name="APIName" Value="{concat($v_namespace, '.', $v_type, '.op_', $v_member)}" />
             </xsl:when>
 					</xsl:choose>
 				</xsl:when>
@@ -274,9 +282,11 @@
 		</xsl:if>
 	</xsl:template>
 
-  <!-- link target (A index) keywords -->  
+	<!-- ============================================================================================
+	link target (A index) keywords
+	============================================================================================= -->
   
-	<xsl:template name="linkMetadata">
+	<xsl:template name="t_linkMetadata">
     
 		<!-- code entity reference keyword -->
 		<MSHelp:Keyword Index="A" Term="{$key}" />
@@ -288,24 +298,24 @@
     </xsl:if>
     
 		<!-- frlrf keywords -->
-    <xsl:call-template name="FrlrfKeywords"/>
+    <xsl:call-template name="t_FrlrfKeywords"/>
 
   </xsl:template>
 
-  <xsl:template name="FrlrfKeywords">
-    <xsl:variable name="frlrfTypeName">
+  <xsl:template name="t_FrlrfKeywords">
+    <xsl:variable name="v_FrlrfTypeName">
       <!-- for members and nested types, start with the containing type name -->
       <xsl:for-each select="/document/reference/containers/type">
-        <xsl:call-template name="FrlrfTypeName"/>
+        <xsl:call-template name="t_FrlrfTypeName"/>
       </xsl:for-each>
       <!-- for types and member list topics, append the type name -->
       <xsl:if test="/document/reference/apidata[@group='type']">
         <xsl:for-each select="/document/reference">
-          <xsl:call-template name="FrlrfTypeName"/>
+          <xsl:call-template name="t_FrlrfTypeName"/>
         </xsl:for-each>
       </xsl:if>
     </xsl:variable>
-    <xsl:variable name="memberName">
+    <xsl:variable name="v_memberName">
       <xsl:choose>
         <xsl:when test="/document/reference/apidata[@subgroup='constructor']">
           <xsl:value-of select="'ctor'"/>
@@ -321,24 +331,24 @@
     <xsl:choose>
       <!-- namespace topic -->
       <xsl:when test="/document/reference/apidata/@group='namespace'">
-        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf',$memberName),'.','')}"/>
+        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf',$v_memberName),'.','')}"/>
       </xsl:when>
       <!-- Overload topic -->
       <xsl:when test="/document/reference/topicdata[@subgroup='overload']">
-        <xsl:variable name="frlrfBaseId">
-          <xsl:value-of select="translate(concat('frlrf', $namespaceName, $frlrfTypeName, 'Class', $memberName, 'Topic'),'.','')"/>
+        <xsl:variable name="v_FrlrfBaseId">
+          <xsl:value-of select="translate(concat('frlrf', $namespaceName, $v_FrlrfTypeName, 'Class', $v_memberName, 'Topic'),'.','')"/>
         </xsl:variable>
-        <MSHelp:Keyword Index="A" Term="{$frlrfBaseId}"/>
+        <MSHelp:Keyword Index="A" Term="{$v_FrlrfBaseId}"/>
         <!-- whidbey included frlrf keyword for each overload, but I don't think we need in Manifold, so commenting it out -->
         <!--
         <xsl:for-each select="elements/element">
-          <MSHelp:Keyword Index="A" Term="{concat($frlrfBaseId, string(position()))}"/>
+          <MSHelp:Keyword Index="A" Term="{concat($v_FrlrfBaseId, string(position()))}"/>
         </xsl:for-each>
         -->
       </xsl:when>
       <!-- Member list topic (other than overload list captured above) -->
       <xsl:when test="/document/reference/topicdata[@group='list']">
-        <xsl:variable name="memberListSubgroup">
+        <xsl:variable name="v_memberListSubgroup">
           <xsl:choose>
             <xsl:when test="/document/reference/topicdata/@subgroup='members'">Members</xsl:when>
             <xsl:otherwise>
@@ -346,24 +356,24 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf', $namespaceName, $frlrfTypeName, $memberListSubgroup, 'Topic'),'.','')}"/>
+        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf', $namespaceName, $v_FrlrfTypeName, $v_memberListSubgroup, 'Topic'),'.','')}"/>
       </xsl:when>
       <!-- type topic -->
       <xsl:when test="/document/reference/apidata[@group='type']">
-        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf',$namespaceName, $frlrfTypeName, 'ClassTopic'),'.','')}"/>
+        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf',$namespaceName, $v_FrlrfTypeName, 'ClassTopic'),'.','')}"/>
       </xsl:when>
       <!-- no frlrf ID for overload signature topics-->
       <xsl:when test="/document/reference/apidata[@group='member'] and /document/reference/memberdata/@overload"/>
       <!-- non-overload member topic -->
       <xsl:when test="/document/reference/apidata[@group='member']">
-        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf',$namespaceName, $frlrfTypeName, 'Class', $memberName, 'Topic'),'.','')}"/>
+        <MSHelp:Keyword Index="A" Term="{translate(concat('frlrf',$namespaceName, $v_FrlrfTypeName, 'Class', $v_memberName, 'Topic'),'.','')}"/>
       </xsl:when>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="FrlrfTypeName">
+  <xsl:template name="t_FrlrfTypeName">
     <xsl:for-each select="type">
-      <xsl:call-template name="FrlrfTypeName"/>
+      <xsl:call-template name="t_FrlrfTypeName"/>
     </xsl:for-each>
     <xsl:choose>
       <xsl:when test="templates/template">
@@ -375,41 +385,43 @@
     </xsl:choose>
   </xsl:template>
 
+	<!-- ============================================================================================
+	============================================================================================= -->
 
-  <xsl:template name="helpMetadata">
+	<xsl:template name="t_helpMetadata">
     <!-- F keywords -->
     <xsl:choose>
       <!-- namespace pages get the namespace keyword, if it exists -->
 			<xsl:when test="$g_apiTopicGroup='namespace'">
-        <xsl:variable name="namespace" select="/document/reference/apidata/@name" />
-        <xsl:if test="string($namespace) != ''">
-          <MSHelp:Keyword Index="F" Term="{$namespace}" />
+        <xsl:variable name="v_namespace" select="/document/reference/apidata/@name" />
+        <xsl:if test="string($v_namespace) != ''">
+          <MSHelp:Keyword Index="F" Term="{$v_namespace}" />
         </xsl:if>
       </xsl:when>
       <!-- Type overview page gets type and namespace.type keywords. -->
       <xsl:when test="$g_apiTopicGroup='type'">
-        <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
-        <xsl:variable name="type">
+        <xsl:variable name="v_namespace" select="/document/reference/containers/namespace/apidata/@name" />
+        <xsl:variable name="v_type">
           <xsl:for-each select="/document/reference[1]">
             <xsl:call-template name="typeNameWithTicks" />
           </xsl:for-each>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="string($namespace) != ''">
-            <MSHelp:Keyword Index="F" Term="{concat($namespace,'.',$type)}" />
+          <xsl:when test="string($v_namespace) != ''">
+            <MSHelp:Keyword Index="F" Term="{concat($v_namespace,'.',$v_type)}" />
           </xsl:when>
           <xsl:otherwise>
-            <MSHelp:Keyword Index="F" Term="{$type}" />
+            <MSHelp:Keyword Index="F" Term="{$v_type}" />
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="$g_apiTopicSubGroup = 'enumeration'">
           <xsl:for-each select="/document/reference/elements/element">
             <xsl:choose>
-              <xsl:when test="string($namespace) != ''">
-                <MSHelp:Keyword Index="F" Term="{concat($namespace,'.',$type, '.', apidata/@name)}" />
+              <xsl:when test="string($v_namespace) != ''">
+                <MSHelp:Keyword Index="F" Term="{concat($v_namespace,'.',$v_type, '.', apidata/@name)}" />
               </xsl:when>
               <xsl:otherwise>
-                <MSHelp:Keyword Index="F" Term="{concat($type, '.', apidata/@name)}" />
+                <MSHelp:Keyword Index="F" Term="{concat($v_type, '.', apidata/@name)}" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:for-each>
@@ -422,17 +434,17 @@
 
       <!-- overload list pages get member, type.member, and namepsace.type.member keywords -->
       <xsl:when test="$g_apiTopicGroup='list' and $g_apiTopicSubGroup='overload'">
-        <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
-        <xsl:variable name="type">
+        <xsl:variable name="v_namespace" select="/document/reference/containers/namespace/apidata/@name" />
+        <xsl:variable name="v_type">
           <xsl:for-each select="/document/reference/containers/type[1]">
             <xsl:call-template name="typeNameWithTicks" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:variable name="member">
+        <xsl:variable name="v_member">
           <xsl:choose>
             <!-- if the member is a constructor, use the member name for the type name -->
             <xsl:when test="/document/reference/apidata[@subgroup='constructor']">
-              <xsl:value-of select="$type" />
+              <xsl:value-of select="$v_type" />
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="/document/reference/apidata/@name"/>
@@ -441,11 +453,11 @@
         </xsl:variable>
 
         <xsl:choose>
-          <xsl:when test="string($namespace) != ''">
-            <MSHelp:Keyword Index="F" Term="{concat($namespace,'.',$type, '.', $member)}" />
+          <xsl:when test="string($v_namespace) != ''">
+            <MSHelp:Keyword Index="F" Term="{concat($v_namespace,'.',$v_type, '.', $v_member)}" />
           </xsl:when>
           <xsl:otherwise>
-            <MSHelp:Keyword Index="F" Term="{concat($type, '.', $member)}" />
+            <MSHelp:Keyword Index="F" Term="{concat($v_type, '.', $v_member)}" />
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -455,17 +467,17 @@
 
       <!-- member pages get member, type.member, and namepsace.type.member keywords -->
 			<xsl:when test="$g_apiTopicGroup='member'">
-        <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
-        <xsl:variable name="type">
+        <xsl:variable name="v_namespace" select="/document/reference/containers/namespace/apidata/@name" />
+        <xsl:variable name="v_type">
           <xsl:for-each select="/document/reference/containers/type[1]">
             <xsl:call-template name="typeNameWithTicks" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:variable name="member">
+        <xsl:variable name="v_member">
           <xsl:choose>
             <!-- if the member is a constructor, use the member name for the type name -->
             <xsl:when test="$g_apiTopicSubGroup='constructor'">
-              <xsl:value-of select="$type" />
+              <xsl:value-of select="$v_type" />
             </xsl:when>
             <!-- explicit interface implementation -->
             <xsl:when test="document/reference[memberdata[@visibility='private'] and proceduredata[@virtual = 'true']]">
@@ -483,21 +495,21 @@
           -->
           <!--
           <xsl:when test="$g_apiTopicSubGroup='constructor'">
-            <MSHelp:Keyword Index="F" Term="{$type}" />
-            <MSHelp:Keyword Index="F" Term="{concat($type, '.', $type)}" />
-            <xsl:if test="boolean($namespace)">
-              <MSHelp:Keyword Index="F" Term="{concat($namespace, '.', $type, '.', $type)}" />
+            <MSHelp:Keyword Index="F" Term="{$v_type}" />
+            <MSHelp:Keyword Index="F" Term="{concat($v_type, '.', $v_type)}" />
+            <xsl:if test="boolean($v_namespace)">
+              <MSHelp:Keyword Index="F" Term="{concat($v_namespace, '.', $v_type, '.', $v_type)}" />
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             -->
 
         <xsl:choose>
-          <xsl:when test="string($namespace) != ''">
-            <MSHelp:Keyword Index="F" Term="{concat($namespace,'.',$type, '.', $member)}" />
+          <xsl:when test="string($v_namespace) != ''">
+            <MSHelp:Keyword Index="F" Term="{concat($v_namespace,'.',$v_type, '.', $v_member)}" />
           </xsl:when>
           <xsl:otherwise>
-            <MSHelp:Keyword Index="F" Term="{concat($type, '.', $member)}" />
+            <MSHelp:Keyword Index="F" Term="{concat($v_type, '.', $v_member)}" />
           </xsl:otherwise>
         </xsl:choose>
 
@@ -509,9 +521,11 @@
   </xsl:choose>
 </xsl:template>
 
-  <!-- set high help priority for namespace and member list pages, lower priority for type overview pages -->
-  
-  <xsl:template name="helpPriorityMetadata">
+	<!-- ============================================================================================
+	Set high help priority for namespace and member list pages, lower priority for type overview pages
+	============================================================================================= -->
+
+	<xsl:template name="t_helpPriorityMetadata">
     <xsl:choose>
       <xsl:when test="($g_topicGroup='api' and $g_apiGroup='namespace') or ($g_topicGroup='list' and $g_topicSubGroup='members')">
         <MSHelp:Attr Name="HelpPriority" Value="1"/>
@@ -522,53 +536,32 @@
     </xsl:choose>
   </xsl:template>
 
-	<xsl:template name="apiName">
-		<xsl:choose>
-			<xsl:when test="$g_apiTopicSubGroup='constructor'">
-				<xsl:value-of select="/document/reference/containers/type/apidata/@name" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="/document/reference/apidata/@name" />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+	<!-- ============================================================================================
+	Language attributes
+	============================================================================================= -->
 
-  <!-- make a semicolon-separated list of the $languages-->
-  <xsl:template name="languagesList">
-    <xsl:for-each select="$languages/language">
-      <xsl:variable name="devlang">
-        <xsl:call-template name="t_codeLangName">
-          <xsl:with-param name="p_codeLang" select="@name"/>
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:if test="normalize-space($devlang)!=''">
-        <xsl:value-of select="$devlang"/><xsl:text>;</xsl:text>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:template>
-
-  <xsl:template name="mshelpDevlangAttributes">
+	<xsl:template name="t_mshelpDevlangAttributes">
     <!-- first insert a DevLang attr for each language in the $languages arg passed to the transform -->
     <xsl:for-each select="$languages/language">
-      <xsl:variable name="devlang">
+      <xsl:variable name="v_devlang">
         <xsl:call-template name="t_codeLangName">
           <xsl:with-param name="p_codeLang" select="@name"/>
         </xsl:call-template>
       </xsl:variable>
       <xsl:choose>
-        <xsl:when test="normalize-space($devlang)=''"/>
-        <xsl:when test="$devlang = 'VJ#'">
+        <xsl:when test="normalize-space($v_devlang)=''"/>
+        <xsl:when test="$v_devlang = 'VJ#'">
           <xsl:if test="boolean(/document/reference/versions/versions[@name='netfw']//version[not(@name='netfw35')])">
-            <MSHelp:Attr Name="DevLang" Value="{$devlang}" />
+            <MSHelp:Attr Name="DevLang" Value="{$v_devlang}" />
           </xsl:if>
         </xsl:when>
-        <xsl:when test="$devlang = 'C++'">
+        <xsl:when test="$v_devlang = 'C++'">
           <xsl:if test="boolean(/document/reference/versions/versions[not(@name='netfw')])">
-            <MSHelp:Attr Name="DevLang" Value="{$devlang}" />
+            <MSHelp:Attr Name="DevLang" Value="{$v_devlang}" />
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
-          <MSHelp:Attr Name="DevLang" Value="{$devlang}" />
+          <MSHelp:Attr Name="DevLang" Value="{$v_devlang}" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:for-each>
@@ -581,16 +574,16 @@
     <!-- add DevLang attr for any additional languages referred to in the topic's snippet and code nodes -->
     <xsl:for-each select="//*[@language]">
       <xsl:if test="not(@language=preceding::*/@language)">
-        <xsl:variable name="devlang">
+        <xsl:variable name="v_devlang">
           <xsl:call-template name="t_codeLangName">
             <xsl:with-param name="p_codeLang" select="@language"/>
           </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="normalize-space($devlang)=''"/>
-          <xsl:when test="contains($languagesList,concat($devlang,';'))"/>
+          <xsl:when test="normalize-space($v_devlang)=''"/>
+          <xsl:when test="contains($languagesList,concat($v_devlang,';'))"/>
           <xsl:otherwise>
-            <MSHelp:Attr Name="DevLang" Value="{$devlang}" />
+            <MSHelp:Attr Name="DevLang" Value="{$v_devlang}" />
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
@@ -600,13 +593,13 @@
     <xsl:variable name="languagesList2">
       <xsl:value-of select="$languagesList"/>
       <xsl:for-each select="//*[@language]">
-        <xsl:variable name="devlang">
+        <xsl:variable name="v_devlang">
           <xsl:call-template name="t_codeLangName">
             <xsl:with-param name="p_codeLang" select="@language"/>
           </xsl:call-template>
         </xsl:variable>
-        <xsl:if test="normalize-space($devlang)!=''">
-          <xsl:value-of select="$devlang"/><xsl:text>;</xsl:text>
+        <xsl:if test="normalize-space($v_devlang)!=''">
+          <xsl:value-of select="$v_devlang"/><xsl:text>;</xsl:text>
         </xsl:if>
       </xsl:for-each>
     </xsl:variable>
@@ -614,46 +607,68 @@
     <!-- add DevLang attr for any additional languages referred to in the topic's syntax blocks -->
     <xsl:for-each select="/document/syntax/div[@codeLanguage and not(div[@class='nonXamlAssemblyBoilerplate'])]">
       <xsl:if test="not(@codeLanguage=preceding::*/@codeLanguage)">
-        <xsl:variable name="devlang">
+        <xsl:variable name="v_devlang">
           <xsl:call-template name="t_codeLangName">
             <xsl:with-param name="p_codeLang" select="@codeLanguage"/>
           </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="normalize-space($devlang)=''"/>
-          <xsl:when test="contains($languagesList2,concat($devlang,';'))"/>
+          <xsl:when test="normalize-space($v_devlang)=''"/>
+          <xsl:when test="contains($languagesList2,concat($v_devlang,';'))"/>
           <xsl:otherwise>
-            <MSHelp:Attr Name="DevLang" Value="{$devlang}" />
+            <MSHelp:Attr Name="DevLang" Value="{$v_devlang}" />
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
 
-  <!-- 
-     Additional F1 keywords for class, struct, and enum topics in a set of WPF namespaces. 
-     This template inserts the MSHelp:Keyword nodes.
-     The keyword prefixes and the WPF namespaces are hard-coded in variables.
- -->
-  <xsl:variable name="var_wpf_f1index_prefix_1">http://schemas.microsoft.com/winfx/2006/xaml/presentation#</xsl:variable>
-  <xsl:variable name="var_wpf_f1index_prefix_1_namespaces">N:System.Windows.Controls#N:System.Windows.Documents#N:System.Windows.Shapes#N:System.Windows.Navigation#N:System.Windows.Data#N:System.Windows#N:System.Windows.Controls.Primitives#N:System.Windows.Media.Animation#N:System.Windows.Annotations#N:System.Windows.Annotations.Anchoring#N:System.Windows.Annotations.Storage#N:System.Windows.Media#N:System.Windows.Media.Animation#N:System.Windows.Media.Media3D#N:</xsl:variable>
+	<!-- ============================================================================================
+	make a semicolon-separated list of the $languages
+	============================================================================================= -->
+
+	<xsl:template name="languagesList">
+		<xsl:for-each select="$languages/language">
+			<xsl:variable name="v_devlang">
+				<xsl:call-template name="t_codeLangName">
+					<xsl:with-param name="p_codeLang"
+													select="@name"/>
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:if test="normalize-space($v_devlang)!=''">
+				<xsl:value-of select="$v_devlang"/>
+				<xsl:text>;</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+
+	<!-- ============================================================================================
+  Additional F1 keywords for class, struct, and enum topics in a set of WPF namespaces. 
+  This template inserts the MSHelp:Keyword nodes.
+  The keyword prefixes and the WPF namespaces are hard-coded in variables.
+	============================================================================================= -->
+	
+	<xsl:variable name="g_wpf_f1index_prefix_1">http://schemas.microsoft.com/winfx/2006/xaml/presentation#</xsl:variable>
+  <xsl:variable name="g_wpf_f1index_prefix_1_namespaces">N:System.Windows.Controls#N:System.Windows.Documents#N:System.Windows.Shapes#N:System.Windows.Navigation#N:System.Windows.Data#N:System.Windows#N:System.Windows.Controls.Primitives#N:System.Windows.Media.Animation#N:System.Windows.Annotations#N:System.Windows.Annotations.Anchoring#N:System.Windows.Annotations.Storage#N:System.Windows.Media#N:System.Windows.Media.Animation#N:System.Windows.Media.Media3D#N:</xsl:variable>
 
   <xsl:template name="xamlMSHelpFKeywords">
     <xsl:if test="$g_apiTopicSubGroup='class' or $g_apiTopicSubGroup='enumeration' or $g_apiTopicSubGroup='structure'">
-      <xsl:if test="boolean(contains($var_wpf_f1index_prefix_1_namespaces, concat('#',/document/reference/containers/namespace/@api,'#'))
-                           or starts-with($var_wpf_f1index_prefix_1_namespaces, concat(/document/reference/containers/namespace/@api,'#')))">
-        <MSHelp:Keyword Index="F" Term="{concat($var_wpf_f1index_prefix_1, /document/reference/apidata/@name)}"/>
+      <xsl:if test="boolean(contains($g_wpf_f1index_prefix_1_namespaces, concat('#',/document/reference/containers/namespace/@api,'#'))
+                           or starts-with($g_wpf_f1index_prefix_1_namespaces, concat(/document/reference/containers/namespace/@api,'#')))">
+        <MSHelp:Keyword Index="F" Term="{concat($g_wpf_f1index_prefix_1, /document/reference/apidata/@name)}"/>
       </xsl:if>
     </xsl:if>
   </xsl:template>
 
-  <!-- Index Logic -->
-  
-  <xsl:template name="indexMetadata">
+	<!-- ============================================================================================
+  Index Logic
+	============================================================================================= -->
+
+	<xsl:template name="t_indexMetadata">
     <xsl:choose>
       <!-- namespace topics get one unqualified index entry -->
       <xsl:when test="$g_topicGroup='api' and $g_apiGroup='namespace'">
-        <xsl:variable name="names">
+        <xsl:variable name="v_names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
           </xsl:for-each>
@@ -661,20 +676,20 @@
         <MSHelp:Keyword Index="K">
           <includeAttribute name="Term" item="namespaceIndexEntry">
             <parameter>
-              <xsl:value-of select="msxsl:node-set($names)/name" />
+              <xsl:value-of select="msxsl:node-set($v_names)/name" />
             </parameter>
           </includeAttribute>
         </MSHelp:Keyword>
       </xsl:when>
       <!-- type overview topics get qualified and unqualified index entries, and an about index entry -->
       <xsl:when test="$g_topicGroup='api' and $g_apiGroup='type'">
-        <xsl:variable name="names">
+        <xsl:variable name="v_names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
-        <xsl:for-each select="msxsl:node-set($names)/name">
+        <xsl:variable name="v_namespace" select="/document/reference/containers/namespace/apidata/@name" />
+        <xsl:for-each select="msxsl:node-set($v_names)/name">
           <MSHelp:Keyword Index="K">
             <includeAttribute name="Term" item="{$g_apiSubGroup}IndexEntry">
               <parameter>
@@ -682,11 +697,11 @@
               </parameter>
             </includeAttribute>
           </MSHelp:Keyword>
-          <xsl:if test="boolean($namespace != '')">
+          <xsl:if test="boolean($v_namespace != '')">
             <MSHelp:Keyword Index="K">
               <includeAttribute name="Term" item="{$g_apiSubGroup}IndexEntry">
                 <parameter>
-                  <xsl:value-of select="$namespace"/>
+                  <xsl:value-of select="$v_namespace"/>
                   <xsl:text>.</xsl:text>
                   <xsl:copy-of select="." />
                 </parameter>
@@ -723,13 +738,13 @@
       </xsl:when>
       <!-- all member lists get unqualified entries, qualified entries, and unqualified sub-entries -->
       <xsl:when test="$g_topicGroup='list' and $g_topicSubGroup='members'">
-        <xsl:variable name="namespace" select="/document/reference/containers/namespace/apidata/@name" />
-        <xsl:variable name="names">
+        <xsl:variable name="v_namespace" select="/document/reference/containers/namespace/apidata/@name" />
+        <xsl:variable name="v_names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:for-each select="msxsl:node-set($names)/name">
+        <xsl:for-each select="msxsl:node-set($v_names)/name">
           <MSHelp:Keyword Index="K">
             <includeAttribute name="Term" item="{$g_apiSubGroup}IndexEntry">
               <parameter>
@@ -749,13 +764,13 @@
             </includeAttribute>
           </MSHelp:Keyword>
         </xsl:for-each>
-        <xsl:variable name="qnames">
+        <xsl:variable name="v_qnames">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="qualifiedTextNames" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:if test="boolean($namespace != '')">
-          <xsl:for-each select="msxsl:node-set($qnames)/name">
+        <xsl:if test="boolean($v_namespace != '')">
+          <xsl:for-each select="msxsl:node-set($v_qnames)/name">
             <MSHelp:Keyword Index="K">
               <includeAttribute name="Term" item="{$g_apiSubGroup}IndexEntry">
                 <parameter>
@@ -768,23 +783,23 @@
       </xsl:when>
       <!-- other member list pages get unqualified sub-entries -->
       <xsl:when test="$g_topicGroup='list' and not($g_topicSubGroup = 'overload')">
-        <xsl:variable name="names">
+        <xsl:variable name="v_names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="textNames" />
           </xsl:for-each>
         </xsl:variable>
         <xsl:choose>
           <xsl:when test="$g_topicSubGroup='Operators'">
-            <xsl:variable name="operators" select="document/reference/elements/element[not(apidata[@name='Explicit' or @name='Implicit'])]"/>
-            <xsl:variable name="conversions" select="document/reference/elements/element[apidata[@name='Explicit' or @name='Implicit']]" />
-            <xsl:variable name="entryType">
+            <xsl:variable name="v_operators" select="document/reference/elements/element[not(apidata[@name='Explicit' or @name='Implicit'])]"/>
+            <xsl:variable name="v_conversions" select="document/reference/elements/element[apidata[@name='Explicit' or @name='Implicit']]" />
+            <xsl:variable name="v_entryType">
               <xsl:choose>
                 <!-- operators + type conversions -->
-                <xsl:when test="count($operators) &gt; 0 and count($conversions) &gt; 0">
+                <xsl:when test="count($v_operators) &gt; 0 and count($v_conversions) &gt; 0">
                   <xsl:value-of select="'operatorsAndTypeConversions'" />
                 </xsl:when>
                 <!-- no operators + type conversions -->
-                <xsl:when test="not(count($operators) &gt; 0) and count($conversions) &gt; 0">
+                <xsl:when test="not(count($v_operators) &gt; 0) and count($v_conversions) &gt; 0">
                   <xsl:value-of select="'typeConversions'" />
                 </xsl:when>
                 <!-- operators + no type conversions -->
@@ -793,9 +808,9 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
-            <xsl:for-each select="msxsl:node-set($names)/name">
+            <xsl:for-each select="msxsl:node-set($v_names)/name">
               <MSHelp:Keyword Index="K">
-                <includeAttribute name="Term" item="{$entryType}IndexEntry">
+                <includeAttribute name="Term" item="{$v_entryType}IndexEntry">
                   <parameter>
                     <include item="{$g_apiSubGroup}IndexEntry">
                       <parameter>
@@ -808,7 +823,7 @@
             </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
-        <xsl:for-each select="msxsl:node-set($names)/name">
+        <xsl:for-each select="msxsl:node-set($v_names)/name">
           <MSHelp:Keyword Index="K">
             <includeAttribute name="Term" item="{$g_apiTopicSubGroup}IndexEntry">
               <parameter>
@@ -826,17 +841,17 @@
       </xsl:when>
       <!-- constructor (or constructor overload) topics get unqualified sub-entries using the type names -->
       <xsl:when test="($g_topicGroup='api' and $g_apiSubGroup='constructor' and not(/document/reference/memberdata/@overload)) or ($g_topicSubGroup='overload' and $g_apiSubGroup = 'constructor')">
-        <xsl:variable name="typeSubgroup" select="/document/reference/containers/type/apidata/@subgroup" />
-        <xsl:variable name="names">
+        <xsl:variable name="v_typeSubgroup" select="/document/reference/containers/type/apidata/@subgroup" />
+        <xsl:variable name="v_names">
           <xsl:for-each select="/document/reference/containers/type">
             <xsl:call-template name="textNames" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:for-each select="msxsl:node-set($names)/name">
+        <xsl:for-each select="msxsl:node-set($v_names)/name">
           <MSHelp:Keyword Index="K">
             <includeAttribute name="Term" item="constructorIndexEntry">
               <parameter>
-                <include item="{$typeSubgroup}IndexEntry">
+                <include item="{$v_typeSubgroup}IndexEntry">
                   <parameter>
                     <xsl:value-of select="." />
                   </parameter>
@@ -845,12 +860,12 @@
             </includeAttribute>
           </MSHelp:Keyword>
         </xsl:for-each>
-        <xsl:variable name="qnames">
+        <xsl:variable name="v_qnames">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="qualifiedTextNames" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:for-each select="msxsl:node-set($qnames)/name">
+        <xsl:for-each select="msxsl:node-set($v_qnames)/name">
           <MSHelp:Keyword Index="K">
             <includeAttribute name="Term" item="constructorTypeIndexEntry">
               <parameter>
@@ -862,12 +877,12 @@
       </xsl:when>
       <!-- op_explicit and op_implicit members -->
       <xsl:when test="$g_topicGroup='api' and $g_apiSubSubGroup='operator' and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit')">
-        <xsl:variable name="names">
+        <xsl:variable name="v_names">
           <xsl:for-each select="/document/reference">
             <xsl:call-template name="operatorTextNames" />
           </xsl:for-each>
         </xsl:variable>
-        <xsl:for-each select="msxsl:node-set($names)/name">
+        <xsl:for-each select="msxsl:node-set($v_names)/name">
           <MSHelp:Keyword Index="K">
             <includeAttribute name="Term" item="conversionOperatorIndexEntry">
               <parameter>
@@ -886,7 +901,7 @@
           </xsl:when>
           <!-- explicit interface implementation -->
           <xsl:when test="/document/reference/proceduredata/@virtual='true' and /document/reference/memberdata/@visibility='private'">
-            <xsl:variable name="entryType">
+            <xsl:variable name="v_entryType">
               <xsl:choose>
                 <xsl:when test="string($g_apiTopicSubSubGroup)">
                   <xsl:value-of select="$g_apiTopicSubSubGroup" />
@@ -903,28 +918,28 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
-            <xsl:variable name="names">
+            <xsl:variable name="v_names">
               <xsl:for-each select="/document/reference/implements/member">
                 <xsl:call-template name="textNames" />
               </xsl:for-each>
             </xsl:variable>
-            <xsl:for-each select="msxsl:node-set($names)/name">
+            <xsl:for-each select="msxsl:node-set($v_names)/name">
               <MSHelp:Keyword Index="K">
-                <includeAttribute name="Term" item="{$entryType}ExplicitIndexEntry">
+                <includeAttribute name="Term" item="{$v_entryType}ExplicitIndexEntry">
                   <parameter>
                     <xsl:copy-of select="."/>
                   </parameter>
                 </includeAttribute>
               </MSHelp:Keyword>
             </xsl:for-each>
-            <xsl:variable name="qnames">
+            <xsl:variable name="v_qnames">
               <xsl:for-each select="/document/reference">
                 <xsl:call-template name="qualifiedTextNames" />
               </xsl:for-each>
             </xsl:variable>
-            <xsl:for-each select="msxsl:node-set($qnames)/name">
+            <xsl:for-each select="msxsl:node-set($v_qnames)/name">
               <MSHelp:Keyword Index="K">
-                <includeAttribute name="Term" item="{$entryType}ExplicitIndexEntry">
+                <includeAttribute name="Term" item="{$v_entryType}ExplicitIndexEntry">
                   <parameter>
                     <xsl:copy-of select="."/>
                   </parameter>
@@ -933,7 +948,7 @@
             </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:variable name="entryType">
+            <xsl:variable name="v_entryType">
               <xsl:choose>
                 <xsl:when test="string($g_apiTopicSubSubGroup)">
                   <xsl:value-of select="$g_apiTopicSubSubGroup" />
@@ -953,28 +968,28 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
-            <xsl:variable name="names">
+            <xsl:variable name="v_names">
               <xsl:for-each select="/document/reference">
                 <xsl:call-template name="textNames" />
               </xsl:for-each>
             </xsl:variable>
-            <xsl:for-each select="msxsl:node-set($names)/name">
+            <xsl:for-each select="msxsl:node-set($v_names)/name">
               <MSHelp:Keyword Index="K">
-                <includeAttribute name="Term" item="{$entryType}IndexEntry">
+                <includeAttribute name="Term" item="{$v_entryType}IndexEntry">
                   <parameter>
                     <xsl:copy-of select="."/>
                   </parameter>
                 </includeAttribute>
               </MSHelp:Keyword>
             </xsl:for-each>
-            <xsl:variable name="qnames">
+            <xsl:variable name="v_qnames">
               <xsl:for-each select="/document/reference">
                 <xsl:call-template name="qualifiedTextNames" />
               </xsl:for-each>
             </xsl:variable>
-            <xsl:for-each select="msxsl:node-set($qnames)/name">
+            <xsl:for-each select="msxsl:node-set($v_qnames)/name">
               <MSHelp:Keyword Index="K">
-                <includeAttribute name="Term" item="{$entryType}IndexEntry">
+                <includeAttribute name="Term" item="{$v_entryType}IndexEntry">
                   <parameter>
                     <xsl:copy-of select="."/>
                   </parameter>

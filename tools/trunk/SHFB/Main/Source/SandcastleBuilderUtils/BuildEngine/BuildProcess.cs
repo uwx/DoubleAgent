@@ -58,6 +58,8 @@
 // 1.9.3.2  08/20/2011  EFW  Updated to support selection of .NET Portable
 //                           Framework versions.
 // 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style
+// 1.9.3.4  02/19/2010  DBF  Minor change to the plugin logic for 
+//							 TransformReflectionInfo
 //=============================================================================
 
 using System;
@@ -971,17 +973,23 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 // Transform the reflection output.
                 this.ReportProgress(BuildStep.TransformReflectionInfo, "Transforming reflection output...");
 
+				//DBF Change the reflectionFile extension BEFORE running the 'ExecutionBehaviors.After' plugin
+				//    so the plugin (if any) can have the correct file name.
                 if(!this.ExecutePlugIns(ExecutionBehaviors.InsteadOf))
                 {
                     scriptFile = this.TransformTemplate("TransformManifest.proj", templateFolder, workingFolder);
 
                     this.ExecutePlugIns(ExecutionBehaviors.Before);
                     this.RunProcess(msBuildExePath, "/nologo /clp:NoSummary /v:m TransformManifest.proj");
-                    this.ExecutePlugIns(ExecutionBehaviors.After);
+					reflectionFile = Path.ChangeExtension (reflectionFile, ".xml");
+					this.ExecutePlugIns (ExecutionBehaviors.After);
                 }
+				else
+				{
+					reflectionFile = Path.ChangeExtension (reflectionFile, ".xml");
+				}
 
                 // Load the transformed file
-                reflectionFile = Path.ChangeExtension(reflectionFile, ".xml");
                 reflectionInfo = new XmlDocument();
                 reflectionInfo.Load(reflectionFile);
                 apisNode = reflectionInfo.SelectSingleNode("reflection/apis");

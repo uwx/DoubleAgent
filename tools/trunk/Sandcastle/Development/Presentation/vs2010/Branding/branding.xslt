@@ -183,7 +183,9 @@
 	<xsl:template match="xhtml:base"
 								name="branding-base"/>
 	<xsl:template match="xhtml:link[@rel='stylesheet']"
-								name="branding-stylesheet"/>
+								name="branding-stylesheet">
+		<xsl:copy-of select="."/>
+	</xsl:template>
 	<xsl:template match="xhtml:script"
 								name="branding-script"/>
 

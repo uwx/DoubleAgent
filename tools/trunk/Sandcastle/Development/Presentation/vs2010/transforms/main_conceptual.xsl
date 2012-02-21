@@ -100,7 +100,7 @@
 
 	<!-- document head -->
 
-	<xsl:template name="nestedKeywordText">
+	<xsl:template name="t_nestedKeywordText">
 		<xsl:for-each select="keyword[@index='K']">
 			<xsl:text>, </xsl:text>
 			<xsl:value-of select="text()"/>

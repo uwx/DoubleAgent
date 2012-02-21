@@ -140,7 +140,7 @@
 	============================================================================================= -->
 
 	<xsl:template name="t_topicTitlePlain">
-		<xsl:param name="qualifyMembers"
+		<xsl:param name="p_qualifyMembers"
 							 select="false()" />
 		<include>
 			<xsl:attribute name="item">
@@ -222,9 +222,9 @@
 				<xsl:text>TopicTitle</xsl:text>
 			</xsl:attribute>
 			<parameter>
-				<xsl:call-template name="shortNamePlain">
-					<xsl:with-param name="qualifyMembers"
-													select="$qualifyMembers" />
+				<xsl:call-template name="t_shortNamePlain">
+					<xsl:with-param name="p_qualifyMembers"
+													select="$p_qualifyMembers" />
 				</xsl:call-template>
 			</parameter>
 			<parameter>
@@ -336,7 +336,7 @@
 				<xsl:text>TopicTitle</xsl:text>
 			</xsl:attribute>
 			<parameter>
-				<xsl:call-template name="shortNameDecorated" />
+				<xsl:call-template name="t_shortNameDecorated" />
 			</parameter>
 			<parameter>
 				<!-- show parameters only from overloaded members -->
@@ -1759,8 +1759,8 @@
 											select="count(/document/syntax/div[@codeLanguage])" />
 			<xsl:with-param name="p_codeLangAttr"
 											select="'codeLanguage'" />
-			<xsl:with-param name="p_formatCode"
-											select="false()" />
+			<!--<xsl:with-param name="p_formatCode"
+											select="false()" />-->
 		</xsl:call-template>
 	</xsl:template>
 
@@ -2127,7 +2127,7 @@
 	Decorated names
 	============================================================================================= -->
 
-	<xsl:template name="typeNameDecorated">
+	<xsl:template name="t_typeNameDecorated">
 		<xsl:if test="type|(containers/type)">
 			<xsl:apply-templates select="type|(containers/type)"
 													 mode="decorated" />
@@ -2146,29 +2146,29 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="shortNameDecorated">
+	<xsl:template name="t_shortNameDecorated">
 		<xsl:choose>
 			<!-- type overview pages and member list pages get the type name -->
 			<xsl:when test="($g_topicGroup='api' and $g_apiGroup='type') or ($g_topicGroup='list' and not($g_topicSubGroup='overload'))">
 				<xsl:for-each select="/document/reference[1]">
-					<xsl:call-template name="typeNameDecorated" />
+					<xsl:call-template name="t_typeNameDecorated" />
 				</xsl:for-each>
 			</xsl:when>
 			<!-- constructors and member list pages also use the type name -->
 			<xsl:when test="($g_topicGroup='api' and $g_apiSubGroup='constructor') or ($g_topicSubGroup='overload' and $g_apiSubGroup='constructor')">
 				<xsl:for-each select="/document/reference/containers/type[1]">
-					<xsl:call-template name="typeNameDecorated" />
+					<xsl:call-template name="t_typeNameDecorated" />
 				</xsl:for-each>
 			</xsl:when>
 			<!-- eii members -->
 			<xsl:when test="document/reference[memberdata[@visibility='private'] and proceduredata[@virtual = 'true']]">
 				<xsl:for-each select="/document/reference/containers/type[1]">
-					<xsl:call-template name="typeNameDecorated" />
+					<xsl:call-template name="t_typeNameDecorated" />
 				</xsl:for-each>
 				<xsl:call-template name="t_decoratedNameSep"/>
 				<xsl:for-each select="/document/reference/implements/member">
 					<xsl:for-each select="type">
-						<xsl:call-template name="typeNameDecorated" />
+						<xsl:call-template name="t_typeNameDecorated" />
 					</xsl:for-each>
 					<xsl:call-template name="t_decoratedNameSep"/>
 					<xsl:value-of select="apidata/@name" />
@@ -2179,7 +2179,7 @@
 			<!-- Use just the plain, unadorned type.api name for overload pages with templates -->
 			<xsl:when test="$g_topicGroup='list' and $g_topicSubGroup='overload' and /document/reference/templates">
 				<xsl:for-each select="/document/reference/containers/type[1]">
-					<xsl:call-template name="typeNameDecorated" />
+					<xsl:call-template name="t_typeNameDecorated" />
 				</xsl:for-each>
 				<xsl:call-template name="t_decoratedNameSep"/>
 				<xsl:value-of select="/document/reference/apidata/@name" />
@@ -2187,7 +2187,7 @@
 			<!-- normal member pages use the qualified member name -->
 			<xsl:when test="($g_topicGroup='api' and $g_apiGroup='member') or ($g_topicSubGroup='overload' and $g_apiGroup='member')">
 				<xsl:for-each select="/document/reference/containers/type[1]">
-					<xsl:call-template name="typeNameDecorated" />
+					<xsl:call-template name="t_typeNameDecorated" />
 				</xsl:for-each>
 				<xsl:if test="not($g_apiSubSubGroup='operator'and (document/reference/apidata/@name='Explicit' or document/reference/apidata/@name='Implicit'))">
 					<xsl:call-template name="t_decoratedNameSep"/>
@@ -2246,8 +2246,8 @@
 	Plain names
 	============================================================================================= -->
 
-	<xsl:template name="shortNamePlain">
-		<xsl:param name="qualifyMembers"
+	<xsl:template name="t_shortNamePlain">
+		<xsl:param name="p_qualifyMembers"
 							 select="false()" />
 		<xsl:choose>
 			<!-- type overview pages and member list pages get the type name -->
@@ -2265,7 +2265,7 @@
 			<!-- member pages use the member name, qualified if the qualified flag is set -->
 			<xsl:when test="($g_topicGroup='api' and $g_apiGroup='member') or ($g_topicSubGroup='overload' and $g_apiGroup='member')">
 				<!-- check for qualify flag and qualify if it is set -->
-				<xsl:if test="$qualifyMembers">
+				<xsl:if test="$p_qualifyMembers">
 					<xsl:for-each select="/document/reference/containers/type[1]">
 						<xsl:call-template name="typeNamePlain" />
 					</xsl:for-each>

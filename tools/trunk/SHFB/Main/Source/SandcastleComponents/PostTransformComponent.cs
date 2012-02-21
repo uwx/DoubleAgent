@@ -160,6 +160,7 @@ namespace SandcastleBuilder.Components
 		// The stylesheet, script, and image files to include and the output path
 		private string stylesheet, scriptFile, copyImage, copyImage_h;
 		private bool colorizerFilesCopied, logoFileCopied;
+		private XmlNamespaceManager namespaceManager = null;
 
 		// Logo properties
 		private string logoFilename, logoAltText, alignment;
@@ -378,6 +379,9 @@ namespace SandcastleBuilder.Components
 			// needs the files.
 			if (CodeBlockComponent.ColorizedCodeBlocks.Count == 0)
 				return;
+
+			namespaceManager = new XmlNamespaceManager (document.NameTable);
+			namespaceManager.AddNamespace ("mtps", "http://msdn2.microsoft.com/mtps");
 
 			// Only copy the files if needed
 			if (!colorizerFilesCopied)
@@ -804,10 +808,10 @@ namespace SandcastleBuilder.Components
 
 			foreach (XmlNode span in codeSpans)
 			{
-				if (String.IsNullOrEmpty (copyImage))
+				if ((span.SelectSingleNode ("ancestor::mtps:CodeSnippet", namespaceManager) != null)
+				|| (span.SelectSingleNode ("ancestor::div[@class='OH_CodeSnippetContainer']", namespaceManager) != null))
 				{
-					// If there is no copyImage, then the copy code added by the colorizer
-					// is assumed to be redundant.
+					// Just remove the copy code - it's not used by this presentation style.
 					XmlNode child = span;
 					XmlNode parent = child.ParentNode;
 					XmlAttribute parentClass = parent.Attributes["class"];
