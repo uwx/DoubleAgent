@@ -86,6 +86,10 @@
 			<meta name="Microsoft.Package.Book"
 						content="{$v_book}" />
 		</xsl:if>
+
+		<!-- BrandingAware -->
+		<meta name="BrandingAware"
+					content="'true'"/>
 	</xsl:template>
 
 	<!-- ======================================================================================== -->

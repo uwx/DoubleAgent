@@ -12,8 +12,8 @@
 			<list class="bullet">
 				<listItem>
 					<para>
-						<token>MA</token> supports help mode on <token>WindowsXP</token> but not on <token>WindowsVista</token>. <token>DA</token>
-						<legacyBold>does not</legacyBold> support help mode (yet).
+						<token>MA</token> supports help mode on <token>WindowsXP</token> but not on <token>WindowsVista</token>.
+						<token>DA</token>&#160;<legacyBold>does not</legacyBold> support help mode (yet).
 					</para>
 				</listItem>
 				<listItem>

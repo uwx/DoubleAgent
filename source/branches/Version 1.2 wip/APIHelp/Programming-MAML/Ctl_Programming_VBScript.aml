@@ -29,7 +29,7 @@ End Sub</code>
 				syntax:
 			</para>
 
-			<code xml:space="preserve" language="none" title="HTML">&lt;SCRIPT LANGUAGE=VBScript For=control Event=event (parameter1, parameter2)&gt;
+			<code xml:space="preserve" language="other" title="HTML">&lt;SCRIPT LANGUAGE=VBScript For=control Event=event (parameter1, parameter2)&gt;
 statements…
 &lt;/SCRIPT&gt;</code>
 

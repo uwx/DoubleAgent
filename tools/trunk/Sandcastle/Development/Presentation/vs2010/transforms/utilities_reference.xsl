@@ -734,13 +734,13 @@
 	<xsl:template name="t_memberIntroBoilerplate">
 		<xsl:if test="/document/reference/elements/element/memberdata[@visibility='public' or @visibility='family' or @visibility='family or assembly' or @visibility='assembly']">
 			<!-- if there are exposed members, show a boilerplate intro p -->
-			<xsl:variable name="introTextItemId">
+			<xsl:variable name="v_introTextItemId">
 				<xsl:choose>
 					<xsl:when test="/document/reference/containers/type/templates">genericExposedMembersTableText</xsl:when>
 					<xsl:otherwise>exposedMembersTableText</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<include item="{$introTextItemId}">
+			<include item="{$v_introTextItemId}">
 				<parameter>
 					<referenceLink target="{$g_topicTypeId}" />
 				</parameter>
@@ -1749,20 +1749,6 @@
 	<!-- ============================================================================================
 	Syntax
 	============================================================================================= -->
-
-	<xsl:template name="syntaxBlocks">
-
-		<xsl:call-template name="t_putCodeSections">
-			<xsl:with-param name="p_codeNodes"
-											select="/document/syntax/div[@codeLanguage]" />
-			<xsl:with-param name="p_nodeCount"
-											select="count(/document/syntax/div[@codeLanguage])" />
-			<xsl:with-param name="p_codeLangAttr"
-											select="'codeLanguage'" />
-			<!--<xsl:with-param name="p_formatCode"
-											select="false()" />-->
-		</xsl:call-template>
-	</xsl:template>
 
 	<xsl:template name="t_isCodeLangValid">
 		<xsl:param name="p_codeLang" />

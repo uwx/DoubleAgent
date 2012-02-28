@@ -152,14 +152,17 @@
 
 	<xsl:template name="footer-fix-parent">
 		<xsl:element name="script"
-								 namespace="{$xhtml}"
-								 xml:space="preserve"><xsl:attribute name="type"><xsl:value-of select="'text/javascript'"/></xsl:attribute>
-			try
-			{
-				var footer = document.getElementById("OH_footer")
-				if (footer)
+								 namespace="{$xhtml}">
+			<xsl:attribute name="type">
+				<xsl:value-of select="'text/javascript'"/>
+			</xsl:attribute>
+			<![CDATA[
+				try
 				{
-					var footerParent = undefined;
+					var footer = document.getElementById("OH_footer")
+					if (footer)
+					{
+						var footerParent = undefined;
 //					var divs = document.getElementsByTagName("div");  
 //					if (divs != undefined)
 //					{
@@ -173,19 +176,20 @@
 //							}
 //						}
 //					}
-					if (!footerParent)
-					{
-						footerParent = document.body;
+						if (!footerParent)
+						{
+							footerParent = document.body;
+						}
+						if (footer.parentElement != footerParent)
+						{ 
+							footer.parentElement.removeChild (footer);
+							footerParent.appendChild (footer); 
+						}
 					}
-					if (footer.parentElement != footerParent)
-					{ 
-						footer.parentElement.removeChild (footer);
-						footerParent.appendChild (footer); 
-					}
-				}
-			} catch (e)
-			{}
-			finally {}
+				} catch (e)
+				{}
+				finally {}
+			]]>
 		</xsl:element>
 	</xsl:template>
 

@@ -111,6 +111,9 @@
 						content="{.}" />
 		</xsl:for-each>
 
+		<!-- BrandingAware -->
+		<meta name="BrandingAware"
+					content="'true'"/>
 	</xsl:template>
 
 	<!-- ======================================================================================== -->

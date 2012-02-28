@@ -108,15 +108,6 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="xhtml:pre"
-								name="ps-pre">
-		<xsl:comment>matched pre</xsl:comment>
-		<xsl:copy>
-			<xsl:apply-templates select="@*"/>
-			<xsl:apply-templates select="node()"/>
-		</xsl:copy>
-	</xsl:template>
-
 	<!-- ============================================================================================
 	Override for formatting the page title
 	============================================================================================= -->
@@ -157,26 +148,7 @@
 						<xsl:element name="td"
 												 namespace="{$xhtml}">
 							<xsl:attribute name="class">OH_tdLogoColumn</xsl:attribute>
-							<xsl:variable name="v_runningHeader"
-														select="following-sibling::xhtml:table[@id='topTable']//xhtml:td[@id='runningHeaderColumn']"/>
-							<xsl:choose>
-								<xsl:when test="following-sibling::xhtml:table[@id='topTable']//xhtml:td//xhtml:img">
-									<!--<xsl:if test="following-sibling::xhtml:table[@id='topTable']//xhtml:td/xhtml:img//ancestor::xhtml:td/@align">
-										<xsl:attribute name="align">
-											<xsl:value-of select="following-sibling::xhtml:table[@id='topTable']//xhtml:td/xhtml:img//ancestor::xhtml:td/@align"/>
-										</xsl:attribute>
-									</xsl:if>-->
-									<!--<xsl:if test="following-sibling::xhtml:table[@id='topTable']//xhtml:td/xhtml:img//ancestor::xhtml:td/@style">
-										<xsl:attribute name="style">
-											<xsl:value-of select="following-sibling::xhtml:table[@id='topTable']//xhtml:td/xhtml:img//ancestor::xhtml:td/@style"/>
-										</xsl:attribute>
-									</xsl:if>-->
-									<xsl:apply-templates select="following-sibling::xhtml:table[@id='topTable']//xhtml:td/xhtml:img//ancestor::xhtml:td/child::node()"/>
-								</xsl:when>
-								<xsl:when test="following-sibling::xhtml:table[@id='topTable']//xhtml:td[@id='runningHeaderColumn']">
-									<xsl:apply-templates select="following-sibling::xhtml:table[@id='topTable']//xhtml:td[@id='runningHeaderColumn']/child::node()"/>
-								</xsl:when>
-							</xsl:choose>
+							<xsl:apply-templates select="following-sibling::xhtml:table[@id='topTable']//xhtml:td[@id='runningHeaderColumn']/child::node()"/>
 						</xsl:element>
 					</xsl:element>
 				</xsl:element>

@@ -257,8 +257,8 @@
 					<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:remarks" />
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:call-template name="WriteRemarksSection">
-						<xsl:with-param name="node"
+					<xsl:call-template name="t_writeRemarksSection">
+						<xsl:with-param name="p_node"
 														select="/document/comments/ddue:dduexml" />
 					</xsl:call-template>
 				</xsl:otherwise>
@@ -291,7 +291,7 @@
 			<xsl:apply-templates select="/document/reference/platforms" />
 		</xsl:if>
 		<xsl:if test="$g_apiTopicSubGroup='class' or $g_apiTopicSubGroup='structure'">
-			<xsl:call-template name="threadSafety" />
+			<xsl:call-template name="t_threadSafety" />
 		</xsl:if>
 
 		<!-- see also -->
@@ -364,13 +364,7 @@
 				<div id="returns">
 					<xsl:call-template name="t_putSubSection">
 						<xsl:with-param name="p_title">
-							<include>
-								<!-- title is propertyValueTitle or methodValueTitle or fieldValueTitle -->
-								<xsl:attribute name="item">
-									<xsl:value-of select="$g_apiSubGroup" />
-									<xsl:text>ValueTitle</xsl:text>
-								</xsl:attribute>
-							</include>
+							<include item="{$g_apiSubGroup}ValueTitle"/>
 						</xsl:with-param>
 						<xsl:with-param name="p_content">
 							<include item="typeLink">
@@ -506,7 +500,14 @@
 				<xsl:with-param name="p_content">
 					<div id="snippetGroup_Syntax"
 							 class="code">
-						<xsl:call-template name="syntaxBlocks" />
+						<xsl:call-template name="t_putCodeSections">
+							<xsl:with-param name="p_codeNodes"
+															select="./div[@codeLanguage]" />
+							<xsl:with-param name="p_nodeCount"
+															select="count(./div[@codeLanguage])" />
+							<xsl:with-param name="p_codeLangAttr"
+															select="'codeLanguage'" />
+						</xsl:call-template>
 					</div>
 					<xsl:apply-templates select="/document/syntax/div[@codeLanguage=XAML]"/>
 

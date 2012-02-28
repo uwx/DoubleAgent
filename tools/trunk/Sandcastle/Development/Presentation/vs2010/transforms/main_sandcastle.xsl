@@ -221,7 +221,7 @@
 
 	<xsl:template match="example">
 		<xsl:call-template name="t_putSectionInclude">
-			<xsl:with-param name="title"
+			<xsl:with-param name="p_titleInclude"
 											select="'examplesTitle'" />
 			<xsl:with-param name="p_content">
 				<xsl:apply-templates />
@@ -285,7 +285,14 @@
 				<xsl:with-param name="p_content">
 					<div id="snippetGroup_Syntax"
 							 class="code">
-						<xsl:call-template name="syntaxBlocks" />
+						<xsl:call-template name="t_putCodeSections">
+							<xsl:with-param name="p_codeNodes"
+															select="./div[@codeLanguage]" />
+							<xsl:with-param name="p_nodeCount"
+															select="count(./div[@codeLanguage])" />
+							<xsl:with-param name="p_codeLangAttr"
+															select="'codeLanguage'" />
+						</xsl:call-template>
 					</div>
 					<!-- parameters & return value -->
 					<xsl:apply-templates select="/document/reference/parameters" />

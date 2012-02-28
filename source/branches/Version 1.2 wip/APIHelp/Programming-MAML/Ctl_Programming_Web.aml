@@ -21,13 +21,13 @@
 					The following example illustrates how to use the &lt;OBJECT&gt; tag to include the
 					control in a Web page.
 				</para>
-				<code xml:space="preserve" language="none" title="HTML">&lt;OBJECT
+				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT
 CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
 id=AgentControl&gt;
 &lt;/OBJECT&gt;</code>
 				<para>
 					To begin using a character, you must load the character using the
-					<codeEntityReference qualifyHint="true">M:DoubleAgent.Control.Characters.Load</codeEntityReference> method.="" A
+					<codeEntityReference qualifyHint="true">M:DoubleAgent.Control.Characters.Load</codeEntityReference> method. A
 					character can be loaded from the user's local storage or an <languageKeyword>HTTP</languageKeyword>
 					server. For more information about the syntax for loading a character, see the
 					<codeEntityReference qualifyHint="true">M:DoubleAgent.Control.Characters.Load</codeEntityReference> method.
@@ -69,7 +69,7 @@ id=AgentControl&gt;
 					</link> mode, even if <token>DA</token> hasn't been installed on
 					the target machine.&#160; Just modify the &lt;OBJECT&gt; tag to include a <languageKeyword>CODEBASE</languageKeyword> as follows:
 				</para>
-				<code xml:space="preserve" language="none" title="HTML">&lt;OBJECT
+				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT
 CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
 CODEBASE=&quot;http://doubleagent.sourceforge.net/DaControl.cab
 id=AgentControl&gt;
@@ -94,7 +94,7 @@ id=AgentControl&gt;
 					<token>DA</token> control &lt;OBJECT&gt; tag:
 				</para>
 
-				<code xml:space="preserve" language="none" title="HTML">&lt;OBJECT width=0 height=0
+				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT width=0 height=0
 CLASSID=&quot;CLSID: C348<i>XXXX</i>-A7F8-11D1-AA75-00C04FA34D72&quot;
 CODEBASE=&quot;http://your server/agt<i>XXXX</i>.dll&quot;&gt;
 &lt;/OBJECT&gt;</code>

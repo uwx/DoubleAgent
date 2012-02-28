@@ -15,7 +15,7 @@ control.object.Property = value</code>
 				JavaScript does not currently have event syntax for non-HTML objects. However, with <token>MSIE</token>
 				you can use the &lt;SCRIPT&gt; tag's <languageKeyword>For…Event</languageKeyword> syntax:
 			</para>
-			<code xml:space="preserve" language="none" title="HTML">&lt;SCRIPT LANGUAGE="JScript" FOR="object" EVENT="event()"&gt;
+			<code xml:space="preserve" language="other" title="HTML">&lt;SCRIPT LANGUAGE="JScript" FOR="object" EVENT="event()"&gt;
 statements…
 &lt;/SCRIPT&gt;</code>
 			<para>

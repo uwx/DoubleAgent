@@ -2,7 +2,7 @@
 // System  : Sandcastle Help File Builder Components
 // File    : MSHCComponent.cs
 // Author  : Eric Woodruff  (Eric@EWoodruff.us)
-// Updated : 02/06/2012
+// Updated : 07/05/2010
 // Note    : This is a modified version of the Microsoft MSHCComponent
 //           (Copyright 2010 Microsoft Corporation).  My changes are indicated
 //           by my initials "EFW" in a comment on the changes.
@@ -28,7 +28,8 @@
 // Version     Date     Who  Comments
 // ============================================================================
 // 1.9.0.0  06/30/2010  EFW  Created the code
-// 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style
+// 1.9.3.4  02/21/2012  DBF  Added the BrandingAware test to support the
+//							 VS2010 style
 //=============================================================================
 
 using System;
@@ -62,8 +63,7 @@ namespace SandcastleBuilder.Components
 	/// <code lang="xml" title="Example Component Configuration">
 	/// &lt;component type="SandcastleBuilder.Components.MSHCComponent"
 	///   assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"&gt;
-	///   &lt;data self-branded="{@SelfBranded}" branding-package="{@BrandingPackage}"
-	///   topic-version="{@TopicVersion}" toc-file="toc.xml"
+	///   &lt;data self-branded="{@SelfBranded}" topic-version="{@TopicVersion}" toc-file="toc.xml"
 	///   toc-parent="{@ApiTocParentId}" toc-parent-version="{@TocParentVersion}" locale="{@Locale}" /&gt;
 	/// &lt;/component&gt;
 	/// </code>
@@ -103,7 +103,6 @@ namespace SandcastleBuilder.Components
 		{
 			public const string Locale = "locale";
 			public const string SelfBranded = "self-branded";
-			public const string BrandingPackage = "branding-package";
 			public const string TopicVersion = "topic-version";
 			public const string TocFile = "toc-file";
 			public const string TocParent = "toc-parent";
@@ -238,7 +237,6 @@ namespace SandcastleBuilder.Components
 
 		private string _locale = String.Empty;
 		private bool _selfBranded = MHSDefault.SelfBranded;
-		private string _brandingPackage = String.Empty;
 		private string _topicVersion = MHSDefault.TopicVersion;
 		private string _tocParent = MHSDefault.TocParent;
 		private string _tocParentVersion = MHSDefault.TocParentVersion;
@@ -271,12 +269,6 @@ namespace SandcastleBuilder.Components
 				if (!String.IsNullOrEmpty (value))
 					_selfBranded = bool.Parse (value);
 
-				// DBF - Added the branding-package configuration
-				value = data.GetAttribute (ConfigurationAttr.BrandingPackage, String.Empty);
-
-				if (!String.IsNullOrEmpty (value))
-					_brandingPackage = value;
-
 				value = data.GetAttribute (ConfigurationAttr.TopicVersion, String.Empty);
 
 				if (!String.IsNullOrEmpty (value))
@@ -298,10 +290,7 @@ namespace SandcastleBuilder.Components
 					tocFile = value;
 			}
 
-			if (!String.IsNullOrEmpty (tocFile) && !String.IsNullOrEmpty (_tocParent))
-			{
-				LoadToc (Path.GetFullPath (Environment.ExpandEnvironmentVariables (tocFile)));
-			}
+			LoadToc (Path.GetFullPath (Environment.ExpandEnvironmentVariables (tocFile)));
 		}
 		#endregion
 
@@ -313,88 +302,36 @@ namespace SandcastleBuilder.Components
 		/// </summary>
 		/// <param name="document">The <see cref="XmlDocument"/> to apply transformation to.</param>
 		/// <param name="key">Topic key of the output document.</param>
-
 		public override void Apply (XmlDocument document, string key)
 		{
 			_document = document;
 
-			// DBF - Refactored this code into a private method (for clarity).
-			EnsureHeaderExists ();
+			XmlElement html = _document.DocumentElement;
+			_head = html.SelectSingleNode (Help2XPath.Head);
 
-			// DBF - Made this code conditional to support VS2010 presentation style
-			if (String.IsNullOrEmpty (_brandingPackage))
+			if (_head == null)
+			{
+				_head = document.CreateElement (Help2XPath.Head);
+				if (!html.HasChildNodes)
+					html.AppendChild (_head);
+				else
+					html.InsertBefore (_head, html.FirstChild);
+			}
+
+			//DBF Added this test to recognize the VS2010 style
+			if (_head.SelectSingleNode ("meta[@name='BrandingAware']") == null)
 			{
 				ModifyAttribute ("id", "mainSection");
 				ModifyAttribute ("class", "members");
 				FixHeaderBottomBackground ("nsrBottom", "headerBottom");
 			}
 
-			AddMHSMeta (MHSMetaName.SelfBranded, _selfBranded.ToString ().ToLower ());
+			AddMHSMeta (MHSMetaName.SelfBranded, _selfBranded.ToString ().ToLowerInvariant ());
 			AddMHSMeta (MHSMetaName.ContentType, MHSDefault.Reference);
 			AddMHSMeta (MHSMetaName.TopicVersion, _topicVersion);
 
-			// DBF - Refactored this code into a private method (for clarity).
-			String locale;
-			String id;
-			Help20MetaToHelp30Meta (out locale, out id);
-
-			AddMHSMeta (MHSMetaName.Locale, locale);
-			AddMHSMeta (MHSMetaName.TopicLocale, locale);
-			AddMHSMeta (MHSMetaName.Id, id);
-
-			// DBF - Refactored this code into a private method (for clarity).
-			EnsureDocInToc (id);
-		}
-		#endregion
-
-		#region Header and Toc
-		//=====================================================================
-
-		/// <summary>
-		/// Adds a header to the document is it doesn't exist.
-		/// </summary>
-		private void EnsureHeaderExists ()
-		{
-			XmlElement html = _document.DocumentElement;
-			_head = html.SelectSingleNode (Help2XPath.Head);
-
-			if (_head == null)
-			{
-				_head = _document.CreateElement (Help2XPath.Head);
-				if (!html.HasChildNodes)
-					html.AppendChild (_head);
-				else
-					html.InsertBefore (_head, html.FirstChild);
-			}
-		}
-
-		/// <summary>
-		/// Adds the document to the Toc if it's not already there.
-		/// </summary>
-		/// <param name="id"></param>
-		private void EnsureDocInToc (String id)
-		{
-			if (_toc.ContainsKey (id))
-			{
-				TocInfo tocInfo = _toc[id];
-				AddMHSMeta (MHSMetaName.TocParent, tocInfo.Parent);
-
-				if (tocInfo.Parent != MHSDefault.TocParent)
-					AddMHSMeta (MHSMetaName.TocParentVersion, tocInfo.ParentVersion);
-
-				AddMHSMeta (MHSMetaName.TocOrder, tocInfo.Order.ToString (CultureInfo.InvariantCulture));
-			}
-		}
-
-		/// <summary>
-		/// Copies attributes from the Help20 XML data island to Help30 header meta tags
-		/// </summary>
-		/// <param name="locale">The locale meta value</param>
-		/// <param name="id">The document GUID</param>
-		private void Help20MetaToHelp30Meta (out String locale, out String id)
-		{
-			locale = _locale;
-			id = Guid.NewGuid ().ToString ();
+			string locale = _locale;
+			string id = Guid.NewGuid ().ToString ();
 			_xml = _head.SelectSingleNode (Help2XPath.Xml);
 
 			if (_xml != null)
@@ -439,16 +376,27 @@ namespace SandcastleBuilder.Components
 			if (String.IsNullOrEmpty (locale))
 				locale = MHSDefault.Locale;
 
-			// DBF - Remove the MSHelp20 metadata - it's not supported by MSHC.
-#if !DEBUG
+			AddMHSMeta (MHSMetaName.Locale, locale);
+			AddMHSMeta (MHSMetaName.TopicLocale, locale);
+			AddMHSMeta (MHSMetaName.Id, id);
+
+			if (_toc.ContainsKey (id))
+			{
+				TocInfo tocInfo = _toc[id];
+				AddMHSMeta (MHSMetaName.TocParent, tocInfo.Parent);
+
+				if (tocInfo.Parent != MHSDefault.TocParent)
+					AddMHSMeta (MHSMetaName.TocParentVersion, tocInfo.ParentVersion);
+
+				AddMHSMeta (MHSMetaName.TocOrder, tocInfo.Order.ToString (CultureInfo.InvariantCulture));
+			}
+
+			//DBF Added this to get rid of unwanted metadata after it is used.
 			if (_xml != null)
 			{
-				_head.RemoveChild (_xml);
+				_xml.ParentNode.RemoveChild (_xml);
 			}
-#endif
-			//END PATCH
 		}
-
 		#endregion
 
 		#region Private helper methods
@@ -513,7 +461,6 @@ namespace SandcastleBuilder.Components
 
 			XmlElement elem = null;
 
-			// DBF - Fixed a bug that allowed duplicate metadata even when it is not desired.
 			if (!multiple)
 				elem = _document.SelectSingleNode (String.Format (CultureInfo.InvariantCulture,
 					"//meta[@name='{0}']", name)) as XmlElement;

@@ -270,8 +270,8 @@ namespace SandcastleBuilder.Components
 				v_header = document.DocumentElement.SelectSingleNode ("xhtml:head", v_namespaceManager);
 				if (v_header != null)
 				{
-					XmlNode v_branded = v_header.SelectSingleNode ("meta[(@name='SelfBranded') | (@name='Microsoft.Help.SelfBranded')]");
-					if (v_branded == null)
+					XmlNodeList v_branded = v_header.SelectNodes ("meta[(@name='SelfBranded') | (@name='Microsoft.Help.SelfBranded')]");
+					if (v_branded.Count == 0)
 					{
 						XmlElement v_meta = document.CreateElement ("meta", s_xhtmlNamespace);
 						v_meta.SetAttribute ("name", "SelfBranded");
@@ -280,9 +280,12 @@ namespace SandcastleBuilder.Components
 					}
 					else
 					{
-						XmlAttribute v_Attribute = document.CreateAttribute ("meta", String.Empty);
-						v_Attribute.Value = selfBranded.ToString ().ToLower ();
-						v_branded.Attributes.SetNamedItem (v_Attribute);
+						foreach (XmlNode v_brandedNode in v_branded)
+						{
+							XmlAttribute v_Attribute = document.CreateAttribute ("meta", String.Empty);
+							v_Attribute.Value = selfBranded.ToString ().ToLower ();
+							v_brandedNode.Attributes.SetNamedItem (v_Attribute);
+						}
 					}
 				}
 			}

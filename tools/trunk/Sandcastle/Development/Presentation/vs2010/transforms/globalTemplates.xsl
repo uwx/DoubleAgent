@@ -261,6 +261,41 @@
 			<string id="BrandingFeedbackBody">
 				<include item="fb_body"/>
 			</string>
+
+			<xsl:if test="$languages/language">
+				<list id="BrandingLanguages">
+					<xsl:for-each select="$languages/language">
+						<xsl:variable name="v_devlang">
+							<xsl:call-template name="t_codeLangTitle">
+								<xsl:with-param name="p_codeLang"
+																select="@name"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:if test="normalize-space($v_devlang)!=''">
+							<xsl:element name="value">
+								<xsl:value-of select="$v_devlang"/>
+							</xsl:element>
+						</xsl:if>
+					</xsl:for-each>
+				</list>
+			</xsl:if>
+			<xsl:if test="/document/syntax/div[@codeLanguage]">
+				<list id="BrandingSyntaxLanguages">
+					<xsl:for-each select="/document/syntax/div[@codeLanguage and not(div[@class='nonXamlAssemblyBoilerplate'])]">
+						<xsl:variable name="v_codeLang">
+							<xsl:call-template name="t_codeLangTitle">
+								<xsl:with-param name="p_codeLang"
+																select="@codeLanguage"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:if test="normalize-space($v_codeLang)!=''">
+							<xsl:element name="value">
+								<xsl:value-of select="$v_codeLang"/>
+							</xsl:element>
+						</xsl:if>
+					</xsl:for-each>
+				</list>
+			</xsl:if>
 		</xsl:element>
 	</xsl:template>
 
@@ -483,43 +518,55 @@
 	</xsl:template>
 
 	<!-- ============================================================================================
-	Debugging
+	Debugging template for showing an element in comments
 	============================================================================================= -->
 
-	<xsl:template name="t_Dump">
-		<xsl:param name="p_Path"/>
-		<xsl:param name="p_Recursive"
-							 select="true()"/>
-
-		<div>
-			<xsl:value-of select="name($p_Path)"/>
-			<ol>
-				<xsl:for-each select="msxsl:node-set($p_Path)/@*">
-					<li>
-						@<xsl:value-of select="name()"/> [<xsl:value-of select="."/>]
-					</li>
-				</xsl:for-each>
-			</ol>
-			<ul>
-				<xsl:for-each select="msxsl:node-set($p_Path)/*">
+	<xsl:template name="t_dumpContent">
+		<xsl:param name="indent"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="self::text()">
+				<xsl:comment>
+					<xsl:value-of select="$indent"/>
+					<xsl:value-of select="."/>
+				</xsl:comment>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:comment>
+					<xsl:value-of select="$indent"/>
+					<xsl:value-of select="'«'"/>
+					<xsl:value-of select="name()"/>
+					<xsl:for-each select="@*">
+						<xsl:text xml:space="preserve"> </xsl:text>
+						<xsl:value-of select="name()"/>
+						<xsl:value-of select="'='"/>
+						<xsl:value-of select="."/>
+					</xsl:for-each>
 					<xsl:choose>
-						<xsl:when test="boolean($p_Recursive)">
-							<li>
-								<xsl:call-template name="t_Dump">
-									<xsl:with-param name="p_Path"
-																	select="."/>
-								</xsl:call-template>
-							</li>
+						<xsl:when test="./node()">
+							<xsl:value-of select="'»'"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<li>
-								<xsl:value-of select="name()"/> [<xsl:value-of select="."/>]
-							</li>
+							<xsl:value-of select="'/»'"/>
 						</xsl:otherwise>
 					</xsl:choose>
+				</xsl:comment>
+				<xsl:for-each select="node()">
+					<xsl:call-template name="t_dumpContent">
+						<xsl:with-param name="indent"
+														select="concat($indent,'  ')"/>
+					</xsl:call-template>
 				</xsl:for-each>
-			</ul>
-		</div>
+				<xsl:if test="./node()">
+					<xsl:comment>
+						<xsl:value-of select="$indent"/>
+						<xsl:value-of select="'«/'"/>
+						<xsl:value-of select="name()"/>
+						<xsl:value-of select="'»'"/>
+					</xsl:comment>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>

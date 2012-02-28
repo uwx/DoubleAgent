@@ -407,4 +407,57 @@
         }
     ]]>
 	</msxsl:script>
+
+	<!-- ============================================================================================
+	Debugging template for showing an element in comments
+	============================================================================================= -->
+
+	<xsl:template name="t_dumpContent">
+		<xsl:param name="indent"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="self::text()">
+				<xsl:comment>
+					<xsl:value-of select="$indent"/>
+					<xsl:value-of select="."/>
+				</xsl:comment>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:comment>
+					<xsl:value-of select="$indent"/>
+					<xsl:value-of select="'«'"/>
+					<xsl:value-of select="name()"/>
+					<xsl:for-each select="@*">
+						<xsl:text xml:space="preserve"> </xsl:text>
+						<xsl:value-of select="name()"/>
+						<xsl:value-of select="'='"/>
+						<xsl:value-of select="."/>
+					</xsl:for-each>
+					<xsl:choose>
+						<xsl:when test="./node()">
+							<xsl:value-of select="'»'"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="'/»'"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:comment>
+				<xsl:for-each select="node()">
+					<xsl:call-template name="t_dumpContent">
+						<xsl:with-param name="indent"
+														select="concat($indent,'  ')"/>
+					</xsl:call-template>
+				</xsl:for-each>
+				<xsl:if test="./node()">
+					<xsl:comment>
+						<xsl:value-of select="$indent"/>
+						<xsl:value-of select="'«/'"/>
+						<xsl:value-of select="name()"/>
+						<xsl:value-of select="'»'"/>
+					</xsl:comment>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 </xsl:stylesheet>
