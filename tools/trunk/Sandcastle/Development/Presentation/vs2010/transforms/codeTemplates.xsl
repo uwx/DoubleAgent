@@ -7,7 +7,10 @@
 								xmlns:mtps="http://msdn2.microsoft.com/mtps"
 								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
-        >
+	>
+	<!-- ======================================================================================== -->
+
+	<xsl:import href="globalTemplates.xsl"/>
 
 	<!-- ============================================================================================
 	Code languages
@@ -255,12 +258,46 @@
 	Code sections
 	============================================================================================= -->
 
+	<xsl:template name="t_putCodeSections">
+		<xsl:param name="p_codeNodes"/>
+		<xsl:param name="p_nodeCount"/>
+		<xsl:param name="p_codeLangAttr"
+							 select="'language'"/>
+		<xsl:param name="p_translateCode"
+							 select="false()"/>
+		<xsl:param name="p_enableCopyCode"
+							 select="true()"/>
+
+		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
+			<xsl:variable name="v_codeLang">
+				<xsl:call-template name="t_codeLang">
+					<xsl:with-param name="p_codeLang">
+						<xsl:for-each select="@*">
+							<xsl:if test="name() = $p_codeLangAttr">
+								<xsl:value-of select="."/>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+
+			<xsl:call-template name="t_putCodeSection">
+				<xsl:with-param name="p_codeLang"
+												select="$v_codeLang"/>
+				<xsl:with-param name="p_translateCode"
+												select="$p_translateCode"/>
+				<xsl:with-param name="p_enableCopyCode"
+												select="$p_enableCopyCode"/>
+			</xsl:call-template>
+		</xsl:for-each>
+	</xsl:template>
+
 	<xsl:template name="t_putCodeSection">
 		<xsl:param name="p_codeLang"
 							 select="@language"/>
 		<xsl:param name="p_codeTitle"
 							 select="@title"/>
-		<xsl:param name="p_formatCode"
+		<xsl:param name="p_translateCode"
 							 select="false()"/>
 		<xsl:param name="p_enableCopyCode"
 							 select="true()"/>
@@ -281,30 +318,6 @@
 						<xsl:with-param name="p_codeLang"
 														select="$v_codeLangUnique"/>
 					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="v_code">
-			<xsl:choose>
-				<xsl:when test="$p_formatCode">
-					<xsl:choose>
-						<xsl:when test="local-name()='code' or local-name()='pre'">
-							<xsl:apply-templates select="node()"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="local-name()='code' or local-name()='pre'">
-							<xsl:copy-of select="node()"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:copy-of select="."/>
-						</xsl:otherwise>
-					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -332,12 +345,9 @@
 			</xsl:attribute>
 			<xsl:attribute name="ContainsMarkup">
 				<xsl:choose>
-					<xsl:when test="starts-with(normalize-space($v_code),'@@_')">
+					<xsl:when test="starts-with(normalize-space(.),'@@_')">
 						<xsl:value-of select="'true'"/>
 					</xsl:when>
-					<!--<xsl:when test="msxsl:node-set($v_code)//*[(local-name()!='code') and (local-name()!='pre') and (local-name()!='div')]">
-						<xsl:value-of select="'true'"/>
-					</xsl:when>-->
 					<xsl:otherwise>
 						<xsl:value-of select="'false'"/>
 					</xsl:otherwise>
@@ -347,397 +357,76 @@
 				<xsl:value-of select="string($p_enableCopyCode)"/>
 			</xsl:attribute>
 			<xsl:choose>
-				<xsl:when test="starts-with(normalize-space($v_code),'@@_')">
+				<xsl:when test="starts-with(normalize-space(.),'@@_')">
 					<!-- MS Help Viewer has code to show the code colorized or plain.  We'll ignore their colorizer and insert our own colorized text later. -->
 					<xsl:element name="div">
 						<xsl:attribute name="class">
 							<xsl:value-of select="'code'"/>
 						</xsl:attribute>
-						<xsl:value-of select="$v_code"/>
+						<xsl:value-of select="."/>
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="$v_code"/>
+					<xsl:choose>
+						<xsl:when test="$p_translateCode">
+							<xsl:apply-templates mode="translateCode"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates mode="copyCode"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template name="t_putCodeSections">
-		<xsl:param name="p_codeNodes"/>
-		<xsl:param name="p_nodeCount"/>
-		<xsl:param name="p_codeLangAttr"
-							 select="'language'"/>
-		<xsl:param name="p_formatCode"
-							 select="true()"/>
-		<xsl:param name="p_enableCopyCode"
-							 select="true()"/>
+	<!-- ======================================================================================== -->
 
-		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
-			<xsl:variable name="v_codeLang">
-				<xsl:call-template name="t_codeLang">
-					<xsl:with-param name="p_codeLang">
-						<xsl:for-each select="@*">
-							<xsl:if test="name() = $p_codeLangAttr">
-								<xsl:value-of select="."/>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:with-param>
-				</xsl:call-template>
-			</xsl:variable>
-
-			<xsl:call-template name="t_putCodeSection">
-				<xsl:with-param name="p_codeLang"
-												select="$v_codeLang"/>
-				<xsl:with-param name="p_formatCode"
-												select="$p_formatCode"/>
-				<xsl:with-param name="p_enableCopyCode"
-												select="$p_enableCopyCode"/>
-			</xsl:call-template>
-		</xsl:for-each>
+	<xsl:template match="*"
+								mode="translateCode"
+								name="t_translateCodeElement">
+		<xsl:apply-templates/>
 	</xsl:template>
 
-	<!-- ============================================================================================
-	Code sections (direct to branded)
-	
-	The following templates bypass the content branding by formatting code sections directly to
-	the branded format.  They're not used in this presentation style, but they're available for
-	use in derived styles.
-	============================================================================================= -->
-
-	<xsl:template name="t_putCodeSectionBranded">
-		<xsl:param name="p_codeLang"
-							 select="@title"/>
-		<xsl:param name="p_codeTitle"
-							 select="@language"/>
-		<xsl:param name="p_formatCode"
-							 select="false()"/>
-		<xsl:param name="p_enableCopyCode"
-							 select="true()"/>
-
-		<xsl:variable name="sectionId">
-			<xsl:value-of select="generate-id()"/>
-		</xsl:variable>
-		<xsl:variable name="v_codeLangUnique">
-			<xsl:call-template name="t_codeLang">
-				<xsl:with-param name="p_codeLang"
-												select="$p_codeLang"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:variable name="v_codeLangName">
-			<xsl:choose>
-				<xsl:when test="(($v_codeLangUnique = 'other') or ($v_codeLangUnique = 'none')) and (normalize-space($p_codeTitle) != '')">
-					<xsl:value-of select="$p_codeTitle"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="t_codeLangName">
-						<xsl:with-param name="p_codeLang"
-														select="$v_codeLangUnique"/>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<div class="OH_clear"></div>
-		<a id="{$sectionId}_syntaxToggle">
-			<!---->
-		</a>
-		<div id="{$sectionId}"
-				 class="OH_CodeSnippetContainer">
-
-			<xsl:call-template name="t_putCodeTabsSolo">
-				<xsl:with-param name="sectionId"
-												select="$sectionId"/>
-				<xsl:with-param name="p_codeLangName"
-												select="$v_codeLangName"/>
-				<xsl:with-param name="p_enableCopyCode"
-												select="$p_enableCopyCode"/>
-			</xsl:call-template>
-
-			<div id="{$sectionId}_codecollection"
-					 class="OH_CodeSnippetContainerCodeCollection">
-				<div class="OH_CodeSnippetToolBar">
-					<div class="OH_CodeSnippetToolBarText">
-						<a id="{$sectionId}_copycode"
-							 href="javascript:CopyToClipboard('{$sectionId}','1')"
-							 title="Copy to Clipboard">Copy to Clipboard</a>
-						<a id="{$sectionId}_PrintText"
-							 class="OH_PrintText"
-							 href="javascript:Print('{$sectionId}','1')"
-							 title="Print">Print</a>
-					</div>
-				</div>
-
-				<xsl:call-template name="t_putCodeDiv">
-					<xsl:with-param name="sectionId"
-													select="$sectionId"/>
-					<xsl:with-param name="p_codeLang"
-													select="$v_codeLangUnique"/>
-					<xsl:with-param name="p_formatCode"
-													select="$p_formatCode"/>
-				</xsl:call-template>
-			</div>
-		</div>
+	<xsl:template match="text()"
+								mode="translateCode"
+								name="t_translateCodeText">
+		<xsl:call-template name="t_hardSpacedText"/>
 	</xsl:template>
 
-	<xsl:template name="t_putCodeSectionsBranded">
-		<xsl:param name="p_codeNodes"/>
-		<xsl:param name="p_nodeCount"/>
-		<xsl:param name="p_codeLangAttr"
-							 select="'language'"/>
-		<xsl:param name="p_formatCode"
-							 select="true()"/>
-		<xsl:param name="p_enableCopyCode"
-							 select="true()"/>
-
-		<xsl:variable name="sectionId">
-			<xsl:value-of select="generate-id()"/>
-		</xsl:variable>
-
-		<div class="OH_clear"></div>
-		<a id="{$sectionId}_syntaxToggle">
-			<!---->
-		</a>
-		<div id="{$sectionId}"
-				 class="OH_CodeSnippetContainer">
-
-			<div class="OH_CodeSnippetContainerTabs"
-					 id="{$sectionId}_tabs">
-				<div class="OH_CodeSnippetContainerTabLeftActive"
-						 id="{$sectionId}_tabimgleft"></div>
-
-				<xsl:call-template name="t_putCodeTabs">
-					<xsl:with-param name="sectionId"
-													select="$sectionId"/>
-					<xsl:with-param name="p_codeNodes"
-													select="$p_codeNodes"/>
-					<xsl:with-param name="p_nodeCount"
-													select="$p_nodeCount"/>
-					<xsl:with-param name="p_codeLangAttr"
-													select="$p_codeLangAttr"/>
-					<xsl:with-param name="p_enableCopyCode"
-													select="$p_enableCopyCode"/>
-				</xsl:call-template>
-				<div class="OH_CodeSnippetContainerTabRight"
-						 id="{$sectionId}_tabimgright"></div>
-			</div>
-
-			<div id="{$sectionId}_codecollection"
-					 class="OH_CodeSnippetContainerCodeCollection">
-				<div class="OH_CodeSnippetToolBar">
-					<div class="OH_CodeSnippetToolBarText">
-						<a id="{$sectionId}_copycode"
-							 href="javascript:CopyToClipboard('{$sectionId}','{$p_nodeCount}')"
-							 title="Copy to Clipboard"
-							 style="display: none">Copy to Clipboard</a>
-						<a id="{$sectionId}_PrintText"
-							 class="OH_PrintText"
-							 href="javascript:Print('{$sectionId}','{$p_nodeCount}')"
-							 title="Print">Print</a>
-					</div>
-				</div>
-
-				<xsl:call-template name="t_putCodeDivs">
-					<xsl:with-param name="sectionId"
-													select="$sectionId"/>
-					<xsl:with-param name="p_codeNodes"
-													select="$p_codeNodes"/>
-					<xsl:with-param name="p_nodeCount"
-													select="$p_nodeCount"/>
-					<xsl:with-param name="p_codeLangAttr"
-													select="$p_codeLangAttr"/>
-					<xsl:with-param name="p_formatCode"
-													select="$p_formatCode"/>
-				</xsl:call-template>
-			</div>
-		</div>
+	<xsl:template match="code|pre|div"
+								mode="translateCode"
+								name="t_translateCodeContainer">
+		<xsl:apply-templates select="node()"
+												 mode="translateCode"/>
 	</xsl:template>
 
-	<xsl:template name="t_putCodeTabsSolo">
-		<xsl:param name="sectionId"/>
-		<xsl:param name="p_codeLangName"/>
-		<xsl:param name="p_enableCopyCode"
-							 select="true()"/>
+	<!-- ======================================================================================== -->
 
-		<div class="OH_CodeSnippetContainerTabs"
-				 id="{$sectionId}_tabs">
-			<div class="OH_CodeSnippetContainerTabLeftActive"
-					 id="{$sectionId}_tabimgleft"></div>
-			<div id="{$sectionId}_tab1"
-					 class="OH_CodeSnippetContainerTabSolo"
-					 EnableCopyCode="{$p_enableCopyCode}">
-				<a href="#">
-					<xsl:value-of select="$p_codeLangName"/>
-				</a>
-			</div>
-			<div class="OH_CodeSnippetContainerTabRightActive"
-					 id="{$sectionId}_tabimgright"></div>
-		</div>
-	</xsl:template>
-
-	<xsl:template name="t_putCodeTabs">
-		<xsl:param name="sectionId"/>
-		<xsl:param name="p_codeNodes"/>
-		<xsl:param name="p_nodeCount"/>
-		<xsl:param name="p_codeLangAttr"
-							 select="'language'"/>
-		<xsl:param name="p_enableCopyCode"
-							 select="true()"/>
-
-		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
-			<xsl:variable name="nodeIndex"
-										select="position()"/>
-			<xsl:variable name="v_codeLang">
-				<xsl:call-template name="t_codeLang">
-					<xsl:with-param name="p_codeLang">
-						<xsl:for-each select="@*">
-							<xsl:if test="name() = $p_codeLangAttr">
-								<xsl:value-of select="."/>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:with-param>
-				</xsl:call-template>
-			</xsl:variable>
-
-			<xsl:variable name="v_isCodeLangValid">
-				<xsl:call-template name="t_isCodeLangValid">
-					<xsl:with-param name="p_codeLang"
-													select="$v_codeLang"/>
-				</xsl:call-template>
-			</xsl:variable>
-			<xsl:variable name="v_codeTitle"
-										select="@title"/>
-			<xsl:variable name="v_codeLangName">
-				<xsl:choose>
-					<xsl:when test="(($v_codeLang = 'other') or ($v_codeLang = 'none')) and (normalize-space($v_codeTitle) != '')">
-						<xsl:value-of select="$v_codeTitle"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="t_codeLangName">
-							<xsl:with-param name="p_codeLang"
-															select="$v_codeLang"/>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:variable name="v_codeLangTitle">
-				<xsl:choose>
-					<xsl:when test="(($v_codeLang = 'other') or ($v_codeLang = 'none')) and (normalize-space($v_codeTitle) != '')">
-						<xsl:value-of select="$v_codeTitle"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="t_codeLangTitle">
-							<xsl:with-param name="p_codeLang"
-															select="$v_codeLang"/>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-
-			<xsl:variable name="v_tabClass">
-				<xsl:choose>
-					<xsl:when test="$nodeIndex = 1">
-						<xsl:text>OH_CodeSnippetContainerTabActive</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>OH_CodeSnippetContainerTab</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-
-			<div id="{$sectionId}_tab{$nodeIndex}"
-					 class="{$v_tabClass}"
-					 EnableCopyCode="{$p_enableCopyCode}">
-				<a href="javascript:ChangeTab('{$sectionId}','{$v_codeLangTitle}','{$nodeIndex}','{$p_nodeCount}')">
-					<xsl:value-of select="$v_codeLangName"/>
-				</a>
-			</div>
-		</xsl:for-each>
-	</xsl:template>
-
-	<xsl:template name="t_putCodeDiv">
-		<xsl:param name="sectionId"/>
-		<xsl:param name="p_codeLang"/>
-		<xsl:param name="p_codeDivIndex"
-							 select="1"/>
-		<xsl:param name="p_formatCode"
-							 select="true()"/>
-
-		<xsl:variable name="v_isCodeLangValid">
-			<xsl:call-template name="t_isCodeLangValid">
-				<xsl:with-param name="p_codeLang"
-												select="$p_codeLang"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:variable name="v_codeHidden">
-			<xsl:if test="$p_codeDivIndex &gt; 1">
-				<xsl:value-of select="'display: none'"/>
+	<xsl:template match="*"
+								mode="copyCode"
+								name="t_copyCodeElement">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<xsl:apply-templates select="node()"
+													 mode="copyCode"/>
+			<xsl:if test="not(node()) and not(self::xhtml:br) and not(self::xhtml:hr)">
+				<xsl:value-of select="''"/>
 			</xsl:if>
-		</xsl:variable>
-
-		<div id="{$sectionId}_code_Div{$p_codeDivIndex}"
-				 class="OH_CodeSnippetContainerCode"
-				 style="{$v_codeHidden}">
-			<div class="code">
-				<xsl:choose>
-					<xsl:when test="substring(normalize-space(.),1,8)='@@_SHFB_'">
-						<!-- MS Help Viewer has code to show the code colorized or plain.  We'll ignore their colorizer and insert our own colorized text -->
-						<pre xml:space="preserve"><xsl:text/><xsl:value-of select="."/><xsl:text/></pre>
-					</xsl:when>
-					<xsl:when test="$p_formatCode">
-						<pre xml:space="preserve"><xsl:text/><xsl:apply-templates/><xsl:text/></pre>
-					</xsl:when>
-					<xsl:otherwise>
-						<pre xml:space="preserve"><xsl:text/><xsl:copy-of select="."/><xsl:text/></pre>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-		</div>
-		<!-- The hidden plain (uncolorized) text is for copying to the clipboard and printing -->
-		<div id="{$sectionId}_code_Plain_Div{$p_codeDivIndex}"
-				 class="OH_CodeSnippetContainerCode"
-				 style="display: none">
-			<div class="code">
-				<!-- Leave it empty - it is filled in by the MSHCComponent -->
-				<pre xml:space="preserve"><xsl:text/></pre>
-			</div>
-		</div>
-
+		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template name="t_putCodeDivs">
-		<xsl:param name="sectionId"/>
-		<xsl:param name="p_codeNodes"/>
-		<xsl:param name="p_nodeCount"/>
-		<xsl:param name="p_codeLangAttr"
-							 select="'language'"/>
-		<xsl:param name="p_formatCode"
-							 select="true()"/>
+	<xsl:template match="text()"
+								mode="copyCode"
+								name="t_copyCodeText">
+		<xsl:call-template name="t_hardSpacedText"/>
+	</xsl:template>
 
-		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
-			<xsl:variable name="v_codeLang">
-				<xsl:call-template name="t_codeLang">
-					<xsl:with-param name="p_codeLang">
-						<xsl:for-each select="@*">
-							<xsl:if test="name() = $p_codeLangAttr">
-								<xsl:value-of select="."/>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:with-param>
-				</xsl:call-template>
-			</xsl:variable>
-
-			<xsl:call-template name="t_putCodeDiv">
-				<xsl:with-param name="sectionId"
-												select="$sectionId"/>
-				<xsl:with-param name="p_codeLang"
-												select="$v_codeLang"/>
-				<xsl:with-param name="p_formatCode"
-												select="$p_formatCode"/>
-				<xsl:with-param name="p_codeDivIndex"
-												select="position()"/>
-			</xsl:call-template>
-		</xsl:for-each>
+	<xsl:template match="code|pre|div"
+								mode="copyCode"
+								name="t_copyCodeContainer">
+		<xsl:apply-templates select="node()"
+												 mode="copyCode"/>
 	</xsl:template>
 
 </xsl:stylesheet>

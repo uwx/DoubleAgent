@@ -262,7 +262,7 @@
 				<xsl:when test="msxsl:node-set($snippetCode)/*">
 					<xsl:variable name="spacedSnippetCode">
 						<xsl:apply-templates select="msxsl:node-set($snippetCode)/node()"
-																 mode="code-spacing"/>
+																 mode="codeSpacing"/>
 					</xsl:variable>
 					<xsl:choose>
 						<xsl:when test="$plainCode='true'">
@@ -306,16 +306,30 @@
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template match="node()"
-								mode="code-spacing">
+	<xsl:template match="*"
+								mode="codeSpacing"
+								name="codeSpacingElement">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:apply-templates select="node()"
-													 mode="code-spacing"/>
+													 mode="codeSpacing"/>
+			<xsl:if test="not(node()) and not(self::xhtml:br) and not(self::xhtml:hr)">
+				<xsl:value-of select="''"/>
+			</xsl:if>
 		</xsl:copy>
-		<xsl:if test="self::xhtml:span and following-sibling::node()[1]/self::xhtml:span and not(normalize-space(.)='') and not(normalize-space(following-sibling::node()[1])='')">
-			<xsl:text>&#160;</xsl:text>
-		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="text()"
+								mode="codeSpacing"
+								name="codeSpacingText">
+		<xsl:choose>
+			<xsl:when test=".=' ' or .='&#160;'">
+				<xsl:text xml:space="preserve">&#160;</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ============================================================================================

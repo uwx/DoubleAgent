@@ -84,6 +84,20 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- translate single spaces to single hard-spaces -->
+	<xsl:template match="text()"
+								mode="hardSpaced"
+								name="t_hardSpacedText">
+		<xsl:choose>
+			<xsl:when test=".=' ' or .='&#160;'">
+				<xsl:text xml:space="preserve">&#160;</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<!-- ============================================================================================
 	LanguageSpecific text
 

@@ -11,7 +11,15 @@
 >
 	<!-- ======================================================================================== -->
 
+	<xsl:import href="xpathFunctions.xsl" />
+	<xsl:import href="globalTemplates.xsl"/>
+	<xsl:import href="codeTemplates.xsl"/>
+	<xsl:import href="utilities_dduexml.xsl" />
+	<xsl:import href="seealso_dduexml.xsl" />
+	<xsl:import href="conceptualMetadataHelp30.xsl"/>
+	<xsl:import href="conceptualMetadataHelp20.xsl"/>
 	<xsl:import href="../../shared/transforms/utilities_bibliography.xsl"/>
+
 	<xsl:output method="xml"
 							omit-xml-declaration="yes"
 							indent="no"
@@ -29,29 +37,11 @@
 	<xsl:param name="changeHistoryOptions" />
 
 	<!-- ============================================================================================
-	Includes
-	============================================================================================= -->
-
-	<xsl:include href="xpathFunctions.xsl" />
-	<xsl:include href="utilities_dduexml.xsl" />
-	<xsl:include href="seealso_dduexml.xsl" />
-	<xsl:include href="conceptualMetadataHelp30.xsl"/>
-	<xsl:include href="conceptualMetadataHelp20.xsl"/>
-	<xsl:include href="codeTemplates.xsl"/>
-	<xsl:include href="globalTemplates.xsl"/>
-
-	<!-- ============================================================================================
 	Global Variables
 	============================================================================================= -->
 
 	<xsl:variable name="g_hasSeeAlsoSection"
 								select="boolean(count(/document/topic/*/ddue:relatedTopics/*[local-name()!='sampleRef']) > 0)"/>
-	<!--<xsl:variable name="g_hasExamplesSection"
-								select="boolean(string-length(/document/topic/*/ddue:codeExample[normalize-space(.)]) > 0)"/>-->
-	<!--<xsl:variable name="g_hasLanguageFilterSection"
-								select="normalize-space(/document/topic/*/ddue:codeExample) 
-                or normalize-space(/document/topic/*//ddue:snippets/ddue:snippet)
-                or /document/topic/ddue:developerSampleDocument/ddue:relatedTopics/ddue:sampleRef[@srcID]" />-->
 
 	<xsl:variable name="g_apiGroup"
 								select="/document/reference/apidata/@group" />
@@ -154,8 +144,8 @@
 
 	<xsl:template name="t_body">
 		<!-- freshness date -->
-		<xsl:call-template name="writeFreshnessDate">
-			<xsl:with-param name="ChangedHistoryDate"
+		<xsl:call-template name="t_writeFreshnessDate">
+			<xsl:with-param name="p_changedHistoryDate"
 											select="/document/topic/*//ddue:section[ddue:title = 'Change History']/ddue:content/ddue:table/ddue:row[1]/ddue:entry[1] |
                       /document/topic/*/ddue:changeHistory/ddue:content/ddue:table/ddue:row[1]/ddue:entry[1]" />
 		</xsl:call-template>
@@ -163,7 +153,7 @@
 		<xsl:apply-templates select="topic" />
 
 		<!-- changed table section -->
-		<xsl:call-template name="writeChangeHistorySection" />
+		<xsl:call-template name="t_writeChangeHistorySection" />
 	</xsl:template>
 
 	<!-- sections that behave differently in conceptual and reference -->

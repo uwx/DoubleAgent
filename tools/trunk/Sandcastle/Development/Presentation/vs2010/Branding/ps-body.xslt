@@ -13,14 +13,14 @@
 	<xsl:template match="xhtml:body"
 								name="ps-body">
 		<xsl:copy>
-			<xsl:if test="not(boolean($pre-branding))">
+			<xsl:if test="not($pre-branding)">
 				<xsl:attribute name="onload">onLoad()</xsl:attribute>
 				<xsl:attribute name="class">OH_body</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select="@*"/>
 
 			<xsl:choose>
-				<xsl:when test="not(boolean($pre-branding))">
+				<xsl:when test="not($pre-branding)">
 					<xsl:if test="not($downscale-browser)">
 						<xsl:element name="span"
 												 namespace="{$xhtml}">
@@ -79,7 +79,7 @@
 								name="ps-img">
 		<xsl:copy>
 			<xsl:choose>
-				<xsl:when test="not(boolean($pre-branding))">
+				<xsl:when test="not($pre-branding)">
 					<xsl:for-each select="@*">
 						<xsl:choose>
 							<xsl:when test="name()='src'">

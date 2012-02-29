@@ -11,6 +11,13 @@
     >
 	<!-- ======================================================================================== -->
 
+	<xsl:import href="xpathFunctions.xsl" />
+	<xsl:import href="globalTemplates.xsl"/>
+	<xsl:import href="codeTemplates.xsl"/>
+	<xsl:import href="utilities_reference.xsl" />
+	<xsl:import href="utilities_dduexml.xsl" />
+	<xsl:import href="seealso_dduexml.xsl"/>
+
 	<xsl:output method="xml"
 							omit-xml-declaration="yes"
 							indent="no"
@@ -28,22 +35,9 @@
 						 select="'false'" />
 
 	<!-- ============================================================================================
-	Includes
-	============================================================================================= -->
-
-	<xsl:include href="xpathFunctions.xsl" />
-	<xsl:include href="utilities_reference.xsl" />
-	<xsl:include href="utilities_dduexml.xsl" />
-	<xsl:include href="seealso_dduexml.xsl"/>
-	<xsl:include href="codeTemplates.xsl"/>
-	<xsl:include href="globalTemplates.xsl"/>
-
-	<!-- ============================================================================================
 	Global Variables
 	============================================================================================= -->
 
-	<!--<xsl:variable name="g_summary"
-								select="normalize-space(/document/comments/ddue:dduexml/ddue:summary)" />-->
 	<xsl:variable name="g_abstractSummary">
 		<xsl:for-each select="/document/comments/ddue:dduexml/ddue:summary">
 			<xsl:apply-templates select="."
@@ -55,10 +49,6 @@
                            (count(/document/comments/ddue:dduexml/ddue:relatedTopics/*) > 0)  or 
                            ($g_apiTopicGroup='type' or $g_apiTopicGroup='member' or $g_apiTopicGroup='list')
                         )"/>
-	<!--<xsl:variable name="g_hasExamplesSection"
-								select="boolean(string-length(/document/comments/ddue:dduexml/ddue:codeExamples[normalize-space(.)]) > 0) and not($g_hasSecurityCriticalSection)"/>-->
-	<!--<xsl:variable name="g_hasLanguageFilterSection"
-								select="boolean(string-length(/document/comments/ddue:dduexml/ddue:codeExamples[normalize-space(.)]) > 0)" />-->
 	<xsl:variable name="g_hasSecurityCriticalSection"
 								select="boolean(
                           (/document/reference/attributes/attribute/type[@api='T:System.Security.SecurityCriticalAttribute'] and
@@ -85,8 +75,8 @@
 
 	<xsl:template name="t_body">
 		<!-- freshness date -->
-		<xsl:call-template name="writeFreshnessDate">
-			<xsl:with-param name="ChangedHistoryDate"
+		<xsl:call-template name="t_writeFreshnessDate">
+			<xsl:with-param name="p_changedHistoryDate"
 											select="/document/comments/ddue:dduexml//ddue:section[ddue:title = 'Change History']/ddue:content/ddue:table/ddue:row[1]/ddue:entry[1] | 
                       /document/comments/ddue:dduexml/ddue:changeHistory/ddue:content/ddue:table/ddue:row[1]/ddue:entry[1]"/>
 		</xsl:call-template>
@@ -298,7 +288,7 @@
 		<xsl:call-template name="t_putSeeAlsoSection"/>
 
 		<!-- changed table section -->
-		<xsl:call-template name="writeChangeHistorySection" />
+		<xsl:call-template name="t_writeChangeHistorySection" />
 
 	</xsl:template>
 

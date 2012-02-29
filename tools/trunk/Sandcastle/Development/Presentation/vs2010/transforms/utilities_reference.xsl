@@ -11,6 +11,9 @@
     >
 	<!-- ======================================================================================== -->
 
+	<xsl:import href="metadataHelp30.xsl" />
+	<xsl:import href="metadataHelp20.xsl"/>
+	<xsl:import href="xamlSyntax.xsl"/>
 	<xsl:import href="../../shared/transforms/utilities_reference.xsl"/>
 
 	<!-- ============================================================================================
@@ -21,14 +24,6 @@
 	<xsl:param name="metadata">false</xsl:param>
 	<xsl:param name="languages">false</xsl:param>
 	<xsl:param name="componentizeBy">namespace</xsl:param>
-
-	<!-- ============================================================================================
-	Includes
-	============================================================================================= -->
-
-	<xsl:include href="metadataHelp30.xsl" />
-	<xsl:include href="metadataHelp20.xsl"/>
-	<xsl:include href="xamlSyntax.xsl"/>
 
 	<!-- ============================================================================================
 	Global Variables
@@ -91,7 +86,7 @@
 		</xsl:choose>
 	</xsl:variable>
 
-	<xsl:variable name="namespaceName"
+	<xsl:variable name="g_namespaceName"
 								select="/document/reference/containers/namespace/apidata/@name" />
 
 	<!-- ============================================================================================

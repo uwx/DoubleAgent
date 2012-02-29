@@ -29,7 +29,7 @@
 		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackAlias">
-		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:xml/xhtml:string[@id='BrandingFeedbackAlias']"/>
+		<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackAlias']"/>
 	</xsl:variable>
 	<xsl:variable name="ft_feedbackText"
 								select="/xhtml:html/xhtml:head/xhtml:xml/xhtml:string[@id='BrandingFeedbackText']/child::node()"/>

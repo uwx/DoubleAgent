@@ -13,23 +13,33 @@
 	<xsl:import href="head.xslt"/>
 
 	<xsl:template match="xhtml:head"
-								name="ps-head-self">
+								name="ps-head">
 		<xsl:copy>
 			<xsl:call-template name="head-favicon"/>
-			<xsl:if test="not(boolean($pre-branding))">
+			<xsl:if test="not($pre-branding)">
 				<xsl:call-template name="head-stylesheet"/>
 			</xsl:if>
 			<xsl:call-template name="head-style-urls"/>
 			<xsl:if test="$downscale-browser">
 				<xsl:call-template name="head-style-adjustments"/>
 			</xsl:if>
-			<xsl:if test="not(boolean($pre-branding))">
+			<xsl:if test="not($pre-branding)">
 				<xsl:call-template name="head-script"/>
 			</xsl:if>
 
 			<xsl:apply-templates select="@*"/>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="xhtml:head//xhtml:meta"
+								name="ps-head-meta">
+		<xsl:copy-of select="."/>
+	</xsl:template>
+
+	<xsl:template match="xhtml:head//xhtml:xml"
+								name="ps-head-xml">
+		<xsl:copy-of select="."/>
 	</xsl:template>
 
 	<!-- Remove branding data from the header - it's no longer required -->

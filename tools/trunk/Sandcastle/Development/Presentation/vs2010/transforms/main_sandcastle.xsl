@@ -4,7 +4,12 @@
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5">
 	<!-- ======================================================================================== -->
 
+	<xsl:import href="xpathFunctions.xsl" />
+	<xsl:import href="globalTemplates.xsl"/>
+	<xsl:import href="codeTemplates.xsl"/>
+	<xsl:import href="utilities_reference.xsl" />
 	<xsl:import href="../../shared/transforms/utilities_bibliography.xsl"/>
+
 	<xsl:output method="xml"
 							omit-xml-declaration="yes"
 							indent="no"
@@ -22,29 +27,14 @@
 						 select="'false'" />
 
 	<!-- ============================================================================================
-	Includes
-	============================================================================================= -->
-
-	<xsl:include href="xpathFunctions.xsl" />
-	<xsl:include href="utilities_reference.xsl" />
-	<xsl:include href="codeTemplates.xsl"/>
-	<xsl:include href="globalTemplates.xsl"/>
-
-	<!-- ============================================================================================
 	Global Variables
 	============================================================================================= -->
 
-	<!--<xsl:variable name="g_summary"
-								select="normalize-space(/document/comments/summary)" />-->
 	<xsl:variable name="g_abstractSummary"
 								select="/document/comments/summary" />
 	<xsl:variable name="g_hasSeeAlsoSection"
 								select="boolean((count(/document/comments//seealso | /document/reference/elements/element/overloads//seealso) > 0)  or 
                            ($g_apiTopicGroup='type' or $g_apiTopicGroup='member' or $g_apiTopicGroup='list'))"/>
-	<!--<xsl:variable name="g_hasExamplesSection"
-								select="boolean(string-length(/document/comments/example[normalize-space(.)]) > 0)"/>-->
-	<!--<xsl:variable name="g_hasLanguageFilterSection"
-								select="boolean(string-length(/document/comments/example[normalize-space(.)]) > 0)" />-->
 
 	<!-- ============================================================================================
 	Body
@@ -506,7 +496,7 @@
 								<xsl:with-param name="p_content">
 									<xsl:if test="$getterRequires">
 										<xsl:call-template name="contractsTable">
-											<xsl:with-param name="title">
+											<xsl:with-param name="p_title">
 												<include item="requiresNameHeader"/>
 											</xsl:with-param>
 											<xsl:with-param name="contracts"
@@ -515,7 +505,7 @@
 									</xsl:if>
 									<xsl:if test="$getterEnsures">
 										<xsl:call-template name="contractsTable">
-											<xsl:with-param name="title">
+											<xsl:with-param name="p_title">
 												<include item="ensuresNameHeader"/>
 											</xsl:with-param>
 											<xsl:with-param name="contracts"
@@ -524,7 +514,7 @@
 									</xsl:if>
 									<xsl:if test="$getterEnsuresOnThrow">
 										<xsl:call-template name="contractsTable">
-											<xsl:with-param name="title">
+											<xsl:with-param name="p_title">
 												<include item="ensuresOnThrowNameHeader"/>
 											</xsl:with-param>
 											<xsl:with-param name="contracts"
@@ -548,7 +538,7 @@
 								<xsl:with-param name="p_content">
 									<xsl:if test="$setterRequires">
 										<xsl:call-template name="contractsTable">
-											<xsl:with-param name="title">
+											<xsl:with-param name="p_title">
 												<include item="requiresNameHeader"/>
 											</xsl:with-param>
 											<xsl:with-param name="contracts"
@@ -557,7 +547,7 @@
 									</xsl:if>
 									<xsl:if test="$setterEnsures">
 										<xsl:call-template name="contractsTable">
-											<xsl:with-param name="title">
+											<xsl:with-param name="p_title">
 												<include item="ensuresNameHeader"/>
 											</xsl:with-param>
 											<xsl:with-param name="contracts"
@@ -566,7 +556,7 @@
 									</xsl:if>
 									<xsl:if test="$setterEnsuresOnThrow">
 										<xsl:call-template name="contractsTable">
-											<xsl:with-param name="title">
+											<xsl:with-param name="p_title">
 												<include item="ensuresOnThrowNameHeader"/>
 											</xsl:with-param>
 											<xsl:with-param name="contracts"
@@ -578,7 +568,7 @@
 						</xsl:if>
 						<xsl:if test="$requires">
 							<xsl:call-template name="contractsTable">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="requiresNameHeader"/>
 								</xsl:with-param>
 								<xsl:with-param name="contracts"
@@ -587,7 +577,7 @@
 						</xsl:if>
 						<xsl:if test="$ensures">
 							<xsl:call-template name="contractsTable">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="ensuresNameHeader"/>
 								</xsl:with-param>
 								<xsl:with-param name="contracts"
@@ -596,7 +586,7 @@
 						</xsl:if>
 						<xsl:if test="$ensuresOnThrow">
 							<xsl:call-template name="contractsTable">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="ensuresOnThrowNameHeader"/>
 								</xsl:with-param>
 								<xsl:with-param name="contracts"
@@ -605,7 +595,7 @@
 						</xsl:if>
 						<xsl:if test="$invariants">
 							<xsl:call-template name="contractsTable">
-								<xsl:with-param name="title">
+								<xsl:with-param name="p_title">
 									<include item="invariantsNameHeader"/>
 								</xsl:with-param>
 								<xsl:with-param name="contracts"
@@ -631,12 +621,12 @@
 	</xsl:template>
 
 	<xsl:template name="contractsTable">
-		<xsl:param name="title"/>
+		<xsl:param name="p_title"/>
 		<xsl:param name="contracts"/>
 		<table>
 			<tr>
 				<th class="contractsNameColumn">
-					<xsl:copy-of select="$title"/>
+					<xsl:copy-of select="$p_title"/>
 				</th>
 			</tr>
 			<xsl:for-each select="$contracts">
@@ -893,14 +883,14 @@
 	</xsl:template>
 
 	<xsl:template match="see[@href]">
-		<xsl:call-template name="hyperlink">
+		<xsl:call-template name="t_hyperlink">
 			<xsl:with-param name="p_content"
 											select="."/>
-			<xsl:with-param name="href"
+			<xsl:with-param name="p_href"
 											select="@href"/>
-			<xsl:with-param name="target"
+			<xsl:with-param name="p_target"
 											select="@target"/>
-			<xsl:with-param name="alt"
+			<xsl:with-param name="p_alt"
 											select="@alt"/>
 		</xsl:call-template>
 	</xsl:template>
@@ -935,14 +925,14 @@
 		<xsl:param name="displaySeeAlso"
 							 select="false()" />
 		<xsl:if test="$displaySeeAlso">
-			<xsl:call-template name="hyperlink">
+			<xsl:call-template name="t_hyperlink">
 				<xsl:with-param name="p_content"
 												select="."/>
-				<xsl:with-param name="href"
+				<xsl:with-param name="p_href"
 												select="@href"/>
-				<xsl:with-param name="target"
+				<xsl:with-param name="p_target"
 												select="@target"/>
-				<xsl:with-param name="alt"
+				<xsl:with-param name="p_alt"
 												select="@alt"/>
 			</xsl:call-template>
 		</xsl:if>
@@ -969,49 +959,49 @@
 
 	<!-- ======================================================================================== -->
 
-	<xsl:template name="hyperlink">
+	<xsl:template name="t_hyperlink">
 		<xsl:param name="p_content"/>
-		<xsl:param name="href"/>
-		<xsl:param name="target"/>
-		<xsl:param name="alt"/>
+		<xsl:param name="p_href"/>
+		<xsl:param name="p_target"/>
+		<xsl:param name="p_alt"/>
 
 		<a>
 			<xsl:choose>
-				<xsl:when test="starts-with($href,'ms.help?')">
+				<xsl:when test="starts-with($p_href,'ms.help?')">
 					<xsl:attribute name="class">
 						mtps-internal-link
 					</xsl:attribute>
 				</xsl:when>
-				<xsl:when test="starts-with($href,'http:')">
+				<xsl:when test="starts-with($p_href,'http:')">
 					<xsl:attribute name="class">
 						mtps-external-link
 					</xsl:attribute>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:attribute name="href">
-				<xsl:value-of select="$href"/>
+				<xsl:value-of select="$p_href"/>
 			</xsl:attribute>
 			<xsl:choose>
-				<xsl:when test="normalize-space($target)">
+				<xsl:when test="normalize-space($p_target)">
 					<xsl:attribute name="target">
-						<xsl:value-of select="normalize-space($target)"/>
+						<xsl:value-of select="normalize-space($p_target)"/>
 					</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:attribute name="target">_blank</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:if test="normalize-space($alt)">
+			<xsl:if test="normalize-space($p_alt)">
 				<xsl:attribute name="title">
-					<xsl:value-of select="normalize-space($alt)"/>
+					<xsl:value-of select="normalize-space($p_alt)"/>
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>
-				<xsl:when test="normalize-space($content)">
-					<xsl:value-of select="$content" />
+				<xsl:when test="normalize-space($p_content)">
+					<xsl:value-of select="$p_content" />
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="$href" />
+					<xsl:value-of select="$p_href" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</a>
@@ -1020,7 +1010,7 @@
 	<!-- ======================================================================================== -->
 
 	<xsl:template match="note">
-		<xsl:variable name="title">
+		<xsl:variable name="v_title">
 			<xsl:choose>
 				<xsl:when test="@type='note'">
 					<xsl:text>noteTitle</xsl:text>
@@ -1063,7 +1053,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="altTitle">
+		<xsl:variable name="v_altTitle">
 			<xsl:choose>
 				<xsl:when test="@type='note' or @type='implement' or @type='caller' or @type='inherit'">
 					<xsl:text>noteAltText</xsl:text>
@@ -1097,7 +1087,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="noteImg">
+		<xsl:variable name="v_noteImg">
 			<xsl:choose>
 				<xsl:when test="@type='note' or @type='tip' or @type='implement' or @type='caller' or @type='inherit'">
 					<xsl:text>alert_note.gif</xsl:text>
@@ -1136,14 +1126,14 @@
 							<includeAttribute item="iconPath"
 																name="src">
 								<parameter>
-									<xsl:value-of select="$noteImg"/>
+									<xsl:value-of select="$v_noteImg"/>
 								</parameter>
 							</includeAttribute>
 							<includeAttribute name="alt"
-																item="{$altTitle}" />
+																item="{$v_altTitle}" />
 						</img>
 						<xsl:text> </xsl:text>
-						<include item="{$title}" />
+						<include item="{$v_title}" />
 					</th>
 				</tr>
 				<tr>

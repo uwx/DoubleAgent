@@ -217,7 +217,7 @@
 					</xsl:call-template>
 				</parameter>
 				<parameter>
-					<xsl:value-of select="$namespaceName"/>
+					<xsl:value-of select="$g_namespaceName"/>
 				</parameter>
 			</includeAttribute>
 		</MSHelp:RLTitle>
@@ -372,7 +372,7 @@
 			<!-- Overload topic -->
 			<xsl:when test="/document/reference/topicdata[@subgroup='overload']">
 				<xsl:variable name="v_FrlrfBaseId">
-					<xsl:value-of select="translate(concat('frlrf', $namespaceName, $v_FrlrfTypeName, 'Class', $v_memberName, 'Topic'),'.','')"/>
+					<xsl:value-of select="translate(concat('frlrf', $g_namespaceName, $v_FrlrfTypeName, 'Class', $v_memberName, 'Topic'),'.','')"/>
 				</xsl:variable>
 				<MSHelp:Keyword Index="A"
 												Term="{$v_FrlrfBaseId}"/>
@@ -394,19 +394,19 @@
 					</xsl:choose>
 				</xsl:variable>
 				<MSHelp:Keyword Index="A"
-												Term="{translate(concat('frlrf', $namespaceName, $v_FrlrfTypeName, $v_memberListSubgroup, 'Topic'),'.','')}"/>
+												Term="{translate(concat('frlrf', $g_namespaceName, $v_FrlrfTypeName, $v_memberListSubgroup, 'Topic'),'.','')}"/>
 			</xsl:when>
 			<!-- type topic -->
 			<xsl:when test="/document/reference/apidata[@group='type']">
 				<MSHelp:Keyword Index="A"
-												Term="{translate(concat('frlrf',$namespaceName, $v_FrlrfTypeName, 'ClassTopic'),'.','')}"/>
+												Term="{translate(concat('frlrf',$g_namespaceName, $v_FrlrfTypeName, 'ClassTopic'),'.','')}"/>
 			</xsl:when>
 			<!-- no frlrf ID for overload signature topics-->
 			<xsl:when test="/document/reference/apidata[@group='member'] and /document/reference/memberdata/@overload"/>
 			<!-- non-overload member topic -->
 			<xsl:when test="/document/reference/apidata[@group='member']">
 				<MSHelp:Keyword Index="A"
-												Term="{translate(concat('frlrf',$namespaceName, $v_FrlrfTypeName, 'Class', $v_memberName, 'Topic'),'.','')}"/>
+												Term="{translate(concat('frlrf',$g_namespaceName, $v_FrlrfTypeName, 'Class', $v_memberName, 'Topic'),'.','')}"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>

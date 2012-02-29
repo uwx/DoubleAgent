@@ -182,12 +182,22 @@
 
 	<xsl:template match="xhtml:base"
 								name="branding-base"/>
+
 	<xsl:template match="xhtml:link[@rel='stylesheet']"
 								name="branding-stylesheet">
-		<xsl:copy-of select="."/>
+		<xsl:if test="$self-branded != 'false'">
+			<xsl:copy-of select="."/>
+		</xsl:if>
 	</xsl:template>
 	<xsl:template match="xhtml:script"
-								name="branding-script"/>
+								name="branding-script">
+		<xsl:if test="$self-branded != 'false'">
+			<xsl:copy>
+				<xsl:copy-of select="@*"/>
+				<xsl:comment/>
+			</xsl:copy>
+		</xsl:if>
+	</xsl:template>
 
 	<xsl:template match="mtps:MemberLink"
 								name="branding-MemberLink"/>
@@ -205,11 +215,11 @@
 		<xsl:param name="ref"
 							 select="@href|@src"/>
 		<xsl:choose>
-			<xsl:when test="not(boolean($pre-branding))">
-				<xsl:value-of select="concat($BrandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
+			<xsl:when test="$pre-branding">
+				<xsl:value-of select="$ref"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="$ref"/>
+				<xsl:value-of select="concat($BrandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
