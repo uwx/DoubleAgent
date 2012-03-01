@@ -8,6 +8,10 @@
 >
 	<!-- ======================================================================================== -->
 
+	<xsl:import href="globalTemplates.xsl"/>
+
+	<!-- ======================================================================================== -->
+
 	<xsl:template name="t_insertMetadataHelp30">
 
 		<!-- System.Language -->
@@ -81,7 +85,7 @@
 
 		<xsl:variable name="v_contentTypeTopicType">
 			<xsl:variable name="lookupValue">
-				<xsl:value-of select="translate(/document/metadata/topicType/@id, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+				<xsl:value-of select="translate(/document/metadata/topicType/@id, $g_allLowerCaseLetters, $g_allUpperCaseLetters)"/>
 			</xsl:variable>
 			<xsl:value-of select="msxsl:node-set($g_topicTypes)/topic[@guid = $lookupValue]/text()"/>
 		</xsl:variable>
@@ -122,7 +126,7 @@
 
 		<!-- authored K -->
 		<xsl:variable name="v_docset"
-									select="translate(/document/metadata/attribute[@name='DocSet'][1]/text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz ')"/>
+									select="translate(/document/metadata/attribute[@name='DocSet'][1]/text(),$g_allUpperCaseLetters,'abcdefghijklmnopqrstuvwxyz ')"/>
 		<xsl:for-each select="/document/metadata/keyword[@index='K']">
 			<xsl:variable name="v_nestedKeywordText">
 				<xsl:call-template name="t_nestedKeywordText"/>

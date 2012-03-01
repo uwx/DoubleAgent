@@ -272,12 +272,10 @@
 															disable-output-escaping="yes"/>
 							</xsl:element>
 						</xsl:when>
-						<xsl:when test="msxsl:node-set($snippetCode)/node()[1]/self::xhtml:pre">
-							<xsl:copy-of select="$spacedSnippetCode"/>
-						</xsl:when>
 						<xsl:otherwise>
 							<xsl:element name="pre"
 													 namespace="{$xhtml}">
+								<xsl:attribute name="style">white-space:nowrap;word-wrap:normal;</xsl:attribute>
 								<xsl:copy-of select="$spacedSnippetCode"/>
 							</xsl:element>
 						</xsl:otherwise>
@@ -285,38 +283,51 @@
 				</xsl:when>
 				<!-- Otherwise it's only text -->
 				<xsl:otherwise>
-					<xsl:element name="pre"
-											 namespace="{$xhtml}">
-						<xsl:choose>
-							<xsl:when test="$plainCode='true'">
+					<xsl:choose>
+						<xsl:when test="$plainCode='true'">
+							<xsl:element name="pre"
+													 namespace="{$xhtml}">
 								<xsl:value-of select="cs:ConvertWhiteSpace(cs:plainCode($snippetCode))"
 															disable-output-escaping="yes"/>
-							</xsl:when>
-							<xsl:when test="$ContainsMarkup='true'">
+							</xsl:element>
+						</xsl:when>
+						<xsl:when test="$ContainsMarkup='true'">
+							<xsl:element name="pre"
+													 namespace="{$xhtml}">
 								<xsl:copy-of select="cs:ConvertWhiteSpace($snippetCode)"/>
-							</xsl:when>
-							<xsl:otherwise>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:element name="pre"
+													 namespace="{$xhtml}">
 								<xsl:value-of select="cs:ConvertWhiteSpace(cs:test($snippetCode, $lang, 'en-us'))"
 															disable-output-escaping="yes"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:element>
+							</xsl:element>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
 	</xsl:template>
+
+	<!-- ======================================================================================== -->
 
 	<xsl:template match="*"
 								mode="codeSpacing"
 								name="codeSpacingElement">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
-			<xsl:apply-templates select="node()"
-													 mode="codeSpacing"/>
+			<xsl:apply-templates mode="codeSpacing"/>
 			<xsl:if test="not(node()) and not(self::xhtml:br) and not(self::xhtml:hr)">
 				<xsl:value-of select="''"/>
 			</xsl:if>
 		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="xhtml:pre"
+								mode="codeSpacing"
+								name="codeSpacingContainer">
+		<xsl:apply-templates mode="codeSpacing"/>
 	</xsl:template>
 
 	<xsl:template match="text()"
@@ -324,7 +335,10 @@
 								name="codeSpacingText">
 		<xsl:choose>
 			<xsl:when test=".=' ' or .='&#160;'">
-				<xsl:text xml:space="preserve">&#160;</xsl:text>
+				<xsl:value-of select="'&#160;'"/>
+			</xsl:when>
+			<xsl:when test="normalize-space(.)='' and contains(.,'&#10;')">
+				<xsl:value-of select="concat('&#160;',translate(.,'&#10;&#13;',''),'&#10;')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="."/>

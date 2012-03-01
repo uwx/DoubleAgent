@@ -334,7 +334,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="getReturnsDescription">
+	<xsl:template name="t_getReturnsDescription">
 		<xsl:choose>
 			<xsl:when test="normalize-space(/document/comments/ddue:dduexml/ddue:returnValue[1]) != ''">
 				<span sdata="authoredValueSummary">
@@ -379,7 +379,7 @@
 								</parameter>
 							</include>
 							<br/>
-							<xsl:call-template name="getReturnsDescription" />
+							<xsl:call-template name="t_getReturnsDescription" />
 						</xsl:with-param>
 					</xsl:call-template>
 				</div>

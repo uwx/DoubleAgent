@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Translations provided by TimberLandChapel -->
 <content xml:space="preserve">
 	<!-- NOTE: This file must appear LAST in the list of content files
               so that these items override the matching items in the
@@ -15,10 +16,10 @@
 	<item id="fb_alias">{@FeedbackEMailAddress}</item>
   <item id="fb_product">{@ScriptHelpTitle}</item>
   <item id="fb_topic">{0}</item>
-	<item id="fb_text">Send Feedback</item>
+	<item id="fb_text">フィードバックの送信</item>
   <item id="fb_footer_to">{@HtmlEncFeedbackEMailAddress}</item>
-  <item id="fb_footer_text">on this topic.</item>
-  <item id="fb_footer_text_to">on this topic to {@HtmlEncFeedbackEMailAddress}.</item>
-	<item id="fb_body">Your feedback is used to improve the documentation and the product. Your e-mail address will not be used for any other purpose and is disposed of after the issue you report is resolved. While working to resolve the issue that you report, you may be contacted via e-mail to get further details or clarification on the feedback you sent. After the issue you report has been addressed, you may receive an e-mail to let you know that your feedback has been addressed.</item>
+  <item id="fb_footer_text">このトピックに対して</item>
+  <item id="fb_footer_text_to">このトピックに対して to {@HtmlEncFeedbackEMailAddress}.</item>
+  <item id="fb_body">ドキュメント開発チームはドキュメントの品質向上にあなたのフィードバックを使用いたします。送信いただいたメールアドレスは他の用途に使用いたしません。問題が解決した後送信されたメールアドレスを破棄いたします。送信いただいた問題の処理において，詳細をお伺いする場合や問題の切り分けのためにコンタクトをとらせていただく場合がございます。</item>
 
 </content>

@@ -19,7 +19,7 @@
 	<xsl:template name="t_codeLang">
 		<xsl:param name="p_codeLang"/>
 		<xsl:variable name="v_codeLangLC"
-									select="translate($p_codeLang,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+									select="translate($p_codeLang,$g_allUpperCaseLetters,$g_allLowerCaseLetters)"/>
 		<xsl:choose>
 			<xsl:when test="$v_codeLangLC = 'vbs' or $v_codeLangLC = 'vbscript'">
 				<xsl:text>VBScript</xsl:text>
@@ -263,7 +263,7 @@
 		<xsl:param name="p_nodeCount"/>
 		<xsl:param name="p_codeLangAttr"
 							 select="'language'"/>
-		<xsl:param name="p_translateCode"
+		<xsl:param name="p_transformCode"
 							 select="false()"/>
 		<xsl:param name="p_enableCopyCode"
 							 select="true()"/>
@@ -284,8 +284,8 @@
 			<xsl:call-template name="t_putCodeSection">
 				<xsl:with-param name="p_codeLang"
 												select="$v_codeLang"/>
-				<xsl:with-param name="p_translateCode"
-												select="$p_translateCode"/>
+				<xsl:with-param name="p_transformCode"
+												select="$p_transformCode"/>
 				<xsl:with-param name="p_enableCopyCode"
 												select="$p_enableCopyCode"/>
 			</xsl:call-template>
@@ -297,7 +297,7 @@
 							 select="@language"/>
 		<xsl:param name="p_codeTitle"
 							 select="@title"/>
-		<xsl:param name="p_translateCode"
+		<xsl:param name="p_transformCode"
 							 select="false()"/>
 		<xsl:param name="p_enableCopyCode"
 							 select="true()"/>
@@ -323,7 +323,7 @@
 		</xsl:variable>
 
 		<xsl:element name="mtps:CodeSnippet"
-								 namespace="http://msdn2.microsoft.com/mtps">
+								 namespace="{$mtps}">
 			<xsl:attribute name="runat">
 				<xsl:value-of select="'server'"/>
 			</xsl:attribute>
@@ -368,11 +368,15 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="$p_translateCode">
-							<xsl:apply-templates mode="translateCode"/>
+						<xsl:when test="$p_transformCode">
+							<xsl:element name="pre"
+													 namespace="{$xhtml}"
+													 xml:space="preserve"><xsl:call-template name="t_translateCodeContainer"/></xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates mode="copyCode"/>
+							<xsl:element name="pre"
+													 namespace="{$xhtml}"
+													 xml:space="preserve"><xsl:call-template name="t_copyCodeContainer"/></xsl:element>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
@@ -383,22 +387,21 @@
 	<!-- ======================================================================================== -->
 
 	<xsl:template match="*"
-								mode="translateCode"
+								mode="transformCode"
 								name="t_translateCodeElement">
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template match="text()"
-								mode="translateCode"
-								name="t_translateCodeText">
-		<xsl:call-template name="t_hardSpacedText"/>
+	<xsl:template match="code|pre|div"
+								mode="transformCode"
+								name="t_translateCodeContainer">
+		<xsl:apply-templates mode="transformCode"/>
 	</xsl:template>
 
-	<xsl:template match="code|pre|div"
-								mode="translateCode"
-								name="t_translateCodeContainer">
-		<xsl:apply-templates select="node()"
-												 mode="translateCode"/>
+	<xsl:template match="text()"
+								mode="transformCode"
+								name="t_translateCodeText">
+		<xsl:call-template name="t_copyCodeText"/>
 	</xsl:template>
 
 	<!-- ======================================================================================== -->
@@ -406,27 +409,85 @@
 	<xsl:template match="*"
 								mode="copyCode"
 								name="t_copyCodeElement">
-		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-			<xsl:apply-templates select="node()"
-													 mode="copyCode"/>
-			<xsl:if test="not(node()) and not(self::xhtml:br) and not(self::xhtml:hr)">
-				<xsl:value-of select="''"/>
-			</xsl:if>
-		</xsl:copy>
-	</xsl:template>
-
-	<xsl:template match="text()"
-								mode="copyCode"
-								name="t_copyCodeText">
-		<xsl:call-template name="t_hardSpacedText"/>
+		<xsl:choose>
+			<!-- The span element can be interpreted as xhtml:span or ddue:span so special processing is required -->
+			<xsl:when test="local-name()='span'">
+				<xsl:element name="span"
+										 namespace="{$xhtml}">
+					<xsl:copy-of select="@*"/>
+					<xsl:apply-templates mode="copyCode"/>
+					<xsl:if test="not(node())">
+						<xsl:value-of select="''"/>
+					</xsl:if>
+				</xsl:element>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:copy-of select="@*"/>
+					<xsl:apply-templates mode="copyCode"/>
+					<xsl:if test="not(node()) and not(self::br) and not(self::hr)">
+						<xsl:value-of select="''"/>
+					</xsl:if>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="code|pre|div"
 								mode="copyCode"
 								name="t_copyCodeContainer">
-		<xsl:apply-templates select="node()"
-												 mode="copyCode"/>
+		<xsl:choose>
+			<xsl:when test="$compact='true'">
+				<xsl:for-each select="node()">
+					<xsl:choose>
+						<xsl:when test="self::*">
+							<xsl:call-template name="t_copyCodeElement"/>
+						</xsl:when>
+						<xsl:when test="self::text() and normalize-space(.)='' and contains(.,'&#10;') and not(preceding-sibling::node())">
+						</xsl:when>
+						<xsl:when test="self::text() and normalize-space(.)='' and contains(.,'&#10;') and not(following-sibling::*)">
+						</xsl:when>
+						<xsl:when test="self::text() and normalize-space(.)!='' and contains(.,'&#10;') and not(following-sibling::*)">
+							<xsl:call-template name="t_copyCodeText">
+								<xsl:with-param name="p_text"
+																select="ddue:TrimEol(.)"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="t_copyCodeText"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates mode="copyCode"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="text()"
+								mode="copyCode"
+								name="t_copyCodeText">
+		<xsl:param name="p_text"
+							 select="."/>
+		<xsl:choose>
+			<xsl:when test="$p_text=' ' or $p_text='&#160;'">
+				<xsl:value-of select="'&#160;'"/>
+			</xsl:when>
+			<xsl:when test="normalize-space($p_text)='' and contains($p_text,'&#10;')">
+				<xsl:value-of select="concat('&#160;',translate($p_text,'&#10;&#13;',''),'&#10;')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$p_text"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- MAML elements are transformed, even if the code is not.  This supports the ddue:legacy* elements -->
+	<xsl:template match="ddue:*"
+								mode="copyCode"
+								name="t_copyCodeDdueElement">
+		<xsl:apply-templates select="."/>
 	</xsl:template>
 
 </xsl:stylesheet>

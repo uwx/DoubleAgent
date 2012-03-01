@@ -33,6 +33,14 @@
 				{
 						return id.Trim().ToUpper(System.Globalization.CultureInfo.InvariantCulture);
 				}
+				public static string TrimEnd(string input)
+				{
+						return input.TrimEnd();
+				}
+				public static string TrimEol(string input)
+				{
+						return input.TrimEnd('\r','\n','\t',' ');
+				}
 
 				//Regular expression to check that a string is in a valid Guid representation.
 				private static Regex guidChecker = new Regex("[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}", RegexOptions.None);

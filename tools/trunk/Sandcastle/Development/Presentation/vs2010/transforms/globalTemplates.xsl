@@ -7,7 +7,27 @@
 								xmlns:mtps="http://msdn2.microsoft.com/mtps"
 								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
-        >
+	>
+	<!-- ============================================================================================
+	Parameters
+	============================================================================================= -->
+
+	<xsl:param name="metadata">false</xsl:param>
+	<xsl:param name="languages">false</xsl:param>
+	<xsl:param name="compact">true</xsl:param>
+
+	<!-- ============================================================================================
+	Globals
+	============================================================================================= -->
+
+	<xsl:variable name="xhtml"
+								select="'http://www.w3.org/1999/xhtml'"/>
+	<xsl:variable name="ddue"
+								select="'http://ddue.schemas.microsoft.com/authoring/2003/5'"/>
+	<xsl:variable name="mtps"
+								select="'http://msdn2.microsoft.com/mtps'"/>
+	<xsl:variable name="g_allUpperCaseLetters">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
+	<xsl:variable name="g_allLowerCaseLetters">abcdefghijklmnopqrstuvwxyz</xsl:variable>
 
 	<!-- ============================================================================================
 	String formatting
@@ -82,20 +102,6 @@
 												select="$p_count - 1" />
 			</xsl:call-template>
 		</xsl:if>
-	</xsl:template>
-
-	<!-- translate single spaces to single hard-spaces -->
-	<xsl:template match="text()"
-								mode="hardSpaced"
-								name="t_hardSpacedText">
-		<xsl:choose>
-			<xsl:when test=".=' ' or .='&#160;'">
-				<xsl:text xml:space="preserve">&#160;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 	<!-- ============================================================================================

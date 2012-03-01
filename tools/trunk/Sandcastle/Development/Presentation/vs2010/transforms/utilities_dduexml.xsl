@@ -12,7 +12,6 @@
 
 	<xsl:import href="globalTemplates.xsl"/>
 	<xsl:import href="codeTemplates.xsl"/>
-	<xsl:import href="../../shared/transforms/utilities_dduexml.xsl"/>
 
 	<!-- ============================================================================================
 	The Remarks section includes content from these nodes, excluding the xaml sections which are captured in the xaml syntax processing
@@ -249,21 +248,32 @@
 	Block Elements
 	============================================================================================= -->
 
-	<xsl:template name="t_threadSafety">
-		<xsl:call-template name="t_putSectionInclude">
-			<xsl:with-param name="p_titleInclude"
-											select="'threadSafetyTitle'"/>
-			<xsl:with-param name="p_content">
-				<xsl:choose>
-					<xsl:when test="/document/comments/ddue:dduexml/ddue:threadSafety">
-						<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:threadSafety"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<include item="ThreadSafetyBP"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:with-param>
-		</xsl:call-template>
+	<xsl:template match="ddue:para"
+								name="t_ddue_para">
+		<p>
+			<xsl:apply-templates />
+		</p>
+	</xsl:template>
+
+	<!-- Pass through a chunk of markup.  This will allow build components
+       to add HTML to a pre-transformed document.  You can also use it in
+       topics to support things such as video or image maps that aren't
+       addressed by the MAML schema and the Sandcastle transforms. -->
+	<xsl:template match="ddue:markup"
+								name="t_ddue_markup">
+		<xsl:copy-of select="node()"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:summary"
+								name="t_ddue_summary">
+		<xsl:if test="not(@abstract='true')">
+			<!-- The ddue:summary element is redundant since it's optional in
+           the MAML schema but ddue:introduction is not.  Using abstract='true'
+           will prevent the summary from being included in the topic. -->
+			<div class="summary">
+				<xsl:apply-templates />
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="ddue:notesForImplementers"
@@ -792,6 +802,23 @@
 
 	</xsl:template>
 
+	<xsl:template name="t_threadSafety">
+		<xsl:call-template name="t_putSectionInclude">
+			<xsl:with-param name="p_titleInclude"
+											select="'threadSafetyTitle'"/>
+			<xsl:with-param name="p_content">
+				<xsl:choose>
+					<xsl:when test="/document/comments/ddue:dduexml/ddue:threadSafety">
+						<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:threadSafety"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<include item="ThreadSafetyBP"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
 	<!-- ============================================================================================
 	Lists and Tables
 	============================================================================================= -->
@@ -820,6 +847,14 @@
 				</ul>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="ddue:listItem"
+								name="t_ddue_listItem">
+		<li>
+			<xsl:apply-templates select="@address" />
+			<xsl:apply-templates />
+		</li>
 	</xsl:template>
 
 	<xsl:template match="ddue:table"
@@ -1165,11 +1200,24 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="ddue:alert/ddue:para[1]"
+								name="t_ddue_alertPara1">
+		<xsl:choose>
+			<xsl:when test="$compact='true'">
+				<xsl:apply-templates/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="t_ddue_para"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<!-- ============================================================================================
 	Media
 	============================================================================================= -->
 
-	<xsl:template match="ddue:mediaLink" name="t_ddue_mediaLink">
+	<xsl:template match="ddue:mediaLink"
+								name="t_ddue_mediaLink">
 		<div>
 			<xsl:choose>
 				<xsl:when test="ddue:image[@placement='center']">
@@ -1206,7 +1254,8 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="ddue:mediaLinkInline" name="t_ddue_mediaLinkInline">
+	<xsl:template match="ddue:mediaLinkInline"
+								name="t_ddue_mediaLinkInline">
 		<span class="media">
 			<artLink target="{ddue:image/@xlink:href}"/>
 		</span>
@@ -1216,7 +1265,8 @@
 	Inline elements
 	============================================================================================= -->
 
-	<xsl:template match="ddue:span" name="t_ddue_span">
+	<xsl:template match="ddue:span"
+								name="t_ddue_span">
 		<xsl:choose>
 			<!-- Process the markup added by MTMarkup tool -->
 			<xsl:when test="@class='tgtSentence' or @class='srcSentence'">
@@ -1233,7 +1283,8 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="ddue:languageKeyword" name="t_ddue_languageKeyword">
+	<xsl:template match="ddue:languageKeyword"
+								name="t_ddue_languageKeyword">
 		<xsl:variable name="v_keyword"
 									select="."/>
 		<span sdata="langKeyword"
@@ -1320,7 +1371,19 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template match="ddue:codeFeaturedElement" name="t_ddue_codeFeaturedElement">
+	<!-- ======================================================================================== -->
+
+	<xsl:template match="ddue:application"
+								name="t_ddue_application">
+		<xsl:if test="normalize-space(.)">
+			<b>
+				<xsl:apply-templates/>
+			</b>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:codeFeaturedElement"
+								name="t_ddue_codeFeaturedElement">
 		<xsl:if test="normalize-space(.)">
 			<span class="label">
 				<xsl:apply-templates/>
@@ -1328,11 +1391,219 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- ============================================================================================
-	Overrides of shared templates
-	============================================================================================= -->
+	<xsl:template match="ddue:codeInline"
+								name="t_ddue_codeInline">
+		<xsl:if test="normalize-space(.)">
+			<span class="code">
+				<xsl:value-of select="." />
+			</span>
+		</xsl:if>
+	</xsl:template>
 
-	<xsl:template match="ddue:subscript | ddue:subscriptType">
+	<xsl:template match="ddue:command"
+								name="t_ddue_command">
+		<xsl:if test="normalize-space(.)">
+			<span class="command">
+				<xsl:apply-templates />
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:computerOutputInline"
+								name="t_ddue_computerOutputInline">
+		<xsl:call-template name="t_ddue_codeInline"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:corporation"
+								name="t_ddue_corporation">
+		<xsl:apply-templates/>
+	</xsl:template>
+
+	<xsl:template match="ddue:country"
+								name="t_ddue_country">
+		<xsl:apply-templates/>
+	</xsl:template>
+
+	<xsl:template match="ddue:database"
+								name="t_ddue_database">
+		<xsl:if test="normalize-space(.)">
+			<b>
+				<xsl:apply-templates/>
+			</b>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:date"
+								name="t_ddue_date">
+		<xsl:apply-templates/>
+	</xsl:template>
+
+	<xsl:template match="ddue:embeddedLabel"
+								name="t_ddue_embeddedLabel">
+		<xsl:if test="normalize-space(.)">
+			<span class="label">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:environmentVariable"
+								name="t_ddue_environmentVariable">
+		<xsl:call-template name="t_ddue_codeInline"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:errorInline"
+								name="t_ddue_errorInline">
+		<xsl:if test="normalize-space(.)">
+			<em>
+				<xsl:apply-templates/>
+			</em>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:hardware"
+								name="t_ddue_hardware">
+		<xsl:if test="normalize-space(.)">
+			<b>
+				<xsl:apply-templates/>
+			</b>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:fictitiousUri"
+								name="t_ddue_fictitiousUri">
+		<xsl:call-template name="t_ddue_localUri"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:foreignPhrase"
+								name="t_ddue_foreignPhrase">
+		<xsl:if test="normalize-space(.)">
+			<span class="foreignPhrase">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:legacyBold"
+								name="t_ddue_legacyBold">
+		<xsl:if test="normalize-space(.)">
+			<b>
+				<xsl:apply-templates />
+			</b>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:legacyItalic"
+								name="t_ddue_legacyItalic">
+		<xsl:if test="normalize-space(.)">
+			<i>
+				<xsl:apply-templates />
+			</i>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:legacyUnderline"
+								name="t_ddue_legacyUnderline">
+		<xsl:if test="normalize-space(.)">
+			<u>
+				<xsl:apply-templates />
+			</u>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:literal"
+								name="t_ddue_literal">
+		<xsl:if test="normalize-space(.)">
+			<span class="literal">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:localizedText"
+								name="t_ddue_localizedText">
+		<xsl:apply-templates/>
+	</xsl:template>
+
+	<xsl:template match="ddue:localUri"
+								name="t_ddue_localUri">
+		<xsl:if test="normalize-space(.)">
+			<em>
+				<xsl:apply-templates/>
+			</em>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:math"
+								name="t_ddue_math">
+		<xsl:if test="normalize-space(.)">
+			<span class="math">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:newTerm"
+								name="t_ddue_newTerm">
+		<xsl:if test="normalize-space(.)">
+			<span class="term">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:parameterReference"
+								name="t_ddue_parameterReference">
+		<xsl:if test="normalize-space(.)">
+			<span class="parameter">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:phrase"
+								name="t_ddue_phrase">
+		<xsl:if test="normalize-space(.)">
+			<span class="phrase">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:placeholder"
+								name="t_ddue_placeholder">
+		<xsl:call-template name="t_ddue_replaceable"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:quote"
+								name="t_ddue_quote">
+		<xsl:if test="normalize-space(.)">
+			<blockQuote>
+				<xsl:apply-templates/>
+			</blockQuote>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:quoteInline"
+								name="t_ddue_quoteInline">
+		<xsl:if test="normalize-space(.)">
+			<q>
+				<xsl:apply-templates/>
+			</q>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:replaceable"
+								name="t_ddue_replaceable">
+		<xsl:if test="normalize-space(.)">
+			<span class="placeholder">
+				<xsl:apply-templates/>
+			</span>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:subscript"
+								name="t_ddue_subscript">
 		<xsl:if test="normalize-space(.)">
 			<small>
 				<small>
@@ -1344,7 +1615,13 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="ddue:superscript | ddue:superscriptType">
+	<xsl:template match="ddue:subscriptType"
+								name="t_ddue_subscriptType">
+		<xsl:call-template name="t_ddue_subscript"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:superscript"
+								name="t_ddue_superscript">
 		<xsl:if test="normalize-space(.)">
 			<small>
 				<small>
@@ -1356,31 +1633,22 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="ddue:literal">
+	<xsl:template match="ddue:superscriptType"
+								name="t_ddue_superscriptType">
+		<xsl:call-template name="t_ddue_superscript"/>
+	</xsl:template>
+
+	<xsl:template match="ddue:system"
+								name="t_ddue_system">
 		<xsl:if test="normalize-space(.)">
-			<span class="literal">
+			<b>
 				<xsl:apply-templates/>
-			</span>
+			</b>
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="ddue:parameterReference">
-		<xsl:if test="normalize-space(.)">
-			<span class="parameter">
-				<xsl:apply-templates/>
-			</span>
-		</xsl:if>
-	</xsl:template>
-
-	<xsl:template match="ddue:replaceable | ddue:placeholder">
-		<xsl:if test="normalize-space(.)">
-			<span class="placeholder">
-				<xsl:apply-templates/>
-			</span>
-		</xsl:if>
-	</xsl:template>
-
-	<xsl:template match="ddue:ui">
+	<xsl:template match="ddue:ui"
+								name="t_ddue_ui">
 		<xsl:if test="normalize-space(.)">
 			<span class="ui">
 				<xsl:apply-templates/>
@@ -1388,27 +1656,35 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="ddue:newTerm">
+	<xsl:template match="ddue:unmanagedCodeEntityReference"
+								name="t_ddue_unmanagedCodeEntityReference">
 		<xsl:if test="normalize-space(.)">
-			<span class="term">
+			<b>
 				<xsl:apply-templates/>
+			</b>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="ddue:userInput"
+								name="t_ddue_userInput">
+		<xsl:if test="normalize-space(.)">
+			<span class="input">
+				<xsl:value-of select="." />
 			</span>
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="ddue:errorInline|ddue:fictitiousUri|ddue:localUri">
-		<xsl:if test="normalize-space(.)">
-			<em>
-				<xsl:apply-templates/>
-			</em>
-		</xsl:if>
+	<xsl:template match="ddue:userInputLocalizable"
+								name="t_ddue_userInputLocalizable">
+		<xsl:call-template name="t_ddue_userInput"/>
 	</xsl:template>
 
 	<!-- ============================================================================================
 	Links
 	============================================================================================= -->
 
-	<xsl:template match="ddue:externalLink" name="t_ddue_externalLink">
+	<xsl:template match="ddue:externalLink"
+								name="t_ddue_externalLink">
 		<a class="mtps-external-link">
 			<xsl:attribute name="href">
 				<xsl:value-of select="normalize-space(ddue:linkUri)"/>
@@ -1432,7 +1708,8 @@
 		</a>
 	</xsl:template>
 
-	<xsl:template match="ddue:link" name="t_ddue_link">
+	<xsl:template match="ddue:link"
+								name="t_ddue_link">
 		<span sdata="link">
 			<xsl:choose>
 				<xsl:when test="starts-with(@xlink:href,'#')">
@@ -1452,7 +1729,27 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template match="ddue:codeEntityReference" name="t_ddue_codeEntityReference">
+	<xsl:template match="ddue:legacyLink"
+								name="t_ddue_legacyLink">
+		<xsl:choose>
+			<xsl:when test="starts-with(@xlink:href,'#')">
+				<!-- in-page link -->
+				<a href="{@xlink:href}">
+					<xsl:apply-templates />
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- unverified, external link -->
+				<mshelp:link keywords="{@xlink:href}"
+										 tabindex="0">
+					<xsl:apply-templates />
+				</mshelp:link>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="ddue:codeEntityReference"
+								name="t_ddue_codeEntityReference">
 		<span sdata="cer"
 					target="{normalize-space(string(.))}">
 			<referenceLink class="mtps-internal-link"
@@ -1472,6 +1769,42 @@
 				</xsl:if>
 			</referenceLink>
 		</span>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Copyright notice
+	============================================================================================= -->
+
+	<xsl:template match="ddue:copyright"
+								name="t_ddue_copyright">
+		<!-- <p>{0} &copy;{1}{2}. All rights reserved.</p> -->
+		<include item="copyrightNotice">
+			<parameter>
+				<xsl:value-of select="ddue:trademark" />
+			</parameter>
+			<parameter>
+				<xsl:for-each select="ddue:year">
+					<xsl:if test="position() = 1">
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</parameter>
+			<parameter>
+				<xsl:for-each select="ddue:holder">
+					<xsl:if test="position() = 1">
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</parameter>
+		</include>
 	</xsl:template>
 
 	<!-- ============================================================================================
@@ -1550,5 +1883,290 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
+
+	<!-- ============================================================================================
+	Glossary
+	============================================================================================= -->
+
+	<xsl:key name="k_glossaryTermFirstLetters"
+					 match="//ddue:glossaryEntry"
+					 use="translate(substring(ddue:terms/ddue:term/text(),1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ ')"/>
+
+	<xsl:template match="ddue:glossary"
+								name="t_ddue_glossary">
+		<xsl:if test="ddue:title">
+			<h1 class="glossaryTitle">
+				<xsl:value-of select="normalize-space(ddue:title)" />
+			</h1>
+		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="ddue:glossaryDiv">
+				<!-- Organized glossary with glossaryDiv elements -->
+				<br/>
+				<xsl:for-each select="ddue:glossaryDiv">
+					<xsl:if test="ddue:title">
+						<xsl:choose>
+							<xsl:when test="@address">
+								<a>
+									<!-- Keep this on one line or the spaces preceeding the "#" end up in the anchor name -->
+									<xsl:attribute name="href">
+										#<xsl:value-of select="@address"/>
+									</xsl:attribute>
+									<xsl:value-of select="ddue:title" />
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="ddue:title" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+					<xsl:if test="position() != last()">
+						<xsl:text> | </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+
+				<xsl:apply-templates select="ddue:glossaryDiv"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- Simple glossary consisting of nothing by glossaryEntry elements -->
+				<br/>
+				<xsl:call-template name="t_glossaryLetterBar"/>
+				<br/>
+				<xsl:call-template name="t_glossaryGroupByEntriesTermFirstLetter"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="ddue:glossaryDiv"
+								name="t_ddue_glossaryDiv">
+		<xsl:if test="@address">
+			<a>
+				<!-- Keep this on one line or the spaces preceeding the address end up in the anchor name -->
+				<xsl:attribute name="name">
+					<xsl:value-of select="@address"/>
+				</xsl:attribute>
+			</a>
+		</xsl:if>
+		<div class="glossaryDiv">
+			<xsl:if test="ddue:title">
+				<h2 class="glossaryDivHeading">
+					<xsl:value-of select="ddue:title"/>
+				</h2>
+			</xsl:if>
+			<hr class="glossaryRule"/>
+			<xsl:call-template name="t_glossaryLetterBar">
+				<xsl:with-param name="p_sectionPrefix"
+												select="generate-id()"/>
+			</xsl:call-template>
+			<br/>
+			<xsl:call-template name="t_glossaryGroupByEntriesTermFirstLetter">
+				<xsl:with-param name="p_sectionPrefix"
+												select="generate-id()"/>
+			</xsl:call-template>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="t_glossaryGroupByEntriesTermFirstLetter">
+		<xsl:param name="p_sectionPrefix"
+							 select="''"/>
+		<xsl:variable name="v_div"
+									select="."/>
+		<!-- Group entries by the first letter of their terms using the Muenchian method.
+         http://www.jenitennison.com/xslt/grouping/muenchian.html -->
+		<xsl:for-each select="ddue:glossaryEntry[generate-id() = 
+                  generate-id(key('k_glossaryTermFirstLetters',
+                  translate(substring(ddue:terms/ddue:term[1]/text(),1,1),$g_allLowerCaseLetters,concat($g_allUpperCaseLetters,' ')))
+                  [parent::node() = $v_div][1])]">
+			<xsl:sort select="ddue:terms/ddue:term[1]" />
+			<xsl:variable name="v_letter"
+										select="translate(substring(ddue:terms/ddue:term[1]/text(),1,1),$g_allLowerCaseLetters,concat($g_allUpperCaseLetters,' '))"/>
+
+			<xsl:call-template name="t_glossaryEntryGroup">
+				<xsl:with-param name="p_link"
+												select="concat($p_sectionPrefix,$v_letter)"/>
+				<xsl:with-param name="p_name"
+												select="$v_letter"/>
+				<xsl:with-param name="p_nodes"
+												select="key('k_glossaryTermFirstLetters',
+                        translate($v_letter,$g_allLowerCaseLetters,concat($g_allUpperCaseLetters,' ')))
+                        [parent::node() = $v_div]"/>
+			</xsl:call-template>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template match="ddue:glossaryEntry"
+								name="t_ddue_glossaryEntry">
+		<dt class="glossaryEntry">
+			<xsl:apply-templates select="@address" />
+			<xsl:for-each select="ddue:terms/ddue:term">
+				<xsl:sort select="normalize-space(.)" />
+
+				<xsl:if test="@termId">
+					<a>
+						<!-- Keep this on one line or the spaces preceeding the address end up in the anchor name -->
+						<xsl:attribute name="name">
+							<xsl:value-of select="@termId"/>
+						</xsl:attribute>
+					</a>
+				</xsl:if>
+
+				<xsl:value-of select="normalize-space(.)" />
+				<xsl:if test="position() != last()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+		</dt>
+		<dd class="glossaryEntry">
+			<xsl:apply-templates select="ddue:definition/*"/>
+
+			<xsl:if test="ddue:relatedEntry">
+				<div class="relatedEntry">
+					<include item="relatedEntries" />&#160;
+
+					<xsl:for-each select="ddue:relatedEntry">
+						<xsl:variable name="id"
+													select="@termId" />
+						<a>
+							<!-- Keep this on one line or the spaces preceeding the address end up in the anchor name -->
+							<xsl:attribute name="href">
+								#<xsl:value-of select="@termId"/>
+							</xsl:attribute>
+							<xsl:value-of select="//ddue:term[@termId=$id]"/>
+						</a>
+						<xsl:if test="position() != last()">
+							<xsl:text>, </xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</div>
+			</xsl:if>
+		</dd>
+	</xsl:template>
+
+	<xsl:template name="t_glossaryEntryGroup">
+		<xsl:param name="p_link"/>
+		<xsl:param name="p_name"/>
+		<xsl:param name="p_nodes"/>
+		<div class="glossaryGroup">
+			<a>
+				<xsl:attribute name="name">
+					<xsl:value-of select="$p_link"/>
+				</xsl:attribute>
+			</a>
+			<h3 class="glossaryGroupHeading">
+				<xsl:value-of select="$p_name"/>
+			</h3>
+			<dl class="glossaryGroupList">
+				<xsl:apply-templates select="$p_nodes">
+					<xsl:sort select="ddue:terms/ddue:term"/>
+				</xsl:apply-templates>
+			</dl>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="t_glossaryLetterBar">
+		<xsl:param name="p_sectionPrefix"
+							 select="''"/>
+		<div class="t_glossaryLetterBar">
+			<xsl:call-template name="t_glossaryLetterBarLinkRecursive">
+				<xsl:with-param name="p_sectionPrefix"
+												select="$p_sectionPrefix"/>
+				<xsl:with-param name="p_bar"
+												select="$g_allUpperCaseLetters"/>
+				<xsl:with-param name="p_characterPosition"
+												select="1"/>
+			</xsl:call-template>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="t_glossaryLetterBarLinkRecursive">
+		<xsl:param name="p_sectionPrefix"/>
+		<xsl:param name="p_bar"/>
+		<xsl:param name="p_characterPosition"/>
+		<xsl:variable name="v_letter"
+									select="substring($p_bar,$p_characterPosition,1)"/>
+		<xsl:if test="$v_letter">
+			<xsl:choose>
+				<xsl:when test="ddue:glossaryEntry[ddue:terms/ddue:term[1]
+                  [translate(substring(text(),1,1),$g_allLowerCaseLetters,concat($g_allUpperCaseLetters,' ')) = $v_letter]]">
+					<xsl:call-template name="t_glossaryLetterBarLink">
+						<xsl:with-param name="p_link"
+														select="concat($p_sectionPrefix,$v_letter)"/>
+						<xsl:with-param name="p_name"
+														select="$v_letter"/>
+					</xsl:call-template>
+					<xsl:if test="not($p_characterPosition = string-length($p_bar))">
+						<xsl:text> | </xsl:text>
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="t_glossaryLetterBarLink">
+						<xsl:with-param name="p_name"
+														select="$v_letter"/>
+					</xsl:call-template>
+					<xsl:if test="not($p_characterPosition = string-length($p_bar))">
+						<xsl:text> | </xsl:text>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:call-template name="t_glossaryLetterBarLinkRecursive">
+				<xsl:with-param name="p_sectionPrefix"
+												select="$p_sectionPrefix"/>
+				<xsl:with-param name="p_bar"
+												select="$p_bar"/>
+				<xsl:with-param name="p_characterPosition"
+												select="$p_characterPosition + 1"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="t_glossaryLetterBarLink">
+		<xsl:param name="p_link"/>
+		<xsl:param name="p_name"/>
+		<xsl:choose>
+			<xsl:when test="$p_link">
+				<a>
+					<xsl:attribute name="href">
+						#<xsl:value-of select="$p_link"/>
+					</xsl:attribute>
+					<xsl:value-of select="$p_name"/>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<span class="nolink">
+					<xsl:value-of select="$p_name"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- ======================================================================================== -->
+
+	<!-- Authored glossary links -->
+
+	<xsl:template match="ddue:link[starts-with(.,'GTMT#')]"
+								name="t_GTMT_link">
+		<!-- not supporting popup definitions; just show the text -->
+		<span sdata="link">
+			<xsl:value-of select="substring-after(.,'GTMT#')"/>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="ddue:legacyLink[starts-with(@xlink:href,'GTMT#')]"
+								name="t_GTMT_legacyLink">
+		<!-- not supporting popup definitions; just show the text -->
+		<xsl:value-of select="."/>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Debugging - fail if any unknown elements are encountered
+	============================================================================================= -->
+
+	<!--<xsl:template match="ddue:*">
+		<xsl:message terminate="yes">
+			<xsl:text>An unknown element </xsl:text>
+			<xsl:value-of select="name()"/>
+			<xsl:text> was encountered.</xsl:text>
+		</xsl:message>
+	</xsl:template>-->
 
 </xsl:stylesheet>

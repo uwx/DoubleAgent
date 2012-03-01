@@ -9,6 +9,10 @@
 >
 	<!-- ======================================================================================== -->
 
+	<xsl:import href="globalTemplates.xsl"/>
+
+	<!-- ======================================================================================== -->
+
 	<xsl:template name="t_insertMetadataHelp20">
 		<xsl:if test="$metadata='true'">
 			<xml>
@@ -34,7 +38,7 @@
 
 				<!-- authored K -->
 				<xsl:variable name="v_docset"
-											select="translate(/document/metadata/attribute[@name='DocSet'][1]/text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz ')"/>
+											select="translate(/document/metadata/attribute[@name='DocSet'][1]/text(),$g_allUpperCaseLetters,'abcdefghijklmnopqrstuvwxyz ')"/>
 				<xsl:for-each select="/document/metadata/keyword[@index='K']">
 					<xsl:variable name="v_nestedKeywordText">
 						<xsl:call-template name="t_nestedKeywordText"/>
