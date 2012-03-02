@@ -30,7 +30,8 @@
 						<tableHeader>
 							<row>
 								<entry>
-									<token>Agent</token> Server</entry>
+									<token>Agent</token> Server
+								</entry>
 								<entry>Server instance created using</entry>
 								<entry>Server architecture</entry>
 							</row>
@@ -164,7 +165,8 @@
 						<tableHeader>
 							<row>
 								<entry>
-									<token>Agent</token> Control</entry>
+									<token>Agent</token> Control
+								</entry>
 								<entry>Control created using</entry>
 								<entry>Application architecture</entry>
 								<entry>Control architecture</entry>
@@ -415,11 +417,13 @@
 					</table>
 					<para/>
 					<alert class="note">
-						<superscript>
-							<legacyBold>1</legacyBold>
-						</superscript>This behaviour is new in <token>DA</token> version 1.2. You can still use the 64-bit server by setting
-						<codeEntityReference>P:DoubleAgent.Control.Control.AutoConnect</codeEntityReference> to <literal>64</literal> but
-						the <legacyItalic>default</legacyItalic> server is the 32-bit server. This change was made for compatibility with <token>MA</token>.
+						<para>
+							<superscript>
+								<legacyBold>1</legacyBold>
+							</superscript>This behaviour is new in <token>DA</token> version 1.2. You can still use the 64-bit server by setting
+							<codeEntityReference>P:DoubleAgent.Control.Control.AutoConnect</codeEntityReference> to <literal>64</literal> but
+							the <legacyItalic>default</legacyItalic> server is the 32-bit server. This change was made for compatibility with <token>MA</token>.
+						</para>
 					</alert>
 				</listItem>
 			</list>

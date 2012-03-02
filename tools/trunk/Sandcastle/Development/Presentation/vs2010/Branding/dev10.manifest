@@ -2,7 +2,7 @@
 <Manifest>
 
 	<ItemGroup Label="transforms"
-						 Condition="$(noTransforms)!=true">
+						 Condition="$(noTransforms)!=true and $(onlyIcons)!=true">
 		<Content Include="branding.xslt">
 			<SubType>text/richtext</SubType>
 			<CopyToOutputDirectory>false</CopyToOutputDirectory>
@@ -66,9 +66,11 @@
 		</Content>
 		<Content Include="NestedTable.xslt">
 			<SubType>text/richtext</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="nestedtable-??-??.xslt">
 			<SubType>text/richtext</SubType>
+			<CopyToOutputDirectory>false</CopyToOutputDirectory>
 		</Content>
 		<Content Include="index.xslt">
 			<SubType>text/richtext</SubType>
@@ -97,7 +99,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="pages"
-						 Condition="$(onlyTransforms)!=true">
+						 Condition="$(onlyTransforms)!=true and $(onlyIcons)!=true">
 		<Content Include="contentnotfound-??-??.htm">
 			<SubType>text/html</SubType>
 			<CopyToOutputDirectory>false</CopyToOutputDirectory>
@@ -109,7 +111,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="styles"
-						 Condition="$(onlyTransforms)!=true">
+						 Condition="$(onlyTransforms)!=true and $(onlyIcons)!=true">
 		<Content Include="branding.css">
 			<SubType>text/richtext</SubType>
 		</Content>
@@ -119,7 +121,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="scripts"
-						 Condition="$(onlyTransforms)!=true">
+						 Condition="$(onlyTransforms)!=true and $(onlyIcons)!=true">
 		<Content Include="branding.js">
 			<SubType>text/richtext</SubType>
 		</Content>

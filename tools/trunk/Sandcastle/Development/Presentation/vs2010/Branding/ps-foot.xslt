@@ -162,24 +162,7 @@
 					var footer = document.getElementById("OH_footer")
 					if (footer)
 					{
-						var footerParent = undefined;
-//					var divs = document.getElementsByTagName("div");  
-//					if (divs != undefined)
-//					{
-//						var divNdx;
-//						for (divNdx = 0; divNdx != divs.length; divNdx++)
-//						{
-//							if (divs[divNdx].className == "OH_outerDiv")
-//							{
-//								footerParent = divs[divNdx];
-//								break;
-//							}
-//						}
-//					}
-						if (!footerParent)
-						{
-							footerParent = document.body;
-						}
+						var footerParent = document.body;
 						if (footer.parentElement != footerParent)
 						{ 
 							footer.parentElement.removeChild (footer);

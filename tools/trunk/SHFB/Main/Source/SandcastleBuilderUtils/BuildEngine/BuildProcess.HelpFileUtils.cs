@@ -468,9 +468,11 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				const String manifestPropertyPreBranding = "preBranding";
 				const String manifestPropertyNoTransforms = "noTransforms";
 				const String manifestPropertyOnlyTransforms = "onlyTransforms";
+				const String manifestPropertyOnlyIcons = "onlyIcons";
 
 				String brandingTarget = Path.Combine (helpFormatOutputFolder, "branding");
 				String brandingTransformsTarget = Path.Combine (WorkingFolder, "branding");
+				String brandingIconsTarget = helpFormatOutputFolder;
 				String brandingName = CurrentProject.BrandingPackageName;
 				String brandingManifiest = Path.Combine (brandingSource, "branding.manifest");
 				MSHCPackage brandingPackage;
@@ -509,7 +511,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					brandingPackage = new MSHCPackage (Path.ChangeExtension (v_fileInfo.FullName, SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.Help3PackageExtension), FileMode.Open);
 					if (brandingPackage.IsOpen)
 					{
-						brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, this.CurrentFormat.ToString ());
+						brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, Path.GetFileNameWithoutExtension (helpFormatOutputFolder));
 						brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isPreBranding.ToString ());
 						if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
 						{
@@ -521,7 +523,14 @@ namespace SandcastleBuilder.Utils.BuildEngine
 						this.ReportProgress ("{0} -> {1}", brandingPackage.PackagePath, brandingTarget);
 						brandingPackage.GetTheseParts (brandingTarget, v_fileInfo.FullName, true);
 
-						if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+						if (helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+						{
+							brandingPackage.ManifestProperties.Add (manifestPropertyOnlyIcons, Boolean.TrueString);
+
+							this.ReportProgress ("{0} -> {1}", brandingPackage.PackagePath, brandingIconsTarget);
+							brandingPackage.GetTheseParts (brandingIconsTarget, v_fileInfo.FullName, true);
+						}
+						else
 						{
 							brandingPackage.ManifestProperties.Remove (manifestPropertyNoTransforms);
 							brandingPackage.ManifestProperties.Add (manifestPropertyOnlyTransforms, Boolean.TrueString);
@@ -533,7 +542,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				}
 
 				brandingPackage = new MSHCPackage (brandingTarget);
-				brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, this.CurrentFormat.ToString ());
+				brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, Path.GetFileNameWithoutExtension (helpFormatOutputFolder));
 				brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isPreBranding.ToString ());
 				if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
 				{
@@ -545,10 +554,22 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				this.ReportProgress ("{0} -> {1}", brandingSource, brandingTarget);
 				brandingPackage.CopyTheseParts (brandingManifiest, true);
 
-				if (!helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+				if (helpFormatOutputFolder.Contains (HelpFileFormat.MSHelpViewer.ToString ()))
+				{
+					brandingPackage = new MSHCPackage (brandingIconsTarget);
+					brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, Path.GetFileNameWithoutExtension (helpFormatOutputFolder));
+					brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isDefaultBranding.ToString ());
+					brandingPackage.ManifestProperties.Add (manifestPropertyOnlyIcons, Boolean.TrueString);
+					brandingPackage.LoggingTarget = swLog;
+					brandingPackage.LoggingPrefix = "  ";
+
+					this.ReportProgress ("{0} -> {1}", brandingSource, brandingIconsTarget);
+					brandingPackage.CopyTheseParts (brandingManifiest, true);
+				}
+				else
 				{
 					brandingPackage = new MSHCPackage (brandingTransformsTarget);
-					brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, this.CurrentFormat.ToString ());
+					brandingPackage.ManifestProperties.Add (manifestPropertyHelpOutput, Path.GetFileNameWithoutExtension (helpFormatOutputFolder));
 					brandingPackage.ManifestProperties.Add (manifestPropertyPreBranding, isDefaultBranding.ToString ());
 					brandingPackage.ManifestProperties.Add (manifestPropertyOnlyTransforms, Boolean.TrueString);
 					brandingPackage.LoggingTarget = swLog;

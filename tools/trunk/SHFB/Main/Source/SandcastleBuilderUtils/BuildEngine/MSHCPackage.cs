@@ -160,7 +160,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		/// <summary>
 		/// The full path of the package file.
 		/// </summary>
-		public String PackagePath {get; protected set;}
+		public String PackagePath { get; protected set; }
 
 		/// <summary>
 		/// The package file name (without the <value>.mshc</value> extension);
@@ -1190,7 +1190,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 							foreach (String v_partName in packageParts)
 							{
-								if (Regex.IsMatch (v_partName.ToLower(), v_manifestItem.Include.Replace ("*", ".*").Replace ("?", ".").ToLower()))
+								if (Regex.IsMatch (v_partName.ToLower (), v_manifestItem.Include.Replace ("*", ".*").Replace ("?", ".").ToLower ()))
 								{
 									v_manifestItem.Add (v_partName);
 								}
@@ -1219,16 +1219,31 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					{
 						try
 						{
+							String v_conditionValue = v_condition.Value;
 							foreach (KeyValuePair<String, String> v_property in properties)
 							{
-								String v_conditionValue = v_condition.Value.Replace ("$(" + v_property.Key + ")", v_property.Value);
-								if (!v_conditionValue.Contains ("$("))
+								v_conditionValue = v_conditionValue.Replace ("$(" + v_property.Key + ")", v_property.Value);
+							}
+							while (v_conditionValue.Contains ("$("))
+							{
+								String v_property = v_conditionValue.Substring (v_conditionValue.IndexOf ("$("));
+								if (v_property.Contains (")"))
 								{
-									Object v_result = Navigator.Evaluate (v_conditionValue);
-									if (v_result is Boolean)
-									{
-										return (Boolean)v_result;
-									}
+									v_property = v_property.Substring (0, v_property.IndexOf (")") + 1);
+									v_conditionValue = v_conditionValue.Replace (v_property, "false");
+								}
+								else
+								{
+									break;
+								}
+							}
+							v_conditionValue = v_conditionValue.ToLower ().Replace ("'true'", "true").Replace ("'false'", "false").Replace ("true", "'true'").Replace ("false", "'false'");
+							if (!v_conditionValue.Contains ("$("))
+							{
+								Object v_result = Navigator.Evaluate (v_conditionValue);
+								if (v_result is Boolean)
+								{
+									return (Boolean)v_result;
 								}
 							}
 						}

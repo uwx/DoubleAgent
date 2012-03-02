@@ -14,7 +14,7 @@
 
 	<xsl:param name="metadata">false</xsl:param>
 	<xsl:param name="languages">false</xsl:param>
-	<xsl:param name="compact">true</xsl:param>
+	<xsl:param name="minimal-spacing">code;alert;listItem;table;tableHeader;definedTerm;definition;</xsl:param>
 
 	<!-- ============================================================================================
 	Globals
@@ -102,6 +102,103 @@
 												select="$p_count - 1" />
 			</xsl:call-template>
 		</xsl:if>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Minimal spacing tests
+	============================================================================================= -->
+
+	<xsl:template name="t_checkMinimalSpacing">
+		<xsl:param name="p_spacingType"
+							 select="'any'"/>
+		<xsl:param name="p_parentLevel"
+							 select="0"/>
+		<xsl:if test="$p_spacingType='any' or contains($minimal-spacing,$p_spacingType)">
+			<xsl:variable name="v_minimalSpacing">
+				<xsl:call-template name="t_getMinimalSpacing"/>
+			</xsl:variable>
+			<xsl:if test="$v_minimalSpacing='' or starts-with($v_minimalSpacing,'true')">
+				<xsl:variable name="v_levelCheck">
+					<xsl:call-template name="t_checkMinimalParent">
+						<xsl:with-param name="p_parentLevel"
+														select="$p_parentLevel"/>
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:choose>
+					<xsl:when test="$v_levelCheck=''">
+						<xsl:value-of select="'true'"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$v_levelCheck"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="t_getMinimalSpacing">
+		<xsl:choose>
+			<xsl:when test="@minimal-spacing">
+				<xsl:value-of select="@minimal-spacing"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="parent::*">
+					<xsl:call-template name="t_getMinimalSpacing"/>
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="t_checkMinimalParent">
+		<xsl:param name="p_parentLevel"/>
+		<xsl:param name="p_childLevel"
+							 select="0"/>
+		<xsl:choose>
+			<xsl:when test="$p_parentLevel = 1">
+				<xsl:for-each select="parent::*">
+					<xsl:call-template name="t_checkMinimalChild">
+						<xsl:with-param name="p_childLevel"
+														select="$p_childLevel"/>
+					</xsl:call-template>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:when test="$p_parentLevel &gt; 1">
+				<xsl:for-each select="parent::*">
+					<xsl:call-template name="t_checkMinimalParent">
+						<xsl:with-param name="p_parentLevel"
+														select="$p_parentLevel - 1"/>
+						<xsl:with-param name="p_childLevel"
+														select="$p_childLevel + 1"/>
+					</xsl:call-template>
+				</xsl:for-each>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="t_checkMinimalChild">
+		<xsl:param name="p_childLevel"/>
+		<xsl:choose>
+			<xsl:when test="$p_childLevel = 0">
+				<xsl:if test="@minimal-spacing!='true'">
+					<xsl:choose>
+						<xsl:when test="child::*[local-name()!='para']">
+							<xsl:value-of select="'sibling!=para'"/>
+						</xsl:when>
+						<xsl:when test="(child::*[local-name()='para'])[2]">
+							<xsl:value-of select="'sibling para[2]'"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="$p_childLevel &gt; 0">
+				<xsl:for-each select="child::*">
+					<xsl:call-template name="t_checkMinimalChild">
+						<xsl:with-param name="p_childLevel"
+														select="$p_childLevel - 1"/>
+					</xsl:call-template>
+				</xsl:for-each>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ============================================================================================

@@ -138,6 +138,9 @@
 			<xsl:when test="$downscale-browser">
 				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
 			</xsl:when>
+			<xsl:when test="$pre-branding">
+				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../icons')"/>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
 			</xsl:otherwise>

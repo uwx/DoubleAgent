@@ -45,19 +45,23 @@
 					<unmanagedCodeEntityReference>Width</unmanagedCodeEntityReference>, and <unmanagedCodeEntityReference>Height</unmanagedCodeEntityReference> properties.
 				</para>
 				<alert class="note">
-					The <token>DA</token>&#160;<link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
-						<token>AdvancedCharacterOptions</token>
-					</link>
-					window combines the <token>MA</token>&#160;<token>AdvancedCharacterOptions</token> window
-					and the <token>MA</token>&#160;<token>DefaultCharacterProperties</token> window.
+					<para>
+						The <token>DA</token>&#160;<link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+							<token>AdvancedCharacterOptions</token>
+						</link>
+						window combines the <token>MA</token>&#160;<token>AdvancedCharacterOptions</token> window
+						and the <token>MA</token>&#160;<token>DefaultCharacterProperties</token> window.
+					</para>
 				</alert>
 				<alert class="note">
-					The pages in the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
-						<token>AdvancedCharacterOptions</token>
-					</link>
-					window are also included in the <link xlink:href="e08466bf-419c-11e1-9d4f-002421116fb2">
-						<token>DaControlPanel</token>
-					</link>.
+					<para>
+						The pages in the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+							<token>AdvancedCharacterOptions</token>
+						</link>
+						window are also included in the <link xlink:href="e08466bf-419c-11e1-9d4f-002421116fb2">
+							<token>DaControlPanel</token>
+						</link>.
+					</para>
 				</alert>
 			</content>
 		</section>

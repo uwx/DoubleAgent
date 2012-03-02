@@ -67,9 +67,11 @@
 					<image xlink:href="Options_Gallery" />
 				</mediaLink>
 				<alert class="note">
-					The <token>GalleryPage</token> used to be in the
-					<token>DefaultCharacterProperties</token> window, which no longer exists as of <token>DA</token>
-					version 1.1.
+					<para>
+						The <token>GalleryPage</token> used to be in the
+						<token>DefaultCharacterProperties</token> window, which no longer exists as of <token>DA</token>
+						version 1.1.
+					</para>
 				</alert>
 			</content>
 		</section>

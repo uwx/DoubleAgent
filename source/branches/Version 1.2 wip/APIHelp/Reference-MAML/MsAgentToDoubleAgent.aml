@@ -18,17 +18,23 @@
 					</para>
 					<list class="ordered">
 						<listItem>
-							Replace the <token>MA</token> Control <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>Agent.Control</codeInline> or <codeInline>Agent.Control.2</codeInline>
-							with the <token>DA</token> Control <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>DoubleAgent.Control</codeInline>
-							or <codeInline>DoubleAgent.Control.1.1</codeInline>
+							<para>
+								Replace the <token>MA</token> Control <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>Agent.Control</codeInline> or <codeInline>Agent.Control.2</codeInline>
+								with the <token>DA</token> Control <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>DoubleAgent.Control</codeInline>
+								or <codeInline>DoubleAgent.Control.1.1</codeInline>
+							</para>
 						</listItem>
 						<listItem>
-							Replace the <token>MA</token> Control <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
-							with the <token>DA</token> Control <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
+							<para>
+								Replace the <token>MA</token> Control <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
+								with the <token>DA</token> Control <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
+							</para>
 						</listItem>
 						<listItem>
-							Replace the <token>MA</token> Control <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>AgentObjects</codeInline> {F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}
-							with the <token>DA</token> Control <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>DoubleAgentCtl</codeInline> {1147E550-A208-11DE-ABF2-002421116FB2}
+							<para>
+								Replace the <token>MA</token> Control <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>AgentObjects</codeInline> {F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}
+								with the <token>DA</token> Control <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>DoubleAgentCtl</codeInline> {1147E550-A208-11DE-ABF2-002421116FB2}
+							</para>
 						</listItem>
 					</list>
 				</listItem>
@@ -38,16 +44,22 @@
 					</para>
 					<list class="ordered">
 						<listItem>
-							Replace the <token>MA</token> Server <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>Agent.Server</codeInline> or <codeInline>Agent.Server.2</codeInline>
-							with the <token>DA</token> Server <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>DoubleAgent.Server</codeInline> or <codeInline>DoubleAgent.Server.1.1</codeInline>
+							<para>
+								Replace the <token>MA</token> Server <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>Agent.Server</codeInline> or <codeInline>Agent.Server.2</codeInline>
+								with the <token>DA</token> Server <languageKeyword>ProgId</languageKeyword>&#160;<codeInline>DoubleAgent.Server</codeInline> or <codeInline>DoubleAgent.Server.1.1</codeInline>
+							</para>
 						</listItem>
 						<listItem>
-							Replace the <token>MA</token> Server <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{D45FD2FC-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
-							with the <token>DA</token> Server <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{1147E500-A208-11DE-ABF2-002421116FB2}</codeInline>
+							<para>
+								Replace the <token>MA</token> Server <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{D45FD2FC-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
+								with the <token>DA</token> Server <languageKeyword>ClassId</languageKeyword>&#160;<codeInline>{1147E500-A208-11DE-ABF2-002421116FB2}</codeInline>
+							</para>
 						</listItem>
 						<listItem>
-							Replace the <token>MA</token> Server <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>AgentServerObjects</codeInline> {A7B93C73-7B81-11D0-AC5F-00C04FD97575}
-							with the <token>DA</token> Server <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>DoubleAgentSvr</codeInline> {1147E501-A208-11DE-ABF2-002421116FB2}
+							<para>
+								Replace the <token>MA</token> Server <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>AgentServerObjects</codeInline> {A7B93C73-7B81-11D0-AC5F-00C04FD97575}
+								with the <token>DA</token> Server <languageKeyword>TypeLib</languageKeyword>&#160;<codeInline>DoubleAgentSvr</codeInline> {1147E501-A208-11DE-ABF2-002421116FB2}
+							</para>
 						</listItem>
 					</list>
 				</listItem>
@@ -75,22 +87,30 @@
 					<table>
 						<row>
 							<entry>
-								change:
+								<para>
+									change:
+								</para>
 							</entry>
 							<entry>
-								<codeInline>
-									Object = &quot;{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0&quot;; &quot;AgentCtl.dll&quot;
-								</codeInline>
+								<para>
+									<codeInline>
+										Object = &quot;{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0&quot;; &quot;AgentCtl.dll&quot;
+									</codeInline>
+								</para>
 							</entry>
 						</row>
 						<row>
 							<entry>
-								to:
+								<para>
+									to:
+								</para>
 							</entry>
 							<entry>
-								<codeInline>
-									Object = &quot;{1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0&quot;; &quot;DaControl.dll&quot;
-								</codeInline>
+								<para>
+									<codeInline>
+										Object = &quot;{1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0&quot;; &quot;DaControl.dll&quot;
+									</codeInline>
+								</para>
 							</entry>
 						</row>
 					</table>
@@ -102,44 +122,68 @@
 					<table>
 						<row>
 							<entry>
-								change:
+								<para>
+									change:
+								</para>
 							</entry>
 							<entry>
-								<codeInline>AgentObjects</codeInline>
+								<para>
+									<codeInline>AgentObjects</codeInline>
+								</para>
 							</entry>
 							<entry>
-								to:
+								<para>
+									to:
+								</para>
 							</entry>
 							<entry>
-								<codeInline>DoubleAgent.Control</codeInline>
-							</entry>
-						</row>
-						<row>
-							<entry>
-								change:
-							</entry>
-							<entry>
-								<codeInline>AxAgentObjects</codeInline>
-							</entry>
-							<entry>
-								to:
-							</entry>
-							<entry>
-								<codeInline>DoubleAgent.AxControl</codeInline>
+								<para>
+									<codeInline>DoubleAgent.Control</codeInline>
+								</para>
 							</entry>
 						</row>
 						<row>
 							<entry>
-								change:
+								<para>
+									change:
+								</para>
 							</entry>
 							<entry>
-								<codeInline>AgentServerObjects</codeInline>
+								<para>
+									<codeInline>AxAgentObjects</codeInline>
+								</para>
 							</entry>
 							<entry>
-								to:
+								<para>
+									to:
+								</para>
 							</entry>
 							<entry>
-								<codeInline>DoubleAgent.Server</codeInline>
+								<para>
+									<codeInline>DoubleAgent.AxControl</codeInline>
+								</para>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<para>
+									change:
+								</para>
+							</entry>
+							<entry>
+								<para>
+									<codeInline>AgentServerObjects</codeInline>
+								</para>
+							</entry>
+							<entry>
+								<para>
+									to:
+								</para>
+							</entry>
+							<entry>
+								<para>
+									<codeInline>DoubleAgent.Server</codeInline>
+								</para>
 							</entry>
 						</row>
 					</table>

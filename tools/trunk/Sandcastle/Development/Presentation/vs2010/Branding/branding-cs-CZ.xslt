@@ -8,7 +8,7 @@
 	<xsl:import href="instrumentedlink-cs-CZ.xslt" />
 	<xsl:import href="ps-instrumentedlink.xslt" />
 	<xsl:import href="ps-languageSpecificText.xslt" />
-	<xsl:import href="nestedtable.xslt" />
+	<!--<xsl:import href="nestedtable.xslt" />-->
 	<xsl:import href="codesnippet-cs-CZ.xslt" />
 	<xsl:import href="ps-codesnippet.xslt" />
 	<xsl:import href="MultiViewTable-cs-CZ.xslt" />

@@ -37,8 +37,10 @@ Result = server-&gt;Register ((IUnknown*)MyNotifySink, &amp;MyNotifySinkID);</co
 						<codeEntityReference qualifyHint="false">M:DoubleAgent.Server.Server.Unregister</codeEntityReference> methods.
 					</para>
 					<alert class="note">
-						<token>DA</token> also supports the <unmanagedCodeEntityReference>IDaSvrNotifySink</unmanagedCodeEntityReference>,
-						<unmanagedCodeEntityReference>IAgentNotifySink</unmanagedCodeEntityReference> and <unmanagedCodeEntityReference>IAgentNotifySinkEx</unmanagedCodeEntityReference> interfaces.
+						<para>
+							<token>DA</token> also supports the <unmanagedCodeEntityReference>IDaSvrNotifySink</unmanagedCodeEntityReference>,
+							<unmanagedCodeEntityReference>IAgentNotifySink</unmanagedCodeEntityReference> and <unmanagedCodeEntityReference>IAgentNotifySinkEx</unmanagedCodeEntityReference> interfaces.
+						</para>
 					</alert>
 				</listItem>
 				<listItem>

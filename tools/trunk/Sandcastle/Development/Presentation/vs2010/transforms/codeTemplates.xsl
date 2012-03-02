@@ -437,7 +437,7 @@
 								mode="copyCode"
 								name="t_copyCodeContainer">
 		<xsl:choose>
-			<xsl:when test="$compact='true'">
+			<xsl:when test="contains($minimal-spacing,'code')">
 				<xsl:for-each select="node()">
 					<xsl:choose>
 						<xsl:when test="self::*">

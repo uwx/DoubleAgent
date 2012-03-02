@@ -55,9 +55,15 @@
 				<table>
 					<tableHeader>
 						<row>
-							<entry>Tag</entry>
-							<entry>Description</entry>
-							<entry>Syntax</entry>
+							<entry>
+								<para>Tag</para>
+							</entry>
+							<entry>
+								<para>Description</para>
+							</entry>
+							<entry>
+								<para>Syntax</para>
+							</entry>
 						</row>
 					</tableHeader>
 					<row>
@@ -76,16 +82,24 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
 									<entry>
-										<placeholder>number</placeholder>
+										<para>
+											<placeholder>number</placeholder>
+										</para>
 									</entry>
 									<entry>
-										A numeric value that identifies the bookmark (from 1 to 2147483645).
+										<para>
+											A numeric value that identifies the bookmark (from 1 to 2147483645).
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -113,24 +127,36 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
 									<entry>
-										<placeholder>string</placeholder>
+										<para>
+											<placeholder>string</placeholder>
+										</para>
 									</entry>
 									<entry>
-										The <link xlink:href="e08466cb-419c-11e1-9d4f-002421116fb2">normalization context</link> name.
+										<para>
+											The <link xlink:href="e08466cb-419c-11e1-9d4f-002421116fb2">normalization context</link> name.
+										</para>
 									</entry>
 								</row>
 								<row>
 									<entry>
-										<placeholder>content</placeholder>
+										<para>
+											<placeholder>content</placeholder>
+										</para>
 									</entry>
 									<entry>
-										The speech to be normalized according to the specified context.
+										<para>
+											The speech to be normalized according to the specified context.
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -152,16 +178,24 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
 									<entry>
-										<placeholder>content</placeholder>
+										<para>
+											<placeholder>content</placeholder>
+										</para>
 									</entry>
 									<entry>
-										The speech text to emphasize.
+										<para>
+											The speech text to emphasize.
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -183,8 +217,12 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
@@ -195,13 +233,21 @@
 									<entry>
 										<definitionTable>
 											<definedTerm>-24</definedTerm>
-											<definition>One octave lower than the current pitch</definition>
+											<definition>
+												<para>One octave lower than the current pitch</para>
+											</definition>
 											<definedTerm>-10</definedTerm>
-											<definition>3/4 the current pitch</definition>
+											<definition>
+												<para>3/4 the current pitch</para>
+											</definition>
 											<definedTerm>[+]10</definedTerm>
-											<definition>4/3 the current pitch</definition>
+											<definition>
+												<para>4/3 the current pitch</para>
+											</definition>
 											<definedTerm>[+]24</definedTerm>
-											<definition>One octave higher than the current pitch</definition>
+											<definition>
+												<para>One octave higher than the current pitch</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
@@ -213,24 +259,38 @@
 									<entry>
 										<definitionTable>
 											<definedTerm>-24</definedTerm>
-											<definition>One octave lower than the default pitch</definition>
+											<definition>
+												<para>One octave lower than the default pitch</para>
+											</definition>
 											<definedTerm>-10</definedTerm>
-											<definition>3/4 the default pitch</definition>
+											<definition>
+												<para>3/4 the default pitch</para>
+											</definition>
 											<definedTerm>0</definedTerm>
-											<definition>The default pitch</definition>
+											<definition>
+												<para>The default pitch</para>
+											</definition>
 											<definedTerm>[+]10</definedTerm>
-											<definition>4/3 the default pitch</definition>
+											<definition>
+												<para>4/3 the default pitch</para>
+											</definition>
 											<definedTerm>[+]24</definedTerm>
-											<definition>One octave higher than the default pitch</definition>
+											<definition>
+												<para>One octave higher than the default pitch</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
 								<row>
 									<entry>
-										<placeholder>content</placeholder>
+										<para>
+											<placeholder>content</placeholder>
+										</para>
 									</entry>
 									<entry>
-										The affected speech text.
+										<para>
+											The affected speech text.
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -253,8 +313,12 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
@@ -265,9 +329,13 @@
 									<entry>
 										<definitionTable>
 											<definedTerm>-10</definedTerm>
-											<definition>1/3 the current rate</definition>
+											<definition>
+												<para>1/3 the current rate</para>
+											</definition>
 											<definedTerm>[+]10</definedTerm>
-											<definition>3 times the current rate</definition>
+											<definition>
+												<para>3 times the current rate</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
@@ -279,19 +347,31 @@
 									<entry>
 										<definitionTable>
 											<definedTerm>-10</definedTerm>
-											<definition>1/3 the default rate</definition>
+											<definition>
+												<para>1/3 the default rate</para>
+											</definition>
 											<definedTerm>0</definedTerm>
-											<definition>The default rate</definition>
+											<definition>
+												<para>The default rate</para>
+											</definition>
 											<definedTerm>[+]10</definedTerm>
-											<definition>3 times the default rate</definition>
+											<definition>
+												<para>3 times the default rate</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
 								<row>
 									<entry>
-										<placeholder>content</placeholder>
+										<para>
+											<placeholder>content</placeholder>
+										</para>
 									</entry>
-									The affected speech text.
+									<entry>
+										<para>
+											The affected speech text.
+										</para>
+									</entry>
 								</row>
 							</table>
 							<para>The speech engine may clip the rate to the maximum or minimum rate it supports.</para>
@@ -313,16 +393,24 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
 									<entry>
-										<placeholder>number</placeholder>
+										<para>
+											<placeholder>number</placeholder>
+										</para>
 									</entry>
 									<entry>
-										The number of milliseconds to pause.
+										<para>
+											The number of milliseconds to pause.
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -344,17 +432,25 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
 									<entry>
-										<placeholder>content</placeholder>
+										<para>
+											<placeholder>content</placeholder>
+										</para>
 									</entry>
 									<entry>
-										Words and numbers are spelled. For words that contain punctuation, such as &quot;U.S.A.&quot;,
-										both the punctuation and the letters are spelled.
+										<para>
+											Words and numbers are spelled. For words that contain punctuation, such as &quot;U.S.A.&quot;,
+											both the punctuation and the letters are spelled.
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -376,8 +472,12 @@
 							<table>
 								<tableHeader>
 									<row>
-										<entry>Part</entry>
-										<entry>Description</entry>
+										<entry>
+											<para>Part</para>
+										</entry>
+										<entry>
+											<para>Description</para>
+										</entry>
 									</row>
 								</tableHeader>
 								<row>
@@ -388,18 +488,26 @@
 										A value from 0 to 100:
 										<definitionTable>
 											<definedTerm>0</definedTerm>
-											<definition>Silent</definition>
+											<definition>
+												<para>Silent</para>
+											</definition>
 											<definedTerm>100</definedTerm>
-											<definition>Full volume</definition>
+											<definition>
+												<para>Full volume</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
 								<row>
 									<entry>
-										<placeholder>content</placeholder>
+										<para>
+											<placeholder>content</placeholder>
+										</para>
 									</entry>
 									<entry>
-										The affected speech text.
+										<para>
+											The affected speech text.
+										</para>
 									</entry>
 								</row>
 							</table>
@@ -506,11 +614,17 @@ character->Speak (SpeechText, …);
 										A string specifying the character of the voice:
 										<definitionTable>
 											<definedTerm>"Normal"</definedTerm>
-											<definition>A normal tone of voice (default)</definition>
+											<definition>
+												<para>A normal tone of voice (default)</para>
+											</definition>
 											<definedTerm>"Monotone"</definedTerm>
-											<definition>A monotone voice</definition>
+											<definition>
+												<para>A monotone voice</para>
+											</definition>
 											<definedTerm>"Whisper"</definedTerm>
-											<definition>A whispered voice</definition>
+											<definition>
+												<para>A whispered voice</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
@@ -546,11 +660,17 @@ character->Speak (SpeechText, …);
 										or abbreviations are spoken:
 										<definitionTable>
 											<definedTerm>"Address"</definedTerm>
-											<definition>Addresses and/or phone numbers</definition>
+											<definition>
+												<para>Addresses and/or phone numbers</para>
+											</definition>
 											<definedTerm>"E-mail"</definedTerm>
-											<definition>Electronic mail</definition>
+											<definition>
+												<para>Electronic mail</para>
+											</definition>
 											<definedTerm>"Unknown"</definedTerm>
-											<definition>The context is unknown (default)</definition>
+											<definition>
+												<para>The context is unknown (default)</para>
+											</definition>
 										</definitionTable>
 									</entry>
 								</row>
@@ -594,7 +714,9 @@ character->Speak (SpeechText, …);
 							</para>
 						</entry>
 						<entry>
-							<para>Maps spoken text to text displayed in the <token>WordBalloon</token>.</para>
+							<para>
+								Maps spoken text to text displayed in the <token>WordBalloon</token>.
+							</para>
 						</entry>
 						<entry>
 							<para>
@@ -803,9 +925,11 @@ character->Speak (SpeechText, …);
 					</row>
 				</table>
 				<alert class="note">
-					<token>DA</token> does not support all of the tags documented
-					in the <token>SAPIname</token> documentation. Parameters may also vary depending on the TTS engine selected.
-					You can set a specific TTS engine using the character's <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference> property.
+					<para>
+						<token>DA</token> does not support all of the tags documented
+						in the <token>SAPIname</token> documentation. Parameters may also vary depending on the TTS engine selected.
+						You can set a specific TTS engine using the character's <unmanagedCodeEntityReference>TTSModeID</unmanagedCodeEntityReference> property.
+					</para>
 				</alert>
 
 			</content>

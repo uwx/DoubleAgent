@@ -2,14 +2,14 @@
 <Manifest>
 
 	<ItemGroup Label="global"
-						 Condition="$(noTransforms)!=true">
+						 Condition="$(noTransforms)!=true and $(onlyIcons)!=true">
 			<Content Include="branding.xml">
 				<SubType>text/xml</SubType>
 			</Content>
 	</ItemGroup>
 
 	<ItemGroup Label="transforms"
-						 Condition="$(noTransforms)!=true">
+						 Condition="$(noTransforms)!=true and $(onlyIcons)!=true">
 		<Content Include="branding.xslt">
 			<SubType>text/richtext</SubType>
 		</Content>
