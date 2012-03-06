@@ -4501,7 +4501,7 @@
 			<remarks>
 				<para>
 					Some programming environments may assign additional design-time or run-time properties. For example, Visual
-					Basic adds a <see cref="8d5fdecd-2580-4545-8a88-0d231385c4ba">Name</see> property that identifies
+					Basic adds a <keyword>Name</keyword> property that identifies
 					the control, and also <keyword>Left</keyword> and <keyword>Top</keyword> properties that define the location
 					of the control on a form, even if the control doesn't appear on the form's page at run time.
 				</para>

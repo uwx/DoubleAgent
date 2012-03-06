@@ -133,13 +133,13 @@
 								select="concat('branding-',branding:GetLocale($locale),'.css')" />
 	<xsl:variable name="contentFolder"
 								select="branding:GetDirectoryName($content-path)"/>
-	<xsl:variable name="BrandingPath">
+	<xsl:variable name="brandingPath">
 		<xsl:choose>
 			<xsl:when test="$downscale-browser">
 				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../branding')"/>
 			</xsl:when>
 			<xsl:when test="$pre-branding">
-				<xsl:value-of select="concat(branding:BackslashesToFrontslashes($contentFolder), '/../icons')"/>
+				<xsl:value-of select="concat('ms.help?',branding:BackslashesToFrontslashes($branding-package),';')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="concat('ms.help?',branding:EscapeBackslashes($branding-package),';')"/>
@@ -217,12 +217,21 @@
 	<xsl:template name="ms-xhelp" >
 		<xsl:param name="ref"
 							 select="@href|@src"/>
+		<xsl:param name="isStyle"
+							 select="''"/>
 		<xsl:choose>
 			<xsl:when test="$pre-branding">
-				<xsl:value-of select="$ref"/>
+				<xsl:choose>
+					<xsl:when test="$isStyle">
+						<xsl:value-of select="concat($brandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('icons/',branding:BackslashesToFrontslashes($ref))"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat($BrandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
+				<xsl:value-of select="concat($brandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

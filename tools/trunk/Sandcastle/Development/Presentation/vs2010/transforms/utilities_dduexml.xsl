@@ -346,33 +346,17 @@
 								name="t_ddue_syntaxSection">
 		<div id="syntaxSection"
 				 class="section">
-			<div id="snippetGroup_Syntax"
-					 class="code">
-				<xsl:for-each select="ddue:legacySyntax">
-					<xsl:variable name="v_codeLang">
-						<xsl:call-template name="t_codeLang">
-							<xsl:with-param name="p_codeLang"
-															select="@language"/>
+			<xsl:if test="ddue:legacySyntax">
+				<div id="snippetGroup_Syntax"
+						 class="code">
+					<xsl:for-each select="ddue:legacySyntax">
+						<xsl:call-template name="t_putCodeSection">
+							<xsl:with-param name="p_transformCode"
+															select="true()"/>
 						</xsl:call-template>
-					</xsl:variable>
-
-					<span codeLanguage="{$v_codeLang}">
-						<table>
-							<tr>
-								<th align="left">
-									<include item="{$v_codeLang}"/>
-								</th>
-							</tr>
-							<tr>
-								<td>
-									<pre xml:space="preserve"><xsl:apply-templates xml:space="preserve"/></pre>
-								</td>
-							</tr>
-						</table>
-					</span>
-
-				</xsl:for-each>
-			</div>
+					</xsl:for-each>
+				</div>
+			</xsl:if>
 		</div>
 	</xsl:template>
 

@@ -472,7 +472,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 				String brandingTarget = Path.Combine (helpFormatOutputFolder, "branding");
 				String brandingTransformsTarget = Path.Combine (WorkingFolder, "branding");
-				String brandingIconsTarget = helpFormatOutputFolder;
+				String brandingIconsTarget = Path.Combine (helpFormatOutputFolder, "icons");
 				String brandingName = CurrentProject.BrandingPackageName;
 				String brandingManifiest = Path.Combine (brandingSource, "branding.manifest");
 				MSHCPackage brandingPackage;
@@ -565,6 +565,10 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 					this.ReportProgress ("{0} -> {1}", brandingSource, brandingIconsTarget);
 					brandingPackage.CopyTheseParts (brandingManifiest, true);
+
+					//The main branding transform contains variable values
+					TransformTemplate ("branding.xml", brandingSource, brandingTarget);
+					TransformTemplate ("branding.xslt", brandingSource, brandingTarget);
 				}
 				else
 				{
@@ -577,10 +581,11 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 					this.ReportProgress ("{0} -> {1}", brandingSource, brandingTransformsTarget);
 					brandingPackage.CopyTheseParts (brandingManifiest, true);
-				}
 
-				//The main branding transform contains variable values
-				TransformTemplate ("branding.xslt", brandingSource, brandingTarget);
+					//The main branding transform contains variable values
+					TransformTemplate ("branding.xml", brandingSource, brandingTransformsTarget);
+					TransformTemplate ("branding.xslt", brandingSource, brandingTransformsTarget);
+				}
 			}
 		}
 

@@ -881,6 +881,26 @@ namespace SandcastleBuilder.Utils.BuildEngine
                         HttpUtility.HtmlEncode(project.ProductTitle) : HttpUtility.HtmlEncode(project.HelpTitle);
                     break;
 
+				//DBF Added this variable to support the VS2010 style.
+				case "catalogvendorname":
+				case "brandingvendorname":
+					if (project.PresentationStyle.ToLower ().Contains ("vs2010"))
+					{
+						if (project.CatalogProductId == HelpLibraryManager.DefaultCatalogProductId)
+						{
+							replaceWith = HelpLibraryManager.DefaultBrandingVendor;
+						}
+						else
+						{
+							replaceWith = !String.IsNullOrEmpty (project.VendorName) ? project.VendorName : "Vendor Name";
+						}
+					}
+					else
+					{
+						replaceWith = HelpLibraryManager.DefaultBrandingVendor;
+					}
+					break;
+
 				//DBF Updated to force self branding for any style other than VS2010.
 				case "selfbranded":
 					if (project.PresentationStyle.ToLower ().Contains ("vs2010"))

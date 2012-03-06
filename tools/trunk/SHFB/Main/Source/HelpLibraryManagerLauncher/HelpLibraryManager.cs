@@ -133,6 +133,15 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
 
 		//DBF Added this property
 		/// <summary>
+		/// The name of the default help content folder for the MS Help Viewer.
+		/// </summary>
+		public static string DefaultBrandingVendor
+		{
+			get { return "Microsoft"; }
+		}
+
+		//DBF Added this property
+		/// <summary>
 		/// The file extension for MS Help Viewer packages.
 		/// </summary>
 		public static string Help3PackageExtension

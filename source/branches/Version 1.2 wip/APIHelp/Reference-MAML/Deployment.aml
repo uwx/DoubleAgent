@@ -19,7 +19,7 @@
 				</para>
 				<para>
 					If you choose to deploy <token>DA</token> with less than the full user interface, you should include some
-					kind reference to the GNU license agreement in your installation. The GNU licenses in HTML format
+					kind reference to the GNU license agreement in your installation. The GNU licenses in <application>HTML</application> format
 					are included in the Double agent installation.
 				</para>
 			</content>

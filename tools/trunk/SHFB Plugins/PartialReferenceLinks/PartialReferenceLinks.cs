@@ -197,7 +197,7 @@ namespace SandcastleBuilder.PlugIns
 				{
 					FilePath v_topicPath = new FilePath (Path.ChangeExtension (Path.Combine (topicFolder, conceptualTopic.Id), ".xml"), m_buildProcess.CurrentProject);
 #if DEBUG
-					m_buildProcess.ReportProgress ("Topic \"{0}\" File \"{1}\" Process \"{2}\"", conceptualTopic.Title, conceptualTopic.TopicFile.Name, v_topicPath);
+					m_buildProcess.ReportProgress ("  Topic \"{0}\" File \"{1}\" Process \"{2}\"", conceptualTopic.Title, conceptualTopic.TopicFile.Name, v_topicPath);
 #endif
 					if (v_topicPath.Exists)
 					{
@@ -235,7 +235,7 @@ namespace SandcastleBuilder.PlugIns
 								{
 									String v_methodSignature = v_methodIterator.Current.GetAttribute ("id", String.Empty);
 #if DEBUG
-									m_buildProcess.ReportProgress ("  Replace \"{0}\" with \"{1}\" in \"{2}\"", v_methodReference.InnerText, v_methodSignature, conceptualTopic.TopicFile.Name);
+									m_buildProcess.ReportProgress ("    Replace \"{0}\" with \"{1}\" in \"{2}\"", v_methodReference.InnerText, v_methodSignature, conceptualTopic.TopicFile.Name);
 #endif
 									v_methodReference.InnerText = v_methodSignature;
 									v_changed = true;

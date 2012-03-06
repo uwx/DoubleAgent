@@ -511,7 +511,7 @@
     </ApiFilter>
     <Preliminary>False</Preliminary>
     <PresentationStyle>vs2010</PresentationStyle>
-    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1, MSHelpViewer</HelpFileFormat>
     <HtmlHelp2xCompilerPath>%ProgramFiles(x86)%\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <HelpTitle>Double Agent SDK</HelpTitle>
     <NamingMethod>MemberName</NamingMethod>
@@ -522,7 +522,7 @@
       </PlugInConfig>
 <PlugInConfig id="Pack and Sign MSHC files" enabled="True"><configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" /></PlugInConfig>
 <PlugInConfig id="Resolve Partial Reference Links" enabled="True"><configuration /></PlugInConfig>
-<PlugInConfig id="Table of Contents Type Grouping" enabled="False"><configuration /></PlugInConfig></PlugInConfigurations>
+<PlugInConfig id="Table of Contents Type Grouping" enabled="True"><configuration /></PlugInConfig></PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
     <FooterText>Double Agent is open source software licensed under the &amp;lt%3ba target=&amp;quot%3b_blank&amp;quot%3b href=&amp;quot%3bhttp://www.gnu.org/licenses/gpl.html&amp;quot%3b&amp;gt%3bGNU General Public License&amp;lt%3b/a&amp;gt%3b</FooterText>
@@ -601,7 +601,7 @@
       </ComponentConfig>
     </ComponentConfigurations>
     <ProductTitle>Double Agent SDK</ProductTitle>
-    <VendorName>Cinnamon Software Inc.</VendorName>
+    <VendorName>Cinnamon Software</VendorName>
     <TocParentId>-1</TocParentId>
     <PlugInNamespaces>ms.vscc+,ms.vsipcc+</PlugInNamespaces>
     <ProjectSummary>Double Agent SDK</ProjectSummary>

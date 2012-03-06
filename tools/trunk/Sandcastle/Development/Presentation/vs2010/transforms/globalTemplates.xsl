@@ -424,6 +424,91 @@
 	</xsl:template>
 
 	<!-- ============================================================================================
+	Branding fixups
+	============================================================================================= -->
+
+	<xsl:template name="t_fixupStylesheets"
+								xml:space="preserve">
+		<div id="dummyImageDivProvidesImageUrls"
+				 style="display: none">
+			<img id="tabLeftBG"
+					 alt=""
+					 style="display: none">
+				<includeAttribute name="src"
+													item="iconPath">
+					<parameter>tabLeftBG.gif</parameter>
+				</includeAttribute>
+			</img>
+			<img id="tabRightBG"
+					 alt=""
+					 style="display: none">
+				<includeAttribute name="src"
+													item="iconPath">
+					<parameter>tabRightBG.gif</parameter>
+				</includeAttribute>
+			</img>
+			<img id="footer_slice"
+					 alt=""
+					 style="display: none">
+				<includeAttribute name="src"
+													item="iconPath">
+					<parameter>footer_slice.gif</parameter>
+				</includeAttribute>
+			</img>
+		</div>
+		<script type="text/javascript">
+			try
+			{
+				var styleSheetEnum = new Enumerator(document.styleSheets);
+				var styleSheet;
+				var ruleNdx;
+				var rule;
+
+				for (; !styleSheetEnum.atEnd(); styleSheetEnum.moveNext())
+				{
+					styleSheet = styleSheetEnum.item();
+					if (styleSheet.rules)
+					{
+						if (styleSheet.rules.length != 0)
+						{
+							for (ruleNdx = 0; ruleNdx != styleSheet.rules.length; ruleNdx++)
+							{
+								rule = styleSheet.rules.item(ruleNdx);
+
+								var bgUrl = rule.style.backgroundImage;
+								if (bgUrl != "")
+								{
+									bgUrl = bgUrl.substring(bgUrl.indexOf("(")+1,bgUrl.lastIndexOf(")"));
+									if (bgUrl != "")
+									{
+										if (tabLeftBG.src.indexOf (bgUrl) != -1)
+										{
+											bgUrl = rule.style.backgroundImage.replace (bgUrl, tabLeftBG.src);
+											rule.style.backgroundImage = bgUrl;
+										}
+										else if (tabRightBG.src.indexOf (bgUrl) != -1)
+										{
+											bgUrl = rule.style.backgroundImage.replace (bgUrl, tabRightBG.src);
+											rule.style.backgroundImage = bgUrl;
+										}
+										else if (footer_slice.src.indexOf (bgUrl) != -1)
+										{
+											bgUrl = rule.style.backgroundImage.replace (bgUrl, footer_slice.src);
+											rule.style.backgroundImage = bgUrl;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (e) {}
+			finally {}
+		</script>
+	</xsl:template>
+
+	<!-- ============================================================================================
 	Running header
 	============================================================================================= -->
 
@@ -440,7 +525,8 @@
 		</div>
 
 		<!-- This table is required for runningHeader/logo placement. It will be used and removed during branding. -->
-		<!-- It basically fakes the formatting of older presentation styles so common logic can be applied. -->
+		<!-- It basically fakes the formatting of older presentation styles so common logic can be used in -->
+		<!-- the PostTransformComponent. -->
 		<table id="topTable"
 					 style="display:none">
 			<tr>

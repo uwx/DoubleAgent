@@ -90,18 +90,24 @@
 			<xsl:call-template name="ms-xhelp">
 				<xsl:with-param name="ref"
 												select="'tabLeftBG.gif'"/>
+				<xsl:with-param name="isStyle"
+												select="'true'"/>
 			</xsl:call-template>
 			<xsl:text>')}</xsl:text>
 			<xsl:text>.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled {background-image: url('</xsl:text>
 			<xsl:call-template name="ms-xhelp">
 				<xsl:with-param name="ref"
 												select="'tabRightBG.gif'"/>
+				<xsl:with-param name="isStyle"
+												select="'true'"/>
 			</xsl:call-template>
 			<xsl:text>')}</xsl:text>
 			<xsl:text>.OH_footer { background-image: url('</xsl:text>
 			<xsl:call-template name="ms-xhelp">
 				<xsl:with-param name="ref"
 												select="'footer_slice.gif'"/>
+				<xsl:with-param name="isStyle"
+												select="'true'"/>
 			</xsl:call-template>
 			<xsl:text>'); background-position:top; background-repeat:repeat-x}</xsl:text>
 		</xsl:element>

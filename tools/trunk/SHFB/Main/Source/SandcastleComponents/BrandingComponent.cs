@@ -53,6 +53,7 @@ namespace SandcastleBuilder.Components
 		private const string s_defaultHelpOutput = "MSHelpViewer";
 		private static string s_defaultCatalogProductId = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductId;
 		private static string s_defaultCatalogVersion = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductVersion;
+		private static string s_defaultVendorName = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultBrandingVendor;
 		private static string s_packageExtension = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.Help3PackageExtension;
 
 		private bool m_selfBranded = true;
@@ -63,7 +64,7 @@ namespace SandcastleBuilder.Components
 		private string m_catalogProductId = s_defaultCatalogProductId;
 		private string m_catalogVersion = s_defaultCatalogVersion;
 		private string m_catalogHelpTitle = String.Empty;
-		private string m_vendorName = String.Empty;
+		private string m_vendorName = s_defaultVendorName;
 		private XslCompiledTransform m_brandingTransform = null;
 		private XsltArgumentList m_transformArguments = null;
 
@@ -109,8 +110,11 @@ namespace SandcastleBuilder.Components
 				{
 					m_catalogVersion = v_configValue;
 				}
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configVendorName, String.Empty)))
+				{
+					m_vendorName = v_configValue;
+				}
 				m_catalogHelpTitle = v_configData.GetAttribute (s_configCatalogHelpTitle, String.Empty);
-				m_vendorName = v_configData.GetAttribute (s_configVendorName, String.Empty);
 			}
 
 			if (m_selfBranded)
@@ -374,7 +378,6 @@ namespace SandcastleBuilder.Components
 
 						m_transformArguments = new XsltArgumentList ();
 						m_transformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
-						m_transformArguments.AddParam ("branding-package", String.Empty, m_brandingPackage + s_packageExtension);
 						m_transformArguments.AddParam ("catalogProductFamily", String.Empty, m_catalogProductId);
 						m_transformArguments.AddParam ("catalogProductVersion", String.Empty, m_catalogVersion);
 						m_transformArguments.AddParam ("catalogHelpTitle", String.Empty, m_catalogHelpTitle);
@@ -382,11 +385,17 @@ namespace SandcastleBuilder.Components
 						m_transformArguments.AddParam ("content-path", String.Empty, @".\");
 						if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
 						{
+							m_transformArguments.AddParam ("branding-package", String.Empty, m_brandingPackage + s_packageExtension);
 							m_transformArguments.AddParam ("downscale-browser", String.Empty, true);
 						}
 						else if (String.Compare (m_brandingPackage, s_defaultBrandingPackage, StringComparison.OrdinalIgnoreCase) == 0)
 						{
+							m_transformArguments.AddParam ("branding-package", String.Empty, @"content\" + s_defaultVendorName + @"\store\" + m_brandingPackage + s_packageExtension);
 							m_transformArguments.AddParam ("pre-branding", String.Empty, true);
+						}
+						else
+						{
+							m_transformArguments.AddParam ("branding-package", String.Empty, @"content\" + m_vendorName + @"\store\" + m_brandingPackage + s_packageExtension);
 						}
 
 						LoadBrandingConfig (Path.Combine (v_brandingContentBase, "branding.xml"), ref v_brandingTransformName);

@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <branding xmlns="urn:FH-Branding">
-  <transform-parameters xml:lang="en-us" transform="branding-en-us.xslt" />
+	<common-parameters>
+		<parameter name="branding-package"
+							 value="content\{@BrandingVendorName}\store\{@BrandingPackage}.mshc" />
+	</common-parameters>
+	<transform-parameters xml:lang="en-us" transform="branding-en-us.xslt" />
   <transform-parameters xml:lang="ja-jp" transform="branding-ja-jp.xslt" />
   <transform-parameters xml:lang="cs-cz" transform="branding-cs-cz.xslt" />
   <transform-parameters xml:lang="de-de" transform="branding-de-de.xslt" />

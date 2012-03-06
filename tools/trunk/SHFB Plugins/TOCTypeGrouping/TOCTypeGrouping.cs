@@ -87,6 +87,7 @@ namespace SandcastleBuilder.PlugIns
 					m_executionPoints = new ExecutionPointCollection
                     {
                         new ExecutionPoint(BuildStep.TransformReflectionInfo, ExecutionBehaviors.Before),
+                        new ExecutionPoint(BuildStep.TransformReflectionInfo, ExecutionBehaviors.After),
                         new ExecutionPoint(BuildStep.GenerateIntermediateTableOfContents, ExecutionBehaviors.Before)
                     };
 				}
@@ -132,7 +133,7 @@ namespace SandcastleBuilder.PlugIns
 					String v_namespaceName;
 
 					v_reflectionDocument.Load (v_reflectionFileName);
-#if	DEBUG
+#if	DEBUG_NOT
 					v_reflectionDocument.Save (Path.ChangeExtension (v_reflectionFileName, ".before"));
 					v_reflectionDocument.Load (v_reflectionFileName);
 					m_buildProcess.ReportProgress ("ReflectionInfo [{0}]", v_reflectionFileName);
@@ -143,7 +144,7 @@ namespace SandcastleBuilder.PlugIns
 					{
 						v_namespaceId = NodeAttrValue (v_namespaceNode, "id");
 #if	DEBUG
-						m_buildProcess.ReportProgress ("Namespace [{0}]", v_namespaceId);
+						m_buildProcess.ReportProgress ("  Namespace [{0}]", v_namespaceId);
 #endif
 						v_namespaceData = v_namespaceNode.SelectSingleNode ("apidata[@group='namespace' and not(@subgroup)]");
 						if (v_namespaceData != null)
@@ -155,7 +156,7 @@ namespace SandcastleBuilder.PlugIns
 
 								v_namespaceName = NodeAttrValue (v_namespaceData, "name");
 #if	DEBUG
-								m_buildProcess.ReportProgress ("  Apidata [{0}] [{1}]", v_namespaceId, v_namespaceName);
+								m_buildProcess.ReportProgress ("    Apidata [{0}] [{1}]", v_namespaceId, v_namespaceName);
 #endif
 								v_elementNodes = v_namespaceNode.SelectNodes ("elements/element");
 
@@ -175,7 +176,7 @@ namespace SandcastleBuilder.PlugIns
 										}
 									}
 #if	DEBUG
-									m_buildProcess.ReportProgress ("    Element [{0}] [{1}] [{2}]", NodeAttrValue (v_elementNode, "api"), (v_typeElement == null) ? "<not found>" : NodeAttrValue (v_typeElement, "id"), v_subgroup);
+									m_buildProcess.ReportProgress ("      Element [{0}] [{1}] [{2}]", NodeAttrValue (v_elementNode, "api"), (v_typeElement == null) ? "<not found>" : NodeAttrValue (v_typeElement, "id"), v_subgroup);
 #endif
 									if (!String.IsNullOrEmpty (v_subgroup))
 									{
@@ -190,7 +191,7 @@ namespace SandcastleBuilder.PlugIns
 #if	DEBUG
 								foreach (KeyValuePair<String, XmlNode> v_subgroup in v_subgroupElements)
 								{
-									m_buildProcess.ReportProgress ("  Subgroup [{0}] Count [{1}]", v_subgroup.Key, v_subgroup.Value.ChildNodes.Count);
+									m_buildProcess.ReportProgress ("    Subgroup [{0}] Count [{1}]", v_subgroup.Key, v_subgroup.Value.ChildNodes.Count);
 								}
 #endif
 								foreach (KeyValuePair<String, XmlNode> v_subgroup in v_subgroupElements)
@@ -210,24 +211,18 @@ namespace SandcastleBuilder.PlugIns
 									v_apiNode.SetAttribute ("id", String.Format ("{0}.{1}", v_apiId, v_namespaceId));
 
 									v_apiDataNode = v_reflectionDocument.CreateElement ("apidata");
-									v_apiDataNode.SetAttribute ("name", String.Format ("{0} {1}", v_namespaceData.Attributes.GetNamedItem ("name", String.Empty).Value, v_apiId));
+									v_apiDataNode.Attributes.SetNamedItem (v_namespaceData.Attributes.GetNamedItem ("name", String.Empty).CloneNode (true));
 									v_apiDataNode.Attributes.SetNamedItem (v_namespaceData.Attributes.GetNamedItem ("group", String.Empty).CloneNode (true));
-									//v_apiDataNode.SetAttribute ("subgroup", v_subgroup.Key);
+									v_apiDataNode.SetAttribute ("subgroup", String.Format ("{0}Types", v_subgroup.Key));
 
 									v_containersNode = v_reflectionDocument.CreateElement ("containers");
 									v_containerNode = v_reflectionDocument.CreateElement ("namespace");
 									v_containerNode.SetAttribute ("api", v_namespaceId);
 									v_containersNode.AppendChild (v_containerNode);
-									//v_topicDataNode.SetAttribute ("group", "api");
-									//v_topicDataNode.SetAttribute ("subgroup", v_subgroup.Key);
-
-									//v_fileNameNode = v_reflectionDocument.CreateElement ("file");
-									//v_fileNameNode.SetAttribute ("name", String.Format ("{0}.{1}", v_apiId, v_namespaceId).Replace (":", "_").Replace (".", "_"));
 
 									v_apiNode.AppendChild (v_apiDataNode);
 									v_apiNode.AppendChild (v_containersNode);
-									//v_apiNode.AppendChild (v_fileNameNode);
-									v_apiDataNode.AppendChild (v_subgroup.Value);
+									v_apiNode.AppendChild (v_subgroup.Value);
 									v_namespaceNode.ParentNode.InsertAfter (v_apiNode, v_namespaceNode);
 								}
 							}
@@ -242,7 +237,7 @@ namespace SandcastleBuilder.PlugIns
 					}
 
 					v_reflectionDocument.Save (v_reflectionFileName);
-#if	DEBUG
+#if	DEBUG_NOT
 					m_buildProcess.ReportProgress ("Saved [{0}]", v_reflectionFileName);
 					v_reflectionDocument.Save (Path.ChangeExtension (v_reflectionFileName, ".after"));
 #endif
@@ -255,8 +250,51 @@ namespace SandcastleBuilder.PlugIns
 					System.Diagnostics.Debug.Print (exp.Message);
 				}
 			}
+			else if ((context.BuildStep == BuildStep.TransformReflectionInfo) && (context.Behavior == ExecutionBehaviors.After))
+			{
+				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
+				try
+				{
+					String v_referenceContentFileName = Path.Combine (Path.Combine (m_buildProcess.PresentationStyleFolder, "content"), "reference_content.xml");
+					String v_sharedContentFileName = Path.Combine (m_buildProcess.WorkingFolder, "SharedBuilderContent.xml");
+					XmlDocument v_referenceContentDocument = new XmlDocument ();
+					XmlDocument v_sharedContentDocument = new XmlDocument ();
+					String[] v_groups = {"class","structure","interface","delegate","enumeration"};
+					XmlElement v_titleNode;
+					XmlNode v_includeNode;
+
+					v_referenceContentDocument.Load (v_referenceContentFileName);
+					v_sharedContentDocument.Load (v_sharedContentFileName);
+
+					foreach (String v_group in v_groups)
+					{
+						v_includeNode = v_referenceContentDocument.SelectSingleNode (String.Format ("//item[@id='{0}TypesFilterLabel']", v_group));
+						if (v_includeNode != null)
+						{
+							v_titleNode = v_sharedContentDocument.CreateElement ("item");
+							v_titleNode.SetAttribute ("id", String.Format ("{0}TypesTopicTitle", v_group));
+							v_titleNode.InnerText = "{0} " + v_includeNode.InnerText;
+							v_sharedContentDocument.DocumentElement.AppendChild (v_titleNode);
+
+							v_titleNode = v_sharedContentDocument.CreateElement ("item");
+							v_titleNode.SetAttribute ("id", String.Format ("{0}TypesIndexEntry", v_group));
+							v_titleNode.InnerText = "{0} " + v_includeNode.InnerText.ToLower();
+							v_sharedContentDocument.DocumentElement.AppendChild (v_titleNode);
+						}
+					}
+
+					v_sharedContentDocument.Save (v_sharedContentFileName);
+				}
+				catch (Exception exp)
+				{
+#if	DEBUG
+					m_buildProcess.ReportWarning (Name, exp.Message);
 #endif
-#if false
+					System.Diagnostics.Debug.Print (exp.Message);
+				}
+			}
+#endif
+#if true
 			if ((context.BuildStep == BuildStep.GenerateIntermediateTableOfContents) && (context.Behavior == ExecutionBehaviors.Before))
 			{
 				m_buildProcess.ReportProgress ("{0} Version {1}\r\n{2}", this.Name, this.Version, this.Copyright);
