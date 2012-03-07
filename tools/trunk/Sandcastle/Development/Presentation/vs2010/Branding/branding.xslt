@@ -30,13 +30,13 @@
 	<xsl:param name="pre-branding"
 						 select="false()"/>
 	<xsl:param name="catalogProductFamily"
-						 select="'{@CatalogProductId}'"/>
+						 select="'VS'"/>
 	<xsl:param name="catalogProductVersion"
-						 select="'{@CatalogVersion}'"/>
+						 select="'100'"/>
 	<xsl:param name="catalogLocale"
-						 select="'{@Locale}'"/>
+						 select="'en-US'"/>
 	<xsl:param name="branding-package"
-						 select="'{@BrandingPackage}.mshc'"/>
+						 select="'Dev10.mshc'"/>
 	<xsl:param name="launchingApp"
 						 select="''"/>
 	<xsl:param name="content-path"

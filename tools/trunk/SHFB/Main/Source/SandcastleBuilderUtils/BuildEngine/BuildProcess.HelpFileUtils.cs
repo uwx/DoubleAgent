@@ -565,10 +565,6 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 					this.ReportProgress ("{0} -> {1}", brandingSource, brandingIconsTarget);
 					brandingPackage.CopyTheseParts (brandingManifiest, true);
-
-					//The main branding transform contains variable values
-					TransformTemplate ("branding.xml", brandingSource, brandingTarget);
-					TransformTemplate ("branding.xslt", brandingSource, brandingTarget);
 				}
 				else
 				{
@@ -582,9 +578,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 					this.ReportProgress ("{0} -> {1}", brandingSource, brandingTransformsTarget);
 					brandingPackage.CopyTheseParts (brandingManifiest, true);
 
-					//The main branding transform contains variable values
-					TransformTemplate ("branding.xml", brandingSource, brandingTransformsTarget);
-					TransformTemplate ("branding.xslt", brandingSource, brandingTransformsTarget);
+					brandingTarget = brandingTransformsTarget;
 				}
 			}
 		}

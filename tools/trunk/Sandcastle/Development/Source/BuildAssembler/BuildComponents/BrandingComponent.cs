@@ -1,26 +1,4 @@
-﻿//=============================================================================
-// System  : Sandcastle Help File Builder Components
-// File    : BrandingComponent.cs
-// Author  : Don Fehr (Don.Fehr@videotron.ca)
-// Updated : 
-// Compiler: Microsoft Visual C#
-//
-// This file manages the MSDN and/or custom branding of MSHC packages.
-// It also allows the branding to be applied as part of the build process
-// so that Help1 and Web targets are supported.
-//
-// This code is published under the Microsoft Public License (Ms-PL).  A copy
-// of the license should be distributed with the code.  It can also be found
-// at the project website: http://SHFB.CodePlex.com.   This notice, the
-// author's name, and all copyright notices must remain intact in all
-// applications, documentation, and source files.
-//
-// Version     Date     Who  Comments
-// ============================================================================
-// unknown  02/06/2012  DBF  Created the code
-//=============================================================================
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -28,10 +6,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
-using Microsoft.Ddue.Tools;
-using SandcastleBuilder.MicrosoftHelpViewer;
-
-namespace SandcastleBuilder.Components
+namespace Microsoft.Ddue.Tools
 {
 	class BrandingComponent : BuildComponent
 	{
@@ -48,12 +23,12 @@ namespace SandcastleBuilder.Components
 		private const string s_configVendorName = "vendor-name";
 
 		private const string s_defaultLocale = "en-us";
-		private static string s_defaultBrandingPackage = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultBrandingPackage;
+		private static string s_defaultBrandingPackage = "dev10";
 		private const string s_defaultHelpOutput = "MSHelpViewer";
-		private static string s_defaultCatalogProductId = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductId;
-		private static string s_defaultCatalogVersion = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultCatalogProductVersion;
-		private static string s_defaultVendorName = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.DefaultBrandingVendor;
-		private static string s_packageExtension = SandcastleBuilder.MicrosoftHelpViewer.HelpLibraryManager.Help3PackageExtension;
+		private static string s_defaultCatalogProductId = "VS";
+		private static string s_defaultCatalogVersion = "100";
+		private static string s_defaultVendorName = "Microsoft";
+		private static string s_packageExtension = ".mshc";
 
 		private bool m_selfBranded = true;
 		private string m_locale = s_defaultLocale;
@@ -131,8 +106,6 @@ namespace SandcastleBuilder.Components
 
 		public override void Apply (XmlDocument document, string key)
 		{
-			//MakePlainCodeCopies (document);
-
 			if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				if (m_selfBranded)
@@ -586,46 +559,6 @@ namespace SandcastleBuilder.Components
 					}
 					v_node.ParentNode.ReplaceChild (v_lstElement, v_node);
 #endif
-				}
-			}
-		}
-
-		#endregion
-
-		#region Code snippet finalization
-		//=====================================================================
-
-		/// <summary>
-		/// Each code snippet in an MSHC document has two formats - colorized and
-		/// plain.
-		/// The colorization happens in different places for Conceptual and
-		/// Sandcastle Reference topics, so we use this opportunity to make a
-		/// plain copy of each colorized code snippet.
-		/// The MS Help Viewer uses the plain version in its Copy and Print scripts.
-		/// </summary>
-		private void MakePlainCodeCopies (XmlDocument document)
-		{
-			XmlNodeList v_codeNodes = document.SelectNodes ("//div[@class='OH_CodeSnippetContainerCode']");
-
-			foreach (XmlNode v_ColoredCodeDiv in v_codeNodes)
-			{
-				XmlNode v_codeNodeId = v_ColoredCodeDiv.Attributes.GetNamedItem ("id");
-
-				if ((v_codeNodeId != null) && (v_codeNodeId.Value.Contains ("_code_Div")))
-				{
-					XmlNode v_plainCodeDiv = v_ColoredCodeDiv.ParentNode.SelectSingleNode (String.Format (CultureInfo.InvariantCulture, "div[@id='{0}']", v_codeNodeId.Value.Replace ("_code_Div", "_code_Plain_Div")));
-
-					if (v_plainCodeDiv != null)
-					{
-						XmlNode v_coloredCode = v_ColoredCodeDiv.SelectSingleNode ("descendant::pre");
-						XmlNode v_plainCode = v_plainCodeDiv.SelectSingleNode ("descendant::pre");
-
-						if ((v_coloredCode != null) && (v_plainCode != null))
-						{
-							v_plainCode.InnerXml = String.Empty;
-							v_plainCode.AppendChild (document.CreateTextNode (v_coloredCode.InnerText));
-						}
-					}
 				}
 			}
 		}

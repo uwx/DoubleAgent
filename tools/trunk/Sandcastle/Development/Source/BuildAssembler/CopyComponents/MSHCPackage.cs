@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace SandcastleBuilder.Utils.BuildEngine
+namespace Microsoft.Ddue.Tools
 {
 	/// <summary>
 	/// This class implements an MSHC package (which is a type of ZIP file).

@@ -1,5 +1,5 @@
 <content xml:space="preserve"
- xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+				 xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
 
 	<!-- paths -->
 	<item id="iconPath">../icons/{0}</item>
@@ -86,7 +86,11 @@
   	
   
    <!-- dynamic Link Information -->
-  <item id="mshelpKTable"><MSHelp:ktable keywords='{0}' locHeader='Location' topicHeader = 'Topic' disambiguator='table' indexMoniker='!DefaultDynamicLinkIndex' /></item>
+  <item id="mshelpKTable"><MSHelp:ktable keywords='{0}'
+									 locHeader='Location'
+									 topicHeader = 'Topic'
+									 disambiguator='table'
+									 indexMoniker='!DefaultDynamicLinkIndex' /></item>
 
   <item id="dynamicLinkInlinePreFixText">For more information, see </item>
   <item id="dynamicLinkInlinePostFixText">.</item>
@@ -161,23 +165,26 @@
   <!-- footer -->	
 
 <item id="footer">
-<span id="feedbackarea">
+	<span id="feedbackarea">
 			Send
-		<a>
-			<includeAttribute name="href" item="MailToLink">
-        <parameter>{2}</parameter>
-        <parameter>{3}</parameter>
-      </includeAttribute>
-      <include item="fb_feedBack" />
-		</a>
+			<a>
+				<includeAttribute name="href"
+														item="MailToLink">
+					<parameter>{2}</parameter>
+					<parameter>{3}</parameter>
+				</includeAttribute>
+				<include item="fb_feedBack" />
+			</a>
 			on this topic to Microsoft.
 		</span>
 </item>
   
 <item id="feedbackHeader">
-  <span id="headfeedbackarea" class="feedbackhead">
+  <span id="headfeedbackarea"
+					class="feedbackhead">
       <a>
-        <includeAttribute name="href" item="MailToLink">
+        <includeAttribute name="href"
+													item="MailToLink">
           <parameter>{0}</parameter>
           <parameter>{1}</parameter>
           </includeAttribute>
