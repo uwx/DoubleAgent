@@ -10,7 +10,7 @@
 	<item id="copyright_link">{@CopyrightHref}</item>
 	<item id="copyright_text">{@CopyrightText}</item>
 
-	<item id="header"><font color="DarkGray">{@HeaderText}</font> {@Preliminary}</item>
+	<item id="header"><span class="introStyle">{@HeaderText}</span> {@Preliminary}</item>
 	<item id="footer_text">{@FooterText}</item>
 
 	<item id="fb_alias">{@FeedbackEMailAddress}</item>

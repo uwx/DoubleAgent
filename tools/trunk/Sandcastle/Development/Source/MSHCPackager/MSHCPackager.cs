@@ -40,7 +40,7 @@ namespace Microsoft.Ddue.Tools
 			if (v_parseResults.Options["?"].IsPresent)
 			{
 				Console.WriteLine ("MSHCPackager /extract mshc_file target_directory [/manifest:manifest_file [/arg:...]]");
-				Console.WriteLine ("MSHCPackager /save source_directory mshc_file [/manifest:manifest_file [/arg:...]]");
+				Console.WriteLine ("MSHCPackager /save source_directory mshc_file");
 				Console.WriteLine ("MSHCPackager /copy target_directory /manifest:manifest_file [/arg:...]");
 				v_options.WriteOptionSummary (Console.Out);
 				return (0);
@@ -163,6 +163,16 @@ namespace Microsoft.Ddue.Tools
 					Console.WriteLine ("No source directory specified.");
 					return (1);
 				}
+				else if (!string.IsNullOrEmpty (v_manifestFile))
+				{
+					Console.WriteLine ("Save does not use a manifest file.");
+					return (1);
+				}
+				else if (v_parseResults.Options["arg"].IsPresent)
+				{
+					Console.WriteLine ("Save does not use manifest file arguments.");
+					return (1);
+				}
 			}
 			else if (v_operation == v_copyOperation)
 			{
@@ -208,6 +218,21 @@ namespace Microsoft.Ddue.Tools
 			}
 			else if (v_operation == v_saveOperation)
 			{
+				MSHCPackage v_sourcePackage = new MSHCPackage (v_mshcFile, FileMode.Create);
+
+				if (v_sourcePackage.IsOpen)
+				{
+					Console.WriteLine (String.Format ("{0} -> {1}", v_sourceDirectory, v_sourcePackage.PackagePath));
+					v_sourcePackage.LoggingTarget = Console.Out;
+					v_sourcePackage.LoggingPrefix = "  ";
+
+					v_sourcePackage.PutAllParts (v_sourceDirectory, v_replaceTargets);
+				}
+				else
+				{
+					Console.WriteLine (String.Format ("Unable to create {0}", v_mshcFile));
+					return (1);
+				}
 			}
 			else if (v_operation == v_copyOperation)
 			{

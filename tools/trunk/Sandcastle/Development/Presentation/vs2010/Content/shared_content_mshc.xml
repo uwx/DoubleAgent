@@ -16,11 +16,12 @@
   <item id="xnaTechnologyAttribute">kbXNA</item>
 	<item id="xnaDocSetAttribute">XNA</item>
 
-  	<!-- header -->
-	<item id="header"><font color="DarkGray"></font><p/> </item>
+  <!-- header and footer -->
+	<item id="header"><span class="introStyle"></span></item>
+	<item id="footer_text"></item>
   
   <!-- freshness date -->
-  <item id="UpdateTitle"><font color="DarkGray">Updated: {0}</font></item>
+  <item id="UpdateTitle"><span class="introStyle">Updated: {0}</span></item>
   <!-- if the TransformComponent of the BuildAssembler config file has the argument: 
              argument key="changeHistoryOptions" value="showDefaultFreshnessDate"
        the "defaultFreshnessDate" item is used as the default freshness date for topics that don't have a Change History table. -->
@@ -76,11 +77,11 @@
 	<item id="copyImage">Copy image</item>
 	<item id="footerImage">Footer image</item>
 	
-  	 <!-- product labels -->
-  	<item id="framework">.NET Framework</item>
-  	<item id="compact">.NET Compact Framework</item>
-  	<item id="everett">1.1</item>
-  	<item id="whidbey">2.0</item>
+  <!-- product labels -->
+  <item id="framework">.NET Framework</item>
+  <item id="compact">.NET Compact Framework</item>
+  <item id="everett">1.1</item>
+  <item id="whidbey">2.0</item>
 
 	<item id="copyCode">Copy Code</item>
   	
@@ -162,41 +163,11 @@
 
   <item id="top">Back to Top</item>
 
-  <!-- footer -->	
-
-<item id="footer">
-		<span id="feedbackarea">
-			Send
-			<a>
-				<includeAttribute name="href"
-													item="MailToLink">
-					<parameter>{2}</parameter>
-					<parameter>{3}</parameter>
-				</includeAttribute>
-				<include item="fb_feedBack" />
-			</a>
-			on this topic to <include item="fb_aliasName" />.
-		</span>
-	</item>
-  
-<item id="feedbackHeader">
-		<span id="headfeedbackarea"
-					class="feedbackhead">
-			<a>
-				<includeAttribute name="href"
-													item="MailToLink">
-					<parameter>{0}</parameter>
-					<parameter>{1}</parameter>
-				</includeAttribute>
-				<include item="fb_headerFeedBack" />
-			</a>
-		</span>
-	</item> 
-<item id="MailToLink">javascript:SubmitFeedback('<include item="fb_alias" />','<include item="fb_product" />','<include item="fb_deliverable" />','{0}','{1}','<include item="fb_body" />','<include item="fb_subject" />');</item>  
-  
-<item id="copyrightStatement"><include item="copyrightText"/></item>
-
-<item id="copyrightText">&#169; 2005 Microsoft Corporation. All rights reserved.</item> 
+  <!-- Copyright -->	
+	<item id="copyright_info"><include item="copyright_text"/></item>
+	<item id="copyright_link"></item>
+	<item id="copyright_text">&#169; 2005 Microsoft Corporation. All rights reserved.</item> 
+	<item id="copyrightText"><include item="copyright_text"/></item>
 
     <!-- Bibliography -->
   <item id="bibliographyTitle">Bibliography</item>

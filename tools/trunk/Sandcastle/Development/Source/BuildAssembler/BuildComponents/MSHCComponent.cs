@@ -329,7 +329,7 @@ namespace Microsoft.Ddue.Tools
                 return null;
             XmlElement elem = null;
             if (!multiple)
-                elem = _document.SelectSingleNode(string.Format(@"//meta[@{0}]", name)) as XmlElement;
+				elem = _document.SelectSingleNode (string.Format ("//meta[@name='{0}']", name)) as XmlElement;
             if (elem == null)
             {
                 elem = _document.CreateElement(MHSTag.Meta);

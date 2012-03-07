@@ -1035,7 +1035,7 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 			try
 			{
-				String v_nameExt = Path.GetExtension (partName);
+				String v_nameExt = Path.GetExtension (partName).ToLower ();
 				XmlNamespaceManager v_namespaceManager;
 				XmlNode v_typeNode;
 				XmlNode v_typeAttribute;
@@ -1051,6 +1051,8 @@ namespace SandcastleBuilder.Utils.BuildEngine
 							"<Default Extension='gif' ContentType='image/gif' />" +
 							"<Default Extension='ico' ContentType='image/gif' />" +
 							"<Default Extension='png' ContentType='image/png' />" +
+							"<Default Extension='jpg' ContentType='image/jpeg' />" +
+							"<Default Extension='jpeg' ContentType='image/jpeg' />" +
 							"<Default Extension='xml' ContentType='text/xml' />" +
 							"<Default Extension='xslt' ContentType='text/richtext' />" +
 							"<Default Extension='htm' ContentType='text/html' />" +

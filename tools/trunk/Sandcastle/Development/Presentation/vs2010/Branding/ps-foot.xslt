@@ -59,7 +59,9 @@
 									 namespace="{$xhtml}">
 				<xsl:apply-templates select="$ft_footerText"/>
 				<xsl:if test="normalize-space($ft_copyrightLink)=''">
-					<xsl:text>&#160;</xsl:text>
+					<xsl:if test="normalize-space($ft_footerText)!=''">
+						<xsl:text>&#160;</xsl:text>
+					</xsl:if>
 					<xsl:copy-of select="$ft_copyrightInfo" />
 				</xsl:if>
 			</xsl:element>
@@ -135,9 +137,14 @@
 					<xsl:value-of select="'&amp;body='" />
 					<xsl:value-of select="branding:replace(branding:GetUrlEncode2($ft_feedbackBody),'+','%20')" />
 				</xsl:attribute>
-				<xsl:if test="normalize-space($ft_feedbackText)">
-					<xsl:apply-templates select="$ft_feedbackText" />
-				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="normalize-space($ft_feedbackText)">
+						<xsl:apply-templates select="$ft_feedbackText" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text> </xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:element>
 			<xsl:if test="normalize-space($prolog)">
 				<xsl:text>&#160;</xsl:text>

@@ -430,8 +430,13 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				if (Directory.Exists (presentationFolder + "media"))
 					this.RecursiveCopy (presentationFolder + @"media\*.*", baseFolder + @"media\");
 
-				this.RecursiveCopy (presentationFolder + @"scripts\*.*", baseFolder + @"scripts\");
-				this.RecursiveCopy (presentationFolder + @"styles\*.*", baseFolder + @"styles\");
+				//DBF Made this optional (for VS2010 style)
+				if (Directory.Exists (presentationFolder + "scripts"))
+					this.RecursiveCopy (presentationFolder + @"scripts\*.*", baseFolder + @"scripts\");
+
+				//DBF Made this optional (for VS2010 style)
+				if (Directory.Exists (presentationFolder + "styles"))
+					this.RecursiveCopy (presentationFolder + @"styles\*.*", baseFolder + @"styles\");
 
 				//DBF Added the branding folder
 				CopyHelpBranding (baseFolder);

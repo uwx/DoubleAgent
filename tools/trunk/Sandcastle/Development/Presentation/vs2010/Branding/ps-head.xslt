@@ -21,7 +21,7 @@
 			</xsl:if>
 			<xsl:call-template name="head-style-urls"/>
 			<xsl:if test="$downscale-browser">
-				<xsl:call-template name="head-style-adjustments"/>
+				<xsl:call-template name="head_styles_inline"/>
 			</xsl:if>
 			<xsl:if test="not($pre-branding)">
 				<xsl:call-template name="head-script"/>
@@ -113,19 +113,19 @@
 		</xsl:element>
 	</xsl:template>
 
-	<xsl:template name="head-style-adjustments">
+	<xsl:template name="head_styles_inline">
 		<xsl:element name="style"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="type">text/css</xsl:attribute>
 			body
 			{
 			border-left:5px solid #e6e6e6;
-			overflow-x:visible;
+			overflow-x:scroll;
 			overflow-y:scroll;
 			}
-			.OH_outerDiv
+			span.nolink
 			{
-			overflow-x:auto;
+			font-weight: bold;
 			}
 		</xsl:element>
 	</xsl:template>

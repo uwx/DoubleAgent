@@ -1,6 +1,6 @@
-REM ********** Set path for .net framework2.0, sandcastle,hhc,hxcomp****************************
+REM ********** Set path for .net framework2.0, sandcastle****************************
 
-set PATH=%windir%\Microsoft.NET\Framework\v2.0.50727;%DXROOT%\ProductionTools;%ProgramFiles%\HTML Help Workshop;%PATH%
+set PATH=%windir%\Microsoft.NET\Framework\v2.0.50727;%DXROOT%\ProductionTools;%PATH%
 
 if exist output rmdir output /s /q
 

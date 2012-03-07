@@ -22,7 +22,7 @@ namespace Microsoft.Ddue.Tools
 		private const string s_configCatalogVersion = "catalog-version";
 		private const string s_configVendorName = "vendor-name";
 
-		private const string s_defaultLocale = "en-us";
+		private const string s_defaultLocale = "en-US";
 		private static string s_defaultBrandingPackage = "dev10";
 		private const string s_defaultHelpOutput = "MSHelpViewer";
 		private static string s_defaultCatalogProductId = "VS";
