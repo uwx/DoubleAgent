@@ -222,10 +222,7 @@ namespace Microsoft.Ddue.Tools
 
 				if (v_sourcePackage.IsOpen)
 				{
-					Console.WriteLine (String.Format ("{0} -> {1}", v_sourceDirectory, v_sourcePackage.PackagePath));
 					v_sourcePackage.LoggingTarget = Console.Out;
-					v_sourcePackage.LoggingPrefix = "  ";
-
 					v_sourcePackage.PutAllParts (v_sourceDirectory, v_replaceTargets);
 				}
 				else

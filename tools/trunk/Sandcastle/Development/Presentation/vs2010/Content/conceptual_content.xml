@@ -1,9 +1,7 @@
 <content xml:space="preserve">
 
-	<!-- control window stuff -->
-	<item id="productTitle">.NET Framework Developer's Guide</item>
-
 	<!-- main window stuff -->
+	<item id="productTitle">.NET Framework Developer's Guide</item>
 
 	<!-- body -->
 

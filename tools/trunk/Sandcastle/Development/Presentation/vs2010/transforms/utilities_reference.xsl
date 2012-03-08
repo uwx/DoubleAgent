@@ -668,9 +668,7 @@
 												select="'namespacesTitle'"/>
 				<xsl:with-param name="p_content">
 					<table class="members"
-								 id="memberList"
-								 frame="lhs"
-								 cellpadding="2">
+								 id="memberList">
 						<tr>
 							<th class="nameColumn">
 								<include item="namespaceNameHeader"/>
@@ -740,10 +738,7 @@
 													select="'enumMembersTitle'"/>
 					<xsl:with-param name="p_content">
 						<table class="members"
-									 id="memberList"
-									 frame="lhs"
-									 cellpadding="2">
-							<col width="10%"/>
+									 id="memberList">
 							<tr>
 								<th class="iconColumn"></th>
 								<th class="nameColumn">
@@ -885,9 +880,7 @@
 												select="'derivedClasses'"/>
 				<xsl:with-param name="p_content">
 					<table class="members"
-								 id="memberList"
-								 frame="lhs"
-								 cellpadding="2">
+								 id="memberList">
 						<tr>
 							<th class="nameColumn">
 								<include item="memberNameHeader"/>
@@ -960,10 +953,7 @@
 		<xsl:param name="p_listSubgroup"/>
 
 		<table id="typeList"
-					 class="members"
-					 frame="lhs"
-					 cellpadding="2">
-			<col width="10%"/>
+					 class="members">
 			<tr>
 				<th class="iconColumn">
 					&#160;
@@ -1023,10 +1013,7 @@
 											select="true()"/>
 			<xsl:with-param name="p_content">
 				<table id="memberList"
-							 class="members"
-							 frame="lhs"
-							 cellpadding="2">
-					<col width="10%"/>
+							 class="members">
 					<tr>
 						<th class="iconColumn">
 							&#160;

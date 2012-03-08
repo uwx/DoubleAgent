@@ -759,10 +759,9 @@
 				<xsl:when test="term or description">
 					<xsl:if test="term">
 						<xsl:apply-templates select="term" />
+						<br/>
 					</xsl:if>
-					<p>
-						<xsl:apply-templates select="description" />
-					</p>
+					<xsl:apply-templates select="description" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates />
@@ -789,10 +788,9 @@
 				<xsl:when test="term or description">
 					<xsl:if test="term">
 						<xsl:apply-templates select="term" />
+						<br/>
 					</xsl:if>
-					<p>
-						<xsl:apply-templates select="description" />
-					</p>
+					<xsl:apply-templates select="description" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates />
@@ -824,11 +822,9 @@
 				<xsl:when test="term or description">
 					<xsl:if test="term">
 						<xsl:apply-templates select="term" />
-						<xsl:text> - </xsl:text>
+						<br/>
 					</xsl:if>
-					<p>
-						<xsl:apply-templates select="description" />
-					</p>
+					<xsl:apply-templates select="description" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates />

@@ -205,7 +205,7 @@
 	LanguageSpecific text
 
 	NOTE - the MSHCComponent recognizes these bits and post-processes them into the format used
-	       by the MS Help Viewer. 
+	       by the MS Help Viewer.
 	============================================================================================= -->
 
 	<xsl:template name="t_decoratedNameSep">
@@ -219,87 +219,141 @@
 	</xsl:template>
 
 	<xsl:template name="t_nullKeyword">
-		<span class="keyword"
-					style="display: none">
-			<span class="languageSpecificText">
-				<span class="cs">null</span>
-				<span class="vb">Nothing</span>
-				<span class="cpp">nullptr</span>
-			</span>
-		</span>
-		<span class="nu">
-			<include item="nullKeyword"/>
-		</span>
+		<xsl:param name="p_syntaxKeyword"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="$p_syntaxKeyword">
+				<span class="keyword">
+					<span class="languageSpecificText">
+						<span class="cs">null</span>
+						<span class="vb">Nothing</span>
+						<span class="cpp">nullptr</span>
+						<span class="fs">unit</span>
+						<span class="nu">null</span>
+					</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<include item="nullKeyword"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="t_staticKeyword">
-		<span class="keyword"
-					style="display: none">
-			<span class="languageSpecificText">
-				<span class="cs">static</span>
-				<span class="vb">Shared</span>
-				<span class="cpp">static</span>
-			</span>
-		</span>
-		<span class="nu">
-			<include item="staticKeyword"/>
-		</span>
+		<xsl:param name="p_syntaxKeyword"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="$p_syntaxKeyword">
+				<span class="keyword">
+					<span class="languageSpecificText">
+						<span class="cs">static</span>
+						<span class="vb">Shared</span>
+						<span class="cpp">static</span>
+						<span class="fs">static</span>
+						<span class="nu">static</span>
+					</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<include item="staticKeyword"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="t_virtualKeyword">
-		<span class="keyword"
-					style="display: none">
-			<span class="languageSpecificText">
-				<span class="cs">virtual</span>
-				<span class="vb">Overridable</span>
-				<span class="cpp">virtual</span>
-			</span>
-		</span>
-		<span class="nu">
-			<include item="virtualKeyword"/>
-		</span>
+		<xsl:param name="p_syntaxKeyword"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="$p_syntaxKeyword">
+				<span class="keyword">
+					<span class="languageSpecificText">
+						<span class="cs">virtual</span>
+						<span class="vb">Overridable</span>
+						<span class="cpp">virtual</span>
+						<span class="fs">virtual</span>
+						<span class="nu">virtual</span>
+					</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<include item="virtualKeyword"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="t_trueKeyword">
-		<span class="keyword"
-					style="display: none">
-			<span class="languageSpecificText">
-				<span class="cs">true</span>
-				<span class="vb">True</span>
-				<span class="cpp">true</span>
-			</span>
-		</span>
-		<span class="nu">
-			<include item="trueKeyword"/>
-		</span>
+		<xsl:param name="p_syntaxKeyword"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="$p_syntaxKeyword">
+				<span class="keyword">
+					<span class="languageSpecificText">
+						<span class="cs">true</span>
+						<span class="vb">True</span>
+						<span class="cpp">true</span>
+						<span class="fs">true</span>
+						<span class="nu">true</span>
+					</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<include item="trueKeyword"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="t_falseKeyword">
-		<span class="keyword"
-					style="display: none">
-			<span class="languageSpecificText">
-				<span class="cs">false</span>
-				<span class="vb">False</span>
-				<span class="cpp">false</span>
-			</span>
-		</span>
-		<span class="nu">
-			<include item="falseKeyword"/>
-		</span>
+		<xsl:param name="p_syntaxKeyword"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="$p_syntaxKeyword">
+				<span class="keyword">
+					<span class="languageSpecificText">
+						<span class="cs">false</span>
+						<span class="vb">False</span>
+						<span class="cpp">false</span>
+						<span class="fs">false</span>
+						<span class="nu">false</span>
+					</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<include item="falseKeyword"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="t_abstractKeyword">
-		<span class="keyword"
-					style="display: none">
-			<span class="languageSpecificText">
-				<span class="cs">abstract</span>
-				<span class="vb">MustInherit</span>
-				<span class="cpp">abstract</span>
-			</span>
-		</span>
-		<span class="nu">
-			<include item="abstractKeyword"/>
-		</span>
+		<xsl:param name="p_syntaxKeyword"
+							 select="''"/>
+		<xsl:choose>
+			<xsl:when test="$p_syntaxKeyword">
+				<span class="keyword">
+					<span class="languageSpecificText">
+						<span class="cs">abstract</span>
+						<span class="vb">MustInherit</span>
+						<span class="cpp">abstract</span>
+						<span class="fs">abstract</span>
+						<span class="nu">abstract</span>
+					</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<include item="abstractKeyword"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="t_inKeyword">

@@ -1365,7 +1365,7 @@
 			<xsl:when test="@class='tgtSentence' or @class='srcSentence'">
 				<span>
 					<xsl:copy-of select="@*"/>
-					<xsl:apply-templates/>
+					<xsl:apply-templates select="node()"/>
 				</span>
 			</xsl:when>
 			<!-- fix bug 361746 - use copy-of, so that span class="keyword", "literal" and "comment" 
@@ -1373,6 +1373,10 @@
 			<xsl:when test="@class='keyword' or @class='identifier' or @class='literal' or @class='parameter' or @class='typeparameter' or @class='comment'">
 				<xsl:copy-of select="."/>
 			</xsl:when>
+			<!-- If the class is unrecognized skip it?  Copyied from vs2005 style - is this right? -->
+			<!--<xsl:otherwise>
+				<xsl:apply-templates/>
+			</xsl:otherwise>-->
 		</xsl:choose>
 	</xsl:template>
 
@@ -1382,79 +1386,48 @@
 									select="."/>
 		<span sdata="langKeyword"
 					value="{$v_keyword}">
+			<xsl:variable name="v_syntaxKeyword">
+				<xsl:if test="/document/syntax">
+					<xsl:value-of select="'true'"/>
+				</xsl:if>
+			</xsl:variable>
 			<xsl:choose>
-				<!-- mref topics get special handling for keywords like null, etc. -->
-				<xsl:when test="/document/reference/apidata">
-					<span class="keyword">
-						<xsl:choose>
-							<xsl:when test="$v_keyword='null'">
-								<span class="languageSpecificText">
-									<span class="cs">null</span>
-									<span class="vb">Nothing</span>
-									<span class="cpp">nullptr</span>
-									<span class="fs">unit</span>
-								</span>
-							</xsl:when>
-							<!-- need to comment out special handling for static, virtual, true, and false 
-                 until UE teams review authored content to make sure the auto-text works with the authored text.
-                 For example, auto-text with authored content like the following will result in bad customer experience. 
-                   <languageKeyword>static</languageKeyword> (<languageKeyword>Shared</languageKeyword> in Visual Basic)
-                  
-                 This also needs to have F# added should it be uncommented. 
-                   -->
-							<!--
-            <xsl:when test="$v_keyword='static' or $v_keyword='Shared'">
-              <span class="cs">static</span>
-              <span class="vb">Shared</span>
-              <span class="cpp">static</span>
-            </xsl:when>
-            <xsl:when test="$v_keyword='virtual' or $v_keyword='Overridable'">
-              <span class="cs">virtual</span>
-              <span class="vb">Overridable</span>
-              <span class="cpp">virtual</span>
-            </xsl:when>
-            <xsl:when test="$v_keyword='true' or $v_keyword='True'">
-              <span class="cs">true</span>
-              <span class="vb">True</span>
-              <span class="cpp">true</span>
-            </xsl:when>
-            <xsl:when test="$v_keyword='false' or $v_keyword='False'">
-              <span class="cs">false</span>
-              <span class="vb">False</span>
-              <span class="cpp">false</span>
-            </xsl:when>
-            -->
-							<xsl:otherwise>
-								<xsl:value-of select="."/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</span>
-					<xsl:choose>
-						<xsl:when test="$v_keyword='null'">
-							<span class="languageSpecificText">
-								<span class="nu">
-									<include item="nullKeyword"/>
-								</span>
-							</span>
-						</xsl:when>
-						<!-- need to comment out special handling for static, virtual, true, and false: see note above  -->
-						<!--
-          <xsl:when test="$v_keyword='static' or $v_keyword='Shared'">
-            <span class="nu"><include item="staticKeyword"/></span>
-          </xsl:when>
-          <xsl:when test="$v_keyword='virtual' or $v_keyword='Overridable'">
-            <span class="nu"><include item="virtualKeyword"/></span>
-          </xsl:when>
-          <xsl:when test="$v_keyword='true' or $v_keyword='True'">
-            <span class="nu"><include item="trueKeyword"/></span>
-          </xsl:when>
-          <xsl:when test="$v_keyword='false' or $v_keyword='False'">
-            <span class="nu"><include item="falseKeyword"/></span>
-          </xsl:when>
-          -->
-					</xsl:choose>
+				<xsl:when test="$v_keyword='null'">
+					<xsl:call-template name="t_nullKeyword">
+						<xsl:with-param name="p_syntaxKeyword"
+														select="$v_syntaxKeyword"/>
+					</xsl:call-template>
 				</xsl:when>
-				<!-- conceptual and other non-mref topics do not get special handling for keywords like null, etc. -->
+				<xsl:when test="$v_keyword='static' or $v_keyword='Shared'">
+					<xsl:call-template name="t_staticKeyword">
+						<xsl:with-param name="p_syntaxKeyword"
+														select="$v_syntaxKeyword"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="$v_keyword='virtual' or $v_keyword='Overridable'">
+					<xsl:call-template name="t_virtualKeyword">
+						<xsl:with-param name="p_syntaxKeyword"
+														select="$v_syntaxKeyword"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="$v_keyword='true' or $v_keyword='True'">
+					<xsl:call-template name="t_trueKeyword">
+						<xsl:with-param name="p_syntaxKeyword"
+														select="$v_syntaxKeyword"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="$v_keyword='false' or $v_keyword='False'">
+					<xsl:call-template name="t_falseKeyword">
+						<xsl:with-param name="p_syntaxKeyword"
+														select="$v_syntaxKeyword"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="$v_keyword='abstract'">
+					<xsl:call-template name="t_abstractKeyword">
+						<xsl:with-param name="p_syntaxKeyword"
+														select="$v_syntaxKeyword"/>
+					</xsl:call-template>
+				</xsl:when>
 				<xsl:otherwise>
 					<span class="code">
 						<xsl:value-of select="."/>

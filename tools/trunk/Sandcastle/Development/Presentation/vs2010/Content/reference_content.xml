@@ -102,23 +102,8 @@
 	<item id="eventExplicitIndexEntry">{0} explicitly implemented event</item>
 	<item id="fieldExplicitIndexEntry">{0} explicitly implemented field</item>
 	
-   <!-- index entries like: "FileClassifier class" or "Execute method" or "Microsoft.Build.Tasks.Windows.FileClassifier class"
-       {0} is API's name, which is shortname in some cases, or FQName in others
-       {1} is API's subgroup, e.g. 'class', 'method', etc.
-  <item id="nameSubgroupIndexEntry">{0} <include item="{1}IndexEntry"/></item>
--->
-  <!-- index entries like: "FileClassifier class, about FileClassifier class"
-       {0} is API's name, which is shortname in some cases, or FQName in others
-       {1} is API's subgroup, e.g. 'class', 'method', etc.
-  <item id="aboutTypeIndexEntry">{0} <include item="{1}IndexEntry"/>, about {0} <include item="{1}IndexEntry"/></item>
-  -->
-  <!-- index entries like: "FileClassifier class, methods"
-       {0} is type's name; 
-       {1} is type's subgroup, e.g. 'class'; 
-       {2} is the kind of list, e.g. 'AllMembers', 'Methods', etc.
-  <item id="listTopicIndexEntry">{0} <include item="{1}IndexEntry"/>, <include item="{2}IndexEntry"/></item>
- -->
 	<!-- main window stuff -->
+	<item id="productTitle">.NET Framework Class Library</item>
 
 	<!-- body -->
 

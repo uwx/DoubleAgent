@@ -356,7 +356,7 @@ namespace Microsoft.Ddue.Tools {
             string[] keys = document.GetKeys();
             foreach (string key in keys) {
                 if (index.ContainsKey(key)) {
-                    component.WriteHelperMessage(key.StartsWith("N:")?MessageLevel.Info:MessageLevel.Warn, String.Format("Entries for the key '{0}' occur in both '{1}' and '{2}'. The last entry will be used.", key, index[key], file));
+                    component.WriteHelperMessage(key.StartsWith("N:")?MessageLevel.Ignore:MessageLevel.Warn, String.Format("Entries for the key '{0}' occur in both '{1}' and '{2}'. The last entry will be used.", key, index[key], file));
                 }
                 index[key] = file;
 

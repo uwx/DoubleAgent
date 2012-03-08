@@ -20,7 +20,6 @@
 
 	<xsl:template match="/">
     <root>
-			<!--<xsl:call-template name="t_insertFilename" />-->
 			<metadata>
 			  <topic id="{$key}">
 				  <title><xsl:call-template name="t_topicTitlePlain"/></title>
@@ -39,11 +38,5 @@
 		  </content>
     </root>
 	</xsl:template>
-
-	<!--<xsl:template name="t_insertFilename">
-	  <xsl:attribute name="fileName">
-				<xsl:value-of select="/document/reference/file/@name" />
-	  </xsl:attribute>
-	</xsl:template>-->
 
 </xsl:stylesheet>
