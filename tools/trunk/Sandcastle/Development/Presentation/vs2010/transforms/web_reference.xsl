@@ -20,6 +20,7 @@
 
 	<xsl:template match="/">
     <root>
+			<xsl:call-template name="t_insertFilename" />
 			<metadata>
 			  <topic id="{$key}">
 				  <title><xsl:call-template name="t_topicTitlePlain"/></title>
@@ -32,11 +33,19 @@
           <xsl:text>&#x0a;</xsl:text>
         </xsl:processing-instruction>
         <asp:Content ID="MainBodyContent" ContentPlaceHolderID="MainBody" Runat="Server">
-    			<h1><xsl:call-template name="t_topicTitleDecorated" /></h1>
-				  <xsl:call-template name="t_bodyMain"/>
-		    </asp:Content>
+					<div class="topic">
+						<xsl:call-template name="t_bodyTitle"/>
+						<xsl:call-template name="t_bodyMain"/>
+					</div>
+				</asp:Content>
 		  </content>
     </root>
+	</xsl:template>
+
+	<xsl:template name="t_insertFilename">
+		<xsl:attribute name="fileName">
+			<xsl:value-of select="/document/reference/file/@name" />
+		</xsl:attribute>
 	</xsl:template>
 
 </xsl:stylesheet>

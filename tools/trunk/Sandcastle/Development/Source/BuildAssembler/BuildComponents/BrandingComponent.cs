@@ -392,6 +392,10 @@ namespace Microsoft.Ddue.Tools
 						WriteMessage (MessageLevel.Error, exp.Message);
 					}
 				}
+				else
+				{
+					WriteMessage (MessageLevel.Warn, "No branding transform loaded.");
+				}
 			}
 			catch (Exception exp)
 			{

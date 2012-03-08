@@ -106,17 +106,17 @@
 			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /extract /r "$(Presentation)\branding\dev10.mshc" "$(BrandingDir)" "/manifest:$(Presentation)\branding\dev10.manifest" /arg:onlyTransforms'/>
 			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /copy /r "$(OutputDir)\branding" "/manifest:$(Presentation)\branding\branding.manifest" /arg:noTransforms'/>
 			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /copy /r "$(BrandingDir)" "/manifest:$(Presentation)\branding\branding.manifest" /arg:onlyTransforms'/>
-			<Exec Command='"$(ProductionTools)\XslTransform.exe" /xsl:"$(Presentation)\copyBranding.xsl" "$(Presentation)\branding\branding.xml" /out:$(BrandingDir)\branding.xml /w /arg:catalogProductFamily=$(CatalogProductFamily),catalogProductVersion=$(CatalogProductVersion),catalogLocale=$(CatalogLocale)'/>
+			<Exec Command='"$(ProductionTools)\XslTransform.exe" /xsl:"$(Presentation)\copyBranding.xsl" "$(Presentation)\branding\branding.xml" /out:"$(BrandingDir)\branding.xml" /w /arg:catalogProductFamily=$(CatalogProductFamily),catalogProductVersion=$(CatalogProductVersion),catalogLocale=$(CatalogLocale)'/>
 		</Target>
 
 		<Target Name="BrandingMSHC" Condition="'$(PresentationStyle)' == 'vs2010'" DependsOnTargets="Template"
 						Inputs="$(Presentation)\branding\branding.xml;$(Presentation)\branding\dev10.mshc"
 						Outputs="$(BrandingDir)\branding.xml">
-				<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /extract /r "$(Presentation)\branding\dev10.mshc" "$(OutputDir)\icons" "/manifest:$(Presentation)\branding\dev10.manifest" /arg:onlyIcons'/>
-				<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /extract /r "$(Presentation)\branding\dev10.mshc" "$(BrandingDir)" "/manifest:$(Presentation)\branding\dev10.manifest" /arg:noIcons'/>
-				<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /copy /r "$(OutputDir)\icons" "/manifest:$(Presentation)\branding\branding.manifest" /arg:onlyIcons'/>
-				<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /copy /r "$(BrandingDir)" "/manifest:$(Presentation)\branding\branding.manifest" /arg:noIcons'/>
-				<Exec Command='"$(ProductionTools)\XslTransform.exe" /xsl:"$(Presentation)\copyBranding.xsl" "$(Presentation)\branding\branding.xml" /out:$(BrandingDir)\branding.xml /w /arg:catalogProductFamily=$(CatalogProductFamily),catalogProductVersion=$(CatalogProductVersion),catalogLocale=$(CatalogLocale)'/>
+			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /extract /r "$(Presentation)\branding\dev10.mshc" "$(OutputDir)\icons" "/manifest:$(Presentation)\branding\dev10.manifest" /arg:onlyIcons'/>
+			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /extract /r "$(Presentation)\branding\dev10.mshc" "$(BrandingDir)" "/manifest:$(Presentation)\branding\dev10.manifest" /arg:noIcons'/>
+			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /copy /r "$(OutputDir)\icons" "/manifest:$(Presentation)\branding\branding.manifest" /arg:onlyIcons'/>
+			<Exec Command='"$(ProductionTools)\MSHCPackager.exe" /copy /r "$(BrandingDir)" "/manifest:$(Presentation)\branding\branding.manifest" /arg:noIcons'/>
+			<Exec Command='"$(ProductionTools)\XslTransform.exe" /xsl:"$(Presentation)\copyBranding.xsl" "$(Presentation)\branding\branding.xml" /out:"$(BrandingDir)\branding.xml" /w /arg:catalogProductFamily=$(CatalogProductFamily),catalogProductVersion=$(CatalogProductVersion),catalogLocale=$(CatalogLocale)'/>
 		</Target>
 
 		<Target Name="ReflectionData" DependsOnTargets="Template" Inputs="$(OutputAssembly)" Outputs="reflection.xml">
