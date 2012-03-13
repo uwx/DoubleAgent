@@ -33,7 +33,46 @@ using SandcastleBuilder.MicrosoftHelpViewer;
 
 namespace SandcastleBuilder.Components
 {
-	class BrandingComponent : BuildComponent
+	/// <summary>
+	/// This component applies formatting that makes the help content compatible with
+	/// the MS Help Viewer branding package.
+	/// </summary>
+	/// <remarks>There are three different possible operation modes:
+	/// <list type="number">
+	/// <item>For self-branded MS Help Viewer content, it applies the branding package formatting
+	/// that the MS Help Viewer would apply if the content were not self-branded (except for
+	/// Microsoft-specific stuff like copyright, logo, feedback, etc.)</item>
+	/// <item>For branded MS Help Viewer content, it applies minimal formatting to ensure that
+	/// the help content conforms to the MTPS conventions expected by the MS Help Viewer.</item>
+	/// <item>For targets other than the MS Help Viewer (eg. Help1 or Web), it performs full
+	/// branding package formatting.</item>
+	/// </list>
+	/// <example>
+	/// <code lang="xml" title="Example configuration - MS Help Viewer - default catalog">
+	///	&lt;data self-branded="true"
+	///       branding-content="branding"           The relative path of the branding package transforms
+	///       help-output="MSHelpViewer" /&gt;
+	/// </code>
+	/// <code lang="xml" title="Example configuration - MS Help Viewer - custom catalog">
+	///	&lt;data self-branded="false"
+	///       branding-content="branding"           The relative path of the branding package transforms
+	///       help-output="MSHelpViewer"
+	///       vendor-name="VendorName"              The custom catalog vendor name
+	///       -- Optional elements - leave blank to use the default --
+	///       catalog-product-id="XX"               The custom catalog product id 
+	///       catalog-version="123"                 The custom catalog product version
+	///       locale="en-US"                        The custom catalog locale
+	///       branding-package="MyBrandingPackage"  The custom branding package name (without extension)
+	///       /&gt;
+	/// </code>
+	/// <code lang="xml" title="Example configuration - other targets">
+	///	&lt;data self-branded="true"
+	///       branding-content="branding"           The relative path of the branding package transforms
+	///       help-output="other" /&gt;
+	/// </code>
+	/// </example>
+	/// </remarks>
+	public class BrandingComponent : BuildComponent
 	{
 		#region Private data members
 		//=====================================================================
@@ -73,6 +112,7 @@ namespace SandcastleBuilder.Components
 		#region Constructor
 		//=====================================================================
 
+		/// <inheritdoc/>
 		public BrandingComponent (BuildAssembler assembler, XPathNavigator configuration)
 			: base (assembler, configuration)
 		{
@@ -129,10 +169,9 @@ namespace SandcastleBuilder.Components
 		#region Apply method
 		//=====================================================================
 
+		/// <inheritdoc/>
 		public override void Apply (XmlDocument document, string key)
 		{
-			//MakePlainCodeCopies (document);
-
 			if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				if (m_selfBranded)
@@ -155,6 +194,11 @@ namespace SandcastleBuilder.Components
 		#region Branding
 		//=====================================================================
 
+		/// <summary>
+		/// This method applies the branding package transforms.
+		/// </summary>
+		/// <param name="document">The current document.</param>
+		/// <param name="key">The document's unique identifier.</param>
 		private void ApplyBranding (XmlDocument document, string key)
 		{
 			if (m_brandingTransform != null)
@@ -176,22 +220,26 @@ namespace SandcastleBuilder.Components
 					}
 					SetSelfBranding (v_tempDocument, m_selfBranded);
 #if DEBUG//_NOT
-					String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PreBranding"));
-					if (!Directory.Exists (v_tempPrePath))
+					try
 					{
-						Directory.CreateDirectory (v_tempPrePath);
+						String v_tempPath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PreBranding"));
+						if (!Directory.Exists (v_tempPath))
+						{
+							Directory.CreateDirectory (v_tempPath);
+						}
+						v_tempPath = Path.Combine (v_tempPath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
+						v_tempDocument.Save (v_tempPath);
 					}
-					v_tempPrePath = Path.Combine (v_tempPrePath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
-					v_tempDocument.Save (v_tempPrePath);
+					catch { }
 #endif
 #if DEBUG_NOT
-					String v_tempPostPath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PostBranding"));
-					if (!Directory.Exists (v_tempPostPath))
+					String v_tempBrandingPath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\TempBranding"));
+					if (!Directory.Exists (v_tempBrandingPath))
 					{
-						Directory.CreateDirectory (v_tempPostPath);
+						Directory.CreateDirectory (v_tempBrandingPath);
 					}
-					v_tempPostPath = Path.Combine (v_tempPostPath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
-					using (FileStream v_stream = new FileStream (v_tempPostPath, FileMode.Create, FileAccess.ReadWrite))
+					v_tempBrandingPath = Path.Combine (v_tempBrandingPath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
+					using (FileStream v_stream = new FileStream (v_tempBrandingPath, FileMode.Create, FileAccess.ReadWrite))
 #else
 					using (Stream v_stream = new MemoryStream ())
 #endif
@@ -220,14 +268,18 @@ namespace SandcastleBuilder.Components
 								document.RemoveAll ();
 								document.Load (v_reader);
 							}
-#if DEBUG_NOT
-							String v_tempPrePath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PostBranding"));
-							if (!Directory.Exists (v_tempPrePath))
+#if DEBUG//_NOT
+							try
 							{
-								Directory.CreateDirectory (v_tempPrePath);
+								String v_tempPath = Path.GetFullPath (Path.Combine (m_brandingContent, @"..\PostBranding"));
+								if (!Directory.Exists (v_tempPath))
+								{
+									Directory.CreateDirectory (v_tempPath);
+								}
+								v_tempPath = Path.Combine (v_tempPath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
+								document.Save (v_tempPath);
 							}
-							v_tempPrePath = Path.Combine (v_tempPrePath, key.Replace (':', '_').Replace ('.', '_') + ".htm");
-							document.Save (v_tempPrePath);
+							catch { }
 #endif
 						}
 						catch (Exception exp)
@@ -355,6 +407,13 @@ namespace SandcastleBuilder.Components
 			}
 		}
 
+		/// <summary>
+		/// Loads the main branding transform.
+		/// <para>The name of the branding transform file is extracted from <c>branding.xml</c> depending
+		/// on the current locale.</para>
+		/// <para>Any global parameters specified by <c>branding.xml</c> are applied and then specific
+		/// parameters are applied according to the component configuration.</para>
+		/// </summary>
 		private void LoadBrandingTransform ()
 		{
 			try
@@ -430,6 +489,11 @@ namespace SandcastleBuilder.Components
 			}
 		}
 
+		/// <summary>
+		/// Loads the branding transform confuration from <c>branding.xml</c>
+		/// </summary>
+		/// <param name="configPath">The full path of <c>branding.xml</c></param>
+		/// <param name="transformName">The full path of the branding transform file to load.</param>
 		private void LoadBrandingConfig (String configPath, ref String transformName)
 		{
 			try
@@ -474,6 +538,11 @@ namespace SandcastleBuilder.Components
 			catch { }
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="value"></param>
 		private void PutTransformParam (String name, Object value)
 		{
 			if (m_transformArguments.GetParam (name, String.Empty) != null)
@@ -493,6 +562,10 @@ namespace SandcastleBuilder.Components
 		#region Helper Class
 		//=====================================================================
 
+		/// <summary>
+		/// This is an override of the default <see cref="T:System.Xml.XmlTextReader"/> that allows
+		/// "xmlns" attributes to be skipped.  It's used to remove unused namespaces from an XML file.
+		/// </summary>
 		private class SpecialXmlReader : XmlTextReader
 		{
 			private MessageHandler m_MessageHandler;
@@ -539,6 +612,7 @@ namespace SandcastleBuilder.Components
 		/// Reformats all LanguageSpecific spans to the format used by the
 		/// MS Help Viewer.
 		/// </summary>
+		/// <param name="document">The current document.</param>
 		private void ReformatLanguageSpecific (XmlDocument document)
 		{
 			int v_uniqueIdSequence = 0;
@@ -570,6 +644,7 @@ namespace SandcastleBuilder.Components
 
 					v_spanElement = document.CreateElement ("span");
 					v_spanElement.SetAttribute ("id", v_uniqueId);
+					v_spanElement.InnerText = "&#160;";
 					v_scriptElement = document.CreateElement ("script");
 					v_scriptElement.SetAttribute ("type", "text/javascript");
 					v_scriptElement.InnerText = String.Format (CultureInfo.InvariantCulture, "addToLanSpecTextIdSet(\"{0}?{1}\");", v_uniqueId, v_partText);
@@ -590,46 +665,6 @@ namespace SandcastleBuilder.Components
 					}
 					v_node.ParentNode.ReplaceChild (v_lstElement, v_node);
 #endif
-				}
-			}
-		}
-
-		#endregion
-
-		#region Code snippet finalization
-		//=====================================================================
-
-		/// <summary>
-		/// Each code snippet in an MSHC document has two formats - colorized and
-		/// plain.
-		/// The colorization happens in different places for Conceptual and
-		/// Sandcastle Reference topics, so we use this opportunity to make a
-		/// plain copy of each colorized code snippet.
-		/// The MS Help Viewer uses the plain version in its Copy and Print scripts.
-		/// </summary>
-		private void MakePlainCodeCopies (XmlDocument document)
-		{
-			XmlNodeList v_codeNodes = document.SelectNodes ("//div[@class='OH_CodeSnippetContainerCode']");
-
-			foreach (XmlNode v_ColoredCodeDiv in v_codeNodes)
-			{
-				XmlNode v_codeNodeId = v_ColoredCodeDiv.Attributes.GetNamedItem ("id");
-
-				if ((v_codeNodeId != null) && (v_codeNodeId.Value.Contains ("_code_Div")))
-				{
-					XmlNode v_plainCodeDiv = v_ColoredCodeDiv.ParentNode.SelectSingleNode (String.Format (CultureInfo.InvariantCulture, "div[@id='{0}']", v_codeNodeId.Value.Replace ("_code_Div", "_code_Plain_Div")));
-
-					if (v_plainCodeDiv != null)
-					{
-						XmlNode v_coloredCode = v_ColoredCodeDiv.SelectSingleNode ("descendant::pre");
-						XmlNode v_plainCode = v_plainCodeDiv.SelectSingleNode ("descendant::pre");
-
-						if ((v_coloredCode != null) && (v_plainCode != null))
-						{
-							v_plainCode.InnerXml = String.Empty;
-							v_plainCode.AppendChild (document.CreateTextNode (v_coloredCode.InnerText));
-						}
-					}
 				}
 			}
 		}

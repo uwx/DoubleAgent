@@ -338,7 +338,10 @@
 				<xsl:value-of select="'&#160;'"/>
 			</xsl:when>
 			<xsl:when test="normalize-space(.)='' and contains(.,'&#10;')">
-				<xsl:value-of select="concat('&#160;',translate(.,'&#10;&#13;',''),'&#10;')"/>
+				<xsl:value-of select="concat('&#160;','&#10;',substring-after(translate(.,' &#13;','&#160;'),'&#10;'))"/>
+			</xsl:when>
+			<xsl:when test=".!='' and normalize-space(.)=''">
+				<xsl:value-of select="translate(.,' ','&#160;')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="."/>

@@ -95,46 +95,27 @@
 
 	<xsl:template name="t_hostProtectionContent">
 		<!-- HostProtectionAttribute boilerplate -->
-		<div class="alert">
-			<table>
-				<tr>
-					<th align="left">
-						<img class="note">
-							<includeAttribute name="alt"
-																item="noteAltText"/>
-							<includeAttribute name="title"
-																item="noteAltText"/>
-							<includeAttribute item="iconPath"
-																name="src">
-								<parameter>alert_note.gif</parameter>
-							</includeAttribute>
-						</img>
-						<include item="noteTitle"/>
-					</th>
-				</tr>
-				<tr>
-					<td>
-						<p>
-							<include item="hostProtectionAttributeLong">
-								<parameter>
-									<xsl:value-of select="concat($g_apiTopicSubGroup, 'Lower')"/>
-								</parameter>
-								<parameter>
-									<span class="label">
-										<xsl:for-each select="/document/reference/attributes/attribute[type[@api='T:System.Security.Permissions.HostProtectionAttribute']]/assignment">
-											<xsl:value-of select="@name"/>
-											<xsl:if test="position() != last()">
-												<xsl:text> | </xsl:text>
-											</xsl:if>
-										</xsl:for-each>
-									</span>
-								</parameter>
-							</include>
-						</p>
-					</td>
-				</tr>
-			</table>
-		</div>
+		<xsl:call-template name="t_putAlert">
+			<xsl:with-param name="p_alertClass"
+											select="'note'"/>
+			<xsl:with-param name="p_alertContent">
+				<include item="hostProtectionAttributeLong">
+					<parameter>
+						<xsl:value-of select="concat($g_apiTopicSubGroup, 'Lower')"/>
+					</parameter>
+					<parameter>
+						<span class="label">
+							<xsl:for-each select="/document/reference/attributes/attribute[type[@api='T:System.Security.Permissions.HostProtectionAttribute']]/assignment">
+								<xsl:value-of select="@name"/>
+								<xsl:if test="position() != last()">
+									<xsl:text> | </xsl:text>
+								</xsl:if>
+							</xsl:for-each>
+						</span>
+					</parameter>
+				</include>
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<!-- ============================================================================================
@@ -1152,139 +1133,7 @@
 
 	<xsl:template match="ddue:alert"
 								name="t_ddue_alert">
-		<xsl:variable name="v_title">
-			<xsl:choose>
-				<xsl:when test="@class='note'">
-					<xsl:text>noteTitle</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='tip'">
-					<xsl:text>tipTitle</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='caution' or @class='warning'">
-					<xsl:text>cautionTitle</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='security' or @class='security note'">
-					<xsl:text>securityTitle</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='important'">
-					<xsl:text>importantTitle</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='vb' or @class='VB' or @class='VisualBasic' or @class='visual basic note'">
-					<xsl:text>visualBasicTitle</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='cs' or @class='CSharp' or @class='c#' or @class='C#' or @class='visual c# note'">
-					<xsl:text>visualC#Title</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='cpp' or @class='c++' or @class='C++' or @class='CPP' or @class='visual c++ note'">
-					<xsl:text>visualC++Title</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='JSharp' or @class='j#' or @class='J#' or @class='visual j# note'">
-					<xsl:text>visualJ#Title</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='implement'">
-					<xsl:text>NotesForImplementers</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='caller'">
-					<xsl:text>NotesForCallers</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='inherit'">
-					<xsl:text>NotesForInheritors</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>noteTitle</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="v_altTitle">
-			<xsl:choose>
-				<xsl:when test="@class='note' or @class='implement' or @class='caller' or @class='inherit'">
-					<xsl:text>noteAltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='tip'">
-					<xsl:text>tipAltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='caution' or @class='warning'">
-					<xsl:text>cautionAltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='security' or @class='security note'">
-					<xsl:text>securityAltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='important'">
-					<xsl:text>importantAltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='vb' or @class='VB' or @class='VisualBasic' or @class='visual basic note'">
-					<xsl:text>visualBasicAltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='cs' or @class='CSharp' or @class='c#' or @class='C#' or @class='visual c# note'">
-					<xsl:text>visualC#AltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='cpp' or @class='c++' or @class='C++' or @class='CPP' or @class='visual c++ note'">
-					<xsl:text>visualC++AltText</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='JSharp' or @class='j#' or @class='J#' or @class='visual j# note'">
-					<xsl:text>visualJ#AltText</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>noteAltText</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="v_noteImg">
-			<xsl:choose>
-				<xsl:when test="@class='note' or @class='tip' or @class='implement' or @class='caller' or @class='inherit'">
-					<xsl:text>alert_note.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='caution' or @class='warning'">
-					<xsl:text>alert_caution.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='security' or @class='security note'">
-					<xsl:text>alert_security.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='important'">
-					<xsl:text>alert_caution.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='vb' or @class='VB' or @class='VisualBasic' or @class='visual basic note'">
-					<xsl:text>alert_note.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='cs' or @class='CSharp' or @class='c#' or @class='C#' or @class='visual c# note'">
-					<xsl:text>alert_note.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='cpp' or @class='c++' or @class='C++' or @class='CPP' or @class='visual c++ note'">
-					<xsl:text>alert_note.gif</xsl:text>
-				</xsl:when>
-				<xsl:when test="@class='JSharp' or @class='j#' or @class='J#' or @class='visual j# note'">
-					<xsl:text>alert_note.gif</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>alert_note.gif</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<div class="alert">
-			<table>
-				<tr>
-					<th>
-						<img class="mtps-img-src">
-							<includeAttribute item="iconPath"
-																name="src">
-								<parameter>
-									<xsl:value-of select="$v_noteImg"/>
-								</parameter>
-							</includeAttribute>
-							<includeAttribute name="alt"
-																item="{$v_altTitle}"/>
-						</img>
-						<xsl:text> </xsl:text>
-						<include item="{$v_title}"/>
-					</th>
-				</tr>
-				<tr>
-					<td>
-						<xsl:apply-templates/>
-					</td>
-				</tr>
-			</table>
-		</div>
+		<xsl:call-template name="t_putAlert"/>
 	</xsl:template>
 
 	<xsl:template match="ddue:alert/ddue:para[1]"
@@ -1293,8 +1142,11 @@
 			<xsl:call-template name="t_checkMinimalSpacing">
 				<xsl:with-param name="p_spacingType"
 												select="'alert'"/>
+				<xsl:with-param name="p_parentLevel"
+												select="1"/>
 			</xsl:call-template>
 		</xsl:variable>
+		<!--<xsl:comment xml:space="preserve">t_notePara1[<xsl:value-of select="$v_minimalSpacing"/>]</xsl:comment>-->
 		<xsl:choose>
 			<xsl:when test="$v_minimalSpacing='true'">
 				<xsl:apply-templates/>

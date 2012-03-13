@@ -1097,15 +1097,28 @@ namespace SandcastleBuilder.Utils.BuildEngine
 		#region Manifest Classes
 		//=====================================================================
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected class PackageManifestItem : List<String>
 		{
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="node"></param>
 			public PackageManifestItem (XmlNode node)
 			{
 				this.Node = node;
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public XmlNode Node { get; protected set; }
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public String Include
 			{
 				get
@@ -1119,6 +1132,9 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				}
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public String SubType
 			{
 				get
@@ -1132,6 +1148,9 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				}
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public bool CopyToOutputDirectory
 			{
 				get
@@ -1148,8 +1167,15 @@ namespace SandcastleBuilder.Utils.BuildEngine
 
 		//=====================================================================
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected class PackageManifest : XmlDocument
 		{
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="filePath"></param>
 			public PackageManifest (String filePath)
 			{
 				SourceDir = Path.GetDirectoryName (filePath);
@@ -1157,10 +1183,20 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				base.Load (filePath);
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public String SourceDir { get; set; }
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public List<PackageManifestItem> Items { get; protected set; }
 
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="properties"></param>
 			public void Evaluate (Dictionary<String, String> properties)
 			{
 				DirectoryInfo v_DirectoryInfo = new DirectoryInfo (SourceDir);
@@ -1188,6 +1224,11 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				}
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="properties"></param>
+			/// <param name="packageParts"></param>
 			public void Evaluate (Dictionary<String, String> properties, String[] packageParts)
 			{
 				Items.Clear ();
@@ -1216,8 +1257,17 @@ namespace SandcastleBuilder.Utils.BuildEngine
 				}
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			private XPathNavigator Navigator { get; set; }
 
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="node"></param>
+			/// <param name="properties"></param>
+			/// <returns></returns>
 			private bool EvaluateCondition (XmlNode node, Dictionary<String, String> properties)
 			{
 				if (Navigator == null)

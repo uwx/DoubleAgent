@@ -51,7 +51,7 @@
 			<xsl:when test="$v_codeLangLC = 'javascript'">
 				<xsl:text>JavaScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangLC = 'xml' or $v_codeLangLC = 'xmlLang'">
+			<xsl:when test="$v_codeLangLC = 'xml' or $v_codeLangLC = 'xmllang'">
 				<xsl:text>xmlLang</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'html'">
@@ -262,7 +262,7 @@
 		<xsl:param name="p_codeNodes"/>
 		<xsl:param name="p_nodeCount"/>
 		<xsl:param name="p_codeLangAttr"
-							 select="'language'"/>
+							 select="''"/>
 		<xsl:param name="p_transformCode"
 							 select="false()"/>
 		<xsl:param name="p_enableCopyCode"
@@ -272,11 +272,21 @@
 			<xsl:variable name="v_codeLang">
 				<xsl:call-template name="t_codeLang">
 					<xsl:with-param name="p_codeLang">
-						<xsl:for-each select="@*">
-							<xsl:if test="name() = $p_codeLangAttr">
-								<xsl:value-of select="."/>
-							</xsl:if>
-						</xsl:for-each>
+						<xsl:choose>
+							<xsl:when test="$p_codeLangAttr!=''">
+								<xsl:for-each select="@*">
+									<xsl:if test="name() = $p_codeLangAttr">
+										<xsl:value-of select="."/>
+									</xsl:if>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:when test="@lang">
+								<xsl:value-of select="@lang"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="@language"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
@@ -293,10 +303,26 @@
 	</xsl:template>
 
 	<xsl:template name="t_putCodeSection">
-		<xsl:param name="p_codeLang"
-							 select="@language"/>
-		<xsl:param name="p_codeTitle"
-							 select="@title"/>
+		<xsl:param name="p_codeLang">
+			<xsl:choose>
+				<xsl:when test="@lang">
+					<xsl:choose>
+						<xsl:when test="(normalize-space(@lang)='none') and (normalize-space(@title)!='')">
+							<xsl:value-of select="'other'"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@lang"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@language"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:param>
+		<xsl:param name="p_codeTitle">
+			<xsl:value-of select="@title"/>
+		</xsl:param>
 		<xsl:param name="p_transformCode"
 							 select="false()"/>
 		<xsl:param name="p_enableCopyCode"
@@ -310,7 +336,7 @@
 		</xsl:variable>
 		<xsl:variable name="v_codeLangTitle">
 			<xsl:choose>
-				<xsl:when test="(($v_codeLangUnique='other') or ($v_codeLangUnique='none')) and (normalize-space($p_codeTitle)!='')">
+				<xsl:when test="(normalize-space($p_codeTitle)!='') and (normalize-space($p_codeTitle)!=$v_codeLangUnique)">
 					<xsl:value-of select="$p_codeTitle"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -321,6 +347,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:comment xml:space="preserve">p_codeLang[<xsl:value-of select="$p_codeLang"/>]</xsl:comment>
+		<xsl:comment xml:space="preserve">p_codeTitle[<xsl:value-of select="$p_codeTitle"/>]</xsl:comment>
+		<xsl:comment xml:space="preserve">v_codeLangUnique[<xsl:value-of select="$v_codeLangUnique"/>]</xsl:comment>
+		<xsl:comment xml:space="preserve">v_codeLangTitle[<xsl:value-of select="$v_codeLangTitle"/>]</xsl:comment>
 
 		<xsl:element name="mtps:CodeSnippet"
 								 namespace="{$mtps}">
@@ -475,7 +505,10 @@
 				<xsl:value-of select="'&#160;'"/>
 			</xsl:when>
 			<xsl:when test="normalize-space($p_text)='' and contains($p_text,'&#10;')">
-				<xsl:value-of select="concat('&#160;',translate($p_text,'&#10;&#13;',''),'&#10;')"/>
+				<xsl:value-of select="concat('&#160;','&#10;',substring-after(translate($p_text,' &#13;','&#160;'),'&#10;'))"/>
+			</xsl:when>
+			<xsl:when test=".!='' and normalize-space(.)=''">
+				<xsl:value-of select="translate(.,' ','&#160;')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$p_text"/>

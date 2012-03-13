@@ -179,7 +179,7 @@
 		<xsl:param name="p_childLevel"/>
 		<xsl:choose>
 			<xsl:when test="$p_childLevel = 0">
-				<xsl:if test="@minimal-spacing!='true'">
+				<xsl:if test="not(@minimal-spacing) or (@minimal-spacing!='true')">
 					<xsl:choose>
 						<xsl:when test="child::*[local-name()!='para']">
 							<xsl:value-of select="'sibling!=para'"/>
@@ -772,6 +772,157 @@
 			<xsl:copy-of select="$p_title" />
 		</xsl:element>
 		<xsl:copy-of select="$p_content" />
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Alerts
+	============================================================================================= -->
+
+	<xsl:template name="t_putAlert">
+		<xsl:param name="p_alertClass"
+							 select="@class"/>
+		<xsl:param name="p_alertContent"
+							 select="''"/>
+		<xsl:variable name="v_title">
+			<xsl:choose>
+				<xsl:when test="$p_alertClass='note'">
+					<xsl:text>noteTitle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='tip'">
+					<xsl:text>tipTitle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='caution' or $p_alertClass='warning'">
+					<xsl:text>cautionTitle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='security' or $p_alertClass='security note'">
+					<xsl:text>securityTitle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='important'">
+					<xsl:text>importantTitle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='vb' or $p_alertClass='VB' or $p_alertClass='VisualBasic' or $p_alertClass='visual basic note'">
+					<xsl:text>visualBasicTitle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='cs' or $p_alertClass='CSharp' or $p_alertClass='c#' or $p_alertClass='C#' or $p_alertClass='visual c# note'">
+					<xsl:text>visualC#Title</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='cpp' or $p_alertClass='c++' or $p_alertClass='C++' or $p_alertClass='CPP' or $p_alertClass='visual c++ note'">
+					<xsl:text>visualC++Title</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='JSharp' or $p_alertClass='j#' or $p_alertClass='J#' or $p_alertClass='visual j# note'">
+					<xsl:text>visualJ#Title</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='implement'">
+					<xsl:text>NotesForImplementers</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='caller'">
+					<xsl:text>NotesForCallers</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='inherit'">
+					<xsl:text>NotesForInheritors</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>noteTitle</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="v_altTitle">
+			<xsl:choose>
+				<xsl:when test="$p_alertClass='note' or $p_alertClass='implement' or $p_alertClass='caller' or $p_alertClass='inherit'">
+					<xsl:text>noteAltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='tip'">
+					<xsl:text>tipAltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='caution' or $p_alertClass='warning'">
+					<xsl:text>cautionAltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='security' or $p_alertClass='security note'">
+					<xsl:text>securityAltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='important'">
+					<xsl:text>importantAltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='vb' or $p_alertClass='VB' or $p_alertClass='VisualBasic' or $p_alertClass='visual basic note'">
+					<xsl:text>visualBasicAltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='cs' or $p_alertClass='CSharp' or $p_alertClass='c#' or $p_alertClass='C#' or $p_alertClass='visual c# note'">
+					<xsl:text>visualC#AltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='cpp' or $p_alertClass='c++' or $p_alertClass='C++' or $p_alertClass='CPP' or $p_alertClass='visual c++ note'">
+					<xsl:text>visualC++AltText</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='JSharp' or $p_alertClass='j#' or $p_alertClass='J#' or $p_alertClass='visual j# note'">
+					<xsl:text>visualJ#AltText</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>noteAltText</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="v_noteImg">
+			<xsl:choose>
+				<xsl:when test="$p_alertClass='note' or $p_alertClass='tip' or $p_alertClass='implement' or $p_alertClass='caller' or $p_alertClass='inherit'">
+					<xsl:text>alert_note.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='caution' or $p_alertClass='warning'">
+					<xsl:text>alert_caution.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='security' or $p_alertClass='security note'">
+					<xsl:text>alert_security.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='important'">
+					<xsl:text>alert_caution.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='vb' or $p_alertClass='VB' or $p_alertClass='VisualBasic' or $p_alertClass='visual basic note'">
+					<xsl:text>alert_note.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='cs' or $p_alertClass='CSharp' or $p_alertClass='c#' or $p_alertClass='C#' or $p_alertClass='visual c# note'">
+					<xsl:text>alert_note.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='cpp' or $p_alertClass='c++' or $p_alertClass='C++' or $p_alertClass='CPP' or $p_alertClass='visual c++ note'">
+					<xsl:text>alert_note.gif</xsl:text>
+				</xsl:when>
+				<xsl:when test="$p_alertClass='JSharp' or $p_alertClass='j#' or $p_alertClass='J#' or $p_alertClass='visual j# note'">
+					<xsl:text>alert_note.gif</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>alert_note.gif</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<div class="alert">
+			<table>
+				<tr>
+					<th>
+						<img class="mtps-img-src">
+							<includeAttribute item="iconPath"
+																name="src">
+								<parameter>
+									<xsl:value-of select="$v_noteImg"/>
+								</parameter>
+							</includeAttribute>
+							<includeAttribute name="alt"
+																item="{$v_altTitle}"/>
+						</img>
+						<xsl:text>&#160;</xsl:text>
+						<include item="{$v_title}"/>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<xsl:choose>
+							<xsl:when test="$p_alertContent=''">
+								<xsl:apply-templates/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:copy-of select="$p_alertContent"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</xsl:template>
 
 	<!-- ============================================================================================

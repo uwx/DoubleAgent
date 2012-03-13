@@ -16,8 +16,12 @@
 											select="generate-id(.)"/>
 
 				<xsl:element name="span"
-										 namespace="{$xhtml}"
-										 xml:space="preserve"><xsl:attribute name="id"><xsl:value-of select="$v_id"/></xsl:attribute><xsl:text> </xsl:text></xsl:element>
+										 namespace="{$xhtml}">
+					<xsl:attribute name="id">
+						<xsl:value-of select="$v_id"/>
+					</xsl:attribute>
+					<xsl:text>&#160;</xsl:text>
+				</xsl:element>
 				<xsl:element name="script"
 										 namespace="{$xhtml}">
 					<xsl:attribute name="type">
