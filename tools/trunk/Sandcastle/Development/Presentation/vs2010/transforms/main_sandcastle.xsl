@@ -99,22 +99,21 @@
 			</xsl:when>
 		</xsl:choose>
 
+		<!-- exceptions -->
+		<xsl:call-template name="t_exceptions"/>
 		<!-- remarks -->
 		<xsl:apply-templates select="/document/comments/remarks"/>
 		<!-- examples -->
 		<xsl:apply-templates select="/document/comments/example"/>
 
-		<!-- other comment sections -->
-		<!-- exceptions -->
-		<xsl:call-template name="t_exceptions"/>
-		<!-- permissions -->
-		<xsl:call-template name="t_permissions"/>
 		<!-- contracts -->
 		<xsl:call-template name="t_contracts"/>
 		<!--versions-->
 		<xsl:if test="not($g_apiTopicGroup='list' or $g_apiTopicGroup='namespace' or $g_apiTopicGroup='root' )">
 			<xsl:apply-templates select="/document/reference/versions"/>
 		</xsl:if>
+		<!-- permissions -->
+		<xsl:call-template name="t_permissions"/>
 		<!-- threadsafety -->
 		<xsl:apply-templates select="/document/comments/threadsafety"/>
 

@@ -240,6 +240,11 @@
 			</xsl:when>
 		</xsl:choose>
 
+		<!-- exceptions -->
+		<xsl:if test="not($g_hasSecurityCriticalSection)">
+			<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:exceptions" />
+		</xsl:if>
+
 		<!-- remarks -->
 		<xsl:if test="not($g_apiTopicGroup='namespace') and not($g_hasSecurityCriticalSection)">
 			<xsl:choose>
@@ -260,9 +265,9 @@
 			<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:codeExamples" />
 		</xsl:if>
 
-		<!-- exceptions -->
-		<xsl:if test="not($g_hasSecurityCriticalSection)">
-			<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:exceptions" />
+		<xsl:if test="not($g_apiTopicGroup='list' or $g_apiTopicGroup='namespace' or $g_apiTopicGroup='root')">
+			<!--versions-->
+			<xsl:apply-templates select="/document/reference/versions" />
 		</xsl:if>
 
 		<!-- permissions -->
@@ -270,16 +275,12 @@
 			<xsl:call-template name="permissionsSection"/>
 		</xsl:if>
 
-		<!-- inheritance -->
-		<xsl:apply-templates select="/document/reference/family" />
-
-		<!-- other comment sections -->
 		<xsl:if test="not($g_apiTopicGroup='list' or $g_apiTopicGroup='namespace' or $g_apiTopicGroup='root')">
-			<!--versions-->
-			<xsl:apply-templates select="/document/reference/versions" />
 			<!--platforms-->
 			<xsl:apply-templates select="/document/reference/platforms" />
 		</xsl:if>
+
+		<!--threadsafety-->
 		<xsl:if test="$g_apiTopicSubGroup='class' or $g_apiTopicSubGroup='structure'">
 			<xsl:call-template name="t_threadSafety" />
 		</xsl:if>

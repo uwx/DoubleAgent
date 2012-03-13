@@ -511,13 +511,13 @@
     </ApiFilter>
     <Preliminary>False</Preliminary>
     <PresentationStyle>vs2010</PresentationStyle>
-    <HelpFileFormat>HtmlHelp1, MSHelpViewer</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1, MSHelpViewer, Website</HelpFileFormat>
     <HtmlHelp2xCompilerPath>%ProgramFiles(x86)%\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <HelpTitle>Double Agent SDK</HelpTitle>
     <NamingMethod>MemberName</NamingMethod>
     <HelpFileVersion>1.2.0.0</HelpFileVersion>
     <PlugInConfigurations>
-      <PlugInConfig id="Additional Content Only" enabled="True">
+      <PlugInConfig id="Additional Content Only" enabled="False">
         <configuration />
       </PlugInConfig>
 <PlugInConfig id="Pack and Sign MSHC files" enabled="True"><configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" /></PlugInConfig>
