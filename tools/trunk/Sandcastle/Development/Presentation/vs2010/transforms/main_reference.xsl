@@ -544,10 +544,10 @@
 							<div class="tableSection">
 								<table>
 									<tr>
-										<th class="exceptionNameColumn">
+										<th class="ps_exceptionNameColumn">
 											<include item="exceptionNameHeader" />
 										</th>
-										<th class="exceptionConditionColumn">
+										<th class="ps_exceptionConditionColumn">
 											<include item="exceptionConditionHeader" />
 										</th>
 									</tr>

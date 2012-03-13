@@ -90,49 +90,95 @@
 			<xsl:call-template name="ms-xhelp">
 				<xsl:with-param name="ref"
 												select="'tabLeftBG.gif'"/>
-				<xsl:with-param name="isStyle"
-												select="'true'"/>
 			</xsl:call-template>
 			<xsl:text>')}</xsl:text>
 			<xsl:text>.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled {background-image: url('</xsl:text>
 			<xsl:call-template name="ms-xhelp">
 				<xsl:with-param name="ref"
 												select="'tabRightBG.gif'"/>
-				<xsl:with-param name="isStyle"
-												select="'true'"/>
 			</xsl:call-template>
 			<xsl:text>')}</xsl:text>
 			<xsl:text>.OH_footer { background-image: url('</xsl:text>
 			<xsl:call-template name="ms-xhelp">
 				<xsl:with-param name="ref"
 												select="'footer_slice.gif'"/>
-				<xsl:with-param name="isStyle"
-												select="'true'"/>
 			</xsl:call-template>
 			<xsl:text>'); background-position:top; background-repeat:repeat-x}</xsl:text>
 		</xsl:element>
 	</xsl:template>
 
-	<!--<xsl:template name="head-styles-inline">
-		<xsl:element name="style"
-								 namespace="{$xhtml}">
-			<xsl:attribute name="type">text/css</xsl:attribute>
-			dl.authored dt
-			{
-			font-weight: bold;
-			margin-top: 5px;
-			}
-			dl.authored dd
-			{
-			margin-left: 20px;
-			margin-bottom: 5px;
-			}
-			span.nolink
-			{
-			font-weight: bold;
-			}
-		</xsl:element>
-	</xsl:template>-->
+	<xsl:template name="head-style-urls-fixup">
+		<xsl:if test="$pre-branding">
+			<xsl:element name="script"
+									 namespace="{$xhtml}">
+				<xsl:attribute name="type">
+					<xsl:value-of select="'text/javascript'"/>
+				</xsl:attribute>
+				<xsl:variable name="v_script">
+					<![CDATA[
+					var iconPath = undefined;
+					try
+					{
+						var linkEnum = new Enumerator(document.getElementsByTagName('link'));
+						var link;
+
+						for (linkEnum.moveFirst(); !linkEnum.atEnd(); linkEnum.moveNext())
+						{
+							link = linkEnum.item();
+							if (link.rel.toLowerCase() == 'shortcut icon')
+							{
+								iconPath = link.href.toString();
+								iconPath = iconPath.substring(0,iconPath.lastIndexOf(";")) + ";";
+								break;
+							}
+						}
+					}
+					catch (e) {}
+					finally {}
+					if (iconPath)
+					{
+						try
+						{
+							var styleSheetEnum = new Enumerator(document.styleSheets);
+							var styleSheet;
+							var ruleNdx;
+							var rule;
+
+							for (styleSheetEnum.moveFirst(); !styleSheetEnum.atEnd(); styleSheetEnum.moveNext())
+							{
+								styleSheet = styleSheetEnum.item();
+								if (styleSheet.rules)
+								{
+									if (styleSheet.rules.length != 0)
+									{
+										for (ruleNdx = 0; ruleNdx != styleSheet.rules.length; ruleNdx++)
+										{
+											rule = styleSheet.rules.item(ruleNdx);
+
+											var bgUrl = rule.style.backgroundImage;
+											if (bgUrl != "")
+											{
+												bgUrl = bgUrl.substring(bgUrl.indexOf("(")+1,bgUrl.lastIndexOf(")"));
+											}
+											if (bgUrl != "")
+											{
+												rule.style.backgroundImage = "url(" + iconPath + bgUrl + ")";
+											}
+										}
+									}
+								}
+							}
+						}
+						catch (e) {}
+						finally {}
+					}
+					]]>
+				</xsl:variable>
+				<xsl:value-of select="$v_script"
+											disable-output-escaping="yes"/>
+			</xsl:element>
+		</xsl:if>
+	</xsl:template>
 
 	<xsl:template name="head-styles-external">
 		<xsl:element name="style"

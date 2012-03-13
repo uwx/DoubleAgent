@@ -43,6 +43,7 @@
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
+					<xsl:call-template name="head-style-urls-fixup"/>
 					<xsl:apply-templates select="node()"/>
 				</xsl:otherwise>
 			</xsl:choose>

@@ -232,21 +232,15 @@
 	<xsl:template name="ms-xhelp" >
 		<xsl:param name="ref"
 							 select="@href|@src"/>
-		<xsl:param name="isStyle"
-							 select="''"/>
 		<xsl:choose>
+			<xsl:when test="$downscale-browser">
+				<xsl:value-of select="branding:BackslashesToFrontslashes(concat($contentFolder,'/../branding/',$ref))"/>
+			</xsl:when>
 			<xsl:when test="$pre-branding">
-				<xsl:choose>
-					<xsl:when test="$isStyle">
-						<xsl:value-of select="concat($brandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="concat('icons/',branding:BackslashesToFrontslashes($ref))"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="branding:BackslashesToFrontslashes(concat('icons/',$ref))"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="branding:BackslashesToFrontslashes(concat($contentFolder, '/../branding/',$ref))"/>
+				<xsl:value-of select="concat($brandingPath,branding:BackslashesToFrontslashes($ref))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -254,7 +248,7 @@
 	<!-- generates comment to replace mtps control element and keep its original information-->
 	<xsl:template name="comment-mtps">
 		<xsl:comment>
-			<xsl:value-of select="concat('[', local-name(namespace::*[.=namespace-uri(current())]),':', local-name())" />
+			<xsl:value-of select="concat('[',local-name(namespace::*[.=namespace-uri(current())]),':',local-name())" />
 			<xsl:apply-templates mode="cmt"
 													 select="@*" />
 			<xsl:value-of select="']'" />
@@ -266,7 +260,7 @@
 	<xsl:template match="@*"
 								mode="cmt"
 								name="cmt-mode">
-		<xsl:value-of select="concat(' ', local-name(),'=&quot;', ., '&quot;')" />
+		<xsl:value-of select="concat(' ',local-name(),'=&quot;',.,'&quot;')" />
 	</xsl:template>
 
 	<!-- The following templates are not used but are retained to ensure all references are resolved -->

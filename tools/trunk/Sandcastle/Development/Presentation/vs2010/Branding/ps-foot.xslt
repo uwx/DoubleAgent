@@ -164,21 +164,21 @@
 				<xsl:value-of select="'text/javascript'"/>
 			</xsl:attribute>
 			<![CDATA[
-				try
+			try
+			{
+				var footer = document.getElementById("OH_footer")
+				if (footer)
 				{
-					var footer = document.getElementById("OH_footer")
-					if (footer)
-					{
-						var footerParent = document.body;
-						if (footer.parentElement != footerParent)
-						{ 
-							footer.parentElement.removeChild (footer);
-							footerParent.appendChild (footer); 
-						}
+					var footerParent = document.body;
+					if (footer.parentElement != footerParent)
+					{ 
+						footer.parentElement.removeChild (footer);
+						footerParent.appendChild (footer); 
 					}
-				} catch (e)
-				{}
-				finally {}
+				}
+			} catch (e)
+			{}
+			finally {}
 			]]>
 		</xsl:element>
 	</xsl:template>

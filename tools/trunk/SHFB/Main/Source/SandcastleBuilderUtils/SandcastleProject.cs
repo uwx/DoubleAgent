@@ -1637,7 +1637,7 @@ namespace SandcastleBuilder.Utils
 		///							the <b>default </b><i>branding package</i>).</item>
 		///						<item>The MS Help Viewer then shows the content with the minimal self-branded reformatting. Since the
 		///							content has been <i>pre-branded</i>, its final formatting matches the custom formatting.</item>
-		///						<item>The final results is the same as if <c>SelfBranded</c> were <see langword="false"/> (see below).
+		///						<item>The final result is essentially the same as if <c>SelfBranded</c> were <see langword="false"/> (see below).
 		///							However, if the <b>custom </b><i>branding package</i> changes in the future, those changes will not
 		///							be applied.</item>
 		///					</list>

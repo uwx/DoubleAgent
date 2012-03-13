@@ -19,43 +19,28 @@ span.nolink
 
 /* Media *********************************************************************/
 
-span.media
-{
-    margin-left: 5px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-div.mediaNear
+div.ps_mediaNear
 {
     text-align: left;
     margin-top: 1em;
     margin-bottom: 1em;
 }
 
-div.mediaFar
+div.ps_mediaFar
 {
     text-align: right;
     margin-top: 1em;
     margin-bottom: 1em;
 }
 
-div.mediaCenter
+div.ps_mediaCenter
 {
     text-align: center;
     margin-top: 1em;
     margin-bottom: 1em;
 }
 
-div.caption
-{
-    margin-top: 1em;
-    margin-bottom: 1em;
-    font-size: 100%;
-    color: #003399;
-}
-
-span.captionLead
+span.ps_captionLead
 {
     font-weight: bold;
     margin-right: .5em;
@@ -63,12 +48,6 @@ span.captionLead
 
 /* Glossary ******************************************************************/
 
-SPAN.clsGlossary
-{
-    cursor: default;
-    color: #509950;
-    font-weight: bold;
-}
 DIV.clsTooltip
 {
     border: 1px solid black;
@@ -83,7 +62,7 @@ DIV.clsTooltip
     font-family: Arial;
 }
 
-h1.glossaryTitle
+h1.ps_glossaryTitle
 {
     color: #000000;
     font-size: 140%;
@@ -91,11 +70,11 @@ h1.glossaryTitle
     margin-bottom: 10px;
 }
 
-div.glossaryDiv
+div.ps_glossaryDiv
 {
 }
 
-h2.glossaryDivHeading
+h2.ps_glossaryDivHeading
 {
     color: Black;
     font-size: 115%;
@@ -103,47 +82,47 @@ h2.glossaryDivHeading
     margin-bottom: 0px;
 }
 
-div.glossaryLetterBar
+div.ps_glossaryLetterBar
 {
     font-size: 90%;
 }
 
-hr.glossaryRule
+hr.ps_glossaryRule
 {
     text-align: left;
     color: Black;
 }
 
-h3.glossaryGroupHeading
+h3.ps_glossaryGroupHeading
 {
     font-size: 120%;
     color: Gray;
     margin: 5px 0 5px 0;
 }
 
-div.glossaryGroup
+div.ps_glossaryGroup
 {
 }
 
-dl.glossaryGroupList
+dl.ps_glossaryGroupList
 {
     margin: 0;
     color: Black;
 }
 
-dt.glossaryEntry
+dt.ps_glossaryEntry
 {
     font-weight: bold;
     margin-left: 2em;
 }
 
-dd.glossaryEntry
+dd.ps_glossaryEntry
 {
     margin-left: 2em;
     margin-bottom: 2em;
 }
 
-div.relatedEntry
+div.ps_relatedEntry
 {
     margin-bottom: 4px;
 }

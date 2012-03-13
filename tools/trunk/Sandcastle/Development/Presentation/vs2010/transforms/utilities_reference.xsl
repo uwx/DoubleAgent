@@ -668,13 +668,13 @@
 				<xsl:with-param name="p_titleInclude"
 												select="'namespacesTitle'"/>
 				<xsl:with-param name="p_content">
-					<table class="members"
-								 id="memberList">
+					<table id="memberList"
+								 class="members">
 						<tr>
-							<th class="nameColumn">
+							<th class="ps_nameColumn">
 								<include item="namespaceNameHeader"/>
 							</th>
-							<th class="descriptionColumn">
+							<th class="ps_descriptionColumn">
 								<include item="namespaceDescriptionHeader"/>
 							</th>
 						</tr>
@@ -738,17 +738,19 @@
 					<xsl:with-param name="p_titleInclude"
 													select="'enumMembersTitle'"/>
 					<xsl:with-param name="p_content">
-						<table class="members"
-									 id="memberList">
+						<table id="memberList"
+									 class="members">
 							<tr>
-								<th class="iconColumn"></th>
-								<th class="nameColumn">
+								<th class="ps_iconColumn">
+									&#160;
+								</th>
+								<th class="ps_nameColumn">
 									<include item="memberNameHeader"/>
 								</th>
-								<th class="valueColumn">
+								<th class="ps_valueColumn">
 									<include item="memberValueHeader"/>
 								</th>
-								<th class="descriptionColumn">
+								<th class="ps_descriptionColumn">
 									<include item="memberDescriptionHeader"/>
 								</th>
 							</tr>
@@ -880,13 +882,13 @@
 				<xsl:with-param name="p_titleInclude"
 												select="'derivedClasses'"/>
 				<xsl:with-param name="p_content">
-					<table class="members"
-								 id="memberList">
+					<table id="memberList"
+								 class="members">
 						<tr>
-							<th class="nameColumn">
+							<th class="ps_nameColumn">
 								<include item="memberNameHeader"/>
 							</th>
-							<th class="descriptionColumn">
+							<th class="ps_descriptionColumn">
 								<include item="memberDescriptionHeader"/>
 							</th>
 						</tr>
@@ -956,13 +958,13 @@
 		<table id="typeList"
 					 class="members">
 			<tr>
-				<th class="iconColumn">
+				<th class="ps_iconColumn">
 					&#160;
 				</th>
-				<th class="nameColumn">
+				<th class="ps_nameColumn">
 					<include item="{$p_listSubgroup}NameHeader"/>
 				</th>
-				<th class="descriptionColumn">
+				<th class="ps_descriptionColumn">
 					<include item="typeDescriptionHeader"/>
 				</th>
 			</tr>
@@ -1016,13 +1018,13 @@
 				<table id="memberList"
 							 class="members">
 					<tr>
-						<th class="iconColumn">
+						<th class="ps_iconColumn">
 							&#160;
 						</th>
-						<th class="nameColumn">
+						<th class="ps_nameColumn">
 							<include item="typeNameHeader"/>
 						</th>
-						<th class="descriptionColumn">
+						<th class="ps_descriptionColumn">
 							<include item="typeDescriptionHeader"/>
 						</th>
 					</tr>
@@ -2107,7 +2109,7 @@
 					<xsl:variable name="v_platformFilterExcluded"
 												select="boolean(/document/reference/platforms and ( (@name='netcfw' and not(/document/reference/platforms/platform[.='PocketPC']) and not(/document/reference/platforms/platform[.='SmartPhone']) and not(/document/reference/platforms/platform[.='WindowsCE']) ) or (@name='xnafw' and not(/document/reference/platforms/platform[.='Xbox360']) ) ) )"/>
 					<xsl:if test="not($v_platformFilterExcluded) and count(.//version) &gt; 0">
-						<h4 class ="subHeading">
+						<h4 class="subHeading">
 							<include item="{@name}"/>
 						</h4>
 						<xsl:call-template name="t_processVersions">

@@ -153,7 +153,7 @@
 
 	<xsl:template match="preliminary"
 								name="t_preliminary">
-		<div class="preliminary">
+		<div>
 			<include item="preliminaryText"/>
 		</div>
 	</xsl:template>
@@ -383,10 +383,10 @@
 					<div class="tableSection">
 						<table>
 							<tr>
-								<th class="exceptionNameColumn">
+								<th class="ps_exceptionNameColumn">
 									<include item="exceptionNameHeader"/>
 								</th>
-								<th class="exceptionConditionColumn">
+								<th class="ps_exceptionConditionColumn">
 									<include item="exceptionConditionHeader"/>
 								</th>
 							</tr>
@@ -446,10 +446,10 @@
 					<div class="tableSection">
 						<table>
 							<tr>
-								<th class="permissionNameColumn">
+								<th class="ps_permissionNameColumn">
 									<include item="permissionNameHeader"/>
 								</th>
-								<th class="permissionDescriptionColumn">
+								<th class="ps_permissionDescriptionColumn">
 									<include item="permissionDescriptionHeader"/>
 								</th>
 							</tr>
@@ -621,7 +621,7 @@
 						</xsl:if>
 					</div>
 					<!--Contracts link-->
-					<div class="contractsLink">
+					<div class="ps_contractsLink">
 						<a>
 							<xsl:attribute name="target">
 								<xsl:text>_blank</xsl:text>
@@ -642,7 +642,7 @@
 		<xsl:param name="p_contracts"/>
 		<table>
 			<tr>
-				<th class="contractsNameColumn">
+				<th class="ps_contractsNameColumn">
 					<xsl:copy-of select="$p_title"/>
 				</th>
 			</tr>

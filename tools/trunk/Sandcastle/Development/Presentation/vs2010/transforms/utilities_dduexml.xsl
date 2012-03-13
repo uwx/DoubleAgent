@@ -1157,19 +1157,19 @@
 		<div>
 			<xsl:choose>
 				<xsl:when test="ddue:image[@placement='center']">
-					<xsl:attribute name="class">mediaCenter</xsl:attribute>
+					<xsl:attribute name="class">ps_mediaCenter</xsl:attribute>
 				</xsl:when>
 				<xsl:when test="ddue:image[@placement='far']">
-					<xsl:attribute name="class">mediaFar</xsl:attribute>
+					<xsl:attribute name="class">ps_mediaFar</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:attribute name="class">mediaNear</xsl:attribute>
+					<xsl:attribute name="class">ps_mediaNear</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:if test="ddue:caption and not(ddue:caption[@placement='after'])">
 				<div class="caption">
 					<xsl:if test="ddue:caption[@lead]">
-						<span class="captionLead">
+						<span class="ps_captionLead">
 							<xsl:value-of select="normalize-space(ddue:caption/@lead)"/>:
 						</span>
 					</xsl:if>
@@ -1180,7 +1180,7 @@
 			<xsl:if test="ddue:caption and ddue:caption[@placement='after']">
 				<div class="caption">
 					<xsl:if test="ddue:caption[@lead]">
-						<span class="captionLead">
+						<span class="ps_captionLead">
 							<xsl:value-of select="normalize-space(ddue:caption/@lead)"/>:
 						</span>
 					</xsl:if>
@@ -1606,7 +1606,7 @@
 								name="t_ddue_markup_content">
 		<xsl:element name="{name()}"
 								 namespace="{$xhtml}">
-			<xsl:apply-templates select="@*"/>
+			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates select="node()"
 													 mode="markup"/>
 		</xsl:element>
@@ -1834,7 +1834,7 @@
 	<xsl:template match="ddue:glossary"
 								name="t_ddue_glossary">
 		<xsl:if test="ddue:title">
-			<h1 class="glossaryTitle">
+			<h1 class="ps_glossaryTitle">
 				<xsl:value-of select="normalize-space(ddue:title)" />
 			</h1>
 		</xsl:if>
@@ -1886,13 +1886,13 @@
 				</xsl:attribute>
 			</a>
 		</xsl:if>
-		<div class="glossaryDiv">
+		<div class="ps_glossaryDiv">
 			<xsl:if test="ddue:title">
-				<h2 class="glossaryDivHeading">
+				<h2 class="ps_glossaryDivHeading">
 					<xsl:value-of select="ddue:title"/>
 				</h2>
 			</xsl:if>
-			<hr class="glossaryRule"/>
+			<hr class="ps_glossaryRule"/>
 			<xsl:call-template name="t_glossaryLetterBar">
 				<xsl:with-param name="p_sectionPrefix"
 												select="generate-id()"/>
@@ -1935,7 +1935,7 @@
 
 	<xsl:template match="ddue:glossaryEntry"
 								name="t_ddue_glossaryEntry">
-		<dt class="glossaryEntry">
+		<dt class="ps_glossaryEntry">
 			<xsl:apply-templates select="@address" />
 			<xsl:for-each select="ddue:terms/ddue:term">
 				<xsl:sort select="normalize-space(.)" />
@@ -1955,11 +1955,11 @@
 				</xsl:if>
 			</xsl:for-each>
 		</dt>
-		<dd class="glossaryEntry">
+		<dd class="ps_glossaryEntry">
 			<xsl:apply-templates select="ddue:definition/*"/>
 
 			<xsl:if test="ddue:relatedEntry">
-				<div class="relatedEntry">
+				<div class="ps_relatedEntry">
 					<include item="relatedEntries" />&#160;
 
 					<xsl:for-each select="ddue:relatedEntry">
@@ -1985,16 +1985,16 @@
 		<xsl:param name="p_link"/>
 		<xsl:param name="p_name"/>
 		<xsl:param name="p_nodes"/>
-		<div class="glossaryGroup">
+		<div class="ps_glossaryGroup">
 			<a>
 				<xsl:attribute name="name">
 					<xsl:value-of select="$p_link"/>
 				</xsl:attribute>
 			</a>
-			<h3 class="glossaryGroupHeading">
+			<h3 class="ps_glossaryGroupHeading">
 				<xsl:value-of select="$p_name"/>
 			</h3>
-			<dl class="glossaryGroupList">
+			<dl class="ps_glossaryGroupList">
 				<xsl:apply-templates select="$p_nodes">
 					<xsl:sort select="ddue:terms/ddue:term"/>
 				</xsl:apply-templates>
@@ -2005,7 +2005,7 @@
 	<xsl:template name="t_glossaryLetterBar">
 		<xsl:param name="p_sectionPrefix"
 							 select="''"/>
-		<div class="t_glossaryLetterBar">
+		<div class="ps_glossaryLetterBar">
 			<xsl:call-template name="t_glossaryLetterBarLinkRecursive">
 				<xsl:with-param name="p_sectionPrefix"
 												select="$p_sectionPrefix"/>
