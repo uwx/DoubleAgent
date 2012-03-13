@@ -1,0 +1,179 @@
+﻿/* Various *******************************************************************/
+
+dl.authored dt
+{
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+dl.authored dd
+{
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+span.nolink
+{
+    font-weight: bold;
+}
+
+/* Media *********************************************************************/
+
+span.media
+{
+    margin-left: 5px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+div.mediaNear
+{
+    text-align: left;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+div.mediaFar
+{
+    text-align: right;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+div.mediaCenter
+{
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+div.caption
+{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    font-size: 100%;
+    color: #003399;
+}
+
+span.captionLead
+{
+    font-weight: bold;
+    margin-right: .5em;
+}
+
+/* Glossary ******************************************************************/
+
+SPAN.clsGlossary
+{
+    cursor: default;
+    color: #509950;
+    font-weight: bold;
+}
+DIV.clsTooltip
+{
+    border: 1px solid black;
+    padding: 2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    background-color: #FFFFAA;
+    color: black;
+    font-size: 8pt;
+    font-family: Arial;
+}
+
+h1.glossaryTitle
+{
+    color: #000000;
+    font-size: 140%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.glossaryDiv
+{
+}
+
+h2.glossaryDivHeading
+{
+    color: Black;
+    font-size: 115%;
+    margin-top: 1em;
+    margin-bottom: 0px;
+}
+
+div.glossaryLetterBar
+{
+    font-size: 90%;
+}
+
+hr.glossaryRule
+{
+    text-align: left;
+    color: Black;
+}
+
+h3.glossaryGroupHeading
+{
+    font-size: 120%;
+    color: Gray;
+    margin: 5px 0 5px 0;
+}
+
+div.glossaryGroup
+{
+}
+
+dl.glossaryGroupList
+{
+    margin: 0;
+    color: Black;
+}
+
+dt.glossaryEntry
+{
+    font-weight: bold;
+    margin-left: 2em;
+}
+
+dd.glossaryEntry
+{
+    margin-left: 2em;
+    margin-bottom: 2em;
+}
+
+div.relatedEntry
+{
+    margin-bottom: 4px;
+}
+
+/* Bibliography***************************************************************/
+
+div.bibliographStyle
+{
+    padding-top: 5px;
+}
+
+span.bibliographyNumber
+{
+}
+
+span.bibliographyAuthor
+{
+    font-weight: bold;
+}
+
+span.bibliographyTitle
+{
+    font-style: italic;
+}
+
+span.bibliographyPublisher
+{
+}
+
+sup.citation a:link a:visited a:active
+{
+    text-decoration: none;
+}

@@ -79,6 +79,7 @@
 				<xsl:call-template name="t_insertMetadataHelp30"/>
 				<xsl:call-template name="t_insertMetadataHelp20"/>
 				<xsl:call-template name="t_insertMetadata"/>
+				<xsl:call-template name="t_insertStylesheets"/>
 			</head>
 			<body class="primary-mtps-offline-document">
 				<div class="topic">
@@ -404,7 +405,7 @@
 	<!--a list item in the outline's bullet list-->
 	<xsl:template name="t_outlineSectionEntry">
 		<xsl:if test="descendant::ddue:content[normalize-space(.)] or count(ddue:content/*) &gt; 0">
-			<li class="outlineSectionEntry">
+			<li>
 				<a>
 					<xsl:if test="@address">
 						<!-- Keep this on one line or the spaces preceeding the "#" end up in the anchor name -->
@@ -414,7 +415,7 @@
 					<xsl:value-of select="ddue:title"/>
 				</a>
 				<xsl:if test="normalize-space(ddue:summary)">
-					<div class="outlineSectionEntrySummary">
+					<div>
 						<xsl:apply-templates select="ddue:summary/node()"/>
 					</div>
 				</xsl:if>

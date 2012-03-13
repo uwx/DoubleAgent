@@ -24,7 +24,7 @@
 			<xsl:when test="$v_codeLangLC = 'vbs' or $v_codeLangLC = 'vbscript'">
 				<xsl:text>VBScript</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangLC = 'vb' or $v_codeLangLC = 'vb#' or $v_codeLangLC = 'kblangvb' or $v_codeLangLC = 'visualbasic'" >
+			<xsl:when test="$v_codeLangLC = 'vb' or $v_codeLangLC = 'vb#' or $v_codeLangLC = 'vb.net' or $v_codeLangLC = 'vbnet' or $v_codeLangLC = 'kblangvb' or $v_codeLangLC = 'visualbasic'" >
 				<xsl:text>VisualBasic</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'visualbasicdeclaration'" >
@@ -35,6 +35,9 @@
 			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'c#' or $v_codeLangLC = 'cs' or $v_codeLangLC = 'csharp'" >
 				<xsl:text>CSharp</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangLC = 'vb-c#' or $v_codeLangLC = 'visualbasicandcsharp'">
+				<xsl:text>visualbasicANDcsharp</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'cpp' or $v_codeLangLC = 'cpp#' or $v_codeLangLC = 'c' or $v_codeLangLC = 'c++' or $v_codeLangLC = 'kblangcpp' or $v_codeLangLC = 'managedcplusplus'" >
 				<xsl:text>ManagedCPlusPlus</xsl:text>
@@ -63,8 +66,11 @@
 			<xsl:when test="$v_codeLangLC = 'aspnet'">
 				<xsl:text>AspNet</xsl:text>
 			</xsl:when>
-			<xsl:when test="$v_codeLangLC = 'vb-c#' or $v_codeLangLC = 'visualbasicandcsharp'">
-				<xsl:text>visualbasicANDcsharp</xsl:text>
+			<xsl:when test="$v_codeLangLC = 'pshell'">
+				<xsl:text>pshell</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangLC = 'sql'">
+				<xsl:text>sql</xsl:text>
 			</xsl:when>
 			<xsl:when test="$v_codeLangLC = 'none'">
 				<xsl:value-of select="$v_codeLangLC"/>
@@ -129,6 +135,12 @@
 			<xsl:when test="$v_codeLangUnique = 'AspNet'">
 				<xsl:text>ASP.NET</xsl:text>
 			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'pshell'">
+				<xsl:text>PowerShell</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'sql'">
+				<xsl:text>SQL</xsl:text>
+			</xsl:when>
 			<xsl:otherwise/>
 		</xsl:choose>
 	</xsl:template>
@@ -180,6 +192,12 @@
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'AspNet'">
 				<xsl:text>ASP.NET</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'pshell'">
+				<xsl:text>PowerShell</xsl:text>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'sql'">
+				<xsl:text>SQL</xsl:text>
 			</xsl:when>
 			<xsl:otherwise/>
 		</xsl:choose>
@@ -269,36 +287,37 @@
 							 select="true()"/>
 
 		<xsl:for-each select="msxsl:node-set($p_codeNodes)">
-			<xsl:variable name="v_codeLang">
-				<xsl:call-template name="t_codeLang">
-					<xsl:with-param name="p_codeLang">
-						<xsl:choose>
-							<xsl:when test="$p_codeLangAttr!=''">
+			<xsl:choose>
+				<xsl:when test="$p_codeLangAttr!=''">
+					<xsl:variable name="v_codeLang">
+						<xsl:call-template name="t_codeLang">
+							<xsl:with-param name="p_codeLang">
 								<xsl:for-each select="@*">
 									<xsl:if test="name() = $p_codeLangAttr">
 										<xsl:value-of select="."/>
 									</xsl:if>
 								</xsl:for-each>
-							</xsl:when>
-							<xsl:when test="@lang">
-								<xsl:value-of select="@lang"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="@language"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:with-param>
-				</xsl:call-template>
-			</xsl:variable>
-
-			<xsl:call-template name="t_putCodeSection">
-				<xsl:with-param name="p_codeLang"
-												select="$v_codeLang"/>
-				<xsl:with-param name="p_transformCode"
-												select="$p_transformCode"/>
-				<xsl:with-param name="p_enableCopyCode"
-												select="$p_enableCopyCode"/>
-			</xsl:call-template>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:variable>
+					<xsl:call-template name="t_putCodeSection">
+						<xsl:with-param name="p_codeLang"
+														select="$v_codeLang"/>
+						<xsl:with-param name="p_transformCode"
+														select="$p_transformCode"/>
+						<xsl:with-param name="p_enableCopyCode"
+														select="$p_enableCopyCode"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="t_putCodeSection">
+						<xsl:with-param name="p_transformCode"
+														select="$p_transformCode"/>
+						<xsl:with-param name="p_enableCopyCode"
+														select="$p_enableCopyCode"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
 
@@ -307,6 +326,9 @@
 			<xsl:choose>
 				<xsl:when test="@lang">
 					<xsl:choose>
+						<xsl:when test="(@title!='') and (normalize-space(@title)='')">
+							<xsl:value-of select="'none'"/>
+						</xsl:when>
 						<xsl:when test="(normalize-space(@lang)='none') and (normalize-space(@title)!='')">
 							<xsl:value-of select="'other'"/>
 						</xsl:when>

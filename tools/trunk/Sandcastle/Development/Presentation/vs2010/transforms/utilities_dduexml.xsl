@@ -236,15 +236,6 @@
 		</p>
 	</xsl:template>
 
-	<!-- Pass through a chunk of markup.  This will allow build components
-       to add HTML to a pre-transformed document.  You can also use it in
-       topics to support things such as video or image maps that aren't
-       addressed by the MAML schema and the Sandcastle transforms. -->
-	<xsl:template match="ddue:markup"
-								name="t_ddue_markup">
-		<xsl:copy-of select="node()"/>
-	</xsl:template>
-
 	<xsl:template match="ddue:summary"
 								name="t_ddue_summary">
 		<xsl:if test="not(@abstract='true')">
@@ -1595,6 +1586,36 @@
 	<xsl:template match="ddue:userInputLocalizable"
 								name="t_ddue_userInputLocalizable">
 		<xsl:call-template name="t_ddue_userInput"/>
+	</xsl:template>
+
+	<!-- ============================================================================================
+	Pass through a chunk of markup (changing its namespace to xhtml).
+	This will allow build components to add HTML to a pre-transformed document.
+	You can also use it in topics to support things such as video or image maps
+	that aren't addressed by the MAML schema and the Sandcastle transforms.
+	============================================================================================= -->
+
+	<xsl:template match="ddue:markup"
+								name="t_ddue_markup">
+		<xsl:apply-templates select="node()"
+												 mode="markup"/>
+	</xsl:template>
+
+	<xsl:template match="*"
+								mode="markup"
+								name="t_ddue_markup_content">
+		<xsl:element name="{name()}"
+								 namespace="{$xhtml}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:apply-templates select="node()"
+													 mode="markup"/>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="text()"
+								mode="markup"
+								name="t_ddue_markup_text">
+		<xsl:copy-of select="."/>
 	</xsl:template>
 
 	<!-- ============================================================================================

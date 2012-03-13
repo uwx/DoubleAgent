@@ -103,6 +103,7 @@
 				<xsl:call-template name="t_insertFilename"/>
 				<xsl:call-template name="t_insertMetadataHelp20"/>
 				<xsl:call-template name="t_insertMetadata"/>
+				<xsl:call-template name="t_insertStylesheets"/>
 			</head>
 			<body class="primary-mtps-offline-document">
 				<div class="topic">

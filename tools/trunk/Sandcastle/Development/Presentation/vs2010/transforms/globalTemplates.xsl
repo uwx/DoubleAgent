@@ -470,6 +470,16 @@
 		</xsl:element>
 	</xsl:template>
 
+	<xsl:template name="t_insertStylesheets">
+		<link	type="text/css"
+					rel="stylesheet">
+			<includeAttribute name="href"
+												item="stylePath">
+				<parameter>Presentation.css</parameter>
+			</includeAttribute>
+		</link>
+	</xsl:template>
+
 	<xsl:template name="t_insertNoIndexNoFollow">
 		<xsl:if test="/document/metadata/attribute[@name='NoSearch']">
 			<META NAME="ROBOTS"

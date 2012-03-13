@@ -121,13 +121,4 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template match="xhtml:span[@class='nolink']"
-								name="nolink-span">
-		<xsl:element name="span"
-								 namespace="{$xhtml}">
-			<xsl:attribute name="class">label</xsl:attribute>
-			<xsl:apply-templates select="node()"/>
-		</xsl:element>
-	</xsl:template>
-
 </xsl:stylesheet>

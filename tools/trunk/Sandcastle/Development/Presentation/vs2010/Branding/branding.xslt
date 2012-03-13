@@ -189,9 +189,24 @@
 	<xsl:template match="xhtml:link[@rel='stylesheet']"
 								name="branding-stylesheet">
 		<xsl:if test="$self-branded != 'false'">
-			<xsl:copy-of select="."/>
+			<xsl:element name="link"
+									 namespace="{$xhtml}">
+				<xsl:attribute name="type">text/css</xsl:attribute>
+				<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				<xsl:attribute name="href">
+					<xsl:choose>
+						<xsl:when test="$downscale-browser">
+							<xsl:value-of select="branding:BackslashesToFrontslashes(concat($contentFolder,'/',@href))"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="branding:BuildContentPath($contentFolder,@href)"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:element>
 		</xsl:if>
 	</xsl:template>
+
 	<xsl:template match="xhtml:script"
 								name="branding-script">
 		<xsl:if test="$self-branded != 'false'">
@@ -231,7 +246,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat($brandingPath,'/',branding:BackslashesToFrontslashes($ref))"/>
+				<xsl:value-of select="branding:BackslashesToFrontslashes(concat($contentFolder, '/../branding/',$ref))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

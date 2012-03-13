@@ -55,7 +55,7 @@
 	============================================================================================= -->
 
 	<!-- strip style attributes by default -->
-	<xsl:template match="@style[normalize-space(.)!='display:none']"
+	<xsl:template match="@style[translate(.,' ;','')!='display:none' and translate(.,' ;','')!='display:inline']"
 								name="ps-style"/>
 
 	<!-- pass through styles for p and h elements -->
