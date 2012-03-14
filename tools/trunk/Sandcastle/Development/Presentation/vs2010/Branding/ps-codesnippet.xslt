@@ -66,12 +66,12 @@
 		<xsl:param name="codeSnippetCount"
 							 select="count($codeSnippets)"/>
 
-		<!--<xsl:variable name="v_languages">
+		<xsl:variable name="v_languages">
 			<xsl:for-each select="$codeSnippets">
 				<xsl:value-of select="concat(' [',@Language,'][',@DisplayLanguage,']')" />
 			</xsl:for-each>
 		</xsl:variable>
-		<xsl:comment xml:space="preserve">codeSnippetGroup [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>-->
+		<xsl:comment xml:space="preserve">codeSnippetGroup [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>
 
 		<xsl:choose>
 			<xsl:when test="$codeSnippetCount = 1">
@@ -133,12 +133,12 @@
 		<xsl:param name="codeSnippetCount"
 							 select="count($codeSnippets)"/>
 
-		<!--<xsl:variable name="v_languages">
+		<xsl:variable name="v_languages">
 			<xsl:for-each select="$codeSnippets">
 				<xsl:value-of select="concat(' [',@Language,'][',@DisplayLanguage,']')" />
 			</xsl:for-each>
 		</xsl:variable>
-		<xsl:comment xml:space="preserve">codeSnippetGroupUnique [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>-->
+		<xsl:comment xml:space="preserve">codeSnippetGroupUnique [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>
 
 		<xsl:choose>
 			<xsl:when test="$codeSnippetCount = 1">
@@ -178,10 +178,10 @@
 
 				<xsl:choose>
 					<xsl:when test="string($v_allMajorLanguageSame)='' and not(contains($v_allMajorLanguage,'false'))">
-						<!--<xsl:comment xml:space="preserve">renderSnippet [<xsl:value-of select="$codeSnippetCount"/>]</xsl:comment>
+						<xsl:comment xml:space="preserve">renderSnippet [<xsl:value-of select="$codeSnippetCount"/>]</xsl:comment>
 						<xsl:for-each select="$codeSnippets">
 							<xsl:comment xml:space="preserve">  [<xsl:value-of select="@Language" />] [<xsl:value-of select="@DisplayLanguage" />]</xsl:comment>
-						</xsl:for-each>-->
+						</xsl:for-each>
 						<xsl:call-template name="renderSnippet">
 							<xsl:with-param name="snippetCount"
 															select="$codeSnippetCount"/>
@@ -195,7 +195,7 @@
 					</xsl:when>
 					<xsl:when test="string($v_allMajorLanguageSame)='' and contains($v_allMajorLanguage,'false')">
 						<xsl:for-each select="$codeSnippets">
-							<!--<xsl:comment xml:space="preserve">standalonesnippet(e) [<xsl:value-of select="@Language" />] [<xsl:value-of select="@DisplayLanguage" />]</xsl:comment>-->
+							<xsl:comment xml:space="preserve">standalonesnippet(e) [<xsl:value-of select="@Language" />] [<xsl:value-of select="@DisplayLanguage" />]</xsl:comment>
 							<xsl:call-template name="standalonesnippet"/>
 						</xsl:for-each>
 					</xsl:when>
@@ -233,6 +233,7 @@
 		<xsl:param name="unrecognized"
 							 select="'false'"/>
 		<xsl:param name="ContainsMarkup" />
+		<xsl:comment xml:space="preserve">renderCodeDiv [<xsl:value-of select="$id" />] [<xsl:value-of select="$pos" />] [<xsl:value-of select="$uniqueLangIndex" />] [<xsl:value-of select="$lang" />] [<xsl:value-of select="$unrecognized" />] [<xsl:value-of select="$ContainsMarkup" />]</xsl:comment>
 		<xsl:element name="div"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="id">
@@ -400,7 +401,7 @@
 		<xsl:for-each select="msxsl:node-set($devLanguages)/value">
 			<xsl:choose>
 				<xsl:when test="msxsl:node-set($separateLanguages)/value[current()/text()=text()]"/>
-				<xsl:when test="msxsl:node-set($groupedLanguages)/value[contains(current()/text(),text())]"/>
+				<xsl:when test="msxsl:node-set($groupedLanguages)/value[current()/text()=text()]"/>
 				<xsl:otherwise>
 					<value>
 						<xsl:value-of select="text()"/>
@@ -411,7 +412,7 @@
 		<xsl:for-each select="msxsl:node-set($syntaxLanguages)/value">
 			<xsl:choose>
 				<xsl:when test="msxsl:node-set($separateLanguages)/value[current()/text()=text()]"/>
-				<xsl:when test="msxsl:node-set($groupedLanguages)/value[contains(current()/text(),text())]"/>
+				<xsl:when test="msxsl:node-set($groupedLanguages)/value[current()/text()=text()]"/>
 				<xsl:when test="msxsl:node-set($devLanguages)/value[current()/text()=text()]"/>
 				<xsl:otherwise>
 					<value>
@@ -426,5 +427,32 @@
 
 	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml/xhtml:list[@id='BrandingLanguages']"/>
 	<xsl:template match="/xhtml:html/xhtml:head/xhtml:xml/xhtml:list[@id='BrandingSyntaxLanguages']"/>
+
+	<!-- ============================================================================================
+	Override of isMajorLanguage
+
+	The default implementation of this template uses the "contains" function which means that if
+	the display language "contains" one of the major language names it matches - even if it's not 
+	actually the same.  The intention is to match Visual Basic, Visual Basic Declaration and 
+	Visual Basic Usage, but it is applied to0 broadly.  This implementation is more accurate.
+	============================================================================================= -->
+
+	<xsl:template name="isMajorLanguage">
+		<xsl:param name="lang"/>
+		<xsl:for-each select="msxsl:node-set($uniqueLangTabsSet)/value">
+			<xsl:choose>
+				<xsl:when test="$lang=.">
+					<xsl:value-of select="'true'"/>
+				</xsl:when>
+				<xsl:when test="contains($lang,.)">
+					<xsl:variable name="loweredLang"
+												select="translate($lang, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
+					<xsl:if test="contains($loweredLang,'declaration') or contains($loweredLang,'usage')">
+						<xsl:value-of select="'true'"/>
+					</xsl:if>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
 
 </xsl:stylesheet>

@@ -43,8 +43,9 @@
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:call-template name="head-style-urls-fixup"/>
 					<xsl:apply-templates select="node()"/>
+					<xsl:call-template name="head-style-urls-fixup"/>
+					<xsl:call-template name="messed-tags-fixup"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:call-template name="footer"/>
@@ -107,6 +108,42 @@
 			</xsl:choose>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
+	</xsl:template>
+
+	<!-- This template compensates for a bug in the default transforms that changes <br/> to <br></br> in SelfBranded content -->
+	<xsl:template name="messed-tags-fixup">
+		<xsl:if test="$pre-branding">
+			<xsl:element name="script"
+									 namespace="{$xhtml}">
+				<xsl:attribute name="type">
+					<xsl:value-of select="'text/javascript'"/>
+				</xsl:attribute>
+					<![CDATA[
+					try
+					{
+						var brTags = document.all.tags("br");
+						if (brTags)
+						{
+							var brEnum = new Enumerator(brTags);
+							for (brEnum.moveFirst(); !brEnum.atEnd(); brEnum.moveNext())
+							{
+								var brTag = brEnum.item();
+								var brNext = brTag.nextSibling;
+								if (brNext)
+								{
+									if (brNext.tagName.toLowerCase() == "br")
+									{
+										brNext.parentElement.removeChild (brNext);
+									}
+								}
+							}
+						}
+					}
+					catch (e) {}
+					finally {}
+					]]>
+			</xsl:element>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- ============================================================================================
