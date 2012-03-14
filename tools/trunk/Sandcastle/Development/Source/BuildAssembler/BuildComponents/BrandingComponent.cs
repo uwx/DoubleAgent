@@ -60,13 +60,16 @@ namespace Microsoft.Ddue.Tools
 		private const string s_configCatalogProductId = "catalog-product-id";
 		private const string s_configCatalogVersion = "catalog-version";
 		private const string s_configVendorName = "vendor-name";
+		private const string s_codeRemoveElement = "plain-remove-element";
+		private const string s_codeRemoveId = "plain-remove-id";
+		private const string s_codeRemoveClass = "plain-remove-class";
 
 		private const string s_defaultLocale = "en-US";
 		private static string s_defaultBrandingPackage = "Dev10";
 		private const string s_defaultHelpOutput = "MSHelpViewer";
 		private static string s_defaultCatalogProductId = "VS";
 		private static string s_defaultCatalogVersion = "100";
-		private static string s_defaultVendorName = "VendorName";
+		private static string s_defaultVendorName = "Microsoft";
 		private static string s_packageExtension = ".mshc";
 
 		private bool m_selfBranded = true;
@@ -77,6 +80,9 @@ namespace Microsoft.Ddue.Tools
 		private string m_catalogProductId = s_defaultCatalogProductId;
 		private string m_catalogVersion = s_defaultCatalogVersion;
 		private string m_vendorName = s_defaultVendorName;
+		private string m_codeRemoveElement = String.Empty;
+		private string m_codeRemoveId = String.Empty;
+		private string m_codeRemoveClass = String.Empty;
 		private XslCompiledTransform m_brandingTransform = null;
 		private XsltArgumentList m_transformArguments = null;
 
@@ -92,11 +98,10 @@ namespace Microsoft.Ddue.Tools
 			: base (assembler, configuration)
 		{
 			XPathNavigator v_configData = configuration.SelectSingleNode ("data");
+			String v_configValue;
 
 			if (v_configData != null)
 			{
-				String v_configValue;
-
 				m_brandingContent = v_configData.GetAttribute (s_configBrandingContent, String.Empty);
 
 				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configLocale, String.Empty)))
@@ -126,6 +131,23 @@ namespace Microsoft.Ddue.Tools
 				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_configVendorName, String.Empty)))
 				{
 					m_vendorName = v_configValue;
+				}
+			}
+
+			v_configData = configuration.SelectSingleNode ("code");
+			if (v_configData != null)
+			{
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_codeRemoveElement, String.Empty)))
+				{
+					m_codeRemoveElement = v_configValue;
+				}
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_codeRemoveId, String.Empty)))
+				{
+					m_codeRemoveId = v_configValue;
+				}
+				if (!String.IsNullOrEmpty (v_configValue = v_configData.GetAttribute (s_codeRemoveClass, String.Empty)))
+				{
+					m_codeRemoveClass = v_configValue;
 				}
 			}
 
@@ -428,6 +450,19 @@ namespace Microsoft.Ddue.Tools
 						else
 						{
 							PutTransformParam ("branding-package", @"content\" + m_vendorName + @"\store\" + m_brandingPackage + s_packageExtension);
+						}
+
+						if (!String.IsNullOrEmpty (m_codeRemoveElement))
+						{
+							PutTransformParam (s_codeRemoveElement, m_codeRemoveElement);
+						}
+						if (!String.IsNullOrEmpty (m_codeRemoveId))
+						{
+							PutTransformParam (s_codeRemoveId, m_codeRemoveId);
+						}
+						if (!String.IsNullOrEmpty (m_codeRemoveClass))
+						{
+							PutTransformParam (s_codeRemoveClass, m_codeRemoveClass);
 						}
 
 						WriteMessage (MessageLevel.Info, String.Format ("Branding Transform \"{0}\" catalogProductFamily={1} catalogProductVersion={2} catalogLocale={3}", Path.Combine (v_brandingContentBase, v_brandingTransformName), m_catalogProductId, m_catalogVersion, m_locale));

@@ -369,10 +369,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:comment xml:space="preserve">p_codeLang[<xsl:value-of select="$p_codeLang"/>]</xsl:comment>
+		<!--<xsl:comment xml:space="preserve">p_codeLang[<xsl:value-of select="$p_codeLang"/>]</xsl:comment>
 		<xsl:comment xml:space="preserve">p_codeTitle[<xsl:value-of select="$p_codeTitle"/>]</xsl:comment>
 		<xsl:comment xml:space="preserve">v_codeLangUnique[<xsl:value-of select="$v_codeLangUnique"/>]</xsl:comment>
-		<xsl:comment xml:space="preserve">v_codeLangTitle[<xsl:value-of select="$v_codeLangTitle"/>]</xsl:comment>
+		<xsl:comment xml:space="preserve">v_codeLangTitle[<xsl:value-of select="$v_codeLangTitle"/>]</xsl:comment>-->
 
 		<xsl:element name="mtps:CodeSnippet"
 								 namespace="{$mtps}">

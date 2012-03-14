@@ -106,6 +106,34 @@
 
 	<!-- ============================================================================================
 	Minimal spacing tests
+
+	The minimal spacing feature skips the <p></p> translation for the first <para> element in
+	selected parent elements (eg. alerts, list items, table entries, definition items, etc.)
+
+	These templates check if minimal spacing should be applied in a specified context. 
+
+	The first check determines if minimal spacing is enabled for the current context by matching
+	the $p_spacingType parameter agains the $minimal-spacing global parameter.
+
+	The next check traverses up the element tree and checks the @minimal-spacing attribute at each
+	level.
+	- If any element has a @minimal-spacing attribute of 'false', this disables the feature
+	  for that element and its descendants.
+	- If any element has a @minimal-spacing attribute of 'true', this enables the feature
+	  for that element and its descendants.
+	- If and element does not have a @minimal-spacing attribute, it inherits its parent's setting.
+	- The root is assumed to have the feature enabled.
+	
+	The last check uses the $p_parentLevel pameter to traverse up the element tree and then
+	back down again to check each descendant.  The purpose is to determine if any	descendant
+	element satisfies conditions that would block the minimal spacing feature, as follows:
+	- If an element contains more than one <para> element, the feature is blocked.
+	- If an element contains any element other than <para>, the feature is blocked.
+	- However, if the element has @minimal-spacing='true' the feature is not blocked, no matter
+	  what the element's contents.
+
+	Note - for the <code> element, minimal spacing does not apply to <para> elements.  Instead, 
+	it causes all leading and trailing blank lines to be removed.
 	============================================================================================= -->
 
 	<xsl:template name="t_checkMinimalSpacing">

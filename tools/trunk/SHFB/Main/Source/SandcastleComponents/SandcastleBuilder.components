@@ -403,7 +403,7 @@
       assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
         <description>This build component is used to transform a help topic for use in Microsoft Help Viewer by converting the MS Help 2 attributes to the MS Help Viewer format.</description>
 
-        <insert placement="before" type="Microsoft.Ddue.Tools.SaveComponent" />
+        <insert placement="before" type="SandcastleBuilder.Components.BrandingComponent" />
 
         <!-- The help file builder project contains properties for this
              component so we won't show it. -->
@@ -418,29 +418,38 @@
         </defaultConfiguration>
     </component>
 
-  <!-- ****************************************************************** -->
+    <!-- ****************************************************************** -->
 
-  <component id="Microsoft Help Viewer Branding Component"
-    type="SandcastleBuilder.Components.BrandingComponent"
-    assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
-    <description>This build component is used to apply Microsoft Help Viewer branding to a help topic.</description>
+    <component id="Microsoft Help Viewer Branding Component"
+      type="SandcastleBuilder.Components.BrandingComponent"
+      assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
+      <description>This build component is used to apply Microsoft Help Viewer branding to a help topic.</description>
 
-    <insert placement="after" type="Microsoft.Ddue.Tools.MSHCComponent" />
+      <insert placement="before" type="Microsoft.Ddue.Tools.SaveComponent" />
 
-    <!-- The help file builder project contains properties for this
-             component so we won't show it. -->
-    <hidden />
+      <!-- The help file builder project contains properties for this
+               component so we won't show it. -->
+      <hidden />
 
-    <!-- Not editable at all -->
-    <configureMethod name="-" />
+      <!-- Not editable at all -->
+      <configureMethod name="-" />
 
-    <defaultConfiguration>
-      <data self-branded="{@SelfBranded}" branding-package="{@BrandingPackage}"
-        help-output="{@HelpFileFormat}" locale="{@Locale}" />
-    </defaultConfiguration>
-  </component>
+      <defaultConfiguration>
+        <data self-branded="{@SelfBranded}"
+          branding-package="{@BrandingPackage}"
+          help-output="{@HelpFileFormat}"
+          catalog-product-id="{@CatalogProductId}"
+          catalog-version="{@CatalogVersion}"
+          locale="{@Locale}" />
+        <code
+          plain-remove-element=""
+          plain-remove-id=""
+          plain-remove-class="highlight-lineno;highlight-lnborder;highlight-spacerShort;highlight-collapsebox;highlight-collapsed"
+          />
+      </defaultConfiguration>
+    </component>
 
-  <!-- ****************************************************************** -->
+    <!-- ****************************************************************** -->
 
     <component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent"
         assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">

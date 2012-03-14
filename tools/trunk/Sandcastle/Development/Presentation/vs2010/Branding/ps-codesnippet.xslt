@@ -8,6 +8,17 @@
 								xmlns:cs="urn:code-snippet"
 >
 	<!-- ============================================================================================
+	Parameters
+
+	These parameters are used to remove elements from pre-formatted code snippets when making the
+	plain copy used for Copy and Print.
+	============================================================================================= -->
+
+	<xsl:param name="plain-remove-element"></xsl:param>
+	<xsl:param name="plain-remove-id"></xsl:param>
+	<xsl:param name="plain-remove-class"></xsl:param>
+
+	<!-- ============================================================================================
 	Override code grouping to consistently use the 'isMajorLanguage' template and to better handle
 	multiple groups.
 
@@ -66,12 +77,12 @@
 		<xsl:param name="codeSnippetCount"
 							 select="count($codeSnippets)"/>
 
-		<xsl:variable name="v_languages">
+		<!--<xsl:variable name="v_languages">
 			<xsl:for-each select="$codeSnippets">
 				<xsl:value-of select="concat(' [',@Language,'][',@DisplayLanguage,']')" />
 			</xsl:for-each>
 		</xsl:variable>
-		<xsl:comment xml:space="preserve">codeSnippetGroup [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>
+		<xsl:comment xml:space="preserve">codeSnippetGroup [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>-->
 
 		<xsl:choose>
 			<xsl:when test="$codeSnippetCount = 1">
@@ -133,12 +144,12 @@
 		<xsl:param name="codeSnippetCount"
 							 select="count($codeSnippets)"/>
 
-		<xsl:variable name="v_languages">
+		<!--<xsl:variable name="v_languages">
 			<xsl:for-each select="$codeSnippets">
 				<xsl:value-of select="concat(' [',@Language,'][',@DisplayLanguage,']')" />
 			</xsl:for-each>
 		</xsl:variable>
-		<xsl:comment xml:space="preserve">codeSnippetGroupUnique [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>
+		<xsl:comment xml:space="preserve">codeSnippetGroupUnique [<xsl:value-of select="$codeSnippetCount" />]<xsl:value-of select="$v_languages" /></xsl:comment>-->
 
 		<xsl:choose>
 			<xsl:when test="$codeSnippetCount = 1">
@@ -178,10 +189,10 @@
 
 				<xsl:choose>
 					<xsl:when test="string($v_allMajorLanguageSame)='' and not(contains($v_allMajorLanguage,'false'))">
-						<xsl:comment xml:space="preserve">renderSnippet [<xsl:value-of select="$codeSnippetCount"/>]</xsl:comment>
+						<!--<xsl:comment xml:space="preserve">renderSnippet [<xsl:value-of select="$codeSnippetCount"/>]</xsl:comment>
 						<xsl:for-each select="$codeSnippets">
 							<xsl:comment xml:space="preserve">  [<xsl:value-of select="@Language" />] [<xsl:value-of select="@DisplayLanguage" />]</xsl:comment>
-						</xsl:for-each>
+						</xsl:for-each>-->
 						<xsl:call-template name="renderSnippet">
 							<xsl:with-param name="snippetCount"
 															select="$codeSnippetCount"/>
@@ -195,7 +206,7 @@
 					</xsl:when>
 					<xsl:when test="string($v_allMajorLanguageSame)='' and contains($v_allMajorLanguage,'false')">
 						<xsl:for-each select="$codeSnippets">
-							<xsl:comment xml:space="preserve">standalonesnippet(e) [<xsl:value-of select="@Language" />] [<xsl:value-of select="@DisplayLanguage" />]</xsl:comment>
+							<!--<xsl:comment xml:space="preserve">standalonesnippet(e) [<xsl:value-of select="@Language" />] [<xsl:value-of select="@DisplayLanguage" />]</xsl:comment>-->
 							<xsl:call-template name="standalonesnippet"/>
 						</xsl:for-each>
 					</xsl:when>
@@ -233,7 +244,7 @@
 		<xsl:param name="unrecognized"
 							 select="'false'"/>
 		<xsl:param name="ContainsMarkup" />
-		<xsl:comment xml:space="preserve">renderCodeDiv [<xsl:value-of select="$id" />] [<xsl:value-of select="$pos" />] [<xsl:value-of select="$uniqueLangIndex" />] [<xsl:value-of select="$lang" />] [<xsl:value-of select="$unrecognized" />] [<xsl:value-of select="$ContainsMarkup" />]</xsl:comment>
+		<!--<xsl:comment xml:space="preserve">renderCodeDiv [<xsl:value-of select="$id" />] [<xsl:value-of select="$pos" />] [<xsl:value-of select="$uniqueLangIndex" />] [<xsl:value-of select="$lang" />] [<xsl:value-of select="$unrecognized" />] [<xsl:value-of select="$ContainsMarkup" />]</xsl:comment>-->
 		<xsl:element name="div"
 								 namespace="{$xhtml}">
 			<xsl:attribute name="id">
@@ -269,8 +280,20 @@
 						<xsl:when test="$plainCode='true'">
 							<xsl:element name="pre"
 													 namespace="{$xhtml}">
-								<xsl:value-of select="cs:plainCode($spacedSnippetCode)"
-															disable-output-escaping="yes"/>
+								<xsl:choose>
+									<xsl:when test="$plain-remove-element!='' or $plain-remove-id!='' or $plain-remove-class!=''">
+										<xsl:variable name="plainSnippetCode">
+											<xsl:apply-templates select="msxsl:node-set($spacedSnippetCode)"
+																					 mode="plainCode"/>
+										</xsl:variable>
+										<xsl:value-of select="cs:plainCode($plainSnippetCode)"
+																	disable-output-escaping="yes"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="cs:plainCode($spacedSnippetCode)"
+																	disable-output-escaping="yes"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
@@ -348,6 +371,30 @@
 				<xsl:value-of select="."/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- ======================================================================================== -->
+
+	<xsl:template match="*"
+								mode="plainCode"
+								name="plainCodeElement">
+		<xsl:choose>
+			<xsl:when test="contains($plain-remove-element,name()) or (@id and contains($plain-remove-id,@id)) or (@class and contains($plain-remove-class,@class))">
+				<!--<xsl:comment xml:space="preserve">skip[<xsl:value-of select="."/>]</xsl:comment>-->
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:apply-templates select="@*"/>
+					<xsl:apply-templates mode="plainCode"/>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="text()"
+								mode="plainCode"
+								name="plainCodeText">
+		<xsl:call-template name="codeSpacingText"/>
 	</xsl:template>
 
 	<!-- ============================================================================================
