@@ -21,16 +21,6 @@
         </Topic>
         <Topic id="e0846716-419c-11e1-9d4f-002421116fb2" visible="True" title="Configuration Services" />
       </Topic>
-      <Topic id="e0846750-419c-11e1-9d4f-002421116fb2" visible="True" title="Programming the Double Agent Server">
-        <Topic id="e0846751-419c-11e1-9d4f-002421116fb2" visible="True" title="Overview" />
-        <Topic id="e0846752-419c-11e1-9d4f-002421116fb2" visible="True" title="The Double Agent Server Object Model" />
-        <Topic id="e0846753-419c-11e1-9d4f-002421116fb2" visible="True" title="Using the Server in Applications">
-          <Topic id="e0846754-419c-11e1-9d4f-002421116fb2" visible="True" title="Loading Character and Animation Data" />
-          <Topic id="e0846755-419c-11e1-9d4f-002421116fb2" visible="True" title="Creating a Notification Sink" />
-        </Topic>
-        <Topic id="e0846756-419c-11e1-9d4f-002421116fb2" visible="True" title="Using Speech Services" />
-        <Topic id="e0846757-419c-11e1-9d4f-002421116fb2" visible="True" title="Updating from Previous Versions" />
-      </Topic>
       <Topic id="e0846730-419c-11e1-9d4f-002421116fb2" visible="True" title="Programming the Double Agent Control">
         <Topic id="e0846731-419c-11e1-9d4f-002421116fb2" visible="True" title="Overview" />
         <Topic id="e0846732-419c-11e1-9d4f-002421116fb2" visible="True" title="The Double Agent Control Object Model" />
@@ -45,6 +35,16 @@
         <Topic id="e0846739-419c-11e1-9d4f-002421116fb2" visible="True" title="Using Speech Services" />
         <Topic id="e084673a-419c-11e1-9d4f-002421116fb2" visible="True" title="Connected, Stand-Alone, and Contained" />
         <Topic id="e084673b-419c-11e1-9d4f-002421116fb2" visible="True" title="Updating from Previous Versions" />
+      </Topic>
+      <Topic id="e0846750-419c-11e1-9d4f-002421116fb2" visible="True" title="Programming the Double Agent Server">
+        <Topic id="e0846751-419c-11e1-9d4f-002421116fb2" visible="True" title="Overview" />
+        <Topic id="e0846752-419c-11e1-9d4f-002421116fb2" visible="True" title="The Double Agent Server Object Model" />
+        <Topic id="e0846753-419c-11e1-9d4f-002421116fb2" visible="True" title="Using the Server in Applications">
+          <Topic id="e0846754-419c-11e1-9d4f-002421116fb2" visible="True" title="Loading Character and Animation Data" />
+          <Topic id="e0846755-419c-11e1-9d4f-002421116fb2" visible="True" title="Creating a Notification Sink" />
+        </Topic>
+        <Topic id="e0846756-419c-11e1-9d4f-002421116fb2" visible="True" title="Using Speech Services" />
+        <Topic id="e0846757-419c-11e1-9d4f-002421116fb2" visible="True" title="Updating from Previous Versions" />
       </Topic>
       <Topic id="e08466c9-419c-11e1-9d4f-002421116fb2" visible="True" title="Double Agent Error Codes" />
       <Topic id="e08466ca-419c-11e1-9d4f-002421116fb2" visible="True" title="Speech Output Tags">

@@ -3,12 +3,12 @@
 								xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
-                
 								exclude-result-prefixes="msxsl"
->
+	>
 	<!-- ======================================================================================== -->
 
 	<xsl:import href="globalTemplates.xsl"/>
+	<xsl:import href="conceptualTopicTypes.xsl"/>
 
 	<!-- ======================================================================================== -->
 
@@ -77,17 +77,17 @@
 
 		<!-- Microsoft.Help.ContentType -->
 		<xsl:variable name="v_contentTypeDocStudio">
-			<xsl:variable name="lookupValue">
+			<xsl:variable name="v_lookupValue">
 				<xsl:value-of select="local-name(/document/topic/*[1])"/>
 			</xsl:variable>
-			<xsl:value-of select="msxsl:node-set($g_topicTypes)/topic[@name = $lookupValue]/text()"/>
+			<xsl:value-of select="msxsl:node-set($g_topicTypes)/topic[@name = $v_lookupValue]/@contentType"/>
 		</xsl:variable>
 
 		<xsl:variable name="v_contentTypeTopicType">
-			<xsl:variable name="lookupValue">
+			<xsl:variable name="v_lookupValue">
 				<xsl:value-of select="translate(/document/metadata/topicType/@id, $g_allLowerCaseLetters, $g_allUpperCaseLetters)"/>
 			</xsl:variable>
-			<xsl:value-of select="msxsl:node-set($g_topicTypes)/topic[@guid = $lookupValue]/text()"/>
+			<xsl:value-of select="msxsl:node-set($g_topicTypes)/topic[@guid = $v_lookupValue]/@contentType"/>
 		</xsl:variable>
 
 		<xsl:choose>
@@ -182,55 +182,5 @@
 		</xsl:for-each>
 
 	</xsl:template>
-
-	<!-- ======================================================================================== -->
-
-	<xsl:variable name="g_topicTypes">
-		<topic guid="EF7DDB37-8ED3-4DFA-B38D-5A3CC1906034"
-					 name="">Concepts</topic>
-		<topic guid="1FE70836-AA7D-4515-B54B-E10C4B516E50"
-					 name="developerConceptualDocument">Concepts</topic>
-		<topic guid="B137C930-7BF7-48A2-A329-3ADCAEF8868E"
-					 name="developerOrientationDocument">Concepts</topic>
-		<topic guid="68F07632-C4C5-4645-8DFA-AC87DCB4BD54"
-					 name="developerSDKTechnologyOverviewArchitectureDocument">Concepts</topic>
-		<topic guid="CDB8C120-888F-447B-8AF8-F9540562E7CA"
-					 name="developerSDKTechnologyOverviewOrientationDocument">Concepts</topic>
-		<topic guid="356C57C4-384D-4AF2-A637-FDD6F088A033"
-					 name="developerSDKTechnologyOverviewScenariosDocument">Concepts</topic>
-		<topic guid="19F1BB0E-F32A-4D5F-80A9-211D92A8A715"
-					 name="developerSDKTechnologyOverviewTechnologySummaryDocument">Concepts</topic>
-		<topic guid="56DB00EC-28BA-4C0D-8694-28E8B244E236"
-					 name="developerWhitePaperDocument">Concepts</topic>
-		<topic guid="B137C930-7BF7-48A2-A329-3ADCAEF8868E"
-					 name="developerOrientationDocument">Concepts</topic>
-
-		<topic guid="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09"
-					 name="developerHowToDocument">How To</topic>
-		<topic guid="4779DD54-5D0C-4CC3-9DB3-BF1C90B721B3"
-					 name="developerWalkthroughDocument">How To</topic>
-
-		<topic guid="A635375F-98C2-4241-94E7-E427B47C20B6"
-					 name="developerErrorMessageDocument">Reference</topic>
-		<topic guid="95DADC4C-A2A6-447A-AA36-B6BE3A4F8DEC"
-					 name="developerReferenceWithSyntaxDocument">Reference</topic>
-		<topic guid="F9205737-4DEC-4A58-AA69-0E621B1236BD"
-					 name="developerReferenceWithoutSyntaxDocument">Reference</topic>
-		<topic guid="38C8E0D1-D601-4DBA-AE1B-5BEC16CD9B01"
-					 name="developerTroubleshootingDocument">Reference</topic>
-		<topic guid="B8ED9F21-39A4-4967-928D-160CD2ED9DCE"
-					 name="developerUIReferenceDocument">Reference</topic>
-		<topic guid="3272D745-2FFC-48C4-9E9D-CF2B2B784D5F"
-					 name="developerXmlReference">Reference</topic>
-		<topic guid="A689E19C-2687-4881-8CE1-652FF60CF46C"
-					 name="developerGlossaryDocument">Reference</topic>
-
-		<topic guid="069EFD88-412D-4E2F-8848-2D5C3AD56BDE"
-					 name="developerSampleDocument">Samples</topic>
-		<topic guid="4BBAAF90-0E5F-4C86-9D31-A5CAEE35A416"
-					 name="developerSDKTechnologyOverviewCodeDirectoryDocument">Samples</topic>
-		<topic guid="4A273212-0AC8-4D72-8349-EC11CD2FF8CD"
-					 name="">Samples</topic>
-	</xsl:variable>
 
 </xsl:stylesheet>

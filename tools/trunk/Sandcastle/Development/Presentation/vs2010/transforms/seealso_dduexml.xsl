@@ -1,116 +1,180 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.1" 
-				xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
-        xmlns:mshelp="http://msdn.microsoft.com/mshelp"
-				xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
-				xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:msxsl="urn:schemas-microsoft-com:xslt"
-        >
-	<!-- ============================================================================================
-	Global Variables
-	============================================================================================= -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+								version="1.1"
+								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
+								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
+								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
+								xmlns:xlink="http://www.w3.org/1999/xlink"
+								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+	>
+	<!-- ======================================================================================== -->
 
-	<!-- Tasks -->
-  <xsl:variable name="HowTo" select="'DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09'" />
-  <xsl:variable name="Walkthrough" select="'4779DD54-5D0C-4CC3-9DB3-BF1C90B721B3'" />
-  <xsl:variable name="Sample" select="'069EFD88-412D-4E2F-8848-2D5C3AD56BDE'" />
-  <xsl:variable name="Troubleshooting" select="'38C8E0D1-D601-4DBA-AE1B-5BEC16CD9B01'" />
+	<xsl:import href="conceptualTopicTypes.xsl"/>
 
-  <!-- Reference -->
-  <xsl:variable name="ReferenceWithoutSyntax" select="'F9205737-4DEC-4A58-AA69-0E621B1236BD'" />
-  <xsl:variable name="ReferenceWithSyntax" select="'95DADC4C-A2A6-447A-AA36-B6BE3A4F8DEC'" />
-  <xsl:variable name="XMLReference" select="'3272D745-2FFC-48C4-9E9D-CF2B2B784D5F'" />
-  <xsl:variable name="ErrorMessage" select="'A635375F-98C2-4241-94E7-E427B47C20B6'" />
-  <xsl:variable name="UIReference" select="'B8ED9F21-39A4-4967-928D-160CD2ED9DCE'" />
-
-  <!-- Concepts -->
-  <xsl:variable name="Conceptual" select="'1FE70836-AA7D-4515-B54B-E10C4B516E50'" />
-  <xsl:variable name="SDKTechnologyOverviewArchitecture" select="'68F07632-C4C5-4645-8DFA-AC87DCB4BD54'" />
-  <xsl:variable name="SDKTechnologyOverviewCodeDirectory" select="'4BBAAF90-0E5F-4C86-9D31-A5CAEE35A416'" />
-  <xsl:variable name="SDKTechnologyOverviewScenarios" select="'356C57C4-384D-4AF2-A637-FDD6F088A033'" />
-  <xsl:variable name="SDKTechnologyOverviewTechnologySummary" select="'19F1BB0E-F32A-4D5F-80A9-211D92A8A715'" />
-
-  <!-- Other Resources -->
-  <xsl:variable name="Orientation" select="'B137C930-7BF7-48A2-A329-3ADCAEF8868E'" />
-  <xsl:variable name="WhitePaper" select="'56DB00EC-28BA-4C0D-8694-28E8B244E236'" />
-  <xsl:variable name="CodeEntity" select="'4A273212-0AC8-4D72-8349-EC11CD2FF8CD'" />
-  <xsl:variable name="Glossary" select="'A689E19C-2687-4881-8CE1-652FF60CF46C'" />
-  <xsl:variable name="SDKTechnologyOverviewOrientation" select="'CDB8C120-888F-447B-8AF8-F9540562E7CA'" />
-	
 	<!-- ============================================================================================
 	Process relatedTopics
 	============================================================================================= -->
 
-	<xsl:template match="ddue:relatedTopics" mode="seeAlso">
-    <xsl:param name="p_autoGenerateLinks" select="false()" />
+	<xsl:template match="ddue:relatedTopics"
+								mode="seeAlso">
+		<xsl:param name="p_autoGenerateLinks"
+							 select="false()"/>
 
-    <!-- Tasks -->
-    <xsl:if test="(ddue:link | ddue:legacyLink)[(ddue:ToUpper(@topicType_id) = $HowTo or ddue:ToUpper(@topicType_id) = $Walkthrough or ddue:ToUpper(@topicType_id) = $Sample or ddue:ToUpper(@topicType_id) = $Troubleshooting) and ddue:GuidChecker(@xlink:href) = 'True']" >
-      <xsl:call-template name="t_putSeeAlsoSubSection">
-        <xsl:with-param name="p_headerGroup" select="'SeeAlsoTasks'" />
-        <xsl:with-param name="p_members" select="(ddue:link | ddue:legacyLink)[(ddue:ToUpper(@topicType_id) = $HowTo or ddue:ToUpper(@topicType_id) = $Walkthrough or ddue:ToUpper(@topicType_id) = $Sample or ddue:ToUpper(@topicType_id) = $Troubleshooting) and ddue:GuidChecker(@xlink:href) = 'True']" />
-        <xsl:with-param name="p_autoGenerateLinks" select="false()" />
-      </xsl:call-template>
-    </xsl:if>
-  
-    <!-- Reference -->
-    <xsl:if test="(ddue:link | ddue:legacyLink)[((ddue:ToUpper(@topicType_id) = $ReferenceWithoutSyntax or ddue:ToUpper(@topicType_id) = $ReferenceWithSyntax or ddue:ToUpper(@topicType_id) = $XMLReference or ddue:ToUpper(@topicType_id) = $ErrorMessage or ddue:ToUpper(@topicType_id) = $UIReference) and ddue:GuidChecker(@xlink:href) = 'True') or ddue:GuidChecker(@xlink:href) = 'False'] |
-                  ddue:codeEntityReference or
-                  boolean($p_autoGenerateLinks)">
-      <xsl:call-template name="t_putSeeAlsoSubSection">
-        <xsl:with-param name="p_headerGroup" select="'SeeAlsoReference'" />
-        <xsl:with-param name="p_members" select="(ddue:link | ddue:legacyLink)[((ddue:ToUpper(@topicType_id) = $ReferenceWithoutSyntax or ddue:ToUpper(@topicType_id) = $ReferenceWithSyntax or ddue:ToUpper(@topicType_id) = $XMLReference or ddue:ToUpper(@topicType_id) = $ErrorMessage or ddue:ToUpper(@topicType_id) = $UIReference) and ddue:GuidChecker(@xlink:href) = 'True') or ddue:GuidChecker(@xlink:href) = 'False'] |
-                                               ddue:codeEntityReference" />
-        <xsl:with-param name="p_autoGenerateLinks" select="$p_autoGenerateLinks" />
-      </xsl:call-template>
-    </xsl:if>
+		<!--<xsl:for-each select="ddue:link | ddue:legacyLink">
+			<xsl:comment xml:space="preserve">[<xsl:value-of select="@xlink:href"/>][<xsl:value-of select="@topicType_id"/>]</xsl:comment>
+		</xsl:for-each>-->
 
-    <!-- Concepts -->
-    <xsl:if test="(ddue:link | ddue:legacyLink)[(ddue:ToUpper(@topicType_id) = $Conceptual or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewArchitecture or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewCodeDirectory or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewScenarios or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewTechnologySummary) and ddue:GuidChecker(@xlink:href) = 'True']">
-      <xsl:call-template name="t_putSeeAlsoSubSection">
-        <xsl:with-param name="p_headerGroup" select="'SeeAlsoConcepts'" />
-        <xsl:with-param name="p_members" select="(ddue:link | ddue:legacyLink)[(ddue:ToUpper(@topicType_id) = $Conceptual or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewArchitecture or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewCodeDirectory or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewScenarios or ddue:ToUpper(@topicType_id) = $SDKTechnologyOverviewTechnologySummary) and ddue:GuidChecker(@xlink:href) = 'True']" />
-        <xsl:with-param name="p_autoGenerateLinks" select="false()" />
-      </xsl:call-template>
-    </xsl:if>
+		<xsl:variable name="v_taskLinks">
+			<xsl:for-each select="(ddue:link | ddue:legacyLink)[@topicType_id]">
+				<xsl:if test="ddue:GuidChecker(@xlink:href)='True'" >
+					<xsl:variable name="v_topicTypeId">
+						<xsl:value-of select="translate(@topicType_id, $g_allLowerCaseLetters, $g_allUpperCaseLetters)"/>
+					</xsl:variable>
+					<xsl:variable name="v_seeAlsoGroup">
+						<xsl:value-of select="translate(msxsl:node-set($g_topicTypes)/topic[@guid = $v_topicTypeId]/@seeAlsoGroup, $g_allUpperCaseLetters, $g_allLowerCaseLetters)"/>
+					</xsl:variable>
+					<xsl:if test="$v_seeAlsoGroup='tasks'">
+						<xsl:copy-of select="."/>
+					</xsl:if>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:variable>
 
-    <!-- Other Resources -->
-    <xsl:if test="(ddue:link | ddue:legacyLink)[(ddue:ToUpper(@topicType_id) != $HowTo and ddue:ToUpper(@topicType_id) != $Walkthrough and ddue:ToUpper(@topicType_id) != $Sample and ddue:ToUpper(@topicType_id) != $Troubleshooting and ddue:ToUpper(@topicType_id) != $Conceptual and ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewArchitecture and ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewCodeDirectory and 
-                  ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewScenarios and ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewTechnologySummary and ddue:ToUpper(@topicType_id) != $ReferenceWithoutSyntax and ddue:ToUpper(@topicType_id) != $ReferenceWithSyntax and ddue:ToUpper(@topicType_id) != $XMLReference and ddue:ToUpper(@topicType_id) != $ErrorMessage and ddue:ToUpper(@topicType_id) != $UIReference and 
-                  ddue:GuidChecker(@xlink:href) = 'True') or (not(@topicType_id) and ddue:GuidChecker(@xlink:href) = 'True')] or
-                  ddue:dynamicLink[@type = 'inline'] or
-                  ddue:externalLink" >
-      <xsl:call-template name="t_putSeeAlsoSubSection">
-        <xsl:with-param name="p_headerGroup" select="'SeeAlsoOtherResources'" />
-          <xsl:with-param name="p_members" select="(ddue:link | ddue:legacyLink)[(ddue:ToUpper(@topicType_id) != $HowTo and ddue:ToUpper(@topicType_id) != $Walkthrough and ddue:ToUpper(@topicType_id) != $Sample and ddue:ToUpper(@topicType_id) != $Troubleshooting and ddue:ToUpper(@topicType_id) != $Conceptual and ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewArchitecture and ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewCodeDirectory and 
-                                                 ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewScenarios and ddue:ToUpper(@topicType_id) != $SDKTechnologyOverviewTechnologySummary and ddue:ToUpper(@topicType_id) != $ReferenceWithoutSyntax and ddue:ToUpper(@topicType_id) != $ReferenceWithSyntax and ddue:ToUpper(@topicType_id) != $XMLReference and ddue:ToUpper(@topicType_id) != $ErrorMessage and ddue:ToUpper(@topicType_id) != $UIReference and 
-                                                 ddue:GuidChecker(@xlink:href) = 'True') or (not(@topicType_id) and ddue:GuidChecker(@xlink:href) = 'True')] |
-                                                 ddue:dynamicLink[@type = 'inline'] |
-                                                 ddue:externalLink" />
-          <xsl:with-param name="p_autoGenerateLinks" select="false()" />
-        </xsl:call-template>
-      </xsl:if>
-      
-  </xsl:template>
+		<xsl:variable name="v_conceptLinks">
+			<xsl:for-each select="(ddue:link | ddue:legacyLink)[@topicType_id]">
+				<xsl:if test="ddue:GuidChecker(@xlink:href)='True'" >
+					<xsl:variable name="v_topicTypeId">
+						<xsl:value-of select="translate(@topicType_id, $g_allLowerCaseLetters, $g_allUpperCaseLetters)"/>
+					</xsl:variable>
+					<xsl:variable name="v_seeAlsoGroup">
+						<xsl:value-of select="translate(msxsl:node-set($g_topicTypes)/topic[@guid = $v_topicTypeId]/@seeAlsoGroup, $g_allUpperCaseLetters, $g_allLowerCaseLetters)"/>
+					</xsl:variable>
+					<xsl:if test="$v_seeAlsoGroup='concepts'">
+						<xsl:copy-of select="."/>
+					</xsl:if>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:variable>
 
-  <xsl:template name="t_putSeeAlsoSubSection">
-    <xsl:param name="p_headerGroup" />
-    <xsl:param name="p_members" />
-    <xsl:param name="p_autoGenerateLinks"
-							 select="false()" />
-    <xsl:call-template name="t_putSubSection">
-      <xsl:with-param name="p_title">
-        <include item="{$p_headerGroup}"/>
-      </xsl:with-param>
-      <xsl:with-param name="p_content">
-        <xsl:if test="boolean($p_autoGenerateLinks)">
-          <xsl:call-template name="t_autogenSeeAlsoLinks"/>
-        </xsl:if>
-        <xsl:for-each select="msxsl:node-set($p_members)">
-          <div class="seeAlsoStyle">
-            <xsl:apply-templates select="." />
-          </div>
-        </xsl:for-each>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
+		<xsl:variable name="v_referenceLinks">
+			<xsl:for-each select="(ddue:link | ddue:legacyLink)[@topicType_id] | ddue:codeEntityReference">
+				<xsl:choose>
+					<xsl:when test="self::ddue:codeEntityReference">
+						<xsl:copy-of select="."/>
+					</xsl:when>
+					<xsl:when test="ddue:GuidChecker(@xlink:href)='True'" >
+						<xsl:variable name="v_topicTypeId">
+							<xsl:value-of select="translate(@topicType_id, $g_allLowerCaseLetters, $g_allUpperCaseLetters)"/>
+						</xsl:variable>
+						<xsl:variable name="v_seeAlsoGroup">
+							<xsl:value-of select="translate(msxsl:node-set($g_topicTypes)/topic[@guid = $v_topicTypeId]/@seeAlsoGroup, $g_allUpperCaseLetters, $g_allLowerCaseLetters)"/>
+						</xsl:variable>
+						<xsl:if test="$v_seeAlsoGroup='reference'">
+							<xsl:copy-of select="."/>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:copy-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:variable>
+
+		<xsl:variable name="v_otherLinks">
+			<xsl:for-each select="ddue:link | ddue:legacyLink | ddue:dynamicLink[@type='inline'] | ddue:externalLink">
+				<xsl:choose>
+					<xsl:when test="self::ddue:dynamicLink">
+						<xsl:copy-of select="."/>
+					</xsl:when>
+					<xsl:when test="self::ddue:externalLink">
+						<xsl:copy-of select="."/>
+					</xsl:when>
+					<xsl:when test="ddue:GuidChecker(@xlink:href)='True'">
+						<xsl:choose>
+							<xsl:when test="@topicType_id">
+								<xsl:variable name="v_topicTypeId">
+									<xsl:value-of select="translate(@topicType_id, $g_allLowerCaseLetters, $g_allUpperCaseLetters)"/>
+								</xsl:variable>
+								<xsl:variable name="v_seeAlsoGroup">
+									<xsl:value-of select="translate(msxsl:node-set($g_topicTypes)/topic[@guid = $v_topicTypeId]/@seeAlsoGroup, $g_allUpperCaseLetters, $g_allLowerCaseLetters)"/>
+								</xsl:variable>
+								<xsl:if test="($v_seeAlsoGroup!='tasks') and ($v_seeAlsoGroup!='concepts') and ($v_seeAlsoGroup!='reference')">
+									<xsl:copy-of select="."/>
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:copy-of select="."/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:variable>
+
+		<xsl:if test="msxsl:node-set($v_taskLinks)/*">
+			<xsl:call-template name="t_putSeeAlsoSubSection">
+				<xsl:with-param name="p_headerGroup"
+												select="'SeeAlsoTasks'"/>
+				<xsl:with-param name="p_members"
+												select="$v_taskLinks"/>
+				<xsl:with-param name="p_autoGenerateLinks"
+												select="false()"/>
+			</xsl:call-template>
+		</xsl:if>
+
+		<xsl:if test="msxsl:node-set($v_referenceLinks)/* or boolean($p_autoGenerateLinks)">
+			<xsl:call-template name="t_putSeeAlsoSubSection">
+				<xsl:with-param name="p_headerGroup"
+												select="'SeeAlsoReference'"/>
+				<xsl:with-param name="p_members"
+												select="$v_referenceLinks"/>
+				<xsl:with-param name="p_autoGenerateLinks"
+												select="$p_autoGenerateLinks"/>
+			</xsl:call-template>
+		</xsl:if>
+
+		<xsl:if test="msxsl:node-set($v_conceptLinks)/*">
+			<xsl:call-template name="t_putSeeAlsoSubSection">
+				<xsl:with-param name="p_headerGroup"
+												select="'SeeAlsoConcepts'"/>
+				<xsl:with-param name="p_members"
+												select="$v_conceptLinks"/>
+				<xsl:with-param name="p_autoGenerateLinks"
+												select="false()"/>
+			</xsl:call-template>
+		</xsl:if>
+
+		<xsl:if test="msxsl:node-set($v_otherLinks)/*">
+			<xsl:call-template name="t_putSeeAlsoSubSection">
+				<xsl:with-param name="p_headerGroup"
+												select="'SeeAlsoOtherResources'"/>
+				<xsl:with-param name="p_members"
+												select="$v_otherLinks"/>
+				<xsl:with-param name="p_autoGenerateLinks"
+												select="false()"/>
+			</xsl:call-template>
+		</xsl:if>
+
+	</xsl:template>
+
+	<xsl:template name="t_putSeeAlsoSubSection">
+		<xsl:param name="p_headerGroup"/>
+		<xsl:param name="p_members"/>
+		<xsl:param name="p_autoGenerateLinks"
+							 select="false()"/>
+		<xsl:call-template name="t_putSubSection">
+			<xsl:with-param name="p_title">
+				<include item="{$p_headerGroup}"/>
+			</xsl:with-param>
+			<xsl:with-param name="p_content">
+				<xsl:if test="boolean($p_autoGenerateLinks)">
+					<xsl:call-template name="t_autogenSeeAlsoLinks"/>
+				</xsl:if>
+				<xsl:for-each select="msxsl:node-set($p_members)">
+					<div class="seeAlsoStyle">
+						<xsl:apply-templates select="."/>
+					</div>
+				</xsl:for-each>
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
 </xsl:stylesheet>

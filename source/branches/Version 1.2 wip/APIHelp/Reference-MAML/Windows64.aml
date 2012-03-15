@@ -30,10 +30,16 @@
 						<tableHeader>
 							<row>
 								<entry>
-									<token>Agent</token> Server
+									<para>
+										<token>Agent</token> Server
+									</para>
 								</entry>
-								<entry>Server instance created using</entry>
-								<entry>Server architecture</entry>
+								<entry>
+									<para>Server instance created using</para>
+								</entry>
+								<entry>
+									<para>Server architecture</para>
+								</entry>
 							</row>
 						</tableHeader>
 						<row>
@@ -120,8 +126,7 @@
 							<entry>
 								<para>
 									ClassId&#160;<codeInline>{1147E500-A208-11DE-ABF2-002421116FB2}</codeInline>
-								</para>
-								<para>
+									<br/>
 									and&#160;<codeInline>CLSCTX_ACTIVATE_64_BIT_SERVER</codeInline>
 								</para>
 							</entry>
@@ -138,8 +143,7 @@
 							<entry>
 								<para>
 									ClassId&#160;<codeInline>{1147E500-A208-11DE-ABF2-002421116FB2}</codeInline>
-								</para>
-								<para>
+									<br/>
 									and&#160;<codeInline>CLSCTX_ACTIVATE_32_BIT_SERVER</codeInline>
 								</para>
 							</entry>
@@ -165,12 +169,22 @@
 						<tableHeader>
 							<row>
 								<entry>
-									<token>Agent</token> Control
+									<para>
+										<token>Agent</token> Control
+									</para>
 								</entry>
-								<entry>Control created using</entry>
-								<entry>Application architecture</entry>
-								<entry>Control architecture</entry>
-								<entry>Server architecture</entry>
+								<entry>
+									<para>Control created using</para>
+								</entry>
+								<entry>
+									<para>Application architecture</para>
+								</entry>
+								<entry>
+									<para>Control architecture</para>
+								</entry>
+								<entry>
+									<para>Server architecture</para>
+								</entry>
 							</row>
 						</tableHeader>
 						<row>
@@ -182,8 +196,7 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>Agent.Control</codeInline> or&#160;<codeInline>Agent.Control.2</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
 								</para>
 							</entry>
@@ -206,8 +219,7 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>Agent.Control</codeInline> or&#160;<codeInline>Agent.Control.2</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</codeInline>
 								</para>
 							</entry>
@@ -230,14 +242,16 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>32-bit application</para>
-								<para>(AutoConnect = 64)</para>
+								<para>
+									32-bit application
+									<br/>
+									(AutoConnect = 64)
+								</para>
 							</entry>
 							<entry>
 								<para>32-bit control</para>
@@ -255,14 +269,16 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>32-bit application</para>
-								<para>(AutoConnect &#8800; 0)</para>
+								<para>
+									32-bit application
+									<br/>
+									(AutoConnect &#8800; 0)
+								</para>
 							</entry>
 							<entry>
 								<para>32-bit control</para>
@@ -280,18 +296,21 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>32-bit application</para>
-								<para>(AutoConnect = 0)</para>
+								<para>
+									32-bit application
+									<br/>
+									(AutoConnect = 0)
+								</para>
 							</entry>
 							<entry>
-								<para>32-bit control</para>
 								<para>
+									32-bit control
+									<br/>
 									(<token>standalone</token>)
 								</para>
 							</entry>
@@ -308,14 +327,14 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>64-bit application</para>
 								<para>
+									64-bit application
+									<br/>
 									(AutoConnect = 32)
 								</para>
 							</entry>
@@ -335,14 +354,14 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>64-bit application</para>
 								<para>
+									64-bit application
+									<br/>
 									(AutoConnect = 64)
 								</para>
 							</entry>
@@ -362,14 +381,14 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>64-bit application</para>
 								<para>
+									64-bit application
+									<br/>
 									(AutoConnect &#8800; 0)
 								</para>
 							</entry>
@@ -393,20 +412,21 @@
 							<entry>
 								<para>
 									ProgId&#160;<codeInline>DoubleAgent.Control</codeInline> or&#160;<codeInline>DoubleAgent.Control.1.1</codeInline>
-								</para>
-								<para>
+									<br/>
 									or&#160;ClassId&#160;<codeInline>{1147E530-A208-11DE-ABF2-002421116FB2}</codeInline>
 								</para>
 							</entry>
 							<entry>
-								<para>64-bit application</para>
 								<para>
+									64-bit application
+									<br/>
 									(AutoConnect = 0)
 								</para>
 							</entry>
 							<entry>
-								<para>64-bit control</para>
 								<para>
+									64-bit control
+									<br/>
 									(<token>standalone</token>)
 								</para>
 							</entry>
