@@ -26,7 +26,7 @@
 	Global Variables
 	============================================================================================= -->
 
-	<xsl:variable name="g_topicTypeId">
+	<xsl:variable name="g_typeTopicId">
 		<xsl:choose>
 			<xsl:when test="/document/reference/topicdata[@group='api'] and /document/reference/apidata[@group='type']">
 				<xsl:value-of select="$key"/>
@@ -987,7 +987,7 @@
 			</xsl:variable>
 			<include item="{$v_introTextItemId}">
 				<parameter>
-					<referenceLink target="{$g_topicTypeId}"/>
+					<referenceLink target="{$g_typeTopicId}"/>
 				</parameter>
 				<parameter>
 					<xsl:value-of select="$g_apiTopicSubGroup"/>
@@ -1884,7 +1884,7 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="containers/type[@api!=$g_topicTypeId]">
+				<xsl:if test="containers/type[@api!=$g_typeTopicId]">
 					<xsl:text>yes</xsl:text>
 				</xsl:if>
 			</xsl:otherwise>
@@ -1900,7 +1900,7 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="containers/type[@api=$g_topicTypeId]">
+				<xsl:if test="containers/type[@api=$g_typeTopicId]">
 					<xsl:text>yes</xsl:text>
 				</xsl:if>
 			</xsl:otherwise>

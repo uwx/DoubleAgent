@@ -137,6 +137,7 @@
 </syntax>
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlroot;.AutoConnect']/value" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlroot;.AutoConnect']/remarks" />
+			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlroot;.AutoConnect']/details" />
 			<include file="&dactlxml;" path="/doc/members/member[@name='P:&dactlroot;.AutoConnect']/seealso" />
 		</member>
 

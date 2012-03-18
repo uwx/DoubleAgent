@@ -31,7 +31,7 @@
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers</VisibleItems>
     <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, FSharp, JScript</SyntaxFilters>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
+    <FrameworkVersion>.NET 3.5</FrameworkVersion>
     <BinaryTOC>False</BinaryTOC>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="DoubleAgent.AxControl" isExposed="True">
@@ -75,9 +75,8 @@
         <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDragStartEvent" filterName="CtlDragStartEvent" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDragStartEvent.#ctor" filterName=".ctor" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHelpCompleteEvent" filterName="CtlHelpCompleteEvent" isExposed="True">
-          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlHelpCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
-        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHelpCompleteEvent" filterName="CtlHelpCompleteEvent" isExposed="False" />
+        <Filter entryType="Delegate" fullName="DoubleAgent.AxControl.CtlHelpCompleteEventHandler" filterName="CtlHelpCompleteEventHandler" isExposed="False" />
         <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHideEvent" filterName="CtlHideEvent" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlHideEvent.#ctor" filterName=".ctor" isExposed="False" />
         </Filter>
@@ -511,7 +510,7 @@
     </ApiFilter>
     <Preliminary>False</Preliminary>
     <PresentationStyle>vs2010</PresentationStyle>
-    <HelpFileFormat>HtmlHelp1, MSHelpViewer</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
     <HtmlHelp2xCompilerPath>%ProgramFiles(x86)%\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <HelpTitle>Double Agent SDK</HelpTitle>
     <NamingMethod>MemberName</NamingMethod>
@@ -520,9 +519,16 @@
       <PlugInConfig id="Additional Content Only" enabled="False">
         <configuration />
       </PlugInConfig>
-<PlugInConfig id="Pack and Sign MSHC files" enabled="True"><configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" /></PlugInConfig>
-<PlugInConfig id="Resolve Partial Reference Links" enabled="True"><configuration /></PlugInConfig>
-<PlugInConfig id="Table of Contents Type Grouping" enabled="True"><configuration /></PlugInConfig></PlugInConfigurations>
+      <PlugInConfig id="Pack and Sign MSHC files" enabled="True">
+        <configuration make-cab="C:\Windows\system32\makecab.exe" sign-code="C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe" cab-path="" timestamp-url="http://timestamp.comodoca.com/authenticode" certificate="/s my /n &quot;Cinnamon Software Inc.&quot;" />
+      </PlugInConfig>
+      <PlugInConfig id="Resolve Partial Reference Links" enabled="True">
+        <configuration />
+      </PlugInConfig>
+      <PlugInConfig id="Table of Contents Type Grouping" enabled="True">
+        <configuration />
+      </PlugInConfig>
+    </PlugInConfigurations>
     <FeedbackEMailAddress>support%40cinnamonsoftware.com</FeedbackEMailAddress>
     <FeedbackEMailLinkText>Cinnamon Software Support</FeedbackEMailLinkText>
     <FooterText>Double Agent is open source software licensed under the &amp;lt%3ba target=&amp;quot%3b_blank&amp;quot%3b href=&amp;quot%3bhttp://www.gnu.org/licenses/gpl.html&amp;quot%3b&amp;gt%3bGNU General Public License&amp;lt%3b/a&amp;gt%3b</FooterText>
@@ -570,7 +576,7 @@
 						{@HelpFormatOutputPaths}
 					</outputPaths><!-- Logo image file (optional).  Filename is required. The height,
                  width, altText, placement, and alignment attributes are
-                 optional. --><logoFile filename="C:\Dev\Images\Cinnamon.png" height="40" width="40" altText="" placement="left" alignment="left" /></component></ComponentConfig>
+                 optional. --><logoFile filename="C:\Dev\Images\Cinnamon.png" height="40" width="40" altText="" placement="right" alignment="left" /></component></ComponentConfig>
 <ComponentConfig id="API Token Resolution" enabled="True"><component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
 
 					{@TokenFiles}
@@ -935,6 +941,9 @@
       <ImageId>Audie_Edged</ImageId>
       <AlternateText>Audie smooth edged</AlternateText>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceItems Include="ResourceItems.items" />
   </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />

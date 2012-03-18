@@ -80,6 +80,20 @@
       <Link>CreateVSToc.xsl</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\..\..\..\Program Files %28x86%29\Sandcastle\ProductionTransforms\ApplyVSDocModel.xsl">
+      <Link>ApplyVSDocModel.xsl</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\Program Files %28x86%29\Sandcastle\ProductionTransforms\ApplyPrototypeDocModel.xsl">
+      <Link>ApplyPrototypeDocModel.xsl</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ApplyVSDocModel_Override.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ApplyPrototypeDocModel_Override.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="DoubleAgent.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

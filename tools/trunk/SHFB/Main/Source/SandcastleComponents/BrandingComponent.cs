@@ -445,76 +445,79 @@ namespace SandcastleBuilder.Components
 				{
 					v_brandingContentBase = Path.GetFullPath (Environment.ExpandEnvironmentVariables (m_brandingContent));
 				}
-				if (!String.IsNullOrEmpty (v_brandingContentBase) && Directory.Exists (v_brandingContentBase))
+				if (!String.IsNullOrEmpty (v_brandingContentBase))
 				{
-					try
+					if (Directory.Exists (v_brandingContentBase))
 					{
-						String v_brandingTransformName = String.Format ("branding-{0}.xslt", m_locale);
-						XslCompiledTransform v_brandingTransform = new XslCompiledTransform ();
-						XmlResolver v_resolver = new XmlUrlResolver ();
+						try
+						{
+							String v_brandingTransformName = String.Format ("branding-{0}.xslt", m_locale);
+							XslCompiledTransform v_brandingTransform = new XslCompiledTransform ();
+							XmlResolver v_resolver = new XmlUrlResolver ();
 
-						m_transformArguments = new XsltArgumentList ();
-						m_transformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
-						LoadBrandingConfig (Path.Combine (v_brandingContentBase, "branding.xml"), ref v_brandingTransformName);
+							m_transformArguments = new XsltArgumentList ();
+							m_transformArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler (OnTransformMessageEncountered);
+							LoadBrandingConfig (Path.Combine (v_brandingContentBase, "branding.xml"), ref v_brandingTransformName);
 
-						PutTransformParam ("catalogProductFamily", m_catalogProductId);
-						PutTransformParam ("catalogProductVersion", m_catalogVersion);
-						PutTransformParam ("catalogLocale", m_locale);
-						PutTransformParam ("content-path", @".\");
-						if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
-						{
-							PutTransformParam ("branding-package", m_brandingPackage + s_packageExtension);
-							PutTransformParam ("downscale-browser", true);
-						}
-						else if (String.Compare (m_brandingPackage, s_defaultBrandingPackage, StringComparison.OrdinalIgnoreCase) == 0)
-						{
-							PutTransformParam ("branding-package", @"content\" + s_defaultVendorName + @"\store\" + m_brandingPackage + s_packageExtension);
-							PutTransformParam ("pre-branding", true);
-						}
-						else
-						{
-							PutTransformParam ("branding-package", @"content\" + m_vendorName + @"\store\" + m_brandingPackage + s_packageExtension);
-						}
+							PutTransformParam ("catalogProductFamily", m_catalogProductId);
+							PutTransformParam ("catalogProductVersion", m_catalogVersion);
+							PutTransformParam ("catalogLocale", m_locale);
+							PutTransformParam ("content-path", @".\");
+							if (String.Compare (m_helpOutput, s_defaultHelpOutput, StringComparison.OrdinalIgnoreCase) != 0)
+							{
+								PutTransformParam ("branding-package", m_brandingPackage + s_packageExtension);
+								PutTransformParam ("downscale-browser", true);
+							}
+							else if (String.Compare (m_brandingPackage, s_defaultBrandingPackage, StringComparison.OrdinalIgnoreCase) == 0)
+							{
+								PutTransformParam ("branding-package", @"content\" + s_defaultVendorName + @"\store\" + m_brandingPackage + s_packageExtension);
+								PutTransformParam ("pre-branding", true);
+							}
+							else
+							{
+								PutTransformParam ("branding-package", @"content\" + m_vendorName + @"\store\" + m_brandingPackage + s_packageExtension);
+							}
 
-						if (!String.IsNullOrEmpty (m_codeRemoveElement))
-						{
-							PutTransformParam (s_codeRemoveElement, m_codeRemoveElement);
-						}
-						if (!String.IsNullOrEmpty (m_codeRemoveId))
-						{
-							PutTransformParam (s_codeRemoveId, m_codeRemoveId);
-						}
-						if (!String.IsNullOrEmpty (m_codeRemoveClass))
-						{
-							PutTransformParam (s_codeRemoveClass, m_codeRemoveClass);
-						}
+							if (!String.IsNullOrEmpty (m_codeRemoveElement))
+							{
+								PutTransformParam (s_codeRemoveElement, m_codeRemoveElement);
+							}
+							if (!String.IsNullOrEmpty (m_codeRemoveId))
+							{
+								PutTransformParam (s_codeRemoveId, m_codeRemoveId);
+							}
+							if (!String.IsNullOrEmpty (m_codeRemoveClass))
+							{
+								PutTransformParam (s_codeRemoveClass, m_codeRemoveClass);
+							}
 
-						WriteMessage (MessageLevel.Info, String.Format ("Branding Transform \"{0}\" catalogProductFamily={1} catalogProductVersion={2} catalogLocale={3}", Path.Combine (v_brandingContentBase, v_brandingTransformName), m_catalogProductId, m_catalogVersion, m_locale));
-						v_brandingTransform.Load (Path.Combine (v_brandingContentBase, v_brandingTransformName), XsltSettings.TrustedXslt, v_resolver);
-						m_brandingTransform = v_brandingTransform;
-					}
-					catch (XsltException exp)
-					{
+							WriteMessage (MessageLevel.Info, String.Format ("Branding Transform \"{0}\" catalogProductFamily={1} catalogProductVersion={2} catalogLocale={3}", Path.Combine (v_brandingContentBase, v_brandingTransformName), m_catalogProductId, m_catalogVersion, m_locale));
+							v_brandingTransform.Load (Path.Combine (v_brandingContentBase, v_brandingTransformName), XsltSettings.TrustedXslt, v_resolver);
+							m_brandingTransform = v_brandingTransform;
+						}
+						catch (XsltException exp)
+						{
 #if DEBUG
-						WriteMessage (MessageLevel.Error, String.Format ("{0} at {1} {2} {3}", exp.Message, exp.SourceUri, exp.LineNumber, exp.LinePosition));
+							WriteMessage (MessageLevel.Error, String.Format ("{0} at {1} {2} {3}", exp.Message, exp.SourceUri, exp.LineNumber, exp.LinePosition));
 #else
 						WriteMessage (MessageLevel.Warn, String.Format ("{0} at {1} {2} {3}", exp.Message, exp.SourceUri, exp.LineNumber, exp.LinePosition));
 #endif
 #if DEBUG
-						if (exp.InnerException != null)
-						{
-							WriteMessage (MessageLevel.Warn, String.Format ("[{0}] {1}", exp.InnerException.GetType ().Name, exp.InnerException.Message));
-						}
+							if (exp.InnerException != null)
+							{
+								WriteMessage (MessageLevel.Warn, String.Format ("[{0}] {1}", exp.InnerException.GetType ().Name, exp.InnerException.Message));
+							}
 #endif
+						}
+						catch (Exception exp)
+						{
+							WriteMessage (MessageLevel.Error, exp.Message);
+						}
 					}
-					catch (Exception exp)
+					else
 					{
-						WriteMessage (MessageLevel.Error, exp.Message);
+						WriteMessage (MessageLevel.Warn, "No branding transform loaded.");
 					}
-				}
-				else
-				{
-					WriteMessage (MessageLevel.Warn, "No branding transform loaded.");
 				}
 			}
 			catch (Exception exp)
