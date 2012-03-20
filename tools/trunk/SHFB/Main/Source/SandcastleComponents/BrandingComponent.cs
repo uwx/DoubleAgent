@@ -114,6 +114,7 @@ namespace SandcastleBuilder.Components
 
 		#endregion
 
+		/// <inheritdoc/>
 		#region Constructor
 		//=====================================================================
 
@@ -187,6 +188,7 @@ namespace SandcastleBuilder.Components
 
 		#endregion
 
+		/// <inheritdoc/>
 		#region Apply method
 		//=====================================================================
 
