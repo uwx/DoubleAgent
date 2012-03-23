@@ -29,7 +29,7 @@
     <SandcastlePath>%ProgramFiles(x86)%\Sandcastle\</SandcastlePath>
     <MissingTags>Parameter, Returns, Value, AutoDocumentCtors, Namespace, TypeParameter, IncludeTargets, AutoDocumentDispose</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers</VisibleItems>
-    <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, FSharp, JScript</SyntaxFilters>
+    <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, JScript</SyntaxFilters>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FrameworkVersion>.NET 3.5</FrameworkVersion>
     <BinaryTOC>False</BinaryTOC>
@@ -143,6 +143,7 @@
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Control.Characters" filterName="Characters" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.Control.Characters.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Characters.GetEnumerator" filterName="GetEnumerator" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Control.Characters.Interface" filterName="Interface" isExposed="False" />
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Control.Command" filterName="Command" isExposed="True">
@@ -154,6 +155,7 @@
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Control.Commands" filterName="Commands" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.Control.Commands.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Commands.GetEnumerator" filterName="GetEnumerator" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.HelpContextID" filterName="HelpContextID" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.Interface" filterName="Interface" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.Voice" filterName="Voice" isExposed="False" />
@@ -263,17 +265,17 @@
           <Filter entryType="Constructor" fullName="DoubleAgent.Control.SREngine.#ctor" filterName=".ctor" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Control.SREngine.Interface" filterName="Interface" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="DoubleAgent.Control.SREngines" filterName="SREngines" isExposed="True">
-          <Filter entryType="Constructor" fullName="DoubleAgent.Control.SREngines.#ctor" filterName=".ctor" isExposed="False" />
-          <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Interface" filterName="Interface" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.SREngines" filterName="SREngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Item" filterName="Item" isExposed="True" />
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngine" filterName="TTSEngine" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.Control.TTSEngine.#ctor" filterName=".ctor" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngine.Interface" filterName="Interface" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngines" filterName="TTSEngines" isExposed="True">
-          <Filter entryType="Constructor" fullName="DoubleAgent.Control.TTSEngines.#ctor" filterName=".ctor" isExposed="False" />
-          <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Interface" filterName="Interface" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngines" filterName="TTSEngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Item" filterName="Item" isExposed="True" />
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Control.UserInput" filterName="UserInput" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.Control.UserInput.#ctor" filterName=".ctor" isExposed="False" />
@@ -349,7 +351,6 @@
         <Filter entryType="Class" fullName="DoubleAgent.Server.Commands" filterName="Commands" isExposed="False">
           <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Add" filterName="Add" isExposed="True" />
           <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.AddEx" filterName="AddEx" isExposed="True" />
-          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.GetEnumerator" filterName="GetEnumerator" isExposed="True" />
           <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Insert" filterName="Insert" isExposed="True" />
           <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.InsertEx" filterName="InsertEx" isExposed="True" />
           <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Remove" filterName="Remove" isExposed="True" />
@@ -460,17 +461,17 @@
           <Filter entryType="Constructor" fullName="DoubleAgent.Server.SREngine.#ctor" filterName=".ctor" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Server.SREngine.Interface" filterName="Interface" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="DoubleAgent.Server.SREngines" filterName="SREngines" isExposed="True">
-          <Filter entryType="Constructor" fullName="DoubleAgent.Server.SREngines.#ctor" filterName=".ctor" isExposed="False" />
-          <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Interface" filterName="Interface" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.SREngines" filterName="SREngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Item" filterName="Item" isExposed="True" />
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngine" filterName="TTSEngine" isExposed="True">
           <Filter entryType="Constructor" fullName="DoubleAgent.Server.TTSEngine.#ctor" filterName=".ctor" isExposed="False" />
           <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngine.Interface" filterName="Interface" isExposed="False" />
         </Filter>
-        <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngines" filterName="TTSEngines" isExposed="True">
-          <Filter entryType="Constructor" fullName="DoubleAgent.Server.TTSEngines.#ctor" filterName=".ctor" isExposed="False" />
-          <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Interface" filterName="Interface" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngines" filterName="TTSEngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Item" filterName="Item" isExposed="True" />
         </Filter>
         <Filter entryType="Class" fullName="DoubleAgent.Server.UserInput" filterName="UserInput" isExposed="False">
           <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.Count" filterName="Count" isExposed="True" />
@@ -509,8 +510,8 @@
       </Filter>
     </ApiFilter>
     <Preliminary>False</Preliminary>
-    <PresentationStyle>vs2010</PresentationStyle>
-    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <PresentationStyle>vs2005</PresentationStyle>
+    <HelpFileFormat>MSHelp2</HelpFileFormat>
     <HtmlHelp2xCompilerPath>%ProgramFiles(x86)%\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <HelpTitle>Double Agent SDK</HelpTitle>
     <NamingMethod>MemberName</NamingMethod>
@@ -561,26 +562,51 @@
           </helpOutput>
         </component>
       </ComponentConfig>
-<ComponentConfig id="Cached Framework Comments Index Data" enabled="True"><component id="Cached Framework Comments Index Data" type="SandcastleBuilder.Components.CachedCopyFromIndexComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><index name="comments" value="/doc/members/member" key="@name" cache="100">
+      <ComponentConfig id="Cached Framework Comments Index Data" enabled="True">
+        <component id="Cached Framework Comments Index Data" type="SandcastleBuilder.Components.CachedCopyFromIndexComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
+          <index name="comments" value="/doc/members/member" key="@name" cache="100">
 						{@CachedFrameworkCommentList}
 						{@CommentFileList}
-					</index><copy name="comments" source="*" target="/document/comments" /></component></ComponentConfig>
-<ComponentConfig id="Code Block Component" enabled="True"><component id="Code Block Component" type="SandcastleBuilder.Components.CodeBlockComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><basePath value="{@HtmlEncProjectFolder}" /><languageFilter value="false" /><allowMissingSource value="false" /><removeRegionMarkers value="false" /><colorizer syntaxFile="{@SHFBFolder}Colorizer\highlight.xml" styleFile="{@SHFBFolder}Colorizer\highlight.xsl" copyImageUrl="../icons/CopyCode.gif" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" /></component></ComponentConfig>
-<ComponentConfig id="Post-transform Component" enabled="True"><component id="Post-transform Component" type="SandcastleBuilder.Components.PostTransformComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><!-- Code colorizer files (required).
+					</index>
+          <copy name="comments" source="*" target="/document/comments" />
+        </component>
+      </ComponentConfig>
+      <ComponentConfig id="Code Block Component" enabled="True">
+        <component id="Code Block Component" type="SandcastleBuilder.Components.CodeBlockComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
+          <basePath value="{@HtmlEncProjectFolder}" />
+          <languageFilter value="false" />
+          <allowMissingSource value="false" />
+          <removeRegionMarkers value="false" />
+          <colorizer syntaxFile="{@SHFBFolder}Colorizer\highlight.xml" styleFile="{@SHFBFolder}Colorizer\highlight.xsl" copyImageUrl="../icons/CopyCode.gif" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
+        </component>
+      </ComponentConfig>
+      <ComponentConfig id="Post-transform Component" enabled="True">
+        <component id="Post-transform Component" type="SandcastleBuilder.Components.PostTransformComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
+          <!-- Code colorizer files (required).
                  Attributes:
                     Stylesheet file (required)
                     Script file (required)
-                    "Copy" image file (required) --><colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" self-branded="{@SelfBranded}" /><!-- Base output paths for the files (required).  These should match
+                    "Copy" image file (required) -->
+          <colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" self-branded="{@SelfBranded}" />
+          <!-- Base output paths for the files (required).  These should match
                  the parent folder of the output path of the HTML files (see
-                 each of the SaveComponent instances below). --><outputPaths>
+                 each of the SaveComponent instances below). -->
+          <outputPaths>
 						{@HelpFormatOutputPaths}
-					</outputPaths><!-- Logo image file (optional).  Filename is required. The height,
+					</outputPaths>
+          <!-- Logo image file (optional).  Filename is required. The height,
                  width, altText, placement, and alignment attributes are
-                 optional. --><logoFile filename="C:\Dev\Images\Cinnamon.png" height="40" width="40" altText="" placement="right" alignment="left" /></component></ComponentConfig>
-<ComponentConfig id="API Token Resolution" enabled="True"><component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
+                 optional. -->
+          <logoFile filename="C:\Dev\Images\Cinnamon.png" height="40" width="40" altText="" placement="right" alignment="left" />
+        </component>
+      </ComponentConfig>
+      <ComponentConfig id="API Token Resolution" enabled="True">
+        <component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
 
 					{@TokenFiles}
-					<replace elements="/*//token" item="string(.)" /></component></ComponentConfig></ComponentConfigurations>
+					<replace elements="/*//token" item="string(.)" /></component>
+      </ComponentConfig>
+    </ComponentConfigurations>
     <ProductTitle>Double Agent SDK</ProductTitle>
     <VendorName>Cinnamon Software</VendorName>
     <TocParentId>-1</TocParentId>
@@ -941,9 +967,6 @@
       <ImageId>Audie_Edged</ImageId>
       <AlternateText>Audie smooth edged</AlternateText>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceItems Include="ResourceItems.items" />
   </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
