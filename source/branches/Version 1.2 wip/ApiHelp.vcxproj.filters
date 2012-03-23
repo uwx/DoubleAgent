@@ -20,9 +20,6 @@
     <None Include="ApiHelp\Source\DoubleAgent.hhc">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="APIHelp\Source\DoubleAgent.hhk">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="APIHelp\Source\DoubleAgent.Include.xml">
       <Filter>Source Files</Filter>
     </None>
@@ -41,6 +38,15 @@
     <None Include="APIHelp\Templates\PropertyTemplate.htm">
       <Filter>Template Files</Filter>
     </None>
+    <None Include="APIHelp\HtmlHelp1\DoubleAgent.hhk">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="APIHelp\HtmlHelp1\DoubleAgent.hhc">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="ApiHelp\DoubleAgent.hhp">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiHelp\Source\DaApiHelp.h">
@@ -54,14 +60,14 @@
     <CustomBuild Include="ApiHelp\Source\DoubleAgent.Control.xml">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ApiHelp\DoubleAgent.hhp">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="ApiHelp\Source\DoubleAgent.Server.xml">
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ApiHelp\MsAgent.chm">
       <Filter>Binary Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="APIHelp\HtmlHelp1\Help1x.hhp">
+      <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

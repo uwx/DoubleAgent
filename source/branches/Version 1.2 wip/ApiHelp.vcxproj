@@ -131,10 +131,41 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(OutDir)$(TargetFrameworkVersion)\XmlToHtml" /xml %(FullPath) /asm $(OutDir)$(TargetFrameworkVersion)\$(InteropOutputPath)%(Filename).dll /html %(RootDir)%(Directory)..\html /is $(OutDir)$(TargetFrameworkVersion)\$(InteropOutputPath)%(Filename)%(Extension) /sc %(RootDir)%(Directory)..\SandCastle\%(Filename)%(Extension) /out %(RootDir)%(Directory)..\SandCastle\%(Filename).Formatted%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)..\Sandcastle\%(Filename)%(Extension);%(Outputs)</Outputs>
     </CustomBuild>
-    <None Include="ApiHelp\Source\DoubleAgent.hhc" />
-    <None Include="APIHelp\Source\DoubleAgent.hhk" />
-    <CustomBuild Include="ApiHelp\DoubleAgent.hhp">
+    <None Include="APIHelp\HtmlHelp1\DoubleAgent.hhc" />
+    <None Include="APIHelp\HtmlHelp1\DoubleAgent.hhk" />
+    <CustomBuild Include="APIHelp\HtmlHelp1\Help1x.hhp">
       <FileType>Document</FileType>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling API Help</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling API Help</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling API Help</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling API Help</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(BinDir)%(Filename).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(BinDir)%(Filename).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(BinDir)%(Filename).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(BinDir)%(Filename).chm</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">hhc %(FullPath) &gt; $(OutDir)%(Filename).log
+type $(OutDir)%(Filename).log
+del  $(OutDir)%(Filename).log
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">hhc %(FullPath) &gt; $(OutDir)%(Filename).log
+type $(OutDir)%(Filename).log
+del  $(OutDir)%(Filename).log
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">hhc %(FullPath) &gt; $(OutDir)%(Filename).log
+type $(OutDir)%(Filename).log
+del  $(OutDir)%(Filename).log
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">hhc %(FullPath) &gt; $(OutDir)%(Filename).log
+type $(OutDir)%(Filename).log
+del  $(OutDir)%(Filename).log
+</Command>
+    </CustomBuild>
+    <None Include="ApiHelp\Source\DoubleAgent.hhc" />
+    <None Include="ApiHelp\DoubleAgent.hhp">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling API Help</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">hhc %(FullPath) &gt; $(OutDir)%(Filename).log
 type $(OutDir)%(Filename).log
@@ -163,7 +194,8 @@ del  $(OutDir)%(Filename).log
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)Source\%(Filename).hhc;%(RootDir)%(Directory)Source\%(Filename).hhk;%(RootDir)%(Directory)Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(RootDir)%(Directory)css\DaHelp.css</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(BinDir)%(Filename).chm</Outputs>
-    </CustomBuild>
+      <FileType>Document</FileType>
+    </None>
     <CustomBuild Include="ApiHelp\Source\DoubleAgent.Server.xml">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating Server Documentation</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(OutDir)$(TargetFrameworkVersion)\XmlToHtml" /xml %(FullPath) /asm $(OutDir)$(TargetFrameworkVersion)\$(InteropOutputPath)%(Filename).dll /server /html %(RootDir)%(Directory)..\html /is $(OutDir)$(TargetFrameworkVersion)\$(InteropOutputPath)%(Filename)%(Extension) /sc %(RootDir)%(Directory)..\SandCastle\%(Filename)%(Extension) /out %(RootDir)%(Directory)..\SandCastle\%(Filename).Formatted%(Extension)</Command>
