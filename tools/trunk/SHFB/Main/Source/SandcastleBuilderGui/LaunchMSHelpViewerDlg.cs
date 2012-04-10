@@ -2,8 +2,8 @@
 // System  : Sandcastle Help File Builder
 // File    : LaunchMSHelpViewDlg.cs
 // Author  : Eric Woodruff  (Eric@EWoodruff.us)
-// Updated : 04/02/2011
-// Note    : Copyright 2010-2011, Eric Woodruff, All rights reserved
+// Updated : 03/24/2012
+// Note    : Copyright 2010-2012, Eric Woodruff, All rights reserved
 // Compiler: Microsoft Visual C#
 //
 // This form is used to determine the state of the current MS Help Viewer
@@ -20,7 +20,7 @@
 // 1.9.0.0  07/05/2010  EFW  Created the code
 // 1.9.3.0  04/02/2011  EFW  Made it project independent so that it could be
 //                           used in the VSPackage too.
-// 1.9.3.4  02/06/2010  DBF  Updated to support branding packages
+// 1.9.3.4  03/24/2012  EFW  Merged changes from Don Fehr
 //=============================================================================
 
 using System;
@@ -112,14 +112,14 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
             else
                 helpFilePath = Path.GetFullPath(helpFilePath);
 
-			helpFilePath += project.HtmlHelpName + HelpLibraryManager.Help3PackageExtension;
+            helpFilePath += project.HtmlHelpName + ".mshc";
             setupFile = Path.ChangeExtension(helpFilePath, ".msha");
 
-			//DBF Modified to support catalogs
             // If an external viewer is not defined, we'll launch it via the ms-xhelp protocol
-			if (msHelpViewer.Length == 0 || !File.Exists (msHelpViewer))
-                msHelpViewer = String.Format ("ms-xhelp:///?method=page&id=-1&topicversion={0}&product={1}&productversion={2}&locale={3}",
-				project.TopicVersion, project.CatalogProductId, project.CatalogVersion, project.Language.Name);
+            if(msHelpViewer.Length == 0 || !File.Exists(msHelpViewer))
+                msHelpViewer = String.Format("ms-xhelp:///?method=page&id=-1&topicversion={0}&product={1}&" +
+                    "productversion={2}&locale={3}", project.TopicVersion, project.CatalogProductId,
+                    project.CatalogVersion, project.Language.Name);
 
             actionThread = new BackgroundWorker { WorkerReportsProgress = true };
             actionThread.DoWork += actionThread_DoWork;
@@ -181,12 +181,11 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
                     contentSetupFile = Path.Combine(Path.GetDirectoryName(setupFile), "HelpContentSetup.msha");
                     File.Copy(setupFile, contentSetupFile, true);
 
-					//DBF Added the branding package parameter
-					String brandingPackage = String.IsNullOrEmpty (project.BrandingPackageName) ? HelpLibraryManager.DefaultBrandingPackage : project.BrandingPackageName;
-					arguments = String.Format (CultureInfo.InvariantCulture,
-                        "/product \"{0}\" /version \"{1}\" /locale {2} /brandingPackage {3}{4} " +
-						"/sourceMedia \"{5}", project.CatalogProductId, project.CatalogVersion, project.Language.Name,
-						brandingPackage, HelpLibraryManager.Help3PackageExtension, contentSetupFile);
+                    arguments = String.Format(CultureInfo.InvariantCulture, "/product \"{0}\" /version \"{1}\" " +
+                        "/locale {2} /brandingPackage {3}.mshc /sourceMedia \"{4}\"", project.CatalogProductId,
+                        project.CatalogVersion, project.Language.Name,
+                        String.IsNullOrEmpty(project.BrandingPackageName) ? hlm.DefaultBrandingPackage :
+                        project.BrandingPackageName, contentSetupFile);
 
                     // Always interactive and must run as administrator.  We can't run
                     // silently as we don't have a signed cabinet file.
@@ -205,7 +204,7 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
                     System.Diagnostics.Process.Start(msHelpViewer);
                 }
             }
-            catch(ThreadAbortException )
+            catch(ThreadAbortException)
             {
                 // Ignore thread abort exceptions
             }
@@ -309,15 +308,15 @@ namespace SandcastleBuilder.MicrosoftHelpViewer
                 HelpLibraryManager hlm = new HelpLibraryManager();
 
                 // Can't do anything if the Help Library Manager is not installed
-				if (HelpLibraryManager.HelpLibraryManagerPath == null)
+                if(hlm.HelpLibraryManagerPath == null)
                     throw new HelpLibraryManagerException(HelpLibraryManagerException.HelpLibraryManagerNotFound);
 
                 // Can't do anything if the Help Library Manager is already running
-				if (Process.GetProcessesByName (Path.GetFileNameWithoutExtension (HelpLibraryManager.HelpLibraryManagerPath)).Length > 0)
+                if(Process.GetProcessesByName(Path.GetFileNameWithoutExtension(hlm.HelpLibraryManagerPath)).Length > 0)
                     throw new HelpLibraryManagerException(HelpLibraryManagerException.HelpLibraryManagerAlreadyRunning);
 
                 // Can't do anything if the local store is not initialized
-				if (!HelpLibraryManager.LocalStoreInitialized)
+                if(!hlm.LocalStoreInitialized)
                     throw new HelpLibraryManagerException(HelpLibraryManagerException.LocalStoreNotInitialized);
 
                 if(!hlm.HelpContentFileInstalled(helpFilePath))

@@ -2,8 +2,8 @@
 // System  : Sandcastle Help File Builder Utilities
 // File    : BuildProcess.cs
 // Author  : Eric Woodruff  (Eric@EWoodruff.us)
-// Updated : 08/21/2011
-// Note    : Copyright 2006-2011, Eric Woodruff, All rights reserved
+// Updated : 03/25/2012
+// Note    : Copyright 2006-2012, Eric Woodruff, All rights reserved
 // Compiler: Microsoft Visual C#
 //
 // This file contains the thread class that handles all aspects of the build
@@ -41,7 +41,6 @@
 // 1.6.0.6  03/09/2008  EFW  Wrapped the log and build steps in XML tags
 // 1.6.0.7  04/17/2008  EFW  Added support for wildcards in assembly names.
 //                           Added support for conceptual content.
-#endregion
 // 1.8.0.0  07/26/2008  EFW  Modified to support the new project format
 // 1.8.0.1  12/14/2008  EFW  Updated to use .NET 3.5 and MSBuild 3.5
 // 1.8.0.3  07/04/2009  EFW  Added support for the July 2009 release and
@@ -52,14 +51,13 @@
 //                           Added support for multi-format build output. Moved
 //                           GenerateIntermediateTableOfContents so that it
 //                           occurs right after MergeTablesOfContents.
+#endregion
 // 1.9.1.0  07/09/2010  EFW  Updated for use with .NET 4.0 and MSBuild 4.0.
 // 1.9.2.0  01/16/2011  EFW  Updated to support selection of Silverlight
 //                           Framework versions.
 // 1.9.3.2  08/20/2011  EFW  Updated to support selection of .NET Portable
 //                           Framework versions.
-// 1.9.3.4  02/06/2010  DBF  Updated to support the new VS2010 style
-// 1.9.3.4  02/19/2010  DBF  Minor change to the plugin logic for 
-//							 TransformReflectionInfo
+// 1.9.4.0  03/25/2012  EFW  Merged changes for VS2010 style from Don Fehr
 //=============================================================================
 
 using System;
@@ -448,7 +446,6 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 rootContentContainerId = value;
             }
         }
-
         #endregion
 
         #region Events
@@ -777,26 +774,26 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 this.ReportProgress(BuildStep.GenerateSharedContent, "Generating shared content files ({0}, {1})...",
                     language.Name, language.DisplayName);
 
-                // First we need to figure out which style is in effect.
-                // Base it on whether the presentation style folder contains
-                // "v2005", "hana", or "prototype".
+                // First we need to figure out which style is in effect.  Base it on whether the presentation
+                // style folder contains "v2005", "vs2010, "hana", or "prototype".
                 presentationParam = project.PresentationStyle.ToLower(CultureInfo.InvariantCulture);
 
-				//DBF Added the vs2010 presentation style.
-				if (presentationParam.IndexOf ("vs2005", StringComparison.Ordinal) != -1)
-					presentationParam = "vs2005";
-				else if (presentationParam.IndexOf ("vs2010", StringComparison.Ordinal) != -1)
-					presentationParam = "vs2010";
-				else if (presentationParam.IndexOf ("hana", StringComparison.Ordinal) != -1)
-					presentationParam = "hana";
-				else
-				{
-					if (presentationParam.IndexOf ("prototype", StringComparison.Ordinal) == -1)
-						this.ReportWarning ("BE0001", "Unable to determine presentation style from folder " +
-							"'{0}'.  Assuming Prototype style.", project.PresentationStyle);
+                if(presentationParam.IndexOf("vs2005", StringComparison.Ordinal) != -1)
+                    presentationParam = "vs2005";
+                else
+                    if(presentationParam.IndexOf("vs2010", StringComparison.Ordinal) != -1)
+                        presentationParam = "vs2010";
+                    else
+                        if(presentationParam.IndexOf("hana", StringComparison.Ordinal) != -1)
+                            presentationParam = "hana";
+                        else
+                        {
+                            if(presentationParam.IndexOf("prototype", StringComparison.Ordinal) == -1)
+                                this.ReportWarning("BE0001", "Unable to determine presentation style from folder " +
+                                    "'{0}'.  Assuming Prototype style.", project.PresentationStyle);
 
-					presentationParam = "prototype";
-				}
+                            presentationParam = "prototype";
+                        }
 
                 if(!File.Exists(templateFolder + @"..\SharedContent\" + languageFile))
                 {
@@ -838,16 +835,16 @@ namespace SandcastleBuilder.Utils.BuildEngine
                     // Presentation-style specific shared content
                     languageFile = languageFile.Replace("Shared", presentationParam);
 
-					this.TransformTemplate (languageFile, templateFolder + @"..\SharedContent\", workingFolder);
+                    this.TransformTemplate(languageFile, templateFolder + @"..\SharedContent\", workingFolder);
                     File.Move(workingFolder + languageFile, workingFolder + "PresentationStyleBuilderContent.xml");
 
                     // Copy the stop word list
                     languageFile = Path.ChangeExtension(languageFile.Replace(presentationParam +
                         "BuilderContent", "StopWordList"), ".txt");
-					File.Copy (templateFolder + @"..\SharedContent\" + languageFile, workingFolder + "StopWordList.txt");
+                    File.Copy(templateFolder + @"..\SharedContent\" + languageFile, workingFolder + "StopWordList.txt");
                     File.SetAttributes(workingFolder + "StopWordList.txt", FileAttributes.Normal);
 
-					this.ExecutePlugIns (ExecutionBehaviors.After);
+                    this.ExecutePlugIns(ExecutionBehaviors.After);
                 }
 
                 // Generate the API filter used by MRefBuilder
@@ -973,21 +970,21 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 // Transform the reflection output.
                 this.ReportProgress(BuildStep.TransformReflectionInfo, "Transforming reflection output...");
 
-				//DBF Change the reflectionFile extension BEFORE running the 'ExecutionBehaviors.After' plugin
-				//    so the plugin (if any) can have the correct file name.
                 if(!this.ExecutePlugIns(ExecutionBehaviors.InsteadOf))
                 {
                     scriptFile = this.TransformTemplate("TransformManifest.proj", templateFolder, workingFolder);
 
                     this.ExecutePlugIns(ExecutionBehaviors.Before);
                     this.RunProcess(msBuildExePath, "/nologo /clp:NoSummary /v:m TransformManifest.proj");
-					reflectionFile = Path.ChangeExtension (reflectionFile, ".xml");
-					this.ExecutePlugIns (ExecutionBehaviors.After);
+
+                    // Change the reflection file extension before running the ExecutionBehaviors.After plugins
+                    // so that the plugins (if any) get the correct filename.
+                    reflectionFile = Path.ChangeExtension(reflectionFile, ".xml");
+
+                    this.ExecutePlugIns(ExecutionBehaviors.After);
                 }
-				else
-				{
-					reflectionFile = Path.ChangeExtension (reflectionFile, ".xml");
-				}
+                else
+                    reflectionFile = Path.ChangeExtension(reflectionFile, ".xml");
 
                 // Load the transformed file
                 reflectionInfo = new XmlDocument();
@@ -1031,6 +1028,8 @@ namespace SandcastleBuilder.Utils.BuildEngine
                         this.ExecutePlugIns(ExecutionBehaviors.After);
                     }
                 }
+                else    // Create an empy xmlComp folder required by the build configuration
+                    Directory.CreateDirectory(Path.Combine(workingFolder, "xmlComp"));
 
                 // Copy the additional content
                 this.CopyAdditionalContent();
@@ -1068,8 +1067,8 @@ namespace SandcastleBuilder.Utils.BuildEngine
                 }
 
                 // The June 2007 CTP removed the root namespace container from the TOC so we'll get
-                // the default project page filename from the refelection information file.
-                XmlNode defTopic = apisNode.SelectSingleNode("api[@id='R:Project']/file/@name");
+                // the default project page filename from the reflection information file.
+                XmlNode defTopic = apisNode.SelectSingleNode("api[starts-with(@id, 'R:Project')]/file/@name");
 
                 if(defTopic != null)
                 {
@@ -1838,9 +1837,9 @@ AllDone:
 
                 case HelpFileFormat.MSHelpViewer:
                     patterns[0] = project.HtmlHelpName + "*.msh?";
-                    patterns[1] = project.HtmlHelpName + "Install_*.bat";
-                    patterns[2] = project.HtmlHelpName + "Remove_*.bat";
-                    patterns[3] = project.HtmlHelpName + "HelpLibraryManagerLauncher.exe";
+                    patterns[1] = "Install_" + project.HtmlHelpName + "*.bat";
+                    patterns[2] = "Remove_" + project.HtmlHelpName + "*.bat";
+                    patterns[3] = "HelpLibraryManagerLauncher.exe";
                     break;
 
                 default:    // Website
@@ -1956,7 +1955,7 @@ AllDone:
             Version fileVersion = new Version(fvi.FileMajorPart, fvi.FileMinorPart,
                 fvi.FileBuildPart, fvi.FilePrivatePart);
 
-            Version expectedVersion = new Version("2.6.10621.1");
+            Version expectedVersion = new Version("2.7.0.0");
 
             if(fileVersion < expectedVersion)
                 throw new BuilderException("BE0036", String.Format(CultureInfo.InvariantCulture,

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.1"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
                 xmlns:MSHelp="http://msdn.microsoft.com/mshelp" 
                 xmlns:asp="http://temp.uri/asp.net" 

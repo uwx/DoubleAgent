@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-								version="1.1"
+								version="2.0"
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
@@ -159,10 +159,13 @@
 	</xsl:template>
 
 	<xsl:template match="ddue:introduction">
-		<xsl:apply-templates select="@address"/>
-		<div class="introduction">
-			<xsl:apply-templates/>
-		</div>
+		<!-- Display the introduction only if it has content -->
+		<xsl:if test="count(*) &gt; 0">
+			<xsl:apply-templates select="@address"/>
+			<div class="introduction">
+				<xsl:apply-templates/>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="ddue:parameters">
@@ -373,7 +376,7 @@
 					</p>
 				</xsl:when>
 			</xsl:choose>
-			<ul>
+			<ul class="autoOutline">
 				<xsl:for-each select="ddue:section[ddue:title[normalize-space(.)!='']]">
 					<xsl:call-template name="t_outlineSectionEntry"/>
 
@@ -394,7 +397,7 @@
 				</xsl:for-each>
 				<!--for toplevel outlines include a link to See Also-->
 				<xsl:if test="starts-with($p_outlineType,'toplevel') and count(//ddue:relatedTopics/*) > 0">
-					<li>
+					<li class="outlineSectionEntry">
 						<a>
 							<xsl:attribute name="href">#seeAlsoSection</xsl:attribute>
 							<include item="title_relatedTopics"/>
@@ -408,17 +411,16 @@
 	<!--a list item in the outline's bullet list-->
 	<xsl:template name="t_outlineSectionEntry">
 		<xsl:if test="descendant::ddue:content[normalize-space(.)] or count(ddue:content/*) &gt; 0">
-			<li>
+			<li class="outlineSectionEntry">
 				<a>
 					<xsl:if test="@address">
 						<!-- Keep this on one line or the spaces preceeding the "#" end up in the anchor name -->
-						<xsl:attribute name="href"
-													 xml:space="preserve">#<xsl:value-of select="@address"/></xsl:attribute>
+						<xsl:attribute name="href" xml:space="preserve">#<xsl:value-of select="@address"/></xsl:attribute>
 					</xsl:if>
 					<xsl:value-of select="ddue:title"/>
 				</a>
 				<xsl:if test="normalize-space(ddue:summary)">
-					<div>
+					<div class="outlineSectionEntrySummary">
 						<xsl:apply-templates select="ddue:summary/node()"/>
 					</div>
 				</xsl:if>

@@ -1,8 +1,7 @@
-REM ********** Set path for .net framework2.0, sandcastle,hhc,hxcomp****************************
+REM ********** Set path for .net framework4.0, sandcastle,hhc,hxcomp****************************
 
 setlocal
-if not exist "%ProgramFiles% (x86)" set PATH=%windir%\Microsoft.NET\Framework\v2.0.50727;%DXROOT%\ProductionTools;%ProgramFiles%\HTML Help Workshop;%PATH%
-if exist "%ProgramFiles% (x86)" set PATH=%windir%\Microsoft.NET\Framework\v2.0.50727;%DXROOT%\ProductionTools;%ProgramFiles% (x86)\HTML Help Workshop;%PATH%
+set PATH=%windir%\Microsoft.NET\Framework\v4.0.30319;%DXROOT%\ProductionTools;%ProgramFiles%\HTML Help Workshop;%PATH%
 
 if exist output rmdir output /s /q
 if exist chm rmdir chm /s /q
@@ -28,6 +27,6 @@ xcopy output\styles\* chm\styles\ /y /r
 
 ChmBuilder.exe /project:test /html:Output\html /lcid:1033 /toc:Toc.xml /out:Chm
 
-DBCSFix.exe /d:Chm /l:1033 
+DBCSFix.exe /d:Chm /l:1033
 
 hhc chm\test.hhp

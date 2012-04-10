@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-								version="1.1"
+								version="2.0"
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 								xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
@@ -1321,6 +1321,15 @@
 					<xsl:if test="normalize-space($v_notsupportedOnNetfw)!=''">
 						<xsl:text>notNetfw;</xsl:text>
 					</xsl:if>
+					<xsl:if test=".//versions">
+						<xsl:for-each select=".//versions/versions">
+							<!-- If we have at least one version in this framework, we list this framework. -->
+							<xsl:if test=".//version">
+								<xsl:value-of select="@name" />
+								<xsl:text>;</xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:if>
 				</xsl:attribute>
 				<td>
 					<xsl:call-template name="t_putMemberIcons">
@@ -1339,7 +1348,7 @@
 						<xsl:with-param name="p_supportedOnCf"
 														select="normalize-space($v_supportedOnCf)"/>
 						<xsl:with-param name="p_supportedOnSilverlight"
-														select="normalized-space($v_supportedOnSilverlight)"/>
+														select="normalize-space($v_supportedOnSilverlight)"/>
 						<xsl:with-param name="p_supportedOnSilverlightMobile"
 														select="normalize-space($v_supportedOnSilverlightMobile)"/>
 					</xsl:call-template>
@@ -2202,6 +2211,9 @@
 								<span class="parameter">
 									<xsl:value-of select="$paramName"/>
 								</span>
+								<xsl:if test="@optional = 'true'">
+									<xsl:text> (Optional)</xsl:text>
+								</xsl:if>
 							</dt>
 							<dd>
 								<include item="typeLink">

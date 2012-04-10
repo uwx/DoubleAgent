@@ -1,26 +1,91 @@
-﻿using System;
-using System.IO;
+﻿//=============================================================================
+// System  : Sandcastle Build Components
+// File    : MSHCComponent.cs
+// Note    : Copyright 2010-2012 Microsoft Corporation
+//
+// This file contains a modified version of the original MSHCComponent that
+// allows the inclusion of a sortOrder attribute on the table of contents file
+// elements.  This allows the sort order of the elements to be defined to set
+// the proper placement of the TOC entries when parented to an entry outside
+// of the help file and to parent the API content within a conceptual content
+// folder.
+//
+// This code is published under the Microsoft Public License (Ms-PL).  A copy
+// of the license should be distributed with the code.  It can also be found
+// at the project website: http://Sandcastle.CodePlex.com.   This notice and
+// all copyright notices must remain intact in all applications, documentation,
+// and source files.
+//
+// Change History
+// 02/16/2012 - EFW - Merged my changes into the code
+//=============================================================================
+
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
+using System.IO;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.Ddue.Tools;
 
 namespace Microsoft.Ddue.Tools
 {
     /// <summary>
-    /// Sandcastle component converting Microsoft Help 2.0 output to Microsoft Help System output.
+    /// This class is a modified version of the original <c>MSHCComponent</c> that
+    /// is used to add MS Help Viewer meta data to the topics.  This version allows
+    /// the inclusion of a <c>sortOrder</c> attribute on the table of contents
+    /// file elements.  This allows the sort order of the elements to be defined
+    /// to set the proper placement of the TOC entries when parented to an entry
+    /// outside of the help file and to parent the API content within a conceptual
+    /// content folder.
     /// </summary>
+    /// <remarks>The <c>sortOrder</c> attributes are optional.  If not found,
+    /// standard ordering is applied starting from zero.  If a <c>sortOrder</c>
+    /// attribute is found, numbering starts from that value for the associated
+    /// topic and increments by one for all subsequent topics until another
+    /// <c>sortOrder</c> attribute is encountered or the end of the group is
+    /// reached.
+    /// </remarks>
+    /// <example>
+    /// <code lang="xml" title="Example Component Configuration">
+    /// &lt;component type="Microsoft.Ddue.Tools.MSHCComponent"
+    ///   assembly="%DXROOT%\ProductionTools\BuildComponents.dll"&gt;
+    ///   &lt;data self-branded="true" topic-version="100" toc-file="toc.xml"
+    ///   toc-parent="" toc-parent-version="100" locale="en-US" /&gt;
+    /// &lt;/component&gt;
+    /// </code>
+    ///
+    /// <code lang="xml" title="Example toc.xml File">
+    /// &lt;?xml version="1.0" encoding="utf-8"?&gt;
+    /// &lt;topics&gt;
+    ///   &lt;!-- Sort our content below that of the parent node's existing sub-topics --&gt;
+    ///   &lt;topic id="d4648875-d41a-783b-d5f4-638df39ee413" file="d4648875-d41a-783b-d5f4-638df39ee413" sortOrder="100"&gt;
+    ///     &lt;topic id="57f7aedc-17d3-4547-bdf9-5b468a08a1bc" file="57f7aedc-17d3-4547-bdf9-5b468a08a1bc" /&gt;
+    ///     &lt;topic id="0e6bbd29-775a-8deb-c4f5-5b1e63349ef1" file="0e6bbd29-775a-8deb-c4f5-5b1e63349ef1" /&gt;
+    ///     &lt;topic id="fcdfafc4-7625-f407-d8e9-ec006944e1d7" file="fcdfafc4-7625-f407-d8e9-ec006944e1d7" /&gt;
+    ///     &lt;!-- API content (7 namespaces, merged later) goes here and this topic follows it --&gt;
+    ///     &lt;topic id="ce37cf86-fd95-49fc-b048-ba7d25d68d87" file="ce37cf86-fd95-49fc-b048-ba7d25d68d87" sortOrder="10"&gt;
+    ///   &lt;/topic&gt;
+    ///   .
+    ///   .
+    ///   .
+    /// &lt;/topics&gt;
+    /// </code>
+    /// </example>
     public class MSHCComponent : BuildComponent
     {
-        // component tag names in the configuration file
-        private class ConfigurationTag
+        #region Constants definitions
+        //=====================================================================
+
+        // EFW - Made all constants classes static.
+
+        // Component tag names in the configuration file
+        private static class ConfigurationTag
         {
             public const string Data = "data";
         }
 
-        // component attribute names in the configuration file
-        private class ConfigurationAttr
+        // Component attribute names in the configuration file
+        private static class ConfigurationAttr
         {
             public const string Locale = "locale";
             public const string SelfBranded = "self-branded";
@@ -31,37 +96,41 @@ namespace Microsoft.Ddue.Tools
         }
 
         // XPath expressions to navigate the TOC file
-        private class TocXPath
+        private static class TocXPath
         {
             public const string Topics = "/topics";
             public const string Topic = "topic";
         }
 
-        // attribute names in the TOC file
-        private class TocAttr
+        // Attribute names in the TOC file
+        private static class TocAttr
         {
             public const string Id = "id";
+            public const string SortOrder = "sortOrder";    // EFW - Added sort order
         }
 
         // Microsoft Help 2.0 namespace info
-        private class Help2Namespace
+        private static class Help2Namespace
         {
             public const string Prefix = "MSHelp";
             public const string Uri = "http://msdn.microsoft.com/mshelp";
         }
 
         // XPath expressions to navigate Microsoft Help 2.0 data in the document
-        private class Help2XPath
+        private static class Help2XPath
         {
             public const string Head = "head";
             public const string Xml = "xml";
             public const string TocTitle = "MSHelp:TOCTitle";
             public const string Attr = "MSHelp:Attr[@Name='{0}']";
             public const string Keyword = "MSHelp:Keyword[@Index='{0}']";
+
+            // !EFW - Added to remove unnecessary Help 2 CSS link element
+            public const string HxLink = "link[@href='ms-help://Hx/HxRuntime/HxLink.css']";
         }
 
         // Microsoft Help 2.0 tag attributes in the document
-        private class Help2Attr
+        private static class Help2Attr
         {
             public const string Value = "Value";
             public const string Term = "Term";
@@ -69,7 +138,7 @@ namespace Microsoft.Ddue.Tools
         }
 
         // Microsoft Help 2.0 attribute values in the document
-        private class Help2Value
+        private static class Help2Value
         {
             public const string K = "K";
             public const string F = "F";
@@ -80,20 +149,20 @@ namespace Microsoft.Ddue.Tools
         }
 
         // Microsoft Help System tags
-        private class MHSTag
+        private static class MHSTag
         {
             public const string Meta = "meta";
         }
 
         // Microsoft Help System meta tag attributes
-        private class MHSMetaAttr
+        private static class MHSMetaAttr
         {
             public const string Name = "name";
             public const string Content = "content";
         }
 
         // Microsoft Help System meta names
-        private class MHSMetaName
+        private static class MHSMetaName
         {
             public const string SelfBranded = "SelfBranded";
             public const string ContentType = "ContentType";
@@ -112,7 +181,7 @@ namespace Microsoft.Ddue.Tools
         }
 
         // Microsoft Help System meta default values 
-        private class MHSDefault
+        private static class MHSDefault
         {
             public const bool SelfBranded = true;
             public const string Locale = "en-us";
@@ -123,6 +192,10 @@ namespace Microsoft.Ddue.Tools
             public const string TocFile = "./toc.xml";
             public const string ShortName = "MHS";
         }
+        #endregion
+
+        #region TOC information class
+        //=====================================================================
 
         // TOC information of a document
         private class TocInfo
@@ -138,61 +211,81 @@ namespace Microsoft.Ddue.Tools
                 _order = order;
             }
 
-            public string Parent { get { return _parent; }}
+            public string Parent { get { return _parent; } }
             public string ParentVersion { get { return _parentVersion; } }
             public int Order { get { return _order; } }
         }
+        #endregion
+
+        #region Private data members
+        //=====================================================================
 
         private XmlDocument _document;
         private XmlNode _head;
         private XmlNode _xml;
 
-        private string _locale = string.Empty;
+        private string _locale = String.Empty;
         private bool _selfBranded = MHSDefault.SelfBranded;
         private string _topicVersion = MHSDefault.TopicVersion;
         private string _tocParent = MHSDefault.TocParent;
         private string _tocParentVersion = MHSDefault.TocParentVersion;
-        private Dictionary<string, TocInfo> _toc = new Dictionary<string, TocInfo>(); 
+        private Dictionary<string, TocInfo> _toc = new Dictionary<string, TocInfo>();
+        #endregion
+
+        #region Constructor
+        //=====================================================================
+
         /// <summary>
-        /// Creates a new instance of the <see cref="MHSComponent"/> class.
+        /// Creates a new instance of the <see cref="MSHCComponent"/> class.
         /// </summary>
         /// <param name="assembler">The active <see cref="BuildAssembler"/>.</param>
         /// <param name="configuration">The current <see cref="XPathNavigator"/> of the configuration.</param>
-        public MSHCComponent(BuildAssembler assembler, XPathNavigator configuration)
-            : base(assembler, configuration)
+        public MSHCComponent(BuildAssembler assembler, XPathNavigator configuration) :
+          base(assembler, configuration)
         {
             string tocFile = MHSDefault.TocFile;
             XPathNavigator data = configuration.SelectSingleNode(ConfigurationTag.Data);
-            if (data != null)
+
+            if(data != null)
             {
-                string value = data.GetAttribute(ConfigurationAttr.Locale, string.Empty);
-                if (!string.IsNullOrEmpty(value))
+                string value = data.GetAttribute(ConfigurationAttr.Locale, String.Empty);
+
+                if(!String.IsNullOrEmpty(value))
                     _locale = value;
 
-                value = data.GetAttribute(ConfigurationAttr.SelfBranded, string.Empty);
-                if (!string.IsNullOrEmpty(value))
+                value = data.GetAttribute(ConfigurationAttr.SelfBranded, String.Empty);
+
+                if(!String.IsNullOrEmpty(value))
                     _selfBranded = bool.Parse(value);
 
-                value = data.GetAttribute(ConfigurationAttr.TopicVersion, string.Empty);
-                if (!string.IsNullOrEmpty(value))
+                value = data.GetAttribute(ConfigurationAttr.TopicVersion, String.Empty);
+
+                if(!String.IsNullOrEmpty(value))
                     _topicVersion = value;
 
-                value = data.GetAttribute(ConfigurationAttr.TocParent, string.Empty);
-                if (!string.IsNullOrEmpty(value))
+                value = data.GetAttribute(ConfigurationAttr.TocParent, String.Empty);
+
+                if(!String.IsNullOrEmpty(value))
                     _tocParent = value;
 
-                value = data.GetAttribute(ConfigurationAttr.TocParentVersion, string.Empty);
-                if (!string.IsNullOrEmpty(value))
+                value = data.GetAttribute(ConfigurationAttr.TocParentVersion, String.Empty);
+
+                if(!String.IsNullOrEmpty(value))
                     _tocParentVersion = value;
 
-                value = data.GetAttribute(ConfigurationAttr.TocFile, string.Empty);
-                if (!string.IsNullOrEmpty(value))
+                value = data.GetAttribute(ConfigurationAttr.TocFile, String.Empty);
+
+                if(!String.IsNullOrEmpty(value))
                     tocFile = value;
             }
+
             LoadToc(Path.GetFullPath(Environment.ExpandEnvironmentVariables(tocFile)));
         }
+        #endregion
 
-        #region Public
+        #region Apply method
+        //=====================================================================
+
         /// <summary>
         /// Applies Microsoft Help System transformation to the output document.
         /// </summary>
@@ -204,118 +297,151 @@ namespace Microsoft.Ddue.Tools
 
             XmlElement html = _document.DocumentElement;
             _head = html.SelectSingleNode(Help2XPath.Head);
-            if (_head == null)
+
+            if(_head == null)
             {
                 _head = document.CreateElement(Help2XPath.Head);
-                if (!html.HasChildNodes)
+
+                if(!html.HasChildNodes)
                     html.AppendChild(_head);
                 else
                     html.InsertBefore(_head, html.FirstChild);
             }
+            else
+            {
+                // !EFW - Remove the unnecessary Help 2 CSS link element from the header
+                XmlNode hxLink = _head.SelectSingleNode(Help2XPath.HxLink);
 
-			if (_head.SelectSingleNode ("meta[@name='BrandingAware']") == null)
-			{
-				ModifyAttribute ("id", "mainSection");
-				ModifyAttribute("class", "members");
-				FixHeaderBottomBackground("nsrBottom", "headerBottom");
-			}
+                if(hxLink != null)
+                    _head.RemoveChild(hxLink);
+            }
 
-            AddMHSMeta(MHSMetaName.SelfBranded, _selfBranded.ToString().ToLower());
+            // Apply some fix-ups if not branding aware
+            if(_head.SelectSingleNode("meta[@name='BrandingAware']") == null)
+            {
+                ModifyAttribute("id", "mainSection");
+                ModifyAttribute("class", "members");
+                FixHeaderBottomBackground("nsrBottom", "headerBottom");
+            }
+
+            AddMHSMeta(MHSMetaName.SelfBranded, _selfBranded.ToString().ToLowerInvariant());
             AddMHSMeta(MHSMetaName.ContentType, MHSDefault.Reference);
             AddMHSMeta(MHSMetaName.TopicVersion, _topicVersion);
 
             string locale = _locale;
             string id = Guid.NewGuid().ToString();
             _xml = _head.SelectSingleNode(Help2XPath.Xml);
-            if (_xml != null)
+
+            if(_xml != null)
             {
                 XmlNamespaceManager nsmgr = new XmlNamespaceManager(_document.NameTable);
-                if (!nsmgr.HasNamespace(Help2Namespace.Prefix))
+
+                if(!nsmgr.HasNamespace(Help2Namespace.Prefix))
                     nsmgr.AddNamespace(Help2Namespace.Prefix, Help2Namespace.Uri);
 
                 XmlElement elem = _xml.SelectSingleNode(Help2XPath.TocTitle, nsmgr) as XmlElement;
-                if (elem != null)
+
+                if(elem != null)
                     AddMHSMeta(MHSMetaName.Title, elem.GetAttribute(Help2Attr.Title));
 
-                foreach (XmlElement keyword in _xml.SelectNodes(string.Format(Help2XPath.Keyword, Help2Value.K), nsmgr))
+                foreach(XmlElement keyword in _xml.SelectNodes(String.Format(CultureInfo.InvariantCulture, Help2XPath.Keyword, Help2Value.K), nsmgr))
                     AddMHSMeta(MHSMetaName.Keywords, keyword.GetAttribute(Help2Attr.Term), true);
 
-                foreach (XmlElement keyword in _xml.SelectNodes(string.Format(Help2XPath.Keyword, Help2Value.F), nsmgr))
+                foreach(XmlElement keyword in _xml.SelectNodes(String.Format(CultureInfo.InvariantCulture, Help2XPath.Keyword, Help2Value.F), nsmgr))
                     AddMHSMeta(MHSMetaName.F1, keyword.GetAttribute(Help2Attr.Term), true);
 
-                foreach (XmlElement lang in _xml.SelectNodes(string.Format(Help2XPath.Attr, Help2Value.DevLang), nsmgr))
+                foreach(XmlElement lang in _xml.SelectNodes(String.Format(CultureInfo.InvariantCulture, Help2XPath.Attr, Help2Value.DevLang), nsmgr))
                     AddMHSMeta(MHSMetaName.Category, Help2Value.DevLang + ":" + lang.GetAttribute(Help2Attr.Value), true);
 
-                elem = _xml.SelectSingleNode(string.Format(Help2XPath.Attr, Help2Value.Abstract), nsmgr) as XmlElement;
-                if (elem != null)
+                elem = _xml.SelectSingleNode(String.Format(CultureInfo.InvariantCulture, Help2XPath.Attr, Help2Value.Abstract), nsmgr) as XmlElement;
+
+                if(elem != null)
                     AddMHSMeta(MHSMetaName.Description, elem.GetAttribute(Help2Attr.Value));
 
-                elem = _xml.SelectSingleNode(string.Format(Help2XPath.Attr, Help2Value.AssetID), nsmgr) as XmlElement;
-                if (elem != null)
+                elem = _xml.SelectSingleNode(String.Format(CultureInfo.InvariantCulture, Help2XPath.Attr, Help2Value.AssetID), nsmgr) as XmlElement;
+
+                if(elem != null)
                     id = elem.GetAttribute(Help2Attr.Value);
 
-                if (string.IsNullOrEmpty(locale))
+                if(String.IsNullOrEmpty(locale))
                 {
-                    elem = _xml.SelectSingleNode(string.Format(Help2XPath.Attr, Help2Value.Locale), nsmgr) as XmlElement;
-                    if (elem != null)
+                    elem = _xml.SelectSingleNode(String.Format(CultureInfo.InvariantCulture, Help2XPath.Attr, Help2Value.Locale), nsmgr) as XmlElement;
+                    if(elem != null)
                         locale = elem.GetAttribute(Help2Attr.Value);
                 }
+
+                // !EFW - Remove the XML data island as it serves no purpose
+                _head.RemoveChild(_xml);
             }
 
-            if (string.IsNullOrEmpty(locale))
+            if(String.IsNullOrEmpty(locale))
                 locale = MHSDefault.Locale;
 
             AddMHSMeta(MHSMetaName.Locale, locale);
             AddMHSMeta(MHSMetaName.TopicLocale, locale);
             AddMHSMeta(MHSMetaName.Id, id);
 
-            if (_toc.ContainsKey(id))
+            if(_toc.ContainsKey(id))
             {
                 TocInfo tocInfo = _toc[id];
                 AddMHSMeta(MHSMetaName.TocParent, tocInfo.Parent);
-                if (tocInfo.Parent != MHSDefault.TocParent)
+
+                if(tocInfo.Parent != MHSDefault.TocParent)
                     AddMHSMeta(MHSMetaName.TocParentVersion, tocInfo.ParentVersion);
-                AddMHSMeta(MHSMetaName.TocOrder, tocInfo.Order.ToString());
+
+                AddMHSMeta(MHSMetaName.TocOrder, tocInfo.Order.ToString(CultureInfo.InvariantCulture));
             }
-
-			if (_xml != null)
-			{
-				_xml.ParentNode.RemoveChild (_xml);
-			}
-		}
-
+        }
         #endregion
 
-        #region Private
-        // loads TOC structure from a file
+        #region Private helper methods
+        //=====================================================================
+
+        // Loads TOC structure from a file
         private void LoadToc(string path)
         {
             _toc.Clear();
-            using (Stream stream = File.OpenRead(path))
+
+            using(Stream stream = File.OpenRead(path))
             {
                 XPathDocument document = new XPathDocument(stream);
                 XPathNavigator navigator = document.CreateNavigator();
                 LoadToc(navigator.SelectSingleNode(TocXPath.Topics), _tocParent, _tocParentVersion);
             }
         }
-        // loads TOC structure from an XPathNavigator
+
+        // Loads TOC structure from an XPathNavigator
         private void LoadToc(XPathNavigator navigator, string parent, string parentVersion)
         {
-            int i = -1;
-            XPathNodeIterator interator = navigator.SelectChildren(TocXPath.Topic, string.Empty);
-            while (interator.MoveNext())
+            // EFW - Reworked to support sortOrder attribute
+            int sortOrder = 0, tempOrder;
+            XPathNodeIterator interator = navigator.SelectChildren(TocXPath.Topic, String.Empty);
+
+            while(interator.MoveNext())
             {
                 XPathNavigator current = interator.Current;
-                string id = current.GetAttribute(TocAttr.Id, string.Empty);
-                if (!string.IsNullOrEmpty(id))
+                string id = current.GetAttribute(TocAttr.Id, String.Empty);
+
+                // If a sort order is defined, start from that value
+                string order = current.GetAttribute(TocAttr.SortOrder, String.Empty);
+
+                if(!String.IsNullOrEmpty(order) && Int32.TryParse(order, out tempOrder))
+                    sortOrder = tempOrder;
+
+                if(!String.IsNullOrEmpty(id))
                 {
-                    TocInfo info = new TocInfo(parent, parentVersion, ++i);
-                    _toc.Add(id, info);
+                    TocInfo info = new TocInfo(parent, parentVersion, sortOrder++);
+
+                    // EFW - Work around a bug in Sandcastle that can result in duplicate IDs
+                    // by using the indexer to add the topic rather than Add() which throws
+                    // an exception when the duplicate is encountered.
+                    _toc[id] = info;
+
                     LoadToc(current, id, _topicVersion);
                 }
             }
         }
-        
+
         // Adds Microsoft Help System meta data to the output document
         private XmlElement AddMHSMeta(string name, string content)
         {
@@ -325,26 +451,34 @@ namespace Microsoft.Ddue.Tools
         // Adds Microsoft Help System meta data to the output document
         private XmlElement AddMHSMeta(string name, string content, bool multiple)
         {
-            if (string.IsNullOrEmpty(content))
+            if(String.IsNullOrEmpty(content))
                 return null;
+
             XmlElement elem = null;
-            if (!multiple)
-				elem = _document.SelectSingleNode (string.Format ("//meta[@name='{0}']", name)) as XmlElement;
-            if (elem == null)
+
+            // !EFW - Bug fix.  Fixed attribute name to find them properly (reported by Don Fehr).
+            if(!multiple)
+                elem = _document.SelectSingleNode(String.Format(CultureInfo.InvariantCulture,
+                    "//meta[@name='{0}']", name)) as XmlElement;
+
+            if(elem == null)
             {
                 elem = _document.CreateElement(MHSTag.Meta);
                 elem.SetAttribute(MHSMetaAttr.Name, name);
                 elem.SetAttribute(MHSMetaAttr.Content, content);
                 _head.AppendChild(elem);
             }
+
             return elem;
         }
 
         // Modifies an attribute value to prevent conflicts with Microsoft Help System branding
         private void ModifyAttribute(string name, string value)
         {
-            XmlNodeList list = _document.SelectNodes(string.Format(@"//*[@{0}='{1}']", name, value));
-            foreach (XmlElement elem in list)
+            XmlNodeList list = _document.SelectNodes(String.Format(CultureInfo.InvariantCulture,
+                @"//*[@{0}='{1}']", name, value));
+
+            foreach(XmlElement elem in list)
                 elem.SetAttribute(name, value + MHSDefault.ShortName);
         }
 
@@ -353,13 +487,17 @@ namespace Microsoft.Ddue.Tools
         // sets the 'background' attribute to the transformed path on page load
         private void FixHeaderBottomBackground(string className, string newId)
         {
-            XmlElement elem = _document.SelectSingleNode(string.Format(@"//*[@class='{0}']", className)) as XmlElement;
-            if (elem == null)
+            XmlElement elem = _document.SelectSingleNode(String.Format(CultureInfo.InvariantCulture,
+                @"//*[@class='{0}']", className)) as XmlElement;
+
+            if(elem == null)
                 return;
 
             string src = elem.GetAttribute("background");
-            if (string.IsNullOrEmpty(src))
+
+            if(String.IsNullOrEmpty(src))
                 return;
+
             elem.SetAttribute("id", newId);
 
             XmlElement img = _document.CreateElement("img");
@@ -369,7 +507,6 @@ namespace Microsoft.Ddue.Tools
 
             elem.AppendChild(img);
         }
-
         #endregion
     }
 }

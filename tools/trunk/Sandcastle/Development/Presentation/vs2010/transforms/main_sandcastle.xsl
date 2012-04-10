@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-								version="1.1"
+								version="2.0"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5">
 	<!-- ======================================================================================== -->
 
@@ -726,7 +726,7 @@
 												select="'title_relatedTopics'"/>
 				<xsl:with-param name="p_content">
 					<xsl:call-template name="t_autogenSeeAlsoLinks"/>
-					<xsl:for-each select="/document/comments//seealso | /document/reference/elements/element/overloads//seealso">
+					<xsl:for-each select="/document/comments//seealso[not(ancestor::overloads)] | /document/reference/elements/element/overloads//seealso">
 						<div class="seeAlsoStyle">
 							<xsl:apply-templates select=".">
 								<xsl:with-param name="displaySeeAlso"
@@ -996,47 +996,43 @@
 	Inline tags
 	============================================================================================= -->
 
-	<xsl:template match="see[@cref]"
-								name="t_seeCRef">
-		<xsl:variable name="v_ref">
-			<xsl:choose>
-				<xsl:when test="contains(@cref,'#')">
-					<xsl:value-of select="substring-before(@cref,'#')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="@cref"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
+	<xsl:template match="conceptualLink">
 		<xsl:choose>
-			<xsl:when test="normalize-space(translate($v_ref,'0123456789abcdefABCDEF-',''))">
-				<xsl:choose>
-					<xsl:when test="normalize-space(.)">
-						<referenceLink class="mtps-internal-link"
-													 target="{@cref}">
-							<xsl:apply-templates/>
-						</referenceLink>
-					</xsl:when>
-					<xsl:otherwise>
-						<referenceLink class="mtps-internal-link"
-													 target="{@cref}"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="normalize-space(.)">
+				<conceptualLink class="mtps-internal-link"
+												target="{@target}">
+					<xsl:apply-templates/>
+				</conceptualLink>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="normalize-space(.)">
-						<conceptualLink class="mtps-internal-link"
-														target="{@cref}">
-							<xsl:apply-templates/>
-						</conceptualLink>
-					</xsl:when>
-					<xsl:otherwise>
-						<conceptualLink class="mtps-internal-link"
-														target="{@cref}"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<conceptualLink class="mtps-internal-link"
+												target="{@target}"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="see[@cref]"
+								name="t_seeCRef">
+		<xsl:choose>
+			<xsl:when test="starts-with(@cref,'O:')">
+				<referenceLink target="{concat('Overload:',substring(@cref,3))}"
+											 display-target="format"
+											 show-parameters="false"
+											 class="mtps-internal-link">
+					<include item="boilerplate_seeAlsoOverloadLink">
+						<parameter>{0}</parameter>
+					</include>
+				</referenceLink>
+			</xsl:when>
+			<xsl:when test="normalize-space(.)">
+				<referenceLink target="{@cref}"
+											 class="mtps-internal-link">
+					<xsl:apply-templates/>
+				</referenceLink>
+			</xsl:when>
+			<xsl:otherwise>
+				<referenceLink target="{@cref}"
+											 class="mtps-internal-link"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1131,6 +1127,16 @@
 							 select="false()"/>
 		<xsl:if test="$displaySeeAlso">
 			<xsl:choose>
+				<xsl:when test="starts-with(@cref,'O:')">
+					<referenceLink target="{concat('Overload:',substring(@cref,3))}"
+												 display-target="format"
+												 show-parameters="false"
+												 class="mtps-internal-link">
+						<include item="boilerplate_seeAlsoOverloadLink">
+							<parameter>{0}</parameter>
+						</include>
+					</referenceLink>
+				</xsl:when>
 				<xsl:when test="normalize-space(.)">
 					<referenceLink target="{@cref}"
 												 qualified="true">

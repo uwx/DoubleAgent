@@ -1,7 +1,7 @@
-REM ********** Set path for .net framework2.0, sandcastle****************************
+REM ********** Set path for .NET Framework 4.0, Sandcastle ****************************
 
 setlocal
-set PATH=%windir%\Microsoft.NET\Framework\v2.0.50727;%DXROOT%\ProductionTools;%PATH%
+set PATH=%windir%\Microsoft.NET\Framework\v4.0.30319;%DXROOT%\ProductionTools;%PATH%
 
 if exist output rmdir output /s /q
 
@@ -11,4 +11,3 @@ XslTransform /xsl:"%DXROOT%\ProductionTransforms\dstoctotoc.xsl" extractedfiles\
 call "%DXROOT%\Presentation\vs2005\copyOutput.bat"
 
 BuildAssembler /config:conceptual-2005-mshc.config manifest.xml
-

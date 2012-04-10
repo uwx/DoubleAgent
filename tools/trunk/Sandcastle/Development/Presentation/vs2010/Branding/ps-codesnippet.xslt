@@ -251,22 +251,17 @@
 			</xsl:attribute>
 			<xsl:attribute name="class">OH_CodeSnippetContainerCode</xsl:attribute>
 			<xsl:attribute name="style">
-				<xsl:if test="$plainCode='true'">
-					<xsl:text>display: none</xsl:text>
-				</xsl:if>
-				<xsl:if test="$plainCode='false'">
-					<xsl:if test="$unrecognized='true'">
+				<xsl:choose>
+					<xsl:when test="$plainCode='true'">
+						<xsl:text>display: none</xsl:text>
+					</xsl:when>
+					<xsl:when test="$uniqueLangIndex=1">
 						<xsl:text>display: block</xsl:text>
-					</xsl:if>
-					<xsl:if test="$unrecognized='true'">
-						<xsl:if test="not($uniqueLangIndex=1)">
-							<xsl:text>display: none</xsl:text>
-						</xsl:if>
-						<xsl:if test="$uniqueLangIndex=1">
-							<xsl:text>display: block</xsl:text>
-						</xsl:if>
-					</xsl:if>
-				</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>display: none</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 			<xsl:variable name="spacedSnippetCode">
 				<xsl:apply-templates select="msxsl:node-set($snippetCode)/node()"

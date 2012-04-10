@@ -27,13 +27,19 @@
 					<xsl:attribute name="type">
 						<xsl:value-of select="'text/javascript'"/>
 					</xsl:attribute>
-					addToLanSpecTextIdSet("<xsl:value-of select="$v_id"/>?<xsl:for-each select="xhtml:span">
-						<xsl:value-of select ="@class"/>
-						<xsl:value-of select ="'='"/>
+					addToLanSpecTextIdSet("<xsl:value-of select="$v_id"/>?<xsl:value-of select ="'vb='"/><xsl:if test="xhtml:span[@class='vb']">
+						<xsl:value-of select ="xhtml:span[@class='vb']"/>
+					</xsl:if><xsl:value-of select ="'|cpp='"/><xsl:if test="xhtml:span[@class='cpp']">
+						<xsl:value-of select ="xhtml:span[@class='cpp']"/>
+					</xsl:if><xsl:value-of select ="'|cs='"/><xsl:if test="xhtml:span[@class='cs']">
+						<xsl:value-of select ="xhtml:span[@class='cs']"/>
+					</xsl:if><xsl:value-of select ="'|fs='"/><xsl:if test="xhtml:span[@class='fs']">
+						<xsl:value-of select ="xhtml:span[@class='fs']"/>
+					</xsl:if><xsl:value-of select ="'|nu='"/><xsl:if test="xhtml:span[@class='nu']">
+						<xsl:value-of select ="xhtml:span[@class='nu']"/>
+					</xsl:if><xsl:for-each select="xhtml:span[@class!='vb' and @class!='cpp' and @class!='cs' and @class!='fs' and @class!='nu']">
+						<xsl:value-of select ="concat('|',@class,'=')"/>
 						<xsl:value-of select ="."/>
-						<xsl:if test="following-sibling::*">
-							<xsl:value-of select ="'|'"/>
-						</xsl:if>
 					</xsl:for-each>");
 				</xsl:element>
 			</xsl:when>

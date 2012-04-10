@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Ddue.Tools</RootNamespace>
     <AssemblyName>MSHCPackager</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <AssemblyOriginatorKeyFile>../SandcastleTools.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -39,41 +40,22 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>CinSoft.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MSHCPackage.cs" />
     <Compile Include="MSHCPackager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BuildAssembler\BuildAssemblerLibrary\BuildAssemblerLibrary.csproj">
-      <Project>{399E78F8-4954-409E-991A-37DA9D0579CC}</Project>
-      <Name>BuildAssemblerLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BuildAssembler\BuildComponents\BuildComponents.csproj">
-      <Project>{30773718-BC7C-4FCC-A9C2-7EE61DF4EC41}</Project>
-      <Name>BuildComponents</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BuildAssembler\CopyComponents\CopyComponents.csproj">
-      <Project>{E64725D7-2208-4C28-922D-B6543C0BC483}</Project>
-      <Name>CopyComponents</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CommandLine\CommandLine.csproj">
       <Project>{6CF7CA42-3706-4F6B-A2B4-10EF3F511888}</Project>
       <Name>CommandLine</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="CinSoft.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
