@@ -31,9 +31,8 @@
       <step>
         <content>
           <para>In the Web application, call the <languageKeyword>Login</languageKeyword> method.</para>
-          <code>
-            <codeFeaturedElement>// This code example</codeFeaturedElement>
-            <codeFeaturedElement> will need to be added</codeFeaturedElement>
+					<code language="none" xml:space="preserve">
+<codeFeaturedElement>// This code example will need to be added</codeFeaturedElement>
 <codeFeaturedElement>// when client-side component is ready.</codeFeaturedElement>
 <codeFeaturedElement>// Login(username, password, userType, true);</codeFeaturedElement></code>
         </content>

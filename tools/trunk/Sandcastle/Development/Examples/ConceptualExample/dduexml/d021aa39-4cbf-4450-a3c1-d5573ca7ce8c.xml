@@ -25,15 +25,17 @@
       <step>
         <content>
           <para>Add a service file (.svc) to your Web site that contains a directive referencing the <codeEntityReference autoUpgrade="true">T:System.Web.Security.RolesService</codeEntityReference> class, as in the following example.</para>
-          <code language="c#">&lt;% @ServiceHost Language="C#" Service="System.Web.Security.RolesService" %&gt;</code>
-					<code language="vb">&lt;% @ServiceHost Language="VB" Service="System.Web.Security.RolesService" %&gt;</code>
+          <code language="c#"
+								xml:space="preserve">&lt;% @ServiceHost Language="C#" Service="System.Web.Security.RolesService" %&gt;</code>
+					<code language="vb"
+								xml:space="preserve">&lt;% @ServiceHost Language="VB" Service="System.Web.Security.RolesService" %&gt;</code>
         </content>
       </step>
       <step>
         <content>
           <para>In the Web.config file, add or modify the <languageKeyword>&lt;system.serviceModel&gt;</languageKeyword> element to define the service and its endpoint contract. For more information about WCF endpoints, see Endpoints in WCF.</para>
           <para>The following example shows the <languageKeyword>&lt;system.serviceModel&gt;</languageKeyword> element of a Web.config file with an endpoint contract configured for the ASP.NET Roles service. </para>
-          <code>&lt;system.serviceModel&gt;
+					<code xml:space="preserve">&lt;system.serviceModel&gt;
     &lt;services&gt;
         &lt;service name="System.Web.Security.RolesService"
         behaviorConfiguration="MyServiceTypeBehaviors"&gt;
@@ -56,7 +58,7 @@
         <content>
           <para>In the Web.config file, enable ASP.NET compatibility in the WCF hosting environment. For more information on hosting WCF services, see WCF Services and ASP.NET.</para>
           <para>The following example shows the <languageKeyword>&lt;serviceHostingEnvironment&gt;</languageKeyword> element set to ASP.NET compatibility. </para>
-          <code>&lt;system.serviceModel&gt;
+					<code xml:space="preserve">&lt;system.serviceModel&gt;
     &lt;services&gt;
         &lt;service name="System.Web.Security.RolesService"
         behaviorConfiguration="MyServiceTypeBehaviors"&gt;
@@ -82,7 +84,7 @@
           <para>Create a binding that requires SSL, and set the endpoint contract to use that binding. </para>
           <para>When you set the contract to use transport security, the service can only be accessed over HTTPS. For more information on transport security in WCF, see Transport Security.</para>
           <para>The following example shows the <languageKeyword>&lt;bindings&gt;</languageKeyword> element, configured for transport security. The endpoint contract is set to use the secure binding through the <languageKeyword>bindingConfiguration</languageKeyword> property.</para>
-          <code>&lt;system.serviceModel&gt;
+					<code xml:space="preserve">&lt;system.serviceModel&gt;
     &lt;services&gt;
         &lt;service name="System.Web.Security.RolesService"
         behaviorConfiguration="MyServiceTypeBehaviors"&gt;
@@ -123,7 +125,7 @@
           <step>
             <content>
               <para>In the Web.config file, set the cookieProtection attribute of the <languageKeyword>&lt;roleManager&gt;</languageKeyword> element to <languageKeyword>All</languageKeyword>, the cacheRolesInCookie to <languageKeyword>true</languageKeyword> and the cookieSlidingExpiration element to <languageKeyword>false</languageKeyword>.</para>
-              <code>&lt;roleManager 
+							<code xml:space="preserve">&lt;roleManager 
     cacheRolesInCookie="true" 
     cookieName=".SVCRoleCookie" 
     cookieProtection="All" 

@@ -1499,7 +1499,7 @@ namespace SandcastleBuilder.Utils
 		/// <para>The MS Help Viewer Catalog ID is composed of the <c>CatalogProductId</c>
 		/// the <see cref="CatalogVersion"/>, and the <see cref="Language"/> code. For example,
 		/// the English Visual Studio 10 catalog is "VS_100_EN-US".</para>
-		/// <note>For styles other than VS2010, you should used the default value.</note>
+		/// <note>For styles other than VS2010, you should use the default value.</note>
 		/// </remarks>
 		/// <seealso cref="SelfBranded"/>
 		/// <seealso cref="BrandingPackageName"/>
@@ -1529,7 +1529,7 @@ namespace SandcastleBuilder.Utils
 		/// <para>The MS Help Viewer Catalog ID is composed of the <see cref="CatalogProductId"/>,
 		/// the <c>CatalogVersion</c>, and the <see cref="Language"/> code. For example,
 		/// the English Visual Studio 10 catalog is "VS_100_EN-US".</para>
-		/// <note>For styles other than VS2010, you should used the default value.</note>
+		/// <note>For styles other than VS2010, you should use the default value.</note>
 		/// </remarks>
 		/// <seealso cref="SelfBranded"/>
 		/// <seealso cref="BrandingPackageName"/>

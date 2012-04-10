@@ -13,7 +13,8 @@
         <content>
           <para>In the application's Global.asax file, create an event handler for the <codeEntityReference autoUpgrade="true">E:System.Web.Security.LoginService.CreatingCookie</codeEntityReference> event and add code to the handler that customizes the cookie. Add your custom information to the cookie's <codeEntityReference autoUpgrade="true">P:System.Web.Security.CreatingCookieEventArgs.CustomCredential</codeEntityReference> property.</para>
           <para>The following example shows an event handler that customizes the authentication cookie by adding the value in the <codeEntityReference autoUpgrade="true">P:System.Web.Security.CreatingCookieEventArgs.CustomCredential</codeEntityReference> property to the <codeEntityReference autoUpgrade="true">P:System.Web.Security.FormsAuthenticationTicket.UserData</codeEntityReference> property.</para>
-          <code language="c#">void LoginService_CreatingCookie(object sender,
+          <code language="c#"
+								xml:space="preserve">void LoginService_CreatingCookie(object sender,
     CreatingCookieEventArgs e)
 {
     int authenticationCookieVersion = 1;
@@ -38,7 +39,8 @@
     HttpContext.Current.Response.Cookies.Add(cookie);
     e.CookieIsSet = true;
 }</code>
-					<code language="vb">Sub LoginService_CreatingCookie(ByVal sender As Object, _
+					<code language="vb"
+								xml:space="preserve">Sub LoginService_CreatingCookie(ByVal sender As Object, _
     ByVal e As CreatingCookieEventArgs)
     Dim authenticationCookieVersion As Integer = 1
     Dim ticket As FormsAuthenticationTicket = New _
@@ -67,12 +69,14 @@ End Sub</code>
       <step>
         <content>
           <para>Subscribe the event handler to the <codeEntityReference autoUpgrade="true">E:System.Web.Security.LoginService.CreatingCookie</codeEntityReference> event in the <languageKeyword>Application_Start</languageKeyword> method of the Global.asax file, as shown in the following example code.</para>
-          <code language="c#">void Application_Start(object sender, EventArgs e) 
+          <code language="c#"
+								xml:space="preserve">void Application_Start(object sender, EventArgs e) 
 {
     LoginService.CreatingCookie += new
         CreatingCookieEventHandler(LoginService_CreatingCookie);
 }</code>
-<code language="vb">Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
+<code language="vb"
+			xml:space="preserve">Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
     AddHandler LoginService.CreatingCookie, _
     AddressOf Me.LoginService_CreatingCookie
 End Sub</code>

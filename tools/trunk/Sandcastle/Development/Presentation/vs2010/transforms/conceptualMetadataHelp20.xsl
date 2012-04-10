@@ -47,7 +47,7 @@
 						<xsl:when test="not(contains(text(),'[')) and ($v_docset='avalon' or $v_docset='wpf' or $v_docset='wcf' or $v_docset='windowsforms')">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="kIndexTermWithTechQualifier">
+																	item="meta_kIndexTermWithTechQualifier">
 									<parameter>
 										<xsl:value-of select="text()"/>
 									</parameter>
@@ -154,14 +154,14 @@
 				<xsl:for-each select="/document/topic/*[1]">
 					<MSHelp:Attr Name="TopicType">
 						<includeAttribute name="Value"
-															item="TT_{local-name()}"/>
+															item="meta_mshelp_topicType_{local-name()}"/>
 					</MSHelp:Attr>
 				</xsl:for-each>
 
 				<!-- Locale attribute -->
 				<MSHelp:Attr Name="Locale">
 					<includeAttribute name="Value"
-														item="locale"/>
+														item="meta_locale"/>
 				</MSHelp:Attr>
 
 			</xml>

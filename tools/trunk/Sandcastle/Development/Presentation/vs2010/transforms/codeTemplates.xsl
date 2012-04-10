@@ -81,70 +81,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="t_codeLangTitle">
-		<xsl:param name="p_codeLang"/>
-		<xsl:variable name="v_codeLangUnique">
-			<xsl:call-template name="t_codeLang">
-				<xsl:with-param name="p_codeLang"
-												select="$p_codeLang"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasic'" >
-				<xsl:text>Visual Basic</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VBScript'">
-				<xsl:text>Visual Basic Script</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasicDeclaration'" >
-				<xsl:text>Visual Basic Declaration</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'VisualBasicUsage'" >
-				<xsl:text>Visual Basic Usage</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
-				<xsl:text>C#</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'visualbasicANDcsharp'" >
-				<xsl:text>Visual Basic and C#</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'ManagedCPlusPlus'" >
-				<xsl:text>Visual C++</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'JSharp'">
-				<xsl:text>J#</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'FSharp'" >
-				<xsl:text>F#</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'JScript'">
-				<xsl:text>JScript</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'JavaScript'">
-				<xsl:text>JavaScript</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'XAML'">
-				<xsl:text>XAML</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'xmlLang'">
-				<xsl:text>XML</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'html'">
-				<xsl:text>HTML</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'AspNet'">
-				<xsl:text>ASP.NET</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'pshell'">
-				<xsl:text>PowerShell</xsl:text>
-			</xsl:when>
-			<xsl:when test="$v_codeLangUnique = 'sql'">
-				<xsl:text>SQL</xsl:text>
-			</xsl:when>
-			<xsl:otherwise/>
-		</xsl:choose>
-	</xsl:template>
-
 	<xsl:template name="t_codeLangName">
 		<xsl:param name="p_codeLang"/>
 		<xsl:variable name="v_codeLangUnique">
@@ -198,6 +134,70 @@
 			</xsl:when>
 			<xsl:when test="$v_codeLangUnique = 'sql'">
 				<xsl:text>SQL</xsl:text>
+			</xsl:when>
+			<xsl:otherwise/>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="t_codeLangTitleId">
+		<xsl:param name="p_codeLang"/>
+		<xsl:variable name="v_codeLangUnique">
+			<xsl:call-template name="t_codeLang">
+				<xsl:with-param name="p_codeLang"
+												select="$p_codeLang"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasic'" >
+				<xsl:value-of select="'devlang_VisualBasic'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'VBScript'">
+				<xsl:value-of select="'devlang_VBScript'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasicDeclaration'" >
+				<xsl:value-of select="'devlang_VisualBasicDeclaration'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'VisualBasicUsage'" >
+				<xsl:value-of select="'devlang_VisualBasicUsage'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'CSharp'" >
+				<xsl:value-of select="'devlang_CSharp'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'visualbasicANDcsharp'" >
+				<xsl:value-of select="'devlang_visualbasicANDcsharp'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'ManagedCPlusPlus'" >
+				<xsl:value-of select="'devlang_ManagedCPlusPlus'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'JSharp'">
+				<xsl:value-of select="'devlang_JSharp'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'FSharp'" >
+				<xsl:value-of select="'devlang_FSharp'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'JScript'">
+				<xsl:value-of select="'devlang_JScript'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'JavaScript'">
+				<xsl:value-of select="'devlang_JavaScript'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'XAML'">
+				<xsl:value-of select="'devlang_XAML'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'xmlLang'">
+				<xsl:value-of select="'devlang_xmlLang'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'html'">
+				<xsl:value-of select="'devlang_html'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'AspNet'">
+				<xsl:value-of select="'devlang_AspNet'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'pshell'">
+				<xsl:value-of select="'devlang_pshell'"/>
+			</xsl:when>
+			<xsl:when test="$v_codeLangUnique = 'sql'">
+				<xsl:value-of select="'devlang_sql'"/>
 			</xsl:when>
 			<xsl:otherwise/>
 		</xsl:choose>
@@ -357,43 +357,30 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="v_codeLangTitle">
-			<xsl:choose>
-				<xsl:when test="(normalize-space($p_codeTitle)!='') and (normalize-space($p_codeTitle)!=$v_codeLangUnique)">
-					<xsl:value-of select="$p_codeTitle"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="t_codeLangTitle">
-						<xsl:with-param name="p_codeLang"
-														select="$v_codeLangUnique"/>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:if test="(normalize-space($p_codeTitle)!='') and (normalize-space($p_codeTitle)!=$v_codeLangUnique)">
+				<xsl:value-of select="$p_codeTitle"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="v_codeLangTitleId">
+			<xsl:call-template name="t_codeLangTitleId">
+				<xsl:with-param name="p_codeLang"
+												select="$v_codeLangUnique"/>
+			</xsl:call-template>
 		</xsl:variable>
 		<!--<xsl:comment xml:space="preserve">p_codeLang[<xsl:value-of select="$p_codeLang"/>]</xsl:comment>
 		<xsl:comment xml:space="preserve">p_codeTitle[<xsl:value-of select="$p_codeTitle"/>]</xsl:comment>
 		<xsl:comment xml:space="preserve">v_codeLangUnique[<xsl:value-of select="$v_codeLangUnique"/>]</xsl:comment>
-		<xsl:comment xml:space="preserve">v_codeLangTitle[<xsl:value-of select="$v_codeLangTitle"/>]</xsl:comment>-->
+		<xsl:comment xml:space="preserve">v_codeLangTitle[<xsl:value-of select="$v_codeLangTitle"/>]</xsl:comment>
+		<xsl:comment xml:space="preserve">v_codeLangTitleId[<xsl:value-of select="$v_codeLangTitleId"/>]</xsl:comment>
+		<xsl:comment xml:space="preserve">p_transformCode[<xsl:value-of select="$p_transformCode"/>]</xsl:comment>-->
 
+		<!-- Post-branding treats 'other' and 'none' alike, so avoid using 'none' as the Language. The result is: -->
+		<!--   If Language is 'other' a tab is formatted using DisplayLanguage. -->
+		<!--   If Language is '' no tab is formatted. -->
 		<xsl:element name="mtps:CodeSnippet"
 								 namespace="{$mtps}">
 			<xsl:attribute name="runat">
 				<xsl:value-of select="'server'"/>
-			</xsl:attribute>
-			<!-- Post-branding treats 'other' and 'none' alike, so avoid using 'other' as the Language. Thus: -->
-			<!--   If Language is 'other' a tab is formatted using DisplayLanguage. -->
-			<!--   If Language is 'none' no tab is formatted. -->
-			<xsl:attribute name="Language">
-				<xsl:choose>
-					<xsl:when test="($v_codeLangUnique!='other') and ($v_codeLangUnique!='none')">
-						<xsl:value-of select="$v_codeLangUnique"/>
-					</xsl:when>
-					<xsl:when test="($v_codeLangUnique!='none')">
-						<xsl:value-of select="$v_codeLangTitle"/>
-					</xsl:when>
-				</xsl:choose>
-			</xsl:attribute>
-			<xsl:attribute name="DisplayLanguage">
-				<xsl:value-of select="$v_codeLangTitle"/>
 			</xsl:attribute>
 			<xsl:attribute name="ContainsMarkup">
 				<xsl:choose>
@@ -409,6 +396,43 @@
 				<xsl:value-of select="string($p_enableCopyCode)"/>
 			</xsl:attribute>
 			<xsl:choose>
+				<xsl:when test="$v_codeLangUnique='none'">
+					<xsl:attribute name="Language"/>
+					<xsl:attribute name="DisplayLanguage"/>
+				</xsl:when>
+				<xsl:when test="$v_codeLangUnique='other'">
+					<xsl:attribute name="DisplayLanguage"/>
+					<xsl:choose>
+						<xsl:when test="$v_codeLangTitle!=''">
+							<xsl:attribute name="Language">
+								<xsl:value-of select="$v_codeLangTitle"/>
+							</xsl:attribute>
+						</xsl:when>
+						<xsl:when test="$v_codeLangTitleId!=''">
+							<includeAttribute name="Language"
+																item="{$v_codeLangTitleId}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:attribute name="Language">
+						<xsl:value-of select="$v_codeLangUnique"/>
+					</xsl:attribute>
+					<xsl:choose>
+						<xsl:when test="$v_codeLangTitle!=''">
+							<xsl:attribute name="DisplayLanguage">
+								<xsl:value-of select="$v_codeLangTitle"/>
+							</xsl:attribute>
+						</xsl:when>
+						<xsl:when test="$v_codeLangTitleId!=''">
+							<includeAttribute name="DisplayLanguage"
+																item="{$v_codeLangTitleId}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+
+			<xsl:choose>
 				<xsl:when test="starts-with(normalize-space(.),'@@_')">
 					<!-- MS Help Viewer has code to show the code colorized or plain.  We'll ignore their colorizer and insert our own colorized text later. -->
 					<xsl:element name="div">
@@ -419,11 +443,11 @@
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:choose>
+						<xsl:choose>
 						<xsl:when test="$p_transformCode">
 							<xsl:element name="pre"
 													 namespace="{$xhtml}"
-													 xml:space="preserve"><xsl:call-template name="t_translateCodeContainer"/></xsl:element>
+													 xml:space="preserve"><xsl:call-template name="t_tranformCodeContainer"/></xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:element name="pre"
@@ -446,7 +470,7 @@
 
 	<xsl:template match="code|pre|div"
 								mode="transformCode"
-								name="t_translateCodeContainer">
+								name="t_tranformCodeContainer">
 		<xsl:apply-templates mode="transformCode"/>
 	</xsl:template>
 
@@ -457,6 +481,13 @@
 	</xsl:template>
 
 	<!-- ======================================================================================== -->
+
+	<!-- MAML elements are transformed, even if the code is not.  This supports the ddue:legacy* elements -->
+	<xsl:template match="ddue:*"
+								mode="copyCode"
+								name="t_copyCodeDdueElement">
+		<xsl:apply-templates select="."/>
+	</xsl:template>
 
 	<xsl:template match="*"
 								mode="copyCode"
@@ -492,6 +523,9 @@
 			<xsl:when test="contains($minimal-spacing,'code')">
 				<xsl:for-each select="node()">
 					<xsl:choose>
+						<xsl:when test="self::ddue:*">
+							<xsl:call-template name="t_copyCodeDdueElement"/>
+						</xsl:when>
 						<xsl:when test="self::*">
 							<xsl:call-template name="t_copyCodeElement"/>
 						</xsl:when>
@@ -529,6 +563,9 @@
 			<xsl:when test="normalize-space($p_text)='' and contains($p_text,'&#10;')">
 				<xsl:value-of select="concat('&#160;','&#10;',substring-after(translate($p_text,' &#13;','&#160;'),'&#10;'))"/>
 			</xsl:when>
+			<xsl:when test="normalize-space($p_text)='' and contains($p_text,'&#13;')">
+				<xsl:value-of select="concat('&#160;','&#10;',substring-after(translate($p_text,' ','&#160;'),'&#13;'))"/>
+			</xsl:when>
 			<xsl:when test=".!='' and normalize-space(.)=''">
 				<xsl:value-of select="translate(.,' ','&#160;')"/>
 			</xsl:when>
@@ -536,13 +573,6 @@
 				<xsl:value-of select="$p_text"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
-
-	<!-- MAML elements are transformed, even if the code is not.  This supports the ddue:legacy* elements -->
-	<xsl:template match="ddue:*"
-								mode="copyCode"
-								name="t_copyCodeDdueElement">
-		<xsl:apply-templates select="."/>
 	</xsl:template>
 
 </xsl:stylesheet>

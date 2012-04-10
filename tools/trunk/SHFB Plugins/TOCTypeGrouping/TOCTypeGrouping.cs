@@ -293,6 +293,10 @@ namespace SandcastleBuilder.PlugIns
 				foreach (String v_group in v_groups)
 				{
 					v_includeNode = v_referenceContentDocument.SelectSingleNode (String.Format ("//item[@id='{0}TypesFilterLabel']", v_group));
+					if (v_includeNode == null)
+					{
+						v_includeNode = v_referenceContentDocument.SelectSingleNode (String.Format ("//item[@id='text_{0}TypesUpper']", v_group));
+					}
 					if (v_includeNode != null)
 					{
 						v_titleNode = v_sharedContentDocument.CreateElement ("item");
@@ -301,13 +305,24 @@ namespace SandcastleBuilder.PlugIns
 						v_sharedContentDocument.DocumentElement.AppendChild (v_titleNode);
 
 						v_titleNode = v_sharedContentDocument.CreateElement ("item");
+						v_titleNode.SetAttribute ("id", String.Format ("topicTitle_{0}Types", v_group));
+						v_titleNode.InnerText = "{0} " + v_includeNode.InnerText;
+						v_sharedContentDocument.DocumentElement.AppendChild (v_titleNode);
+
+						v_titleNode = v_sharedContentDocument.CreateElement ("item");
 						v_titleNode.SetAttribute ("id", String.Format ("{0}TypesIndexEntry", v_group));
+						v_titleNode.InnerText = "{0} " + v_includeNode.InnerText.ToLower ();
+						v_sharedContentDocument.DocumentElement.AppendChild (v_titleNode);
+
+						v_titleNode = v_sharedContentDocument.CreateElement ("item");
+						v_titleNode.SetAttribute ("id", String.Format ("indexEntry_{0}Types", v_group));
 						v_titleNode.InnerText = "{0} " + v_includeNode.InnerText.ToLower ();
 						v_sharedContentDocument.DocumentElement.AppendChild (v_titleNode);
 					}
 				}
 
 				v_sharedContentDocument.Save (v_sharedContentFileName);
+				m_buildProcess.ReportProgress (" {0}: updated {1}", this.Name, v_sharedContentFileName);
 			}
 			catch (Exception exp)
 			{

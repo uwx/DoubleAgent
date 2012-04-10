@@ -14,7 +14,7 @@
 		<!-- System.Language -->
 		<meta name="Language">
 			<includeAttribute name="content"
-												item="locale" />
+												item="meta_locale" />
 		</meta>
 
 		<!-- System.Title -->
@@ -105,7 +105,7 @@
 				</xsl:variable>
 				<meta name="System.Keywords">
 					<includeAttribute name="content"
-														item="namespaceIndexEntry">
+														item="indexEntry_namespace">
 						<parameter>
 							<xsl:value-of select="msxsl:node-set($v_names)/name" />
 						</parameter>
@@ -124,7 +124,7 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="{$g_apiSubGroup}IndexEntry">
+															item="indexEntry_{$g_apiSubGroup}">
 							<parameter>
 								<xsl:copy-of select="."/>
 							</parameter>
@@ -133,7 +133,7 @@
 					<xsl:if test="boolean($v_namespace != '')">
 						<meta name="System.Keywords">
 							<includeAttribute name="content"
-																item="{$g_apiSubGroup}IndexEntry">
+																item="indexEntry_{$g_apiSubGroup}">
 								<parameter>
 									<xsl:value-of select="$v_namespace"/>
 									<xsl:text>.</xsl:text>
@@ -146,9 +146,9 @@
 					<xsl:if test="$g_apiSubGroup='class' or $g_apiSubGroup='structure' or $g_apiSubGroup='interface'">
 						<meta name="System.Keywords">
 							<includeAttribute name="content"
-																item="aboutTypeIndexEntry">
+																item="indexEntry_aboutType">
 								<parameter>
-									<include item="{$g_apiSubGroup}IndexEntry">
+									<include item="indexEntry_{$g_apiSubGroup}">
 										<parameter>
 											<xsl:copy-of select="."/>
 										</parameter>
@@ -163,7 +163,7 @@
 					<xsl:for-each select="/document/reference/elements/element">
 						<meta name="System.Keywords">
 							<includeAttribute name="content"
-																item="{$g_apiSubGroup}MemberIndexEntry">
+																item="indexEntry_{$g_apiSubGroup}Member">
 								<parameter>
 									<xsl:value-of select="apidata/@name" />
 								</parameter>
@@ -184,7 +184,7 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="{$g_apiSubGroup}IndexEntry">
+															item="indexEntry_{$g_apiSubGroup}">
 							<parameter>
 								<xsl:value-of select="." />
 							</parameter>
@@ -192,9 +192,9 @@
 					</meta>
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="membersIndexEntry">
+															item="indexEntry_members">
 							<parameter>
-								<include item="{$g_apiSubGroup}IndexEntry">
+								<include item="indexEntry_{$g_apiSubGroup}">
 									<parameter>
 										<xsl:value-of select="." />
 									</parameter>
@@ -212,7 +212,7 @@
 					<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 						<meta name="System.Keywords">
 							<includeAttribute name="content"
-																item="{$g_apiSubGroup}IndexEntry">
+																item="indexEntry_{$g_apiSubGroup}">
 								<parameter>
 									<xsl:value-of select="." />
 								</parameter>
@@ -253,9 +253,9 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<meta name="System.Keywords">
 								<includeAttribute name="content"
-																	item="{$v_entryType}IndexEntry">
+																	item="indexEntry_{$v_entryType}">
 									<parameter>
-										<include item="{$g_apiSubGroup}IndexEntry">
+										<include item="indexEntry_{$g_apiSubGroup}">
 											<parameter>
 												<xsl:value-of select="." />
 											</parameter>
@@ -269,9 +269,9 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<meta name="System.Keywords">
 								<includeAttribute name="content"
-																	item="{$g_apiTopicSubGroup}IndexEntry">
+																	item="indexEntry_{$g_apiTopicSubGroup}">
 									<parameter>
-										<include item="{$g_apiSubGroup}IndexEntry">
+										<include item="indexEntry_{$g_apiSubGroup}">
 											<parameter>
 												<xsl:value-of select="." />
 											</parameter>
@@ -295,9 +295,9 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="constructorIndexEntry">
+															item="indexEntry_constructor">
 							<parameter>
-								<include item="{$v_typeSubgroup}IndexEntry">
+								<include item="indexEntry_{$v_typeSubgroup}">
 									<parameter>
 										<xsl:value-of select="." />
 									</parameter>
@@ -314,7 +314,7 @@
 				<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="constructorTypeIndexEntry">
+															item="indexEntry_constructorType">
 							<parameter>
 								<xsl:value-of select="." />
 							</parameter>
@@ -332,7 +332,7 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="conversionOperatorIndexEntry">
+															item="indexEntry_conversionOperator">
 							<parameter>
 								<xsl:copy-of select="."/>
 							</parameter>
@@ -374,7 +374,7 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<meta name="System.Keywords">
 								<includeAttribute name="content"
-																	item="{$v_entryType}ExplicitIndexEntry">
+																	item="indexEntry_{$v_entryType}Explicit">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>
@@ -389,7 +389,7 @@
 						<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 							<meta name="System.Keywords">
 								<includeAttribute name="content"
-																	item="{$v_entryType}ExplicitIndexEntry">
+																	item="indexEntry_{$v_entryType}Explicit">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>
@@ -426,7 +426,7 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<meta name="System.Keywords">
 								<includeAttribute name="content"
-																	item="{$v_entryType}IndexEntry">
+																	item="indexEntry_{$v_entryType}">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>
@@ -441,7 +441,7 @@
 						<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 							<meta name="System.Keywords">
 								<includeAttribute name="content"
-																	item="{$v_entryType}IndexEntry">
+																	item="indexEntry_{$v_entryType}">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>

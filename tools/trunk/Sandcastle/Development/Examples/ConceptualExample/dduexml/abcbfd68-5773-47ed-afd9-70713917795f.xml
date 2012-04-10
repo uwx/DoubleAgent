@@ -11,15 +11,19 @@
       <step>
         <content>
           <para>Create an event handler for the <codeEntityReference autoUpgrade="true">E:System.Web.Security.LoginService.Authenticating</codeEntityReference> event in the Global.asax file.</para>
-          <code language="c#">void LoginService_Authenticating
+					<snippets>
+						<snippet language="c#"
+										 xml:space="preserve">void LoginService_Authenticating
      (object sender, AuthenticatingEventArgs e)
 {
-}</code>
-<code language="vb">Sub LoginService_Authenticating _
+}</snippet>
+						<snippet language="vb"
+										 xml:space="preserve">Sub LoginService_Authenticating _
      (ByVal sender As Object, _
       ByVal e As AuthenticatingEventArgs)
-End Sub</code>
-        </content>
+End Sub</snippet>
+					</snippets>
+				</content>
       </step>
       <step>
         <content>
@@ -38,7 +42,8 @@ End Sub</code>
         <content>
           <para>Call the Login service from the application, passing the extra values to be authenticated.</para>
           <para>The following example shows code that calls the Login service passing a student ID and birthdate as custom authentication credentials.</para>
-					<code language="c#">String customCredential = studentid + "," + birthdate;
+					<code language="c#"
+								xml:space="preserve">String customCredential = studentid + "," + birthdate;
 Login(username, password, customCredential, true);</code>
         </content>
       </step>

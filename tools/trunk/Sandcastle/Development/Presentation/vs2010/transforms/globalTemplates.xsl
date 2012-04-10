@@ -263,7 +263,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span>
-					<include item="nullKeyword"/>
+					<include item="devlang_nullKeyword"/>
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -286,7 +286,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span>
-					<include item="staticKeyword"/>
+					<include item="devlang_staticKeyword"/>
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -309,7 +309,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span>
-					<include item="virtualKeyword"/>
+					<include item="devlang_virtualKeyword"/>
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -332,7 +332,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span>
-					<include item="trueKeyword"/>
+					<include item="devlang_trueKeyword"/>
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -355,7 +355,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span>
-					<include item="falseKeyword"/>
+					<include item="devlang_falseKeyword"/>
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -378,7 +378,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span>
-					<include item="abstractKeyword"/>
+					<include item="devlang_abstractKeyword"/>
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -429,7 +429,7 @@
 				<include item="copyright_info"/>
 			</string>
 			<string id="BrandingHeader">
-				<include item="nsrTitle">
+				<include item="boilerplate_pageTitle">
 					<parameter>
 						<xsl:call-template name="t_topicTitleDecorated"/>
 					</parameter>
@@ -464,15 +464,15 @@
 			<xsl:if test="$languages/language">
 				<list id="BrandingLanguages">
 					<xsl:for-each select="$languages/language">
-						<xsl:variable name="v_devlang">
-							<xsl:call-template name="t_codeLangTitle">
+						<xsl:variable name="v_devlangId">
+							<xsl:call-template name="t_codeLangTitleId">
 								<xsl:with-param name="p_codeLang"
 																select="@name"/>
 							</xsl:call-template>
 						</xsl:variable>
-						<xsl:if test="normalize-space($v_devlang)!=''">
+						<xsl:if test="$v_devlangId!=''">
 							<xsl:element name="value">
-								<xsl:value-of select="$v_devlang"/>
+								<include item="{$v_devlangId}"/>
 							</xsl:element>
 						</xsl:if>
 					</xsl:for-each>
@@ -481,15 +481,15 @@
 			<xsl:if test="/document/syntax/div[@codeLanguage]">
 				<list id="BrandingSyntaxLanguages">
 					<xsl:for-each select="/document/syntax/div[@codeLanguage and not(div[@class='nonXamlAssemblyBoilerplate'])]">
-						<xsl:variable name="v_codeLang">
-							<xsl:call-template name="t_codeLangTitle">
+						<xsl:variable name="v_codeLangId">
+							<xsl:call-template name="t_codeLangTitleId">
 								<xsl:with-param name="p_codeLang"
 																select="@codeLanguage"/>
 							</xsl:call-template>
 						</xsl:variable>
-						<xsl:if test="normalize-space($v_codeLang)!=''">
+						<xsl:if test="$v_codeLangId!=''">
 							<xsl:element name="value">
-								<xsl:value-of select="$v_codeLang"/>
+								<include item="{$v_codeLangId}"/>
 							</xsl:element>
 						</xsl:if>
 					</xsl:for-each>
@@ -524,7 +524,7 @@
 			<!---->
 		</div>
 		<div class="title">
-			<include item="nsrTitle">
+			<include item="boilerplate_pageTitle">
 				<parameter>
 					<xsl:call-template name="t_topicTitleDecorated"/>
 				</parameter>
@@ -569,7 +569,7 @@
 			<div class="seeAlsoStyle">
 				<referenceLink target="{$v_typeTopicId}"
 											 display-target="format">
-					<include item="SeeAlsoTypeLinkText">
+					<include item="boilerplate_seeAlsoTypeLink">
 						<parameter>{0}</parameter>
 						<parameter>
 							<xsl:choose>
@@ -601,7 +601,7 @@
 			<div class="seeAlsoStyle">
 				<referenceLink target="{$v_allMembersId}"
 											 display-target="format">
-					<include item="SeeAlsoMembersLinkText">
+					<include item="boilerplate_seeAlsoMembersLink">
 						<parameter>{0}</parameter>
 					</include>
 				</referenceLink>
@@ -617,7 +617,7 @@
 				<referenceLink target="{$v_overloadId}"
 											 display-target="format"
 											 show-parameters="false">
-					<include item="SeeAlsoOverloadLinkText">
+					<include item="boilerplate_seeAlsoOverloadLink">
 						<parameter>{0}</parameter>
 					</include>
 				</referenceLink>
@@ -632,7 +632,7 @@
 			<div class="seeAlsoStyle">
 				<referenceLink target="{$v_namespaceId}"
 											 display-target="format">
-					<include item="SeeAlsoNamespaceLinkText">
+					<include item="boilerplate_seeAlsoNamespaceLink">
 						<parameter>{0}</parameter>
 					</include>
 				</referenceLink>
@@ -739,77 +739,77 @@
 		<xsl:variable name="v_title">
 			<xsl:choose>
 				<xsl:when test="$p_alertClass='note'">
-					<xsl:text>noteTitle</xsl:text>
+					<xsl:text>alert_title_note</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='tip'">
-					<xsl:text>tipTitle</xsl:text>
+					<xsl:text>alert_title_tip</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='caution' or $p_alertClass='warning'">
-					<xsl:text>cautionTitle</xsl:text>
+					<xsl:text>alert_title_caution</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='security' or $p_alertClass='security note'">
-					<xsl:text>securityTitle</xsl:text>
+					<xsl:text>alert_title_security</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='important'">
-					<xsl:text>importantTitle</xsl:text>
+					<xsl:text>alert_title_important</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='vb' or $p_alertClass='VB' or $p_alertClass='VisualBasic' or $p_alertClass='visual basic note'">
-					<xsl:text>visualBasicTitle</xsl:text>
+					<xsl:text>alert_title_visualBasic</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='cs' or $p_alertClass='CSharp' or $p_alertClass='c#' or $p_alertClass='C#' or $p_alertClass='visual c# note'">
-					<xsl:text>visualC#Title</xsl:text>
+					<xsl:text>alert_title_visualC#</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='cpp' or $p_alertClass='c++' or $p_alertClass='C++' or $p_alertClass='CPP' or $p_alertClass='visual c++ note'">
-					<xsl:text>visualC++Title</xsl:text>
+					<xsl:text>alert_title_visualC++</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='JSharp' or $p_alertClass='j#' or $p_alertClass='J#' or $p_alertClass='visual j# note'">
-					<xsl:text>visualJ#Title</xsl:text>
+					<xsl:text>alert_title_visualJ#</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='implement'">
-					<xsl:text>NotesForImplementers</xsl:text>
+					<xsl:text>text_NotesForImplementers</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='caller'">
-					<xsl:text>NotesForCallers</xsl:text>
+					<xsl:text>text_NotesForCallers</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='inherit'">
-					<xsl:text>NotesForInheritors</xsl:text>
+					<xsl:text>text_NotesForInheritors</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>noteTitle</xsl:text>
+					<xsl:text>alert_title_note</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="v_altTitle">
 			<xsl:choose>
 				<xsl:when test="$p_alertClass='note' or $p_alertClass='implement' or $p_alertClass='caller' or $p_alertClass='inherit'">
-					<xsl:text>noteAltText</xsl:text>
+					<xsl:text>alert_altText_note</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='tip'">
-					<xsl:text>tipAltText</xsl:text>
+					<xsl:text>alert_altText_tip</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='caution' or $p_alertClass='warning'">
-					<xsl:text>cautionAltText</xsl:text>
+					<xsl:text>alert_altText_caution</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='security' or $p_alertClass='security note'">
-					<xsl:text>securityAltText</xsl:text>
+					<xsl:text>alert_altText_security</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='important'">
-					<xsl:text>importantAltText</xsl:text>
+					<xsl:text>alert_altText_important</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='vb' or $p_alertClass='VB' or $p_alertClass='VisualBasic' or $p_alertClass='visual basic note'">
-					<xsl:text>visualBasicAltText</xsl:text>
+					<xsl:text>alert_altText_visualBasic</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='cs' or $p_alertClass='CSharp' or $p_alertClass='c#' or $p_alertClass='C#' or $p_alertClass='visual c# note'">
-					<xsl:text>visualC#AltText</xsl:text>
+					<xsl:text>alert_altText_visualC#</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='cpp' or $p_alertClass='c++' or $p_alertClass='C++' or $p_alertClass='CPP' or $p_alertClass='visual c++ note'">
-					<xsl:text>visualC++AltText</xsl:text>
+					<xsl:text>alert_altText_visualC++</xsl:text>
 				</xsl:when>
 				<xsl:when test="$p_alertClass='JSharp' or $p_alertClass='j#' or $p_alertClass='J#' or $p_alertClass='visual j# note'">
-					<xsl:text>visualJ#AltText</xsl:text>
+					<xsl:text>alert_altText_visualJ#</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>noteAltText</xsl:text>
+					<xsl:text>alert_altText_note</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -885,49 +885,53 @@
 	<xsl:template name="t_dumpContent">
 		<xsl:param name="indent"
 							 select="''"/>
-		<xsl:choose>
-			<xsl:when test="self::text()">
-				<xsl:comment>
-					<xsl:value-of select="$indent"/>
-					<xsl:value-of select="."/>
-				</xsl:comment>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:comment>
-					<xsl:value-of select="$indent"/>
-					<xsl:value-of select="'«'"/>
-					<xsl:value-of select="name()"/>
-					<xsl:for-each select="@*">
-						<xsl:text xml:space="preserve"> </xsl:text>
-						<xsl:value-of select="name()"/>
-						<xsl:value-of select="'='"/>
-						<xsl:value-of select="."/>
-					</xsl:for-each>
-					<xsl:choose>
-						<xsl:when test="./node()">
-							<xsl:value-of select="'»'"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="'/»'"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:comment>
-				<xsl:for-each select="node()">
-					<xsl:call-template name="t_dumpContent">
-						<xsl:with-param name="indent"
-														select="concat($indent,'  ')"/>
-					</xsl:call-template>
-				</xsl:for-each>
-				<xsl:if test="./node()">
+		<xsl:param name="content"
+							 select="."/>
+		<xsl:for-each select="msxsl:node-set($content)">
+			<xsl:choose>
+				<xsl:when test="self::text()">
 					<xsl:comment>
 						<xsl:value-of select="$indent"/>
-						<xsl:value-of select="'«/'"/>
-						<xsl:value-of select="name()"/>
-						<xsl:value-of select="'»'"/>
+						<xsl:value-of select="."/>
 					</xsl:comment>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:comment>
+						<xsl:value-of select="$indent"/>
+						<xsl:value-of select="'«'"/>
+						<xsl:value-of select="name()"/>
+						<xsl:for-each select="@*">
+							<xsl:text xml:space="preserve"> </xsl:text>
+							<xsl:value-of select="name()"/>
+							<xsl:value-of select="'='"/>
+							<xsl:value-of select="."/>
+						</xsl:for-each>
+						<xsl:choose>
+							<xsl:when test="./node()">
+								<xsl:value-of select="'»'"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="'/»'"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:comment>
+					<xsl:for-each select="node()">
+						<xsl:call-template name="t_dumpContent">
+							<xsl:with-param name="indent"
+															select="concat($indent,'  ')"/>
+						</xsl:call-template>
+					</xsl:for-each>
+					<xsl:if test="./node()">
+						<xsl:comment>
+							<xsl:value-of select="$indent"/>
+							<xsl:value-of select="'«/'"/>
+							<xsl:value-of select="name()"/>
+							<xsl:value-of select="'»'"/>
+						</xsl:comment>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
 	</xsl:template>
 
 </xsl:stylesheet>

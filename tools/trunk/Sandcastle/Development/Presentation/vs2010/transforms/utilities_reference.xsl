@@ -136,6 +136,7 @@
 							 select="false()"/>
 		<include>
 			<xsl:attribute name="item">
+				<xsl:text>topicTitle_</xsl:text>
 				<xsl:choose>
 					<!-- api topic titles -->
 					<xsl:when test="$g_topicGroup='api'">
@@ -211,7 +212,6 @@
 						<xsl:value-of select="$g_topicGroup"/>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:text>TopicTitle</xsl:text>
 			</xsl:attribute>
 			<parameter>
 				<xsl:call-template name="t_shortNamePlain">
@@ -358,6 +358,7 @@
 	<xsl:template name="t_topicTitleDecorated">
 		<include>
 			<xsl:attribute name="item">
+				<xsl:text>topicTitle_</xsl:text>
 				<xsl:choose>
 
 					<!-- api topic titles -->
@@ -437,7 +438,6 @@
 					</xsl:when>
 				</xsl:choose>
 
-				<xsl:text>TopicTitle</xsl:text>
 			</xsl:attribute>
 			<parameter>
 				<xsl:call-template name="t_shortNameDecorated"/>
@@ -666,16 +666,16 @@
 
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'namespacesTitle'"/>
+												select="'title_namespaces'"/>
 				<xsl:with-param name="p_content">
 					<table id="memberList"
 								 class="members">
 						<tr>
 							<th class="ps_nameColumn">
-								<include item="namespaceNameHeader"/>
+								<include item="header_namespaceName"/>
 							</th>
 							<th class="ps_descriptionColumn">
-								<include item="namespaceDescriptionHeader"/>
+								<include item="header_namespaceDescription"/>
 							</th>
 						</tr>
 						<xsl:apply-templates select="element"
@@ -736,7 +736,7 @@
 			<xsl:if test="count(element) > 0">
 				<xsl:call-template name="t_putSectionInclude">
 					<xsl:with-param name="p_titleInclude"
-													select="'enumMembersTitle'"/>
+													select="'topicTitle_enumMembers'"/>
 					<xsl:with-param name="p_content">
 						<table id="memberList"
 									 class="members">
@@ -745,13 +745,13 @@
 									&#160;
 								</th>
 								<th class="ps_nameColumn">
-									<include item="memberNameHeader"/>
+									<include item="header_memberName"/>
 								</th>
 								<th class="ps_valueColumn">
-									<include item="memberValueHeader"/>
+									<include item="header_memberValue"/>
 								</th>
 								<th class="ps_descriptionColumn">
-									<include item="memberDescriptionHeader"/>
+									<include item="header_memberDescription"/>
 								</th>
 							</tr>
 							<xsl:apply-templates select="element"
@@ -779,8 +779,7 @@
 
 		<xsl:if test="$filteredOverloadElements[apidata[@subgroup='constructor']][.//memberdata[@visibility='public' or @visibility='family' or @visibility='family or assembly' or @visibility='assembly'] or (.//memberdata[@visibility='private'] and not(.//proceduredata[@virtual = 'true']))]">
 			<xsl:call-template name="t_putMemberListSection">
-				<xsl:with-param name="p_headerGroup"
-												select="'constructor'"/>
+				<xsl:with-param name="p_headerGroup">constructor</xsl:with-param>
 				<xsl:with-param name="p_members"
 												select="$filteredOverloadElements[apidata[@subgroup='constructor']][.//memberdata[@visibility='public' or @visibility='family' or @visibility='family or assembly' or @visibility='assembly'] or (.//memberdata[@visibility='private'] and not(.//proceduredata[@virtual = 'true']))]"/>
 			</xsl:call-template>
@@ -861,7 +860,7 @@
 		<!-- eii table -->
 		<xsl:if test="$filteredOverloadElements[memberdata[@visibility='private'] and proceduredata[@virtual = 'true']]">
 			<xsl:call-template name="t_putMemberListSection">
-				<xsl:with-param name="p_headerGroup">ExplicitInterfaceImplementation</xsl:with-param>
+				<xsl:with-param name="p_headerGroup">explicitInterfaceImplementation</xsl:with-param>
 				<xsl:with-param name="p_members"
 												select="$filteredOverloadElements[.//memberdata[@visibility='private'] and .//proceduredata[@virtual = 'true']]"/>
 			</xsl:call-template>
@@ -886,10 +885,10 @@
 								 class="members">
 						<tr>
 							<th class="ps_nameColumn">
-								<include item="memberNameHeader"/>
+								<include item="header_memberName"/>
 							</th>
 							<th class="ps_descriptionColumn">
-								<include item="memberDescriptionHeader"/>
+								<include item="header_memberDescription"/>
 							</th>
 						</tr>
 						<xsl:apply-templates select="element"
@@ -939,7 +938,7 @@
 		<xsl:param name="p_listSubgroup"/>
 
 		<xsl:variable name="v_header"
-									select="concat($p_listSubgroup, 'TypesFilterLabel')"/>
+									select="concat('tableTitle_', $p_listSubgroup)"/>
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
 											select="$v_header"/>
@@ -962,10 +961,10 @@
 					&#160;
 				</th>
 				<th class="ps_nameColumn">
-					<include item="{$p_listSubgroup}NameHeader"/>
+					<include item="header_{$p_listSubgroup}Name"/>
 				</th>
 				<th class="ps_descriptionColumn">
-					<include item="typeDescriptionHeader"/>
+					<include item="header_typeDescription"/>
 				</th>
 			</tr>
 			<xsl:apply-templates select="element[apidata/@subgroup=$p_listSubgroup]"
@@ -990,8 +989,7 @@
 					<referenceLink target="{$g_typeTopicId}"/>
 				</parameter>
 				<parameter>
-					<xsl:value-of select="$g_apiTopicSubGroup"/>
-					<xsl:text>Subgroup</xsl:text>
+					<xsl:value-of select="concat ('text_',$g_apiTopicSubGroup,'Upper')"/>
 				</parameter>
 			</include>
 		</xsl:if>
@@ -1006,7 +1004,7 @@
 							 select="true()"/>
 
 		<xsl:variable name="v_header">
-			<xsl:value-of select="concat($p_headerGroup, 'Table')"/>
+			<xsl:value-of select="concat('tableTitle_', $p_headerGroup)"/>
 		</xsl:variable>
 
 		<xsl:call-template name="t_putSectionInclude">
@@ -1022,10 +1020,10 @@
 							&#160;
 						</th>
 						<th class="ps_nameColumn">
-							<include item="typeNameHeader"/>
+							<include item="header_typeName"/>
 						</th>
 						<th class="ps_descriptionColumn">
-							<include item="typeDescriptionHeader"/>
+							<include item="header_typeDescription"/>
 						</th>
 					</tr>
 
@@ -1112,7 +1110,7 @@
 				<xsl:call-template name="t_getInternalOnlyDescription"/>
 				<xsl:if test="attributes/attribute/type[@api='T:System.ObsoleteAttribute']">
 					<xsl:text> </xsl:text>
-					<include item="obsoleteRed"/>
+					<include item="boilerplate_obsoleteRed"/>
 				</xsl:if>
 				<xsl:call-template name="t_getElementDescription"/>
 			</td>
@@ -1142,9 +1140,9 @@
 							<parameter>CFW.gif</parameter>
 						</includeAttribute>
 						<includeAttribute name="alt"
-															item="CompactFrameworkAltText"/>
+															item="altText_CompactFramework"/>
 						<includeAttribute name="title"
-															item="CompactFrameworkAltText"/>
+															item="altText_CompactFramework"/>
 					</img>
 				</xsl:if>
 
@@ -1155,9 +1153,9 @@
 							<parameter>xna.gif</parameter>
 						</includeAttribute>
 						<includeAttribute name="alt"
-															item="XNAFrameworkAltText"/>
+															item="altText_XNAFramework"/>
 						<includeAttribute name="title"
-															item="XNAFrameworkAltText"/>
+															item="altText_XNAFramework"/>
 					</img>
 				</xsl:if>
 				<xsl:if test="normalize-space($v_supportedOnSilverlightMobile)!=''">
@@ -1167,9 +1165,9 @@
 							<parameter>slMobile.gif</parameter>
 						</includeAttribute>
 						<includeAttribute name="alt"
-															item="SilverlightMobileAltText"/>
+															item="altText_SilverlightMobile"/>
 						<includeAttribute name="title"
-															item="SilverlightMobileAltText"/>
+															item="altText_SilverlightMobile"/>
 					</img>
 				</xsl:if>
 			</td>
@@ -1186,7 +1184,7 @@
 			<td>
 				<xsl:if test="attributes/attribute/type[@api='T:System.ObsoleteAttribute']">
 					<xsl:text> </xsl:text>
-					<include item="obsoleteRed"/>
+					<include item="boilerplate_obsoleteRed"/>
 				</xsl:if>
 				<xsl:call-template name="t_getEnumMemberDescription"/>
 			</td>
@@ -1213,7 +1211,7 @@
 				<xsl:call-template name="t_getInternalOnlyDescription"/>
 				<xsl:if test="attributes/attribute/type[@api='T:System.ObsoleteAttribute']">
 					<xsl:text> </xsl:text>
-					<include item="obsoleteRed"/>
+					<include item="boilerplate_obsoleteRed"/>
 				</xsl:if>
 				<xsl:call-template name="t_getElementDescription"/>
 			</td>
@@ -1374,7 +1372,7 @@
 					<xsl:call-template name="t_getInternalOnlyDescription"/>
 					<xsl:if test="attributes/attribute/type[@api='T:System.ObsoleteAttribute']">
 						<xsl:text> </xsl:text>
-						<include item="obsoleteRed"/>
+						<include item="boilerplate_obsoleteRed"/>
 					</xsl:if>
 					<xsl:if test="topicdata[@subgroup='overload'] or @overload='true'">
 						<include item="Overloaded"/>
@@ -1435,7 +1433,7 @@
 									<xsl:choose>
 										<xsl:when test="overrides">
 											<span data="{$secondaryFramework}">
-												<include item="secondaryFrameworkOverride">
+												<include item="boilerplate_secondaryFrameworkOverride">
 													<parameter>
 														<xsl:value-of select="$secondaryFramework"/>
 													</parameter>
@@ -1450,7 +1448,7 @@
 										</xsl:when>
 										<xsl:when test="normalize-space($inheritedSecondaryMember)!=''">
 											<span data="{$secondaryFramework}">
-												<include item="secondaryFrameworkInherited">
+												<include item="boilerplate_secondaryFrameworkInherited">
 													<parameter>
 														<xsl:value-of select="$secondaryFramework"/>
 													</parameter>
@@ -1472,7 +1470,7 @@
 										</xsl:when>
 										<xsl:otherwise>
 											<span data="{$secondaryFramework}">
-												<include item="secondaryFrameworkMember">
+												<include item="boilerplate_secondaryFrameworkMember">
 													<parameter>
 														<xsl:value-of select="$secondaryFramework"/>
 													</parameter>
@@ -1525,9 +1523,9 @@
 				</parameter>
 			</includeAttribute>
 			<includeAttribute name="alt"
-												item="{concat($p_typeVisibility,$typeSubgroup,'AltText')}"/>
+												item="{concat('altText_',$p_typeVisibility,$typeSubgroup)}"/>
 			<includeAttribute name="title"
-												item="{concat($p_typeVisibility,$typeSubgroup,'AltText')}"/>
+												item="{concat('altText_',$p_typeVisibility,$typeSubgroup)}"/>
 		</img>
 
 	</xsl:template>
@@ -1571,9 +1569,9 @@
 					<parameter>pubinterface.gif</parameter>
 				</includeAttribute>
 				<includeAttribute name="alt"
-													item="ExplicitInterfaceAltText"/>
+													item="altText_ExplicitInterface"/>
 				<includeAttribute name="title"
-													item="ExplicitInterfaceAltText"/>
+													item="altText_ExplicitInterface"/>
 			</img>
 		</xsl:if>
 
@@ -1587,15 +1585,15 @@
 			<xsl:choose>
 				<xsl:when test="apidata/@subsubgroup">
 					<includeAttribute name="alt"
-														item="{concat($p_memberVisibility,apidata/@subsubgroup,'AltText')}"/>
+														item="{concat('altText_',$p_memberVisibility,apidata/@subsubgroup)}"/>
 					<includeAttribute name="title"
-														item="{concat($p_memberVisibility,apidata/@subsubgroup,'AltText')}"/>
+														item="{concat('altText_',$p_memberVisibility,apidata/@subsubgroup)}"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<includeAttribute name="alt"
-														item="{concat($p_memberVisibility,$v_memberSubgroup,'AltText')}"/>
+														item="{concat('altText_',$p_memberVisibility,$v_memberSubgroup)}"/>
 					<includeAttribute name="title"
-														item="{concat($p_memberVisibility,$v_memberSubgroup,'AltText')}"/>
+														item="{concat('altText_',$p_memberVisibility,$v_memberSubgroup)}"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</img>
@@ -1607,9 +1605,9 @@
 					<parameter>static.gif</parameter>
 				</includeAttribute>
 				<includeAttribute name="alt"
-													item="staticAltText"/>
+													item="altText_static"/>
 				<includeAttribute name="title"
-													item="staticAltText"/>
+													item="altText_static"/>
 			</img>
 		</xsl:if>
 
@@ -1620,9 +1618,9 @@
 					<parameter>CFW.gif</parameter>
 				</includeAttribute>
 				<includeAttribute name="alt"
-													item="CompactFrameworkAltText"/>
+													item="altText_CompactFramework"/>
 				<includeAttribute name="title"
-													item="CompactFrameworkAltText"/>
+													item="altText_CompactFramework"/>
 			</img>
 		</xsl:if>
 
@@ -1633,9 +1631,9 @@
 					<parameter>xna.gif</parameter>
 				</includeAttribute>
 				<includeAttribute name="alt"
-													item="XNAFrameworkAltText"/>
+													item="altText_XNAFramework"/>
 				<includeAttribute name="title"
-													item="XNAFrameworkAltText"/>
+													item="altText_XNAFramework"/>
 			</img>
 		</xsl:if>
 
@@ -1646,9 +1644,9 @@
 					<parameter>slMobile.gif</parameter>
 				</includeAttribute>
 				<includeAttribute name="alt"
-													item="SilverlightMobileAltText"/>
+													item="altText_SilverlightMobile"/>
 				<includeAttribute name="title"
-													item="SilverlightMobileAltText"/>
+													item="altText_SilverlightMobile"/>
 			</img>
 		</xsl:if>
 
@@ -1686,7 +1684,7 @@
 
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'familyTitle'"/>
+											select="'title_family'"/>
 			<xsl:with-param name="p_content">
 				<xsl:variable name="ancestorCount"
 											select="count(ancestors/*)"/>
@@ -1764,7 +1762,7 @@
 		<xsl:if test="member">
 			<xsl:call-template name="t_putSubSection">
 				<xsl:with-param name="p_title">
-					<include item="implementsTitle"/>
+					<include item="title_implements"/>
 				</xsl:with-param>
 				<xsl:with-param name="p_content">
 					<xsl:for-each select="member">
@@ -1988,7 +1986,7 @@
 
 	<xsl:template name="t_putRequirementsInfo">
 		<p/>
-		<include item="requirementsNamespaceLayout"/>
+		<include item="boilerplate_requirementsNamespace"/>
 		<xsl:text>&#xa0;</xsl:text>
 		<referenceLink target="{/document/reference/containers/namespace/@api}"/>
 		<br/>
@@ -2003,7 +2001,7 @@
 	<xsl:template name="t_putAssembliesInfo">
 		<xsl:choose>
 			<xsl:when test="count(/document/reference/containers/library)&gt;1">
-				<include item="requirementsAssembliesLabel"/>
+				<include item="boilerplate_requirementsAssemblies"/>
 				<xsl:for-each select="/document/reference/containers/library">
 					<xsl:text>&#xa0;&#xa0;</xsl:text>
 					<xsl:call-template name="t_putAssemblyNameAndModule">
@@ -2014,7 +2012,7 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<include item="requirementsAssemblyLabel"/>
+				<include item="boilerplate_requirementsAssemblyLabel"/>
 				<xsl:text>&#xa0;</xsl:text>
 				<xsl:call-template name="t_putAssemblyNameAndModule"/>
 			</xsl:otherwise>
@@ -2054,12 +2052,12 @@
 								name="t_platforms">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'platformsTitle'"/>
+											select="'title_platforms'"/>
 			<xsl:with-param name="p_content">
 				<xsl:choose>
 					<xsl:when test="/document/reference/versions/versions[@name='silverlight']//version">
 						<p>
-							<include item="silverlightplatforms"/>
+							<include item="boilerplate_silverlightPlatforms"/>
 						</p>
 					</xsl:when>
 					<xsl:otherwise>
@@ -2073,7 +2071,7 @@
 						</p>
 						<xsl:if test="/document/reference/versions/versions[@name='netfw' or @name='netcfw']//version">
 							<p>
-								<include item="SystemRequirementsLinkBoilerplate"/>
+								<include item="boilerplate_systemRequirementsLink"/>
 							</p>
 						</xsl:if>
 					</xsl:otherwise>
@@ -2091,7 +2089,7 @@
 		<xsl:if test="$omitVersionInformation != 'true'">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'versionsTitle'"/>
+												select="'title_versions'"/>
 				<xsl:with-param name="p_content">
 					<xsl:call-template name="t_processVersions"/>
 				</xsl:with-param>
@@ -2180,7 +2178,7 @@
 		<div id="parameters">
 			<xsl:call-template name="t_putSubSection">
 				<xsl:with-param name="p_title">
-					<include item="parametersTitle"/>
+					<include item="title_parameters"/>
 				</xsl:with-param>
 				<xsl:with-param name="p_content">
 					<xsl:for-each select="parameter">

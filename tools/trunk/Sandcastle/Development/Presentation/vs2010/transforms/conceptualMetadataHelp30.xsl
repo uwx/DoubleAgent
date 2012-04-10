@@ -17,7 +17,7 @@
 		<!-- System.Language -->
 		<meta name="Language">
 			<includeAttribute name="content"
-												item="locale" />
+												item="meta_locale" />
 		</meta>
 
 		<!-- System.Title -->
@@ -135,7 +135,7 @@
 				<xsl:when test="not(contains(text(),'[')) and ($v_docset='avalon' or $v_docset='wpf' or $v_docset='wcf' or $v_docset='windowsforms')">
 					<meta name="System.Keywords">
 						<includeAttribute name="content"
-															item="kIndexTermWithTechQualifier">
+															item="meta_kIndexTermWithTechQualifier">
 							<parameter>
 								<xsl:value-of select="text()"/>
 							</parameter>

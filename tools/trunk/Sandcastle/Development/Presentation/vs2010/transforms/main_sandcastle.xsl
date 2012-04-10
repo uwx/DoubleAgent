@@ -153,7 +153,7 @@
 	<xsl:template match="preliminary"
 								name="t_preliminary">
 		<div>
-			<include item="preliminaryText"/>
+			<include item="preliminary"/>
 		</div>
 	</xsl:template>
 
@@ -186,7 +186,7 @@
 								name="t_value">
 		<xsl:call-template name="t_putSubSection">
 			<xsl:with-param name="p_title">
-				<include item="fieldValueTitle"/>
+				<include item="title_fieldValue"/>
 			</xsl:with-param>
 			<xsl:with-param name="p_content">
 				<xsl:apply-templates/>
@@ -198,7 +198,7 @@
 								name="t_returns">
 		<xsl:call-template name="t_putSubSection">
 			<xsl:with-param name="p_title">
-				<include item="methodValueTitle"/>
+				<include item="title_methodValue"/>
 			</xsl:with-param>
 			<xsl:with-param name="p_content">
 				<xsl:apply-templates/>
@@ -210,7 +210,7 @@
 								name="t_remarks">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'remarksTitle'"/>
+											select="'title_remarks'"/>
 			<xsl:with-param name="p_content">
 				<xsl:apply-templates/>
 			</xsl:with-param>
@@ -221,7 +221,7 @@
 								name="t_example">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'examplesTitle'"/>
+											select="'title_examples'"/>
 			<xsl:with-param name="p_content">
 				<xsl:apply-templates/>
 			</xsl:with-param>
@@ -283,7 +283,7 @@
 		<xsl:if test="count(*) > 0">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'syntaxTitle'"/>
+												select="'title_syntax'"/>
 				<xsl:with-param name="p_content">
 					<div id="snippetGroup_Syntax"
 							 class="code">
@@ -306,10 +306,10 @@
 					<xsl:if test="/document/reference/attributes/attribute/type[@api='T:System.Runtime.CompilerServices.ExtensionAttribute'] and boolean($g_apiSubGroup='method')">
 						<xsl:call-template name="t_putSubSection">
 							<xsl:with-param name="p_title">
-								<include item="extensionUsageTitle"/>
+								<include item="title_extensionUsage"/>
 							</xsl:with-param>
 							<xsl:with-param name="p_content">
-								<include item="extensionUsageText">
+								<include item="text_extensionUsage">
 									<parameter>
 										<xsl:apply-templates select="/document/reference/parameters/parameter[1]/type"
 																				 mode="link"/>
@@ -351,7 +351,7 @@
 								name="t_templates">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'templatesTitle'"/>
+											select="'title_templates'"/>
 			<xsl:with-param name="p_content">
 				<dl>
 					<xsl:for-each select="template">
@@ -377,16 +377,16 @@
 		<xsl:if test="count(/document/comments/exception) &gt; 0">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'exceptionsTitle'"/>
+												select="'title_exceptions'"/>
 				<xsl:with-param name="p_content">
 					<div class="tableSection">
 						<table>
 							<tr>
 								<th class="ps_exceptionNameColumn">
-									<include item="exceptionNameHeader"/>
+									<include item="header_exceptionName"/>
 								</th>
 								<th class="ps_exceptionConditionColumn">
-									<include item="exceptionConditionHeader"/>
+									<include item="header_exceptionCondition"/>
 								</th>
 							</tr>
 							<xsl:for-each select="/document/comments/exception">
@@ -411,7 +411,7 @@
 								name="t_threadsafety">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'threadSafetyTitle'"/>
+											select="'title_threadSafety'"/>
 			<xsl:with-param name="p_content">
 				<xsl:choose>
 					<xsl:when test="normalize-space(.)">
@@ -419,16 +419,16 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:if test="@static='true'">
-							<include item="staticThreadSafe"/>
+							<include item="text_staticThreadSafe"/>
 						</xsl:if>
 						<xsl:if test="@static='false'">
-							<include item="staticNotThreadSafe"/>
+							<include item="text_staticNotThreadSafe"/>
 						</xsl:if>
 						<xsl:if test="@instance='true'">
-							<include item="instanceThreadSafe"/>
+							<include item="text_instanceThreadSafe"/>
 						</xsl:if>
 						<xsl:if test="@instance='false'">
-							<include item="instanceNotThreadSafe"/>
+							<include item="text_instanceNotThreadSafe"/>
 						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -440,16 +440,16 @@
 		<xsl:if test="count(/document/comments/permission) &gt; 0">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'permissionsTitle'"/>
+												select="'title_permissions'"/>
 				<xsl:with-param name="p_content">
 					<div class="tableSection">
 						<table>
 							<tr>
 								<th class="ps_permissionNameColumn">
-									<include item="permissionNameHeader"/>
+									<include item="header_permissionName"/>
 								</th>
 								<th class="ps_permissionDescriptionColumn">
-									<include item="permissionDescriptionHeader"/>
+									<include item="header_permissionDescription"/>
 								</th>
 							</tr>
 							<xsl:for-each select="/document/comments/permission">
@@ -490,7 +490,7 @@
 		<xsl:if test="$v_requires or $v_ensures or $v_ensuresOnThrow or $v_invariants or $v_setter or $v_getter or $v_pure">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'contractsTitle'"/>
+												select="'title_contracts'"/>
 				<xsl:with-param name="p_content">
 					<!--Purity-->
 					<xsl:if test="$v_pure">
@@ -507,13 +507,13 @@
 														select="$v_getter/ensuresOnThrow"/>
 							<xsl:call-template name="t_putSubSection">
 								<xsl:with-param name="p_title">
-									<include item="getterTitle"/>
+									<include item="title_getter"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_content">
 									<xsl:if test="$v_getterRequires">
 										<xsl:call-template name="t_contractsTable">
 											<xsl:with-param name="p_title">
-												<include item="requiresNameHeader"/>
+												<include item="header_requiresName"/>
 											</xsl:with-param>
 											<xsl:with-param name="p_contracts"
 																			select="$v_getterRequires"/>
@@ -522,7 +522,7 @@
 									<xsl:if test="$v_getterEnsures">
 										<xsl:call-template name="t_contractsTable">
 											<xsl:with-param name="p_title">
-												<include item="ensuresNameHeader"/>
+												<include item="header_ensuresName"/>
 											</xsl:with-param>
 											<xsl:with-param name="p_contracts"
 																			select="$v_getterEnsures"/>
@@ -531,7 +531,7 @@
 									<xsl:if test="$v_getterEnsuresOnThrow">
 										<xsl:call-template name="t_contractsTable">
 											<xsl:with-param name="p_title">
-												<include item="ensuresOnThrowNameHeader"/>
+												<include item="header_ensuresOnThrowName"/>
 											</xsl:with-param>
 											<xsl:with-param name="p_contracts"
 																			select="$v_getterEnsuresOnThrow"/>
@@ -549,13 +549,13 @@
 														select="$v_setter/ensuresOnThrow"/>
 							<xsl:call-template name="t_putSubSection">
 								<xsl:with-param name="p_title">
-									<include item="setterTitle"/>
+									<include item="title_setter"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_content">
 									<xsl:if test="$v_setterRequires">
 										<xsl:call-template name="t_contractsTable">
 											<xsl:with-param name="p_title">
-												<include item="requiresNameHeader"/>
+												<include item="header_requiresName"/>
 											</xsl:with-param>
 											<xsl:with-param name="p_contracts"
 																			select="$v_setterRequires"/>
@@ -564,7 +564,7 @@
 									<xsl:if test="$v_setterEnsures">
 										<xsl:call-template name="t_contractsTable">
 											<xsl:with-param name="p_title">
-												<include item="ensuresNameHeader"/>
+												<include item="header_ensuresName"/>
 											</xsl:with-param>
 											<xsl:with-param name="p_contracts"
 																			select="$v_setterEnsures"/>
@@ -573,7 +573,7 @@
 									<xsl:if test="$v_setterEnsuresOnThrow">
 										<xsl:call-template name="t_contractsTable">
 											<xsl:with-param name="p_title">
-												<include item="ensuresOnThrowNameHeader"/>
+												<include item="header_ensuresOnThrowName"/>
 											</xsl:with-param>
 											<xsl:with-param name="p_contracts"
 																			select="$v_setterEnsuresOnThrow"/>
@@ -585,7 +585,7 @@
 						<xsl:if test="$v_requires">
 							<xsl:call-template name="t_contractsTable">
 								<xsl:with-param name="p_title">
-									<include item="requiresNameHeader"/>
+									<include item="header_requiresName"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_contracts"
 																select="$v_requires"/>
@@ -594,7 +594,7 @@
 						<xsl:if test="$v_ensures">
 							<xsl:call-template name="t_contractsTable">
 								<xsl:with-param name="p_title">
-									<include item="ensuresNameHeader"/>
+									<include item="header_ensuresName"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_contracts"
 																select="$v_ensures"/>
@@ -603,7 +603,7 @@
 						<xsl:if test="$v_ensuresOnThrow">
 							<xsl:call-template name="t_contractsTable">
 								<xsl:with-param name="p_title">
-									<include item="ensuresOnThrowNameHeader"/>
+									<include item="header_ensuresOnThrowName"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_contracts"
 																select="$v_ensuresOnThrow"/>
@@ -612,7 +612,7 @@
 						<xsl:if test="$v_invariants">
 							<xsl:call-template name="t_contractsTable">
 								<xsl:with-param name="p_title">
-									<include item="invariantsNameHeader"/>
+									<include item="header_invariantsName"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_contracts"
 																select="$v_invariants"/>
@@ -718,9 +718,12 @@
 
 	<xsl:template name="t_putSeeAlsoSection">
 		<xsl:if test="$g_hasSeeAlsoSection">
+			<xsl:element name="a">
+				<xsl:attribute name="name">seeAlsoSection</xsl:attribute>
+			</xsl:element>
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'relatedTopicsTitle'"/>
+												select="'title_relatedTopics'"/>
 				<xsl:with-param name="p_content">
 					<xsl:call-template name="t_autogenSeeAlsoLinks"/>
 					<xsl:for-each select="/document/comments//seealso | /document/reference/elements/element/overloads//seealso">
@@ -1010,14 +1013,14 @@
 			<xsl:when test="normalize-space(translate($v_ref,'0123456789abcdefABCDEF-',''))">
 				<xsl:choose>
 					<xsl:when test="normalize-space(.)">
-						<referenceLink target="{@cref}"
-													 class="mtps-internal-link">
+						<referenceLink class="mtps-internal-link"
+													 target="{@cref}">
 							<xsl:apply-templates/>
 						</referenceLink>
 					</xsl:when>
 					<xsl:otherwise>
-						<referenceLink target="{@cref}"
-													 class="mtps-internal-link"/>
+						<referenceLink class="mtps-internal-link"
+													 target="{@cref}"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>

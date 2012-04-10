@@ -68,7 +68,6 @@
     <MakeDir Directories="$(TopicStyleDir)\website\styles" Condition="!Exists('$(TopicStyleDir)\website\styles') and Exists('$(DXROOT)\Presentation\$(TopicStyle)\scripts')" />
   </Target>
 
-
   <!--Call MRefBuilder-->
   <Target Name="Reflection" DependsOnTargets="CreateDirectories;CopySrcFiles">
     <Exec Command='"$(ProductionTools)\MRefBuilder" &quot;$(DllDir)\*.dll&quot; &quot;$(DllDir)\*.exe&quot; /out:&quot;$(TopicStyleDir)\reflection.org&quot; /dep:&quot;$(DependencyDir)\*.dll&quot;,&quot;$(DependencyDir)\*.exe&quot;' Condition="$(Internal)=='false'" />

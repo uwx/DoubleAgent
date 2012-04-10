@@ -32,7 +32,7 @@
 				<xsl:call-template name="t_mshelpDevlangAttributes" />
 				<MSHelp:Attr Name="Locale">
 					<includeAttribute name="Value"
-														item="locale" />
+														item="meta_locale" />
 				</MSHelp:Attr>
 				<!-- attribute to allow F1 help integration -->
 				<MSHelp:Attr Name="TopicType"
@@ -79,7 +79,7 @@
 		<xsl:if test="count(/document/reference/versions/versions[@name='netfw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='netfw']//version) &gt; 0 ">
 			<MSHelp:Attr Name="Technology">
 				<includeAttribute name="Value"
-													item="desktopTechnologyAttribute" />
+													item="meta_help20_desktopTechnologyAttribute" />
 			</MSHelp:Attr>
 		</xsl:if>
 		<!-- insert CF values for Technology and DocSet attributes for: 
@@ -90,11 +90,11 @@
 		<xsl:if test="count(/document/reference/versions/versions[@name='netcfw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='netcfw']//version) &gt; 0  or count(/document/reference[topicdata[@subgroup='overload']]/elements//element/versions/versions[@name='netcfw']//version) &gt; 0 or normalize-space($v_supportedOnCf)!=''">
 			<MSHelp:Attr Name="Technology">
 				<includeAttribute name="Value"
-													item="netcfTechnologyAttribute" />
+													item="meta_help20_netcfTechnologyAttribute" />
 			</MSHelp:Attr>
 			<MSHelp:Attr Name="DocSet">
 				<includeAttribute name="Value"
-													item="netcfDocSetAttribute" />
+													item="meta_help20_netcfDocSetAttribute" />
 			</MSHelp:Attr>
 		</xsl:if>
 		<!-- insert XNA values for Technology and DocSet attributes for: 
@@ -105,11 +105,11 @@
 		<xsl:if test="count(/document/reference/versions/versions[@name='xnafw']//version) &gt; 0 or count(/document/reference/topicdata/versions/versions[@name='xnafw']//version) &gt; 0  or count(/document/reference[topicdata[@subgroup='overload']]/elements//element/versions/versions[@name='xnafw']//version) &gt; 0 or normalize-space($v_supportedOnXNA)!=''">
 			<MSHelp:Attr Name="Technology">
 				<includeAttribute name="Value"
-													item="xnaTechnologyAttribute" />
+													item="meta_help20_xnaTechnologyAttribute" />
 			</MSHelp:Attr>
 			<MSHelp:Attr Name="DocSet">
 				<includeAttribute name="Value"
-													item="xnaDocSetAttribute" />
+													item="meta_help20_xnaDocSetAttribute" />
 			</MSHelp:Attr>
 		</xsl:if>
 	</xsl:template>
@@ -199,7 +199,7 @@
 		<!-- Toc List title-->
 		<MSHelp:TOCTitle>
 			<includeAttribute name="Title"
-												item="tocTitle">
+												item="meta_mshelp_tocTitle">
 				<parameter>
 					<xsl:call-template name="t_topicTitlePlain" />
 				</parameter>
@@ -209,7 +209,7 @@
 		<!-- The Results List title -->
 		<MSHelp:RLTitle>
 			<includeAttribute name="Title"
-												item="rlTitle">
+												item="meta_mshelp_rlTitle">
 				<parameter>
 					<xsl:call-template name="t_topicTitlePlain">
 						<xsl:with-param name="p_qualifyMembers"
@@ -718,7 +718,7 @@
 				</xsl:variable>
 				<MSHelp:Keyword Index="K">
 					<includeAttribute name="Term"
-														item="namespaceIndexEntry">
+														item="indexEntry_namespace">
 						<parameter>
 							<xsl:value-of select="msxsl:node-set($v_names)/name" />
 						</parameter>
@@ -737,7 +737,7 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<MSHelp:Keyword Index="K">
 						<includeAttribute name="Term"
-															item="{$g_apiSubGroup}IndexEntry">
+															item="indexEntry_{$g_apiSubGroup}">
 							<parameter>
 								<xsl:copy-of select="."/>
 							</parameter>
@@ -746,7 +746,7 @@
 					<xsl:if test="boolean($v_namespace != '')">
 						<MSHelp:Keyword Index="K">
 							<includeAttribute name="Term"
-																item="{$g_apiSubGroup}IndexEntry">
+																item="indexEntry_{$g_apiSubGroup}">
 								<parameter>
 									<xsl:value-of select="$v_namespace"/>
 									<xsl:text>.</xsl:text>
@@ -759,9 +759,9 @@
 					<xsl:if test="$g_apiSubGroup='class' or $g_apiSubGroup='structure' or $g_apiSubGroup='interface'">
 						<MSHelp:Keyword Index="K">
 							<includeAttribute name="Term"
-																item="aboutTypeIndexEntry">
+																item="indexEntry_aboutType">
 								<parameter>
-									<include item="{$g_apiSubGroup}IndexEntry">
+									<include item="indexEntry_{$g_apiSubGroup}">
 										<parameter>
 											<xsl:copy-of select="."/>
 										</parameter>
@@ -776,7 +776,7 @@
 					<xsl:for-each select="/document/reference/elements/element">
 						<MSHelp:Keyword Index="K">
 							<includeAttribute name="Term"
-																item="{$g_apiSubGroup}MemberIndexEntry">
+																item="indexEntry_{$g_apiSubGroup}Member">
 								<parameter>
 									<xsl:value-of select="apidata/@name" />
 								</parameter>
@@ -797,7 +797,7 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<MSHelp:Keyword Index="K">
 						<includeAttribute name="Term"
-															item="{$g_apiSubGroup}IndexEntry">
+															item="indexEntry_{$g_apiSubGroup}">
 							<parameter>
 								<xsl:value-of select="." />
 							</parameter>
@@ -805,9 +805,9 @@
 					</MSHelp:Keyword>
 					<MSHelp:Keyword Index="K">
 						<includeAttribute name="Term"
-															item="membersIndexEntry">
+															item="indexEntry_members">
 							<parameter>
-								<include item="{$g_apiSubGroup}IndexEntry">
+								<include item="indexEntry_{$g_apiSubGroup}">
 									<parameter>
 										<xsl:value-of select="." />
 									</parameter>
@@ -825,7 +825,7 @@
 					<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 						<MSHelp:Keyword Index="K">
 							<includeAttribute name="Term"
-																item="{$g_apiSubGroup}IndexEntry">
+																item="indexEntry_{$g_apiSubGroup}">
 								<parameter>
 									<xsl:value-of select="." />
 								</parameter>
@@ -866,9 +866,9 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="{$v_entryType}IndexEntry">
+																	item="indexEntry_{$v_entryType}">
 									<parameter>
-										<include item="{$g_apiSubGroup}IndexEntry">
+										<include item="indexEntry_{$g_apiSubGroup}">
 											<parameter>
 												<xsl:value-of select="." />
 											</parameter>
@@ -882,9 +882,9 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="{$g_apiTopicSubGroup}IndexEntry">
+																	item="indexEntry_{$g_apiTopicSubGroup}">
 									<parameter>
-										<include item="{$g_apiSubGroup}IndexEntry">
+										<include item="indexEntry_{$g_apiSubGroup}">
 											<parameter>
 												<xsl:value-of select="." />
 											</parameter>
@@ -908,9 +908,9 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<MSHelp:Keyword Index="K">
 						<includeAttribute name="Term"
-															item="constructorIndexEntry">
+															item="indexEntry_constructor">
 							<parameter>
-								<include item="{$v_typeSubgroup}IndexEntry">
+								<include item="indexEntry_{$v_typeSubgroup}">
 									<parameter>
 										<xsl:value-of select="." />
 									</parameter>
@@ -927,7 +927,7 @@
 				<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 					<MSHelp:Keyword Index="K">
 						<includeAttribute name="Term"
-															item="constructorTypeIndexEntry">
+															item="indexEntry_constructorType">
 							<parameter>
 								<xsl:value-of select="." />
 							</parameter>
@@ -945,7 +945,7 @@
 				<xsl:for-each select="msxsl:node-set($v_names)/name">
 					<MSHelp:Keyword Index="K">
 						<includeAttribute name="Term"
-															item="conversionOperatorIndexEntry">
+															item="indexEntry_conversionOperator">
 							<parameter>
 								<xsl:copy-of select="."/>
 							</parameter>
@@ -987,7 +987,7 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="{$v_entryType}ExplicitIndexEntry">
+																	item="indexEntry_{$v_entryType}Explicit">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>
@@ -1002,7 +1002,7 @@
 						<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="{$v_entryType}ExplicitIndexEntry">
+																	item="indexEntry_{$v_entryType}Explicit">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>
@@ -1039,7 +1039,7 @@
 						<xsl:for-each select="msxsl:node-set($v_names)/name">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="{$v_entryType}IndexEntry">
+																	item="indexEntry_{$v_entryType}">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>
@@ -1054,7 +1054,7 @@
 						<xsl:for-each select="msxsl:node-set($v_qnames)/name">
 							<MSHelp:Keyword Index="K">
 								<includeAttribute name="Term"
-																	item="{$v_entryType}IndexEntry">
+																	item="indexEntry_{$v_entryType}">
 									<parameter>
 										<xsl:copy-of select="."/>
 									</parameter>

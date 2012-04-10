@@ -95,16 +95,16 @@
 		<xsl:if test="$g_hasSecurityCriticalSection">
 			<xsl:choose>
 				<xsl:when test="boolean($g_apiGroup='type')">
-					<include item="typeSecurityCriticalBoilerplate" />
+					<include item="boilerplate_typeSecurityCritical" />
 				</xsl:when>
 				<xsl:when test="boolean($g_apiGroup='member')">
 					<xsl:choose>
 						<xsl:when test="(/document/reference/containers/type/attributes/attribute/type[@api='T:System.Security.SecurityCriticalAttribute'] and
  			                      not(/document/reference/containers/type/attributes/attribute/type[@api='T:System.Security.SecurityTreatAsSafeAttribute']))">
-							<include item="typeSecurityCriticalBoilerplate" />
+							<include item="boilerplate_typeSecurityCritical" />
 						</xsl:when>
 						<xsl:otherwise>
-							<include item="memberSecurityCriticalBoilerplate" />
+							<include item="boilerplate_memberSecurityCritical" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -114,7 +114,7 @@
 		<!-- summary -->
 		<!-- useBase boilerplate -->
 		<xsl:if test="/document/comments/ddue:dduexml/ddue:useBase and /document/reference/overrides/member">
-			<include item="useBaseBoilerplate">
+			<include item="boilerplate_useBase">
 				<parameter>
 					<xsl:apply-templates select="/document/reference/overrides/member"
 															 mode="link"/>
@@ -126,7 +126,7 @@
 				<span sdata="authoredSummary">
 					<xsl:if test="$g_hasSecurityCriticalSection">
 						<p>
-							<include item="securityCritical" />
+							<include item="text_securityCritical" />
 						</p>
 					</xsl:if>
 					<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:summary[1]" />
@@ -134,7 +134,7 @@
 			</xsl:when>
 			<!-- if no authored summary, and not in primary framework (e.g. netfw), and overrides a base member: show link to base member -->
 			<xsl:when test="/document/reference/overrides/member and not(/document/reference/versions/versions[1]//version)">
-				<include item="useBaseSummary">
+				<include item="boilerplate_useBaseSummary">
 					<parameter>
 						<xsl:apply-templates select="/document/reference/overrides/member"
 																 mode="link"/>
@@ -149,7 +149,7 @@
 		<!-- Flags attribute boilerplate -->
 		<xsl:if test="/document/reference/attributes/attribute/type[@api='T:System.FlagsAttribute']">
 			<p>
-				<include item="flagsSummary">
+				<include item="boilerplate_flagsSummary">
 					<parameter>
 						<referenceLink target="T:System.FlagsAttribute" />
 					</parameter>
@@ -160,10 +160,10 @@
 		<!-- Non Cls Compliant boilerplate -->
 		<xsl:if test="/document/reference/attributes/attribute[type[@api='T:System.CLSCompliantAttribute']]/argument[value='False']">
 			<p/>
-			<include item="NotClsCompliant"/>
+			<include item="boilerplate_NotClsCompliant"/>
 			<xsl:text>&#160;</xsl:text>
 			<xsl:if test="/document/comments/ddue:dduexml/ddue:clsCompliantAlternative">
-				<include item="AltClsCompliant">
+				<include item="boilerplate_AltClsCompliant">
 					<parameter>
 						<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:clsCompliantAlternative/ddue:codeEntityReference"/>
 					</parameter>
@@ -174,7 +174,7 @@
 		<!-- Overload list page boilerplate -->
 		<xsl:if test="$g_apiTopicGroup = 'list' and $g_apiTopicSubGroup = 'overload'">
 			<p>
-				<include item="overloadSummary" />
+				<include item="boilerplate_overloadSummary" />
 			</p>
 		</xsl:if>
 
@@ -295,14 +295,14 @@
 
 	<xsl:template name="obsoleteSection">
 		<p>
-			<include item="ObsoleteBoilerPlate">
+			<include item="boilerplate_obsolete">
 				<parameter>
 					<xsl:value-of select="$g_apiTopicSubGroup"/>
 				</parameter>
 			</include>
 			<xsl:for-each select="/document/comments/ddue:dduexml/ddue:obsoleteCodeEntity">
 				<xsl:text> </xsl:text>
-				<include item="nonobsoleteAlternative">
+				<include item="boilerplate_obsoleteNonobsoleteAlternative">
 					<parameter>
 						<xsl:apply-templates select="ddue:codeEntityReference" />
 					</parameter>
@@ -355,7 +355,7 @@
 				<div id="returns">
 					<xsl:call-template name="t_putSubSection">
 						<xsl:with-param name="p_title">
-							<include item="{$g_apiSubGroup}ValueTitle"/>
+							<include item="title_{$g_apiSubGroup}Value"/>
 						</xsl:with-param>
 						<xsl:with-param name="p_content">
 							<include item="typeLink">
@@ -387,30 +387,31 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
 	<xsl:template match="templates">
 		<div id="genericParameters">
 			<xsl:call-template name="t_putSubSection">
 				<xsl:with-param name="p_title">
-					<include item="templatesTitle" />
+					<include item="title_templates" />
 				</xsl:with-param>
 				<xsl:with-param name="p_content">
 					<xsl:for-each select="template">
 						<xsl:variable name="parameterName"
 													select="@name" />
-						<xsl:variable name="contravariant">
+						<xsl:variable name="v_contravariant">
 							<xsl:if test="variance/@contravariant='true'">
 								<xsl:call-template name="t_inKeyword"/>
 							</xsl:if>
 						</xsl:variable>
-						<xsl:variable name="covariant">
+						<xsl:variable name="v_covariant">
 							<xsl:if test="variance/@covariant='true'">
 								<xsl:call-template name="t_outKeyword"/>
 							</xsl:if>
 						</xsl:variable>
 						<dl paramName="{$parameterName}">
 							<dt>
-								<xsl:copy-of select="$contravariant"/>
-								<xsl:copy-of select="$covariant" />
+								<xsl:copy-of select="$v_contravariant"/>
+								<xsl:copy-of select="$v_covariant" />
 								<span class="parameter">
 									<xsl:value-of select="$parameterName"/>
 								</span>
@@ -430,15 +431,15 @@
 
 	<xsl:template match="template[variance[@covariant='true']][1]">
 		<p>
-			<include item="covariant"/>
-			<include item="variance" />
+			<include item="text_covariant"/>
+			<include item="text_variance" />
 		</p>
 	</xsl:template>
 
 	<xsl:template match="template[variance[@contravariant='true']][1]">
 		<p>
-			<include item="contravariant" />
-			<include item="variance" />
+			<include item="text_contravariant" />
+			<include item="text_variance" />
 		</p>
 	</xsl:template>
 
@@ -487,7 +488,7 @@
 		<xsl:if test="count(*) > 0">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'syntaxTitle'"/>
+												select="'title_syntax'"/>
 				<xsl:with-param name="p_content">
 					<div id="snippetGroup_Syntax"
 							 class="code">
@@ -514,10 +515,10 @@
 					<xsl:if test="/document/reference/attributes/attribute/type[@api='T:System.Runtime.CompilerServices.ExtensionAttribute'] and boolean($g_apiSubGroup='method')">
 						<xsl:call-template name="t_putSubSection">
 							<xsl:with-param name="p_title">
-								<include item="extensionUsageTitle" />
+								<include item="title_extensionUsage" />
 							</xsl:with-param>
 							<xsl:with-param name="p_content">
-								<include item="extensionUsageText">
+								<include item="text_extensionUsage">
 									<parameter>
 										<xsl:apply-templates select="/document/reference/parameters/parameter[1]/type"
 																				 mode="link" />
@@ -538,7 +539,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'exceptionsTitle'" />
+												select="'title_exceptions'" />
 				<xsl:with-param name="p_content">
 					<xsl:choose>
 						<xsl:when test="ddue:exception">
@@ -546,10 +547,10 @@
 								<table>
 									<tr>
 										<th class="ps_exceptionNameColumn">
-											<include item="exceptionNameHeader" />
+											<include item="header_exceptionName" />
 										</th>
 										<th class="ps_exceptionConditionColumn">
-											<include item="exceptionConditionHeader" />
+											<include item="header_exceptionCondition" />
 										</th>
 									</tr>
 									<xsl:for-each select="ddue:exception">
@@ -581,7 +582,7 @@
 		<xsl:if test="/document/comments/ddue:dduexml/ddue:permissions[normalize-space(.)] or $showAptcaBoilerplate">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'permissionsTitle'" />
+												select="'title_permissions'" />
 				<xsl:with-param name="p_content">
 					<ul>
 						<xsl:for-each select="/document/comments/ddue:dduexml/ddue:permissions/ddue:permission">
@@ -591,7 +592,7 @@
 						</xsl:for-each>
 						<xsl:if test="$showAptcaBoilerplate">
 							<li>
-								<include item="aptca" />
+								<include item="boilerplate_aptca" />
 							</li>
 						</xsl:if>
 					</ul>
@@ -633,11 +634,13 @@
 	</xsl:template>
 
 	<xsl:template name="t_putSeeAlsoSection">
-
 		<xsl:if test="$g_hasSeeAlsoSection">
+			<xsl:element name="a">
+				<xsl:attribute name="name">seeAlsoSection</xsl:attribute>
+			</xsl:element>
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'relatedTopicsTitle'" />
+												select="'title_relatedTopics'" />
 				<xsl:with-param name="p_content">
 					<xsl:choose>
 						<xsl:when test="count(/document/comments/ddue:dduexml/ddue:relatedTopics/*) > 0">
@@ -650,7 +653,7 @@
 						<xsl:otherwise>
 							<xsl:call-template name="t_putSubSection">
 								<xsl:with-param name="p_title">
-									<include item="SeeAlsoReference"/>
+									<include item="title_seeAlso_reference"/>
 								</xsl:with-param>
 								<xsl:with-param name="p_content">
 									<xsl:call-template name="t_autogenSeeAlsoLinks"/>

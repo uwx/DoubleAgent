@@ -10,9 +10,30 @@
 
 	<xsl:template match="xhtml:a"
 								name="insLink">
-		<xsl:variable name="assetid"
-									select="substring-after(translate(@href, 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), '?ID=')"/>
-		<xsl:if test="@class='mtps-external-link' or starts-with(@href,'http:') or starts-with(@href,'https') or starts-with(@href,'www')">
+		<xsl:variable name="href">
+			<xsl:value-of	select="translate(@href, 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+		</xsl:variable>
+		<xsl:variable name="assetid">
+			<xsl:choose>
+				<xsl:when test="contains($href,'?ID=')">
+					<xsl:value-of	select="substring-after($href, '?ID=')"/>
+				</xsl:when>
+				<xsl:when test="not($downscale-browser)">
+					<xsl:choose>
+						<xsl:when test="contains($href,'.HTM')">
+							<xsl:value-of	select="substring-before($href, '.HTM')"/>
+						</xsl:when>
+						<xsl:when test="contains($href,'#')">
+							<xsl:value-of	select="substring-before($href, '#')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of	select="$href"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:if test="@class='mtps-external-link' or starts-with($href,'HTTP:') or starts-with($href,'HTTPS') or starts-with($href,'WWW')">
 			<xsl:element name="img"
 									 namespace="{$xhtml}">
 				<xsl:attribute name="src">
@@ -44,25 +65,25 @@
 					<xsl:choose>
 						<xsl:when test="$downscale-browser">
 							<xsl:choose>
-								<xsl:when test="@href='ms-xhelp:///?id=helponhelp.htm'">
+								<xsl:when test="$href='MS-XHELP:///?ID=HELPONHELP.HTM'">
 									<span color="red">
 										<xsl:value-of select="@href"/>
 										<xsl:text>&#160;is not a valid link.</xsl:text>
 									</span>
 								</xsl:when>
-								<xsl:when test="@href='install'">
+								<xsl:when test="$href='INSTALL'">
 									<span color="red">
 										<xsl:value-of select="@href"/>
 										<xsl:text>&#160;is not a valid link.</xsl:text>
 									</span>
 								</xsl:when>
-								<xsl:when test="@href='install_setting'">
+								<xsl:when test="$href='INSTALL_SETTING'">
 									<span color="red">
 										<xsl:value-of select="@href"/>
 										<xsl:text>&#160;is not a valid link.</xsl:text>
 									</span>
 								</xsl:when>
-								<xsl:when test="@class='mtps-external-link' or starts-with(@href,'#') or starts-with(@href,'http:') or starts-with(@href,'https') or starts-with(@href,'www') or starts-with(@href,'mailto')">
+								<xsl:when test="@class='mtps-external-link' or starts-with($href,'#') or starts-with($href,'HTTP:') or starts-with($href,'HTTPS') or starts-with($href,'WWW') or starts-with($href,'MAILTO')">
 									<!--external link or anchor-->
 									<xsl:value-of select="@href"/>
 								</xsl:when>
@@ -94,7 +115,7 @@
 									<xsl:value-of select="@href"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat('ms.help?method=page&amp;id=', $assetid, '&amp;product=', $product, '&amp;productVersion=', $version,'&amp;topicVersion=', $topicVersion, '&amp;locale=', $locale,'&amp;topicLocale=', $topiclocale)"/>
+									<xsl:value-of select="concat('ms-xhelp?method=page&amp;id=', $assetid, '&amp;product=', $product, '&amp;productVersion=', $version,'&amp;topicVersion=', $topicVersion, '&amp;locale=', $locale,'&amp;topicLocale=', $topiclocale)"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>

@@ -32,7 +32,6 @@
 	<xsl:template match="mtps:CodeSnippet"
 								priority ="2"
 								name="codeSnippetOverride">
-
 		<xsl:choose>
 			<xsl:when test="ancestor::mtps:CollapsibleArea[count(descendant::mtps:CodeSnippet) > 1] or parent::xhtml:div[starts-with(@id,'snippetGroup') and (count(mtps:CodeSnippet) > 1)]">
 				<xsl:variable name="v_currentId">
@@ -269,13 +268,13 @@
 					</xsl:if>
 				</xsl:if>
 			</xsl:attribute>
+			<xsl:variable name="spacedSnippetCode">
+				<xsl:apply-templates select="msxsl:node-set($snippetCode)/node()"
+														 mode="codeSpacing"/>
+			</xsl:variable>
 			<xsl:choose>
 				<!-- If the snippet contains any elements, it's pre-formatted -->
-				<xsl:when test="msxsl:node-set($snippetCode)/*">
-					<xsl:variable name="spacedSnippetCode">
-						<xsl:apply-templates select="msxsl:node-set($snippetCode)/node()"
-																 mode="codeSpacing"/>
-					</xsl:variable>
+				<xsl:when test="msxsl:node-set($spacedSnippetCode)/*">
 					<xsl:choose>
 						<xsl:when test="$plainCode='true'">
 							<xsl:element name="pre"
@@ -363,6 +362,9 @@
 			</xsl:when>
 			<xsl:when test="normalize-space(.)='' and contains(.,'&#10;')">
 				<xsl:value-of select="concat('&#160;','&#10;',substring-after(translate(.,' &#13;','&#160;'),'&#10;'))"/>
+			</xsl:when>
+			<xsl:when test="normalize-space(.)='' and contains(.,'&#13;')">
+				<xsl:value-of select="concat('&#160;','&#10;',substring-after(translate(.,' ','&#160;'),'&#13;'))"/>
 			</xsl:when>
 			<xsl:when test=".!='' and normalize-space(.)=''">
 				<xsl:value-of select="translate(.,' ','&#160;')"/>

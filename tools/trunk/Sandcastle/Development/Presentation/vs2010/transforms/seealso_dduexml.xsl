@@ -113,7 +113,7 @@
 		<xsl:if test="msxsl:node-set($v_taskLinks)/*">
 			<xsl:call-template name="t_putSeeAlsoSubSection">
 				<xsl:with-param name="p_headerGroup"
-												select="'SeeAlsoTasks'"/>
+												select="'title_seeAlso_tasks'"/>
 				<xsl:with-param name="p_members"
 												select="$v_taskLinks"/>
 				<xsl:with-param name="p_autoGenerateLinks"
@@ -124,7 +124,7 @@
 		<xsl:if test="msxsl:node-set($v_referenceLinks)/* or boolean($p_autoGenerateLinks)">
 			<xsl:call-template name="t_putSeeAlsoSubSection">
 				<xsl:with-param name="p_headerGroup"
-												select="'SeeAlsoReference'"/>
+												select="'title_seeAlso_reference'"/>
 				<xsl:with-param name="p_members"
 												select="$v_referenceLinks"/>
 				<xsl:with-param name="p_autoGenerateLinks"
@@ -135,7 +135,7 @@
 		<xsl:if test="msxsl:node-set($v_conceptLinks)/*">
 			<xsl:call-template name="t_putSeeAlsoSubSection">
 				<xsl:with-param name="p_headerGroup"
-												select="'SeeAlsoConcepts'"/>
+												select="'title_seeAlso_concepts'"/>
 				<xsl:with-param name="p_members"
 												select="$v_conceptLinks"/>
 				<xsl:with-param name="p_autoGenerateLinks"
@@ -146,7 +146,7 @@
 		<xsl:if test="msxsl:node-set($v_otherLinks)/*">
 			<xsl:call-template name="t_putSeeAlsoSubSection">
 				<xsl:with-param name="p_headerGroup"
-												select="'SeeAlsoOtherResources'"/>
+												select="'title_seeAlso_otherResources'"/>
 				<xsl:with-param name="p_members"
 												select="$v_otherLinks"/>
 				<xsl:with-param name="p_autoGenerateLinks"
@@ -169,7 +169,7 @@
 				<xsl:if test="boolean($p_autoGenerateLinks)">
 					<xsl:call-template name="t_autogenSeeAlsoLinks"/>
 				</xsl:if>
-				<xsl:for-each select="msxsl:node-set($p_members)">
+				<xsl:for-each select="msxsl:node-set($p_members)/*">
 					<div class="seeAlsoStyle">
 						<xsl:apply-templates select="."/>
 					</div>

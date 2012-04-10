@@ -169,7 +169,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'parametersTitle'"/>
+												select="'title_parameters'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -183,7 +183,7 @@
 				<xsl:when test="(normalize-space(ddue:content)='') and ddue:sections/ddue:section[ddue:title='Property Value']">
 					<xsl:call-template name="t_putSectionInclude">
 						<xsl:with-param name="p_titleInclude"
-														select="'propertyValueTitle'"/>
+														select="'title_propertyValue'"/>
 						<xsl:with-param name="p_content">
 							<xsl:apply-templates select="ddue:sections/ddue:section[ddue:title='Property Value']/*"/>
 						</xsl:with-param>
@@ -192,7 +192,7 @@
 				<xsl:otherwise>
 					<xsl:call-template name="t_putSectionInclude">
 						<xsl:with-param name="p_titleInclude"
-														select="'returnValueTitle'"/>
+														select="'title_returnValue'"/>
 						<xsl:with-param name="p_content">
 							<xsl:apply-templates/>
 						</xsl:with-param>
@@ -206,7 +206,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'exceptionsTitle'"/>
+												select="'title_exceptions'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -218,7 +218,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'relatedSectionsTitle'"/>
+												select="'title_relatedSections'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -228,9 +228,12 @@
 
 	<xsl:template match="ddue:relatedTopics">
 		<xsl:if test="$g_hasSeeAlsoSection">
+			<xsl:element name="a">
+				<xsl:attribute name="name">seeAlsoSection</xsl:attribute>
+			</xsl:element>
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'relatedTopicsTitle'"/>
+												select="'title_relatedTopics'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates select="/document/topic/*/ddue:relatedTopics"
 															 mode="seeAlso"/>
@@ -244,7 +247,7 @@
 		<xsl:if test="not(preceding-sibling::ddue:codeExample) and ../ddue:codeExample[normalize-space(.)!='']">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'Example'"/>
+												select="'title_example'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 					<!-- if there are additional codeExample nodes, put them inside this section -->
@@ -361,12 +364,12 @@
 				</xsl:when>
 				<xsl:when test="$p_outlineType='toplevel' or $p_outlineType='topNoRelated'">
 					<p>
-						<include item="autoOutlineTopLevelIntro"/>
+						<include item="boilerplate_autoOutlineTopLevelIntro"/>
 					</p>
 				</xsl:when>
 				<xsl:when test="$p_outlineType='subsection'">
 					<p>
-						<include item="autoOutlineSubsectionIntro"/>
+						<include item="boilerplate_autoOutlineSubsectionIntro"/>
 					</p>
 				</xsl:when>
 			</xsl:choose>
@@ -394,7 +397,7 @@
 					<li>
 						<a>
 							<xsl:attribute name="href">#seeAlsoSection</xsl:attribute>
-							<include item="RelatedTopicsLinkText"/>
+							<include item="title_relatedTopics"/>
 						</a>
 					</li>
 				</xsl:if>

@@ -5,6 +5,7 @@
 								xmlns:mshelp="http://msdn.microsoft.com/mshelp"
 								xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
 								xmlns:mtps="http://msdn2.microsoft.com/mtps"
+								xmlns:xhtml="http://www.w3.org/1999/xhtml"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt"
    >
@@ -66,7 +67,7 @@
 				<xsl:when test="not($g_apiTopicGroup = 'namespace')">
 					<xsl:call-template name="t_putSectionInclude">
 						<xsl:with-param name="p_titleInclude"
-														select="'remarksTitle'"/>
+														select="'title_remarks'"/>
 						<xsl:with-param name="p_content">
 							<xsl:apply-templates select="$p_node/ddue:remarks/*"/>
 							<!-- HostProtectionAttribute -->
@@ -77,7 +78,7 @@
 							<xsl:apply-templates select="$p_node/ddue:notesForCallers"/>
 							<xsl:apply-templates select="$p_node/ddue:notesForInheritors"/>
 							<xsl:apply-templates select="$p_node/ddue:platformNotes"/>
-							<include item="mshelpKTable">
+							<include item="meta_mshelp_KTable">
 								<parameter>
 									<xsl:text>tt_</xsl:text>
 									<xsl:value-of select="$key"/>
@@ -99,9 +100,9 @@
 			<xsl:with-param name="p_alertClass"
 											select="'note'"/>
 			<xsl:with-param name="p_alertContent">
-				<include item="hostProtectionAttributeLong">
+				<include item="boilerplate_hostProtectionAttribute">
 					<parameter>
-						<xsl:value-of select="concat($g_apiTopicSubGroup, 'Lower')"/>
+						<xsl:value-of select="concat('text_', $g_apiTopicSubGroup, 'Lower')"/>
 					</parameter>
 					<parameter>
 						<span class="label">
@@ -252,7 +253,7 @@
 								name="t_ddue_notesForImplementers">
 		<p/>
 		<span class="label">
-			<include item="NotesForImplementers"/>
+			<include item="text_NotesForImplementers"/>
 		</span>
 		<xsl:apply-templates/>
 	</xsl:template>
@@ -261,7 +262,7 @@
 								name="t_ddue_notesForCallers">
 		<p/>
 		<span class="label">
-			<include item="NotesForCallers"/>
+			<include item="text_NotesForCallers"/>
 		</span>
 		<xsl:apply-templates/>
 	</xsl:template>
@@ -270,7 +271,7 @@
 								name="t_ddue_notesForInheritors">
 		<p/>
 		<span class="label">
-			<include item="NotesForInheritors"/>
+			<include item="text_NotesForInheritors"/>
 		</span>
 		<xsl:apply-templates/>
 	</xsl:template>
@@ -279,7 +280,7 @@
 								name="t_ddue_platformNotes">
 		<xsl:for-each select="ddue:platformNote[normalize-space(ddue:content)]">
 			<p>
-				<include item="PlatformNote">
+				<include item="boilerplate_PlatformNote">
 					<parameter>
 						<xsl:for-each select="ddue:platforms/ddue:platform">
 							<xsl:variable name="v_platformName">
@@ -367,7 +368,7 @@
 					<ul>
 						<xsl:apply-templates select="ddue:step"/>
 					</ul>
-				</xsl:if>
+			</xsl:if>
 				<xsl:if test="$v_temp &gt; 1">
 					<ol>
 						<xsl:apply-templates select="ddue:step"/>
@@ -395,7 +396,7 @@
 								name="t_ddue_inThisSection">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'inThisSectionTitle'"/>
+											select="'title_inThisSection'"/>
 			<xsl:with-param name="p_content">
 				<xsl:apply-templates/>
 			</xsl:with-param>
@@ -407,7 +408,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'buildInstructionsTitle'"/>
+												select="'title_buildInstructions'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -420,7 +421,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'nextStepsTitle'"/>
+												select="'title_nextSteps'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -433,7 +434,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'requirementsTitle'"/>
+												select="'title_requirements'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -446,7 +447,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'remarksTitle'"/>
+												select="'title_remarks'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -459,7 +460,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'attributesAndElements'"/>
+												select="'title_attributesAndElements'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -471,7 +472,7 @@
 								name="t_ddue_attributes">
 		<xsl:if test="normalize-space(.)">
 			<h4 class="subHeading">
-				<include item="attributes"/>
+				<include item="title_attributes"/>
 			</h4>
 			<xsl:apply-templates/>
 		</xsl:if>
@@ -493,7 +494,7 @@
 								name="t_ddue_childElement">
 		<xsl:if test="normalize-space(.)">
 			<h4 class="subHeading">
-				<include item="childElement"/>
+				<include item="title_childElement"/>
 			</h4>
 			<xsl:apply-templates/>
 		</xsl:if>
@@ -503,7 +504,7 @@
 								name="t_ddue_parentElement">
 		<xsl:if test="normalize-space(.)">
 			<h4 class="subHeading">
-				<include item="parentElement"/>
+				<include item="title_parentElement"/>
 			</h4>
 			<xsl:apply-templates/>
 		</xsl:if>
@@ -514,7 +515,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'textValue'"/>
+												select="'title_textValue'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -527,7 +528,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'elementInformation'"/>
+												select="'title_elementInformation'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -540,7 +541,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'dotNetFrameworkEquivalent'"/>
+												select="'title_dotNetFrameworkEquivalent'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -553,7 +554,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'prerequisites'"/>
+												select="'title_prerequisites'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -566,12 +567,12 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template match="ddue:robustProgramming"
+	<xsl:template match="ddue:title_robustProgramming"
 								name="t_ddue_robustProgramming">
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'robustProgramming'"/>
+												select="'title_robustProgramming'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -584,7 +585,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'securitySection'"/>
+												select="'title_securitySection'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -597,7 +598,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'externalResources'"/>
+												select="'title_externalResources'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -610,7 +611,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'demonstrates'"/>
+												select="'title_demonstrates'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -623,7 +624,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'appliesTo'"/>
+												select="'title_appliesTo'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -641,7 +642,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'background'"/>
+												select="'title_background'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -654,7 +655,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'whatsNew'"/>
+												select="'title_whatsNew'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -667,7 +668,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'reference'"/>
+												select="'title_reference'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 				</xsl:with-param>
@@ -702,7 +703,7 @@
 					 class="section">
 				<xsl:if test="../ddue:secondaryErrorTitle">
 					<h4 class="subHeading">
-						<include item="errorMessage"/>
+						<include item="title_errorMessage"/>
 					</h4>
 					<xsl:apply-templates select="../ddue:secondaryErrorTitle">
 						<xsl:with-param name="newSection">no</xsl:with-param>
@@ -761,14 +762,14 @@
 	<xsl:template name="t_threadSafety">
 		<xsl:call-template name="t_putSectionInclude">
 			<xsl:with-param name="p_titleInclude"
-											select="'threadSafetyTitle'"/>
+											select="'title_threadSafety'"/>
 			<xsl:with-param name="p_content">
 				<xsl:choose>
 					<xsl:when test="/document/comments/ddue:dduexml/ddue:threadSafety">
 						<xsl:apply-templates select="/document/comments/ddue:dduexml/ddue:threadSafety"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<include item="ThreadSafetyBP"/>
+						<include item="boilerplate_threadSafety"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:with-param>
@@ -1046,7 +1047,7 @@
 		<xsl:if test="normalize-space(.)">
 			<xsl:call-template name="t_putSectionInclude">
 				<xsl:with-param name="p_titleInclude"
-												select="'examplesTitle'"/>
+												select="'title_examples'"/>
 				<xsl:with-param name="p_content">
 					<xsl:apply-templates/>
 					<xsl:call-template name="t_moreCodeSection"/>
@@ -1499,7 +1500,7 @@
 			<q>
 				<xsl:apply-templates/>
 			</q>
-		</xsl:if>
+	</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="ddue:replaceable"
@@ -1717,7 +1718,7 @@
 	<xsl:template match="ddue:copyright"
 								name="t_ddue_copyright">
 		<!-- <p>{0} &copy;{1}{2}. All rights reserved.</p> -->
-		<include item="copyrightNotice">
+		<include item="boilerplate_copyrightNotice">
 			<parameter>
 				<xsl:value-of select="ddue:trademark" />
 			</parameter>
@@ -1774,7 +1775,7 @@
 			<!-- if it's a valid date, display the freshness line. -->
 			<xsl:when test="normalize-space($v_validChangeHistoryDate)">
 				<p>
-					<include item="UpdateTitle">
+					<include item="boilerplate_UpdateTitle">
 						<parameter>
 							<xsl:value-of select="normalize-space($v_validChangeHistoryDate)"/>
 						</parameter>
@@ -1785,9 +1786,9 @@
 			<!-- use a default date if no p_changedHistoryDate and the 'changeHistoryOptions' argument is set to 'showDefaultFreshnessDate' -->
 			<xsl:when test="$changeHistoryOptions = 'showDefaultFreshnessDate'">
 				<p>
-					<include item="UpdateTitle">
+					<include item="boilerplate_UpdateTitle">
 						<parameter>
-							<include item="defaultFreshnessDate"/>
+							<include item="text_defaultFreshnessDate"/>
 						</parameter>
 					</include>
 				</p>
@@ -1813,7 +1814,7 @@
 				<xsl:if test="normalize-space($v_changeHistoryContent)">
 					<xsl:call-template name="t_putSectionInclude">
 						<xsl:with-param name="p_titleInclude"
-														select="'changeHistory'"/>
+														select="'title_changeHistory'"/>
 						<xsl:with-param name="p_content">
 							<xsl:copy-of select="$v_changeHistoryContent"/>
 						</xsl:with-param>
@@ -1960,16 +1961,14 @@
 
 			<xsl:if test="ddue:relatedEntry">
 				<div class="ps_relatedEntry">
-					<include item="relatedEntries" />&#160;
+					<include item="text_relatedEntries" />&#160;
 
 					<xsl:for-each select="ddue:relatedEntry">
 						<xsl:variable name="id"
 													select="@termId" />
 						<a>
 							<!-- Keep this on one line or the spaces preceeding the address end up in the anchor name -->
-							<xsl:attribute name="href">
-								#<xsl:value-of select="@termId"/>
-							</xsl:attribute>
+							<xsl:attribute name="href" xml:space="preserve">#<xsl:value-of select="@termId"/></xsl:attribute>
 							<xsl:value-of select="//ddue:term[@termId=$id]"/>
 						</a>
 						<xsl:if test="position() != last()">
@@ -2064,9 +2063,7 @@
 		<xsl:choose>
 			<xsl:when test="$p_link">
 				<a>
-					<xsl:attribute name="href">
-						#<xsl:value-of select="$p_link"/>
-					</xsl:attribute>
+					<xsl:attribute name="href" xml:space="preserve">#<xsl:value-of select="$p_link"/></xsl:attribute>
 					<xsl:value-of select="$p_name"/>
 				</a>
 			</xsl:when>

@@ -30,8 +30,10 @@
       <step>
         <content>
           <para>Add a WCF service file (.svc) file to the Web site and add to it the following directive that references the <codeEntityReference autoUpgrade="true">T:System.Web.Security.LoginService</codeEntityReference> class:</para>
-          <code language="c#">&lt;% @ServiceHost Language="C#" Service="System.Web.Security.LoginService" %&gt;</code>
-					<code language="vb">&lt;% @ServiceHost Language="VB" Service="System.Web.Security.LoginService" %&gt;</code>
+          <code language="c#"
+								xml:space="preserve">&lt;% @ServiceHost Language="C#" Service="System.Web.Security.LoginService" %&gt;</code>
+					<code language="vb"
+								xml:space="preserve">&lt;% @ServiceHost Language="VB" Service="System.Web.Security.LoginService" %&gt;</code>
         </content>
       </step>
       <step>
@@ -53,7 +55,7 @@
               <para>Create a binding in the <languageKeyword>&lt;bindings&gt;</languageKeyword> element that requires SSL. For more information about transport security in WCF, see Transport Security.</para>
             </listItem>
           </list>
-          <code>&lt;system.serviceModel&gt;
+					<code xml:space="preserve">&lt;system.serviceModel&gt;
     &lt;services&gt;
         &lt;service name="System.Web.Security.LoginService"
         behaviorConfiguration="MyServiceTypeBehaviors"&gt;
@@ -91,7 +93,7 @@
         <content>
           <para>In the Web.config file, configure the Web application to use forms authentication. The Login service requires cookies to be enabled, so in the <languageKeyword>&lt;authentication&gt;</languageKeyword> element, set the <languageKeyword>cookieless</languageKeyword> attribute to "UseCookies". Setting the <languageKeyword>protection</languageKeyword> attribute to "All" guarantees that the server will encrypt the authentication cookie when it is created and validate it contents when returned from client.</para>
           <para>The following example shows the <languageKeyword>&lt;authentication&gt;</languageKeyword> element in a Web.config file, configured to use forms authentication.</para>
-          <code>&lt;authentication mode="Forms"&gt;
+					<code xml:space="preserve">&lt;authentication mode="Forms"&gt;
     &lt;forms name=".SVCAuthCookie" cookieless="UseCookies" 
     protection="All"/&gt;
 &lt;/authentication&gt;</code>
@@ -106,7 +108,7 @@
         <content>
           <para>Set the default membership provider for use with the Login service. Make sure that the password is hashed by setting the <languageKeyword>hashAlgorithmType</languageKeyword> attribute to "SHA1". </para>
           <para>The following example shows how to set up a custom membership provider. For more information about membership providers, see <link xlink:href="d8658b8e-c962-4f64-95e1-4acce35e4582">Implementing a Membership Provider</link>.</para>
-          <code>&lt;membership defaultProvider="CustomSqlProvider" 
+					<code xml:space="preserve">&lt;membership defaultProvider="CustomSqlProvider" 
     hashAlgorithmType="SHA1" &gt;
     &lt;providers&gt;
         &lt;remove name="AspNetSqlMembershipProvider" /&gt;
