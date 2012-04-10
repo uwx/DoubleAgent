@@ -3181,6 +3181,46 @@ void XmlToHtml::FixMemberReferences (XmlDocument^ pXmlDocument)
 					}
 					catch AnyExceptionSilent
 				}
+
+				if	(mOutputSandcastle)
+				{
+					try
+					{
+						XmlAttribute^				lRefName;
+						XmlAttribute^				lTargetName;
+						XmlElement^					lLinkElement;
+						Generic::List<XmlNode^>^	lLinkContents;
+
+						if	(
+								(lRefName = lNode->Attributes ["cref"])
+							&&	(IsConceptualLink (lRefName->Value))
+							&&	(lLinkElement = pXmlDocument->CreateElement ("conceptualLink"))
+							&&	(lTargetName = pXmlDocument->CreateAttribute ("target"))
+							)
+						{
+							if	(lRefName->Value->Contains ("#"))
+							{
+								lTargetName->Value = lRefName->Value->Substring (0, lRefName->Value->IndexOf ('#'));
+							}
+							else
+							{
+								lTargetName->Value = lRefName->Value;
+							}
+							lLinkElement->Attributes->Append (lTargetName);
+							if	(lLinkContents = NodeList (lNode->ChildNodes))
+							{
+								XmlNode^ lXmlNode;
+								for each (lXmlNode in lLinkContents)
+								{
+									lNode->RemoveChild (lXmlNode);
+									lLinkElement->AppendChild (lXmlNode);
+								}
+							}
+							lNode->ParentNode->ReplaceChild (lLinkElement, lNode);
+						}
+					}
+					catch AnyExceptionSilent
+				}
 			}
 		}
 	}
@@ -3267,6 +3307,10 @@ void XmlToHtml::MoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument)
 			XmlNode^					lRemarksNode;
 			Generic::List<XmlNode^>^	lDetailsNodes;
 			XmlNode^					lDetailsNode;
+			Generic::List<XmlNode^>^	lDetailsContents;
+			XmlElement^					lSectionElement;
+			XmlElement^					lTitleElement;
+			XmlElement^					lContentElement;
 
 			if	(
 					(lDetailsNodes = NodeList (pXmlDocument->DocumentElement->SelectNodes (".//detail | .//details")))
@@ -3281,8 +3325,43 @@ void XmlToHtml::MoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument)
 						&&	(lRemarksNode =	lRemarksNodes[0])
 						)
 					{
+						lSectionElement = pXmlDocument->CreateElement ("section");
+						lTitleElement = pXmlDocument->CreateElement ("title");
+						lContentElement = pXmlDocument->CreateElement ("content");
+
+						if	(lDetailsContents = NodeList (lDetailsNode->ChildNodes))
+						{
+							XmlNode^	lXmlNode;
+							XmlNode^	lClassAttr;
+
+							for each (lXmlNode in lDetailsContents)
+							{
+								if	(
+										(String::Compare (lXmlNode->Name, "H4", true) == 0)
+									&&	(
+											(
+												(lClassAttr = lXmlNode->Attributes->GetNamedItem ("class"))
+											&&	(String::Compare (lClassAttr->Value, "details", true) == 0)
+											)
+										||	(String::Compare (lXmlNode->InnerText, "details", true) == 0)
+										)
+									)
+								{
+									lTitleElement->InnerText = lXmlNode->InnerText;
+									continue;
+								}
+								lDetailsNode->RemoveChild (lXmlNode);
+								lContentElement->AppendChild (lXmlNode);
+							}
+						}
 						lDetailsNode->ParentNode->RemoveChild (lDetailsNode);
-						lRemarksNode->AppendChild (lDetailsNode);
+
+						if	(!String::IsNullOrEmpty (lTitleElement->InnerText))
+						{
+							lSectionElement->AppendChild (lTitleElement);
+						}
+						lSectionElement->AppendChild (lContentElement);
+						lRemarksNode->AppendChild (lSectionElement);
 					}
 				}
 			}
