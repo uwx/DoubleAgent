@@ -1,0 +1,14 @@
+.Define SourcePath=%SourcePath%
+.Define TargetDir=%TargetDir%
+.Define TargetFile=%TargetFile%
+.Set Cabinet=ON
+.Set Compress=OFF
+.Set GenerateInf=OFF
+
+.Set DiskDirectory1=%TargetDir%\
+.Set CabinetName1=%TargetFile%
+.Set MaxDiskSize=10485760
+.Set MaxCabinetSize=10485760
+.Set ReservePerCabinetSize=6144	; Reserved for signature
+
+%SourcePath% /INF=NO
