@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e08466bf-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerSDKTechnologyOverviewOrientationDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<mediaLink>
+				<image xlink:href="construction" />
+			</mediaLink>
+		</introduction>
+
+		<relatedTopics>
+		</relatedTopics>
+
+	</developerSDKTechnologyOverviewOrientationDocument>
+</topic>

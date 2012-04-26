@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846733-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerSDKTechnologyOverviewScenariosDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				You can use the <token>DA</token>&#160;<token>ActiveXCtl</token> in any programming environment that supports
+				the <token>COM</token> standard or the <token>dotNET</token>
+				standard. This includes <token>VB</token> 6, <token>VB</token> .NET, Visual C#, Visual C++,
+				JScript, VBScript, and many other programming languages.
+			</para>
+		</introduction>
+		<section>
+			<content>
+				<para>
+					For programming languages that support native <token>Windows</token> programming, use <token>DA</token>'s
+					native <token>ActiveXCtl</token>.
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							To include the control in a form, make sure the language fully supports the <token>ActiveXInt</token>
+							and follow its conventions for adding and accessing <token>ActiveXCtls</token>.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							If the language supports it, you can also use the <languageKeyword>New</languageKeyword> operator
+							with the &quot;DoubleAgent.Control&quot; or &quot;DoubleAgent.Control.1.1&quot;
+							<languageKeyword>ProgID</languageKeyword>, or the &quot;{1147E530-A208-11DE-ABF2-002421116FB2}&quot;
+							<languageKeyword>ClassID</languageKeyword>.
+						</para>
+					</listItem>
+				</list>
+				<para>
+					The programming environment may require a declared reference to the control's <token>COM</token> type library:
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							The native control is registered as an <token>ActiveXCtl</token> object.
+							If the programming environment provides a list of registered
+							<token>ActiveXCtl</token> or <token>COMauto</token>
+							objects, it will appear in the list.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							A <legacyItalic>reference copy</legacyItalic> of the control's <token>COM</token> type library
+							is installed with the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">
+								<token>theSDK</token>
+							</link>
+							in folder <localUri>C:\Program&#160;Files\Double&#160;Agent\Dev</localUri>.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							For programming environments that prefer to retrieve type information from the actual
+							run-time, a <legacyItalic>copy</legacyItalic> of the control's <token>COM</token> type library
+							is also included in the control's run-time (<localUri>DaControl.dll</localUri>)
+							as an embedded resource.
+						</para>
+					</listItem>
+				</list>
+			</content>
+		</section>
+		<section>
+			<content>
+				<para>
+					For programming languages that support the <token>dotNET</token>&#160;<token>CLRname</token>&#160;(<token>CLR</token>), there are two options:
+				</para>
+				<list class="ordered">
+					<listItem>
+						<para>
+							You can use <token>DA</token>'s Control <token>PIA</token>.
+						</para>
+						<list class="bullet">
+							<listItem>
+								<para>
+									It provides the <token>DA</token> Control as simple a <token>dotNET</token>
+									object (a subclass of <unmanagedCodeEntityReference>System.Object</unmanagedCodeEntityReference>)
+									that you can instantiate using the
+									<languageKeyword>New</languageKeyword> operator (no form required).
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									Use the <codeEntityReference qualifyHint="false">T:DoubleAgent.Control.Control</codeEntityReference> class in
+									the <codeEntityReference qualifyHint="true">N:DoubleAgent.Control</codeEntityReference>
+									namespace.
+
+								</para>
+							</listItem>
+						</list>
+					</listItem>
+					<listItem>
+						<para>
+							If the language supports the <unmanagedCodeEntityReference>System.Windows.Forms</unmanagedCodeEntityReference> namespace,
+							you can use <token>DA</token>'s <token>ActiveXCtl</token>&#160;<token>PIA</token>.
+						</para>
+						<list class="bullet">
+							<listItem>
+								<para>
+									It provides the <token>DA</token> Control as a <token>WinFormsCtl</token>
+									(a subclass of <unmanagedCodeEntityReference>System.Windows.Forms.Control</unmanagedCodeEntityReference>) that you can
+									drop in any form.
+								</para>
+							</listItem>
+							<listItem>
+								<para>
+									Use the <codeEntityReference qualifyHint="false">T:DoubleAgent.AxControl.AxControl</codeEntityReference> class
+									in the <codeEntityReference qualifyHint="true">N:DoubleAgent.AxControl</codeEntityReference>
+									namespace.
+								</para>
+							</listItem>
+						</list>
+					</listItem>
+				</list>
+				<para>
+					The programming environment may require a declared reference to these assemblies:
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							For a programming environment that retrieves references from the
+							<token>GACname</token> (<token>GAC</token>), these assemblies are added to the <token>GAC</token>
+							when <token>DA</token> is installed.
+						</para>
+						<para>
+							There are different versions of the <token>PIAs</token>
+							for <token>dotNET</token> 3.5 or earlier and <token>dotNET</token>
+							4.0 or later. If you move from <token>dotNET</token> 3.5 to
+							<token>dotNET</token> 4.0 you should reinstall the
+							<link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">
+								<token>theSDK</token>
+							</link>
+							to get the correct <token>PIA</token>
+							versions installed in the the <token>GAC</token>.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							If an assembly file is required, a <legacyItalic>reference copy</legacyItalic> of these assemblies is
+							installed with the <link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2#DevFiles">
+								<token>theSDK</token>
+							</link>
+							in folder <localUri>C:\Program&#160;Files\Double&#160;Agent\Dev\v3.5</localUri> (for
+							<token>dotNET</token> 3.5 or earlier) or <localUri>C:\Program&#160;Files\Double&#160;Agent\Dev\v4.0</localUri>
+							(for <token>dotNET</token> 4.0 or later).
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							You can use a reference to a specific assembly's full path, or add the <token>theSDK</token> install
+							location to the programming environment's reference search path.
+						</para>
+					</listItem>
+				</list>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846734-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846735-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerSDKTechnologyOverviewScenariosDocument>
+</topic>

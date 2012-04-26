@@ -1,0 +1,10 @@
+[version]
+	signature="$CHICAGO$"
+	AdvancedINF=2.0
+[Add.Code]
+	DaControl.ocx=DaControl.ocx
+[DaControl.ocx]
+	file-win32-x86=thiscab
+	clsid={1147E530-A208-11DE-ABF2-002421116FB2}
+	FileVersion=1,2,0,53
+	RegisterServer=yes

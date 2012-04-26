@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e084673a-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerSDKTechnologyOverviewArchitectureDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				The <token>DA</token> control can operate in three different modes: <token>connected</token>, <token>standalone</token>, and <token>contained</token>. The mode a developer chooses
+				depends on the application&#39;s requirements.
+			</para>
+		</introduction>
+
+
+		<section address="connected">
+			<title>
+				<token>connectedUc</token> Mode
+			</title>
+			<content>
+				<para>
+					<token>connectedUc</token> mode is the control's default mode, and is compatible with <token>MA</token>. In this mode, the <token>DA</token> control acts as a gateway to the <token>DA</token> server. The control
+					provides all of its services through it's connection with the server. It automatically connects to the
+					server as required, and releases the connection when it's no longer needed.
+				</para>
+				<para>
+					When operating in <token>connected</token> mode, all of the control's characters belong to
+					the <legacyItalic>server</legacyItalic>. This means that all client applications share a <legacyItalic>single</legacyItalic> copy of the character's
+					<link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Character">window</link>,
+					<link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Menu">
+						<token>PopupMenu</token>
+					</link>, <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
+						<token>NotificationIcon</token>
+					</link>, <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>, <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
+						<token>ListeningTip</token>
+					</link>, speech engines, etc.
+				</para>
+				<para>
+					Other server resources such as the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+						<token>AdvancedCharacterOptions</token>
+					</link> window and the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
+						<token>VoiceCommands</token>
+					</link> window
+					are also shared by all client applications.
+				</para>
+				<para>
+					If the control is contained in a form, it will <legacyItalic>not</legacyItalic> be visible at run-time.
+				</para>
+				<para>
+					A character window floats on top of all application windows and is <legacyItalic>not</legacyItalic> visually associated with
+					a specific client application. It can produce Text-to-Speech output and receive mouse, keyboard, and
+					Speech Recognition input even if the client application's window is inactive (not in the foreground)
+					or disabled. It can even be used by a client application that has no visible window.
+				</para>
+				<para>
+					The <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
+						<token>ListeningTip</token>
+					</link>, and the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
+						<token>VoiceCommands</token>
+					</link> window
+					are also <legacyItalic>topmost</legacyItalic> windows, and the <token>ListeningKey</token>
+					is always available.
+				</para>
+
+			</content>
+		</section>
+
+		<section address="standalone">
+			<title>
+				<token>standaloneUc</token> Mode
+			</title>
+			<content>
+
+				<para>
+					In <token>standalone</token> mode, the <token>DA</token> control is <legacyItalic>not</legacyItalic> connected to
+					the <token>DA</token> server. It provides the server's functionality directly.
+				</para>
+				<para>
+					When operating in <token>standalone</token> mode, all of the control's characters belong
+					to the <legacyItalic>control</legacyItalic>. Since the control runs in the same process as the client application, this
+					means that the client application has it's own private copy of its characters and all of their resources.
+					The control also has its own copy of the <link xlink:href="e08466be-419c-11e1-9d4f-002421116fb2">
+						<token>AdvancedCharacterOptions</token>
+					</link> window and the <link xlink:href="e0846717-419c-11e1-9d4f-002421116fb2">
+						<token>VoiceCommands</token>
+					</link> window.
+				</para>
+				<para>
+					If the control is contained in a form, it will <legacyItalic>not</legacyItalic> be visible at run-time.
+				</para>
+				<para>
+					A character window floats on top of the application window containing the <token>DA</token> control, but
+					<legacyItalic>not</legacyItalic> other application windows. It is visually associated with your client application as an
+					<legacyItalic>
+						owned <token>Popup</token>
+					</legacyItalic> of the control's parent window - that is, it's hidden when the
+					control's parent window is minimized. However, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Icon">
+						<token>NotificationIcon</token>
+					</link> remains visible.
+				</para>
+				<para>
+					The <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#Balloon">
+						<token>WordBalloon</token>
+					</link>, the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#ListeningTip">
+						<token>ListeningTip</token>
+					</link>, and the <link xlink:href="e08466bc-419c-11e1-9d4f-002421116fb2#VoiceCommands">
+						<token>VoiceCommands</token>
+					</link> window
+					are also <legacyItalic>
+						owned <token>Popup</token>s
+					</legacyItalic> of the control's parent window, and the
+					<token>ListeningKey</token> is available only when your application is in the foreground.
+				</para>
+
+			</content>
+		</section>
+
+		<section address="contained">
+			<title>
+				<token>containedUc</token> Mode
+			</title>
+			<content>
+
+				<para>
+					In <token>contained</token> mode, the <token>DA</token> control is a <legacyItalic>visible</legacyItalic> child window
+					of it's containing form. Like <token>standalone</token> mode, the control is not connected
+					to the server and it's characters are owned by the client application. Unlike <token>standalone</token>
+					mode, the character is not a floating window; it's displayed within the control's child window.
+				</para>
+				<para>
+					<token>containedUc</token> mode applies to a <legacyItalic>single</legacyItalic> character of a control that's operating
+					in <token>standalone</token> mode. The control can load multiple characters, but only one
+					can be contained. When there is a <token>contained</token> character, the control will be
+					visible. If there is no <token>contained</token> character, the control will <legacyItalic>not</legacyItalic>
+					be visible.
+				</para>
+				<para>
+					The <token>contained</token> character is set by the client application at run-time, so the
+					control can dynamically change to and from <token>contained</token> mode. Also, even when
+					there's a <token>contained</token> character, other characters can be shown as floating (uncontained)
+					windows.
+				</para>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerSDKTechnologyOverviewArchitectureDocument>
+</topic>

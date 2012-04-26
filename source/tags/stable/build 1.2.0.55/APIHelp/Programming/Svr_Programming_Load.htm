@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Loading Character and Animation Data</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<xml>
+		<MSHelp:TOCTitle Title="Loading Character and Animation Data" />
+		<MSHelp:Keyword Index="K" Term="Loading Character and Animation Data" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Loading Character and Animation Data</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Once you have a pointer to the <em class="keyword">IDaServer2</em> interface, you can use the <a class="see keyword"
+				href="../html/M_DoubleAgent_Server_Server_Load.htm">Load</a> method to load a character and retrieve its <em class="keyword">
+					IDaCharacter2</em> interface. There are three different possibilities for the <a class="see keyword"
+					href="../html/M_DoubleAgent_Server_Server_Load.htm">Load</a> <em class="token">Provider</em> parameter. The first
+					to specify the full path and filename of a character file. The second possibility is to specify the
+					filename only, in which case Double Agent searches its <em class="filename">Chars</em> directory and
+					the Microsoft<sup>®</sup> Agent <em class="filename">Chars</em> directory. The last possibility is to
+					supply an empty <em class="keyword">VARIANT</em> parameter that causes the <a href="../Reference/UI_PropSheet.htm#Gallery">
+					default character</a> to be loaded.</p>
+				<div class="example">
+					<pre class="example">const LPWSTR FileName = L"merlin.acs";
+VARIANT Path;
+
+// Create a variant to store the file name of the character to load
+
+<em class="keyword">VariantInit</em> (&amp;Path);
+Path.vt = VT_BSTR;
+Path.bstrVal = <em class="keyword">SysAllocString</em> (FileName);
+
+// Load the character
+
+<em class="token">Result</em> = <em class="token">server</em>-&gt;<em class="keyword">Load</em> (Path, &amp;<em
+	class="token">CharacterID</em>, &amp;<em class="token">RequestID</em>);
+
+// Get its IDaCharacter2 interface
+
+<em class="token">Result</em> = <em class="token">server</em>-&gt;<em class="keyword">get_Character</em> (<em
+	class="token">CharacterID</em>, &amp;<em class="token">character</em>);
+
+<em class="keyword">VariantClear</em> (&amp;Path);</pre>
+				</div>
+				<p>You can use this interface to access the character's methods:</p>
+				<div class="example">
+					<pre class="example">// Show the character (the first parameter tells Double Agent to play the "Showing" animation)
+
+<em class="token">Result</em> = <em class="token">character</em>-&gt;<em class="keyword">Show</em> (FALSE, &amp;<em
+	class="token">RequestID</em>);
+
+// Make the character speak
+
+<em class="token">Speech</em> = <em class="keyword">SysAllocString</em> (L"Hello World!");
+<em class="token">Result</em> = <em class="token">character</em>-&gt;Speak (<em class="token">Speech</em>, NULL, &amp;<em
+	class="token">RequestID</em>);
+<em class="keyword">SysFreeString</em> (<em class="token">Speech</em>);</pre>
+				</div>
+				<p>When you no longer need Double Agent, such as when your client application shuts down, release its interfaces.
+					Note that releasing the character interface does not unload the character. Call the <a class="see keyword"
+					href="../html/M_DoubleAgent_Server_Server_Unload.htm">Unload</a> method to do this before releasing the <em class="keyword">
+						IDaServer2</em> interface:</p>
+				<div class="example">
+					<pre class="example">// Clean up
+
+if (<em class="token">character</em>)
+{
+   // Release the character interface
+
+   <em class="token">character</em>-&gt;<em class="keyword">Release</em> ();
+
+   // Unload the character. NOTE: releasing the character interface
+   // does NOT make the character go away. You must call Unload.
+
+   <em class="token">server</em>-&gt;<em class="keyword">Unload</em> (<em class="token">CharacterID</em>);
+}
+   
+// Release the Server
+
+<em class="token">server</em>-&gt;<em class="keyword">Release</em> ();</pre>
+				</div>
+				<h4 class="seealso">See Also</h4>
+				<a href="Svr_Programming_Apps.htm">Using the Server in Applications</a></td>
+		</tr>
+	</table>
+</body>
+</html>

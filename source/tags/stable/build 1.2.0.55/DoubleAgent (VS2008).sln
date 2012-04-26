@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TlbToAsm", "tools\TlbToAsm\TlbToAsm.vcproj", "{8052FC92-3A66-449E-85EC-626BD6A72782}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharFileCLR", "DaCharFileCLR.vcproj", "{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|Win32.Build.0 = Debug|Win32
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|x64.ActiveCfg = Debug|x64
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|x64.Build.0 = Debug|x64
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Release|Win32.ActiveCfg = Release|Win32
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Release|Win32.Build.0 = Release|Win32
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Release|x64.ActiveCfg = Release|x64
+		{8052FC92-3A66-449E-85EC-626BD6A72782}.Release|x64.Build.0 = Release|x64
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Debug|Win32.Build.0 = Debug|Win32
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Debug|x64.ActiveCfg = Debug|x64
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Debug|x64.Build.0 = Debug|x64
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Release|Win32.ActiveCfg = Release|Win32
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Release|Win32.Build.0 = Release|Win32
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Release|x64.ActiveCfg = Release|x64
+		{07318ED8-0E83-46FF-9DF0-82AC9DF7BCBD}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

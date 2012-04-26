@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D3F0C990-7C09-4BC7-BB32-7F621E74DCF2}</ProjectGuid>
+    <RootNamespace>MsaWithDa</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>Wrappers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>Wrappers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AboutBox.cpp" />
+    <ClCompile Include="Wrappers\CAgentCtl.cpp" />
+    <ClCompile Include="Wrappers\CAgentCtlEx.cpp" />
+    <ClCompile Include="MsaWithDa_C8_MFC8.cpp" />
+    <ClCompile Include="MsaWithDaDlg_C8_MFC8.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Wrappers\CDaControl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MsaWithDa_C8_MFC8.h" />
+    <ClInclude Include="MsaWithDaDlg_C8_MFC8.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Wrappers\CAgent.h" />
+    <ClInclude Include="Wrappers\CAgentAudioOutputProperties.h" />
+    <ClInclude Include="Wrappers\CAgentAudioOutputPropertiesEx.h" />
+    <ClInclude Include="Wrappers\CAgentBalloon.h" />
+    <ClInclude Include="Wrappers\CAgentBalloonEx.h" />
+    <ClInclude Include="Wrappers\CAgentCharacter.h" />
+    <ClInclude Include="Wrappers\CAgentCharacterEx.h" />
+    <ClInclude Include="Wrappers\CAgentCommand.h" />
+    <ClInclude Include="Wrappers\CAgentCommandEx.h" />
+    <ClInclude Include="Wrappers\CAgentCommands.h" />
+    <ClInclude Include="Wrappers\CAgentCommandsEx.h" />
+    <ClInclude Include="Wrappers\CAgentCommandWindow.h" />
+    <ClInclude Include="Wrappers\CAgentCtl.h" />
+    <ClInclude Include="Wrappers\CAgentCtlAnimationNames.h" />
+    <ClInclude Include="Wrappers\CAgentCtlAudioObject.h" />
+    <ClInclude Include="Wrappers\CAgentCtlAudioObjectEx.h" />
+    <ClInclude Include="Wrappers\CAgentCtlBalloon.h" />
+    <ClInclude Include="Wrappers\CAgentCtlBalloonEx.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCharacter.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCharacterEx.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCharacters.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCommand.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCommandEx.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCommands.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCommandsEx.h" />
+    <ClInclude Include="Wrappers\CAgentCtlCommandsWindow.h" />
+    <ClInclude Include="Wrappers\CAgentCtlEx.h" />
+    <ClInclude Include="Wrappers\CAgentCtlPropertySheet.h" />
+    <ClInclude Include="Wrappers\CAgentCtlRequest.h" />
+    <ClInclude Include="Wrappers\CAgentCtlSpeechInput.h" />
+    <ClInclude Include="Wrappers\CAgentCtlUserInput.h" />
+    <ClInclude Include="Wrappers\CAgentEx.h" />
+    <ClInclude Include="Wrappers\CAgentNotifySink.h" />
+    <ClInclude Include="Wrappers\CAgentNotifySinkEx.h" />
+    <ClInclude Include="Wrappers\CAgentPropertySheet.h" />
+    <ClInclude Include="Wrappers\CAgentSpeechInputProperties.h" />
+    <ClInclude Include="Wrappers\CAgentUserInput.h" />
+    <ClInclude Include="Wrappers\CDaControl.h" />
+    <ClInclude Include="Wrappers\CDaCtlAnimationNames.h" />
+    <ClInclude Include="Wrappers\CDaCtlBalloon.h" />
+    <ClInclude Include="Wrappers\CDaCtlCharacter.h" />
+    <ClInclude Include="Wrappers\CDaCtlCharacterFiles.h" />
+    <ClInclude Include="Wrappers\CDaCtlCharacters.h" />
+    <ClInclude Include="Wrappers\CDaCtlCommand.h" />
+    <ClInclude Include="Wrappers\CDaCtlCommands.h" />
+    <ClInclude Include="Wrappers\CDaCtlCommandsWindow.h" />
+    <ClInclude Include="Wrappers\CDaCtlPropertySheet.h" />
+    <ClInclude Include="Wrappers\CDaCtlRequest.h" />
+    <ClInclude Include="Wrappers\CDaCtlSettings.h" />
+    <ClInclude Include="Wrappers\CDaCtlSREngine.h" />
+    <ClInclude Include="Wrappers\CDaCtlSREngines.h" />
+    <ClInclude Include="Wrappers\CDaCtlTTSEngine.h" />
+    <ClInclude Include="Wrappers\CDaCtlTTSEngines.h" />
+    <ClInclude Include="Wrappers\CDaCtlUserInput.h" />
+    <ClInclude Include="Wrappers\CDaServer.h" />
+    <ClInclude Include="Wrappers\CDaSvrAnimationNames.h" />
+    <ClInclude Include="Wrappers\CDaSvrBalloon.h" />
+    <ClInclude Include="Wrappers\CDaSvrCharacter.h" />
+    <ClInclude Include="Wrappers\CDaSvrCharacterFiles.h" />
+    <ClInclude Include="Wrappers\CDaSvrCommand.h" />
+    <ClInclude Include="Wrappers\CDaSvrCommands.h" />
+    <ClInclude Include="Wrappers\CDaSvrCommandsWindow.h" />
+    <ClInclude Include="Wrappers\CDaSvrPropertySheet.h" />
+    <ClInclude Include="Wrappers\CDaSvrSettings.h" />
+    <ClInclude Include="Wrappers\CDaSvrSREngine.h" />
+    <ClInclude Include="Wrappers\CDaSvrSREngines.h" />
+    <ClInclude Include="Wrappers\CDaSvrTTSEngine.h" />
+    <ClInclude Include="Wrappers\CDaSvrTTSEngines.h" />
+    <ClInclude Include="Wrappers\CDaSvrUserInput.h" />
+    <ClInclude Include="MsaWithDaRes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MsaWithDa.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MsaWithDa.rc2" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="MsaWithDa.rc" _x007B_1147E530-A208-11DE-ABF2-002421116FB2_x007D_="CDaControl" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
