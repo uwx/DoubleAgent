@@ -257,6 +257,7 @@ del  $(OutDir)%(Filename).log
     <None Include="APIHelp\Templates\TypeTemplate.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="APIHelp\VS2010 ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiHelp\Source\DaApiHelp.h" />

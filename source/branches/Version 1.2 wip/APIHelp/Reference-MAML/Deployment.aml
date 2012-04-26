@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <topic id="e08466cf-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
-	<developerHowToDocument
+	<developerSDKTechnologyOverviewOrientationDocument
 	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
 	  xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -74,5 +74,5 @@
 			<link xlink:href="e08466bb-419c-11e1-9d4f-002421116fb2" />
 		</relatedTopics>
 
-	</developerHowToDocument>
+	</developerSDKTechnologyOverviewOrientationDocument>
 </topic>

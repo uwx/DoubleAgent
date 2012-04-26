@@ -47,6 +47,9 @@
     <None Include="ApiHelp\DoubleAgent.hhp">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="APIHelp\VS2010 ReadMe.txt">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiHelp\Source\DaApiHelp.h">

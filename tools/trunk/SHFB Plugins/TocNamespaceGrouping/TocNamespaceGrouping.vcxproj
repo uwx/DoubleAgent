@@ -136,7 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="SandcastleBuilder.Utils, Version=1.9.3.0, Culture=neutral, PublicKeyToken=71c06e0a0c1c8bf2">
+    <Reference Include="SandcastleBuilder.Utils, Version=1.9.4.0, Culture=neutral, PublicKeyToken=71c06e0a0c1c8bf2">
       <HintPath>..\..\..\..\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\SandcastleBuilder.Utils.dll</HintPath>
       <Private>false</Private>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>

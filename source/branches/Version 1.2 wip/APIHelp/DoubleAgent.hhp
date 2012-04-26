@@ -1,3 +1,7 @@
+;
+; Copy to HtmlHelp1\Help1x.hhp
+;
+
 [OPTIONS]
 Compiled file=\BinDa\Bin\DoubleAgent.chm
 Display compile progress=Yes

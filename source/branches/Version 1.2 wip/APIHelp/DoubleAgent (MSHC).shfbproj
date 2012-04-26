@@ -35,479 +35,480 @@
     <BinaryTOC>False</BinaryTOC>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="DoubleAgent.AxControl" isExposed="True">
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.AxControl" filterName="AxControl" isExposed="True">
-    <Filter entryType="Property" fullName="DoubleAgent.AxControl.AxControl.AudioOutput" filterName="AudioOutput" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.AxControl.AxControl.SpeechInput" filterName="SpeechInput" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlActivateInputEvent" filterName="CtlActivateInputEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlActivateInputEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlActiveClientChangeEvent" filterName="CtlActiveClientChangeEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlActiveClientChangeEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlBalloonHideEvent" filterName="CtlBalloonHideEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlBalloonHideEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlBalloonShowEvent" filterName="CtlBalloonShowEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlBalloonShowEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlBookmarkEvent" filterName="CtlBookmarkEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlBookmarkEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlClickEvent" filterName="CtlClickEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlClickEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlCommandEvent" filterName="CtlCommandEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlCommandEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDblClickEvent" filterName="CtlDblClickEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDblClickEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDeactivateInputEvent" filterName="CtlDeactivateInputEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDeactivateInputEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" filterName="CtlDefaultCharacterChangeEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDragCompleteEvent" filterName="CtlDragCompleteEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDragCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDragStartEvent" filterName="CtlDragStartEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDragStartEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHelpCompleteEvent" filterName="CtlHelpCompleteEvent" isExposed="False" />
-  <Filter entryType="Delegate" fullName="DoubleAgent.AxControl.CtlHelpCompleteEventHandler" filterName="CtlHelpCompleteEventHandler" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHideEvent" filterName="CtlHideEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlHideEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlIdleCompleteEvent" filterName="CtlIdleCompleteEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlIdleCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlIdleStartEvent" filterName="CtlIdleStartEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlIdleStartEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlListenCompleteEvent" filterName="CtlListenCompleteEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlListenCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlListenStartEvent" filterName="CtlListenStartEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlListenStartEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlMoveEvent" filterName="CtlMoveEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlMoveEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlRequestCompleteEvent" filterName="CtlRequestCompleteEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlRequestCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlRequestStartEvent" filterName="CtlRequestStartEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlRequestStartEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlShowEvent" filterName="CtlShowEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlShowEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSizeEvent" filterName="CtlSizeEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSizeEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSpeechEndEvent" filterName="CtlSpeechEndEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSpeechEndEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSpeechStartEvent" filterName="CtlSpeechStartEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSpeechStartEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSpeechWordEvent" filterName="CtlSpeechWordEvent" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSpeechWordEvent.#ctor" filterName=".ctor" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.AxControl.EventMulticaster" filterName="EventMulticaster" isExposed="False" />
-</Filter>
-<Filter entryType="Namespace" fullName="DoubleAgent.Control" isExposed="True">
-  <Filter entryType="Class" fullName="DoubleAgent.Control.AnimationNames" filterName="AnimationNames" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.AudioOutput" filterName="AudioOutput" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Balloon" filterName="Balloon" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Balloon.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Balloon.ForeColor" filterName="ForeColor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Balloon.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Character" filterName="Character" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Character.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Character.Get" filterName="Get" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.Active" filterName="Active" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.AnimationNames" filterName="AnimationNames" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.GUID" filterName="GUID" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.IdleOn" filterName="IdleOn" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.Interface" filterName="Interface" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.SoundEffectsOn" filterName="SoundEffectsOn" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Character.SRStatus" filterName="SRStatus" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.CharacterFiles" filterName="CharacterFiles" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.CharacterFiles.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.CharacterFiles.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Characters" filterName="Characters" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Characters.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Characters.GetEnumerator" filterName="GetEnumerator" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Characters.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Command" filterName="Command" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Command.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Command.Confidence" filterName="Confidence" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Command.HelpContextID" filterName="HelpContextID" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Command.Interface" filterName="Interface" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Command.Voice" filterName="Voice" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Commands" filterName="Commands" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Commands.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Commands.GetEnumerator" filterName="GetEnumerator" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.HelpContextID" filterName="HelpContextID" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.Interface" filterName="Interface" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.Voice" filterName="Voice" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.CommandsWindow" filterName="CommandsWindow" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.CommandsWindow.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.CommandsWindow.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Control" filterName="Control" isExposed="False">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Control.#ctor" filterName=".ctor" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindCharacterSREngines" filterName="FindCharacterSREngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindCharacterTTSEngines" filterName="FindCharacterTTSEngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindSREngines" filterName="FindSREngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindTTSEngines" filterName="FindTTSEngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.GetCharacterSREngine" filterName="GetCharacterSREngine" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.GetCharacterTTSEngine" filterName="GetCharacterTTSEngine" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Control.Control.ShowDefaultCharacterProperties" filterName="ShowDefaultCharacterProperties" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.AutoConnect" filterName="AutoConnect" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.AutoSize" filterName="AutoSize" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BackColor" filterName="BackColor" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderColor" filterName="BorderColor" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderStyle" filterName="BorderStyle" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderVisible" filterName="BorderVisible" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderWidth" filterName="BorderWidth" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.CharacterFiles" filterName="CharacterFiles" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.Characters" filterName="Characters" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.CharacterStyle" filterName="CharacterStyle" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.CommandsWindow" filterName="CommandsWindow" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.Connected" filterName="Connected" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.ControlCharacter" filterName="ControlCharacter" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.MousePointer" filterName="MousePointer" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.PropertySheet" filterName="PropertySheet" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.RaiseRequestErrors" filterName="RaiseRequestErrors" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.Settings" filterName="Settings" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.SREngines" filterName="SREngines" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Control.TTSEngines" filterName="TTSEngines" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ActivateInput" filterName="ActivateInput" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ActiveClientChange" filterName="ActiveClientChange" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.AgentPropertyChange" filterName="AgentPropertyChange" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.BalloonHide" filterName="BalloonHide" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.BalloonShow" filterName="BalloonShow" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Bookmark" filterName="Bookmark" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Click" filterName="Click" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Command" filterName="Command" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DblClick" filterName="DblClick" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DeactivateInput" filterName="DeactivateInput" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DefaultCharacterChange" filterName="DefaultCharacterChange" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DragComplete" filterName="DragComplete" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DragStart" filterName="DragStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Hide" filterName="Hide" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.IdleComplete" filterName="IdleComplete" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.IdleStart" filterName="IdleStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ListenComplete" filterName="ListenComplete" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ListenStart" filterName="ListenStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Move" filterName="Move" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.RequestComplete" filterName="RequestComplete" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.RequestStart" filterName="RequestStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Show" filterName="Show" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Size" filterName="Size" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.SpeechEnd" filterName="SpeechEnd" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.SpeechStart" filterName="SpeechStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Control.Control.SpeechWord" filterName="SpeechWord" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.FormattedText" filterName="FormattedText" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.FormattedText.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.FormattedText.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Delegate" fullName="DoubleAgent.Control.HelpCompleteEventHandler" filterName="HelpCompleteEventHandler" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IAnimationNames" filterName="IAnimationNames" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IAudioOutput" filterName="IAudioOutput" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IBalloon" filterName="IBalloon" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ICharacter" filterName="ICharacter" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ICharacterFiles" filterName="ICharacterFiles" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ICharacters" filterName="ICharacters" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ICommand" filterName="ICommand" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ICommands" filterName="ICommands" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ICommandsWindow" filterName="ICommandsWindow" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IControl" filterName="IControl" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IEvents2" filterName="IEvents2" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IFormattedText" filterName="IFormattedText" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IPropertySheet" filterName="IPropertySheet" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IRequest" filterName="IRequest" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ISettings" filterName="ISettings" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ISpeechInput" filterName="ISpeechInput" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ISREngine" filterName="ISREngine" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ISREngines" filterName="ISREngines" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ITTSEngine" filterName="ITTSEngine" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.ITTSEngines" filterName="ITTSEngines" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Control.IUserInput" filterName="IUserInput" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.PropertySheet" filterName="PropertySheet" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.PropertySheet.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.PropertySheet.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Request" filterName="Request" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Request.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Request.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Delegate" fullName="DoubleAgent.Control.RestartEventHandler" filterName="RestartEventHandler" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.Settings" filterName="Settings" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.Settings.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.Settings.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Delegate" fullName="DoubleAgent.Control.ShutdownEventHandler" filterName="ShutdownEventHandler" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.SinkHelper" filterName="SinkHelper" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.SpeechInput" filterName="SpeechInput" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Control.SREngine" filterName="SREngine" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.SREngine.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.SREngine.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.SREngines" filterName="SREngines" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Count" filterName="Count" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Item" filterName="Item" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngine" filterName="TTSEngine" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.TTSEngine.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngine.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngines" filterName="TTSEngines" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Count" filterName="Count" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Item" filterName="Item" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Control.UserInput" filterName="UserInput" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Control.UserInput.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Control.UserInput.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-</Filter>
-<Filter entryType="Namespace" fullName="DoubleAgent.Control.Native" isExposed="False" />
-<Filter entryType="Namespace" fullName="DoubleAgent.Server" isExposed="True">
-  <Filter entryType="Class" fullName="DoubleAgent.Server.AnimationNames" filterName="AnimationNames" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.AudioOutput" filterName="AudioOutput" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.Balloon" filterName="Balloon" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.BackColor" filterName="BackColor" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.BorderColor" filterName="BorderColor" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.CharsPerLine" filterName="CharsPerLine" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.Enabled" filterName="Enabled" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontBold" filterName="FontBold" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontCharSet" filterName="FontCharSet" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontItalic" filterName="FontItalic" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontName" filterName="FontName" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontSize" filterName="FontSize" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontStrikethru" filterName="FontStrikethru" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontUnderline" filterName="FontUnderline" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.NumberOfLines" filterName="NumberOfLines" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.Style" filterName="Style" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.TextColor" filterName="TextColor" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.Visible" filterName="Visible" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.Character" filterName="Character" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.Character.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetActive" filterName="GetActive" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetAnimationNames" filterName="GetAnimationNames" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetAutoPopupMenu" filterName="GetAutoPopupMenu" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetDescription" filterName="GetDescription" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetExtraData" filterName="GetExtraData" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetGUID" filterName="GetGUID" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetIdleOn" filterName="GetIdleOn" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetLanguageID" filterName="GetLanguageID" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetMoveCause" filterName="GetMoveCause" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetName" filterName="GetName" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetSoundEffectsOn" filterName="GetSoundEffectsOn" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetSRModeID" filterName="GetSRModeID" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetSRStatus" filterName="GetSRStatus" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetTTSModeID" filterName="GetTTSModeID" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetTTSPitch" filterName="GetTTSPitch" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetTTSSpeed" filterName="GetTTSSpeed" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetVisibilityCause" filterName="GetVisibilityCause" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetVisible" filterName="GetVisible" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.HasOtherClients" filterName="HasOtherClients" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetAutoPopupMenu" filterName="SetAutoPopupMenu" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetDescription" filterName="SetDescription" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetIdleOn" filterName="SetIdleOn" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetLanguageID" filterName="SetLanguageID" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetName" filterName="SetName" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetSoundEffectsOn" filterName="SetSoundEffectsOn" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetSRModeID" filterName="SetSRModeID" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetTTSModeID" filterName="SetTTSModeID" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Character.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.CharacterFiles" filterName="CharacterFiles" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.CharacterFiles.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.CharacterFiles.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.Command" filterName="Command" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.Caption" filterName="Caption" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.CommandID" filterName="CommandID" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.ConfidenceText" filterName="ConfidenceText" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.ConfidenceThreshold" filterName="ConfidenceThreshold" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.Enabled" filterName="Enabled" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.Visible" filterName="Visible" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.VoiceCaption" filterName="VoiceCaption" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Command.VoiceGrammar" filterName="VoiceGrammar" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.Commands" filterName="Commands" isExposed="False">
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Add" filterName="Add" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.AddEx" filterName="AddEx" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Insert" filterName="Insert" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.InsertEx" filterName="InsertEx" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Remove" filterName="Remove" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.RemoveAll" filterName="RemoveAll" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Caption" filterName="Caption" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Command" filterName="Command" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Count" filterName="Count" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.DefaultCommand" filterName="DefaultCommand" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.FontName" filterName="FontName" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.FontSize" filterName="FontSize" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.GlobalVoiceCommandsEnabled" filterName="GlobalVoiceCommandsEnabled" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Item" filterName="Item" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Visible" filterName="Visible" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.VoiceCaption" filterName="VoiceCaption" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.VoiceGrammar" filterName="VoiceGrammar" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.CommandsWindow" filterName="CommandsWindow" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.CommandsWindow.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.CommandsWindow.GetVisible" filterName="GetVisible" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.CommandsWindow.SetVisible" filterName="SetVisible" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.CommandsWindow.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.EventSinkHelper" filterName="EventSinkHelper" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.FormattedText" filterName="FormattedText" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.FormattedText.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.FormattedText.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Delegate" fullName="DoubleAgent.Server.HelpCompleteEventHandler" filterName="HelpCompleteEventHandler" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IAnimationNames" filterName="IAnimationNames" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IAudioOutput" filterName="IAudioOutput" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IBalloon" filterName="IBalloon" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ICharacter" filterName="ICharacter" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ICharacterFiles" filterName="ICharacterFiles" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ICommand" filterName="ICommand" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ICommands" filterName="ICommands" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ICommandsWindow" filterName="ICommandsWindow" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IEvents" filterName="IEvents" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IFormattedText" filterName="IFormattedText" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IPropertySheet" filterName="IPropertySheet" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IServer" filterName="IServer" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ISettings" filterName="ISettings" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ISpeechInput" filterName="ISpeechInput" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ISREngine" filterName="ISREngine" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ISREngines" filterName="ISREngines" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ITTSEngine" filterName="ITTSEngine" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.ITTSEngines" filterName="ITTSEngines" isExposed="False" />
-  <Filter entryType="Interface" fullName="DoubleAgent.Server.IUserInput" filterName="IUserInput" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.PropertySheet" filterName="PropertySheet" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.PropertySheet.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.GetPage" filterName="GetPage" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.GetVisible" filterName="GetVisible" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.SetPage" filterName="SetPage" isExposed="False" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.SetVisible" filterName="SetVisible" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.PropertySheet.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Delegate" fullName="DoubleAgent.Server.RestartEventHandler" filterName="RestartEventHandler" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.Server" filterName="Server" isExposed="False">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.Server.#ctor" filterName=".ctor" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindCharacterSREngines" filterName="FindCharacterSREngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindCharacterTTSEngines" filterName="FindCharacterTTSEngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindSREngines" filterName="FindSREngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindTTSEngines" filterName="FindTTSEngines" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.GetCharacterSREngine" filterName="GetCharacterSREngine" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.GetCharacterTTSEngine" filterName="GetCharacterTTSEngine" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.GetVersion" filterName="GetVersion" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Load" filterName="Load" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Register" filterName="Register" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.ShowDefaultCharacterProperties" filterName="ShowDefaultCharacterProperties" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Unload" filterName="Unload" isExposed="True" />
-    <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Unregister" filterName="Unregister" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.Character" filterName="Character" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.CharacterFiles" filterName="CharacterFiles" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.CharacterStyle" filterName="CharacterStyle" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.CommandsWindow" filterName="CommandsWindow" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.PropertySheet" filterName="PropertySheet" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.Settings" filterName="Settings" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.SREngines" filterName="SREngines" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Server.TTSEngines" filterName="TTSEngines" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.ActivateInputState" filterName="ActivateInputState" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.ActiveClientChange" filterName="ActiveClientChange" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.AgentPropertyChange" filterName="AgentPropertyChange" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.BalloonVisibleState" filterName="BalloonVisibleState" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.BookMark" filterName="BookMark" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Click" filterName="Click" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Command" filterName="Command" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DblClick" filterName="DblClick" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DefaultCharacterChange" filterName="DefaultCharacterChange" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DragComplete" filterName="DragComplete" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DragStart" filterName="DragStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Idle" filterName="Idle" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.ListeningState" filterName="ListeningState" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Move" filterName="Move" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.RequestComplete" filterName="RequestComplete" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.RequestStart" filterName="RequestStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Size" filterName="Size" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.SpeechEnd" filterName="SpeechEnd" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.SpeechStart" filterName="SpeechStart" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.SpeechWord" filterName="SpeechWord" isExposed="True" />
-    <Filter entryType="Event" fullName="DoubleAgent.Server.Server.VisibleState" filterName="VisibleState" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.Settings" filterName="Settings" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.Settings.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.Settings.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Delegate" fullName="DoubleAgent.Server.ShutdownEventHandler" filterName="ShutdownEventHandler" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.SpeechInput" filterName="SpeechInput" isExposed="False" />
-  <Filter entryType="Class" fullName="DoubleAgent.Server.SREngine" filterName="SREngine" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.SREngine.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.SREngine.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.SREngines" filterName="SREngines" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Count" filterName="Count" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Item" filterName="Item" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngine" filterName="TTSEngine" isExposed="True">
-    <Filter entryType="Constructor" fullName="DoubleAgent.Server.TTSEngine.#ctor" filterName=".ctor" isExposed="False" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngine.Interface" filterName="Interface" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngines" filterName="TTSEngines" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Count" filterName="Count" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Item" filterName="Item" isExposed="True" />
-  </Filter>
-  <Filter entryType="Class" fullName="DoubleAgent.Server.UserInput" filterName="UserInput" isExposed="False">
-    <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.Count" filterName="Count" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.ItemCommandID" filterName="ItemCommandID" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.ItemConfidence" filterName="ItemConfidence" isExposed="True" />
-    <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.ItemText" filterName="ItemText" isExposed="True" />
-  </Filter>
-</Filter>
-<Filter entryType="Namespace" fullName="DoubleAgent.Server.Native" isExposed="False" />
-<Filter entryType="Namespace" fullName="System" isExposed="True">
-  <Filter entryType="Class" fullName="System.MarshalByRefObject" filterName="MarshalByRefObject" isExposed="False" />
-</Filter>
-<Filter entryType="Namespace" fullName="System.Windows.Forms" isExposed="True">
-  <Filter entryType="Class" fullName="System.Windows.Forms.AxHost" filterName="AxHost" isExposed="True">
-    <Filter entryType="Method" fullName="System.Windows.Forms.AxHost.DrawToBitmap" filterName="DrawToBitmap" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.BackColor" filterName="BackColor" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.BackgroundImage" filterName="BackgroundImage" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.BackgroundImageLayout" filterName="BackgroundImageLayout" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.Cursor" filterName="Cursor" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.Font" filterName="Font" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.ForeColor" filterName="ForeColor" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.RightToLeft" filterName="RightToLeft" isExposed="False" />
-    <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.BackColorChanged" filterName="BackColorChanged" isExposed="False" />
-    <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.BackgroundImageChanged" filterName="BackgroundImageChanged" isExposed="False" />
-    <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.BackgroundImageLayoutChanged" filterName="BackgroundImageLayoutChanged" isExposed="False" />
-    <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.FontChanged" filterName="FontChanged" isExposed="False" />
-    <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.ForeColorChanged" filterName="ForeColorChanged" isExposed="False" />
-  </Filter>
-  <Filter entryType="Class" fullName="System.Windows.Forms.Control" filterName="Control" isExposed="True">
-    <Filter entryType="Method" fullName="System.Windows.Forms.Control.Contains" filterName="Contains" isExposed="False" />
-    <Filter entryType="Method" fullName="System.Windows.Forms.Control.GetChildAtPoint" filterName="GetChildAtPoint" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.Control.AutoSize" filterName="AutoSize" isExposed="False" />
-    <Filter entryType="Property" fullName="System.Windows.Forms.Control.WindowTarget" filterName="WindowTarget" isExposed="False" />
-    <Filter entryType="Event" fullName="System.Windows.Forms.Control.AutoSizeChanged" filterName="AutoSizeChanged" isExposed="False" />
-  </Filter>
-</Filter></ApiFilter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.AxControl" filterName="AxControl" isExposed="True">
+          <Filter entryType="Property" fullName="DoubleAgent.AxControl.AxControl.AudioOutput" filterName="AudioOutput" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.AxControl.AxControl.SpeechInput" filterName="SpeechInput" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlActivateInputEvent" filterName="CtlActivateInputEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlActivateInputEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlActiveClientChangeEvent" filterName="CtlActiveClientChangeEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlActiveClientChangeEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlBalloonHideEvent" filterName="CtlBalloonHideEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlBalloonHideEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlBalloonShowEvent" filterName="CtlBalloonShowEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlBalloonShowEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlBookmarkEvent" filterName="CtlBookmarkEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlBookmarkEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlClickEvent" filterName="CtlClickEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlClickEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlCommandEvent" filterName="CtlCommandEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlCommandEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDblClickEvent" filterName="CtlDblClickEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDblClickEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDeactivateInputEvent" filterName="CtlDeactivateInputEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDeactivateInputEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent" filterName="CtlDefaultCharacterChangeEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDefaultCharacterChangeEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDragCompleteEvent" filterName="CtlDragCompleteEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDragCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlDragStartEvent" filterName="CtlDragStartEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlDragStartEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHelpCompleteEvent" filterName="CtlHelpCompleteEvent" isExposed="False" />
+        <Filter entryType="Delegate" fullName="DoubleAgent.AxControl.CtlHelpCompleteEventHandler" filterName="CtlHelpCompleteEventHandler" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlHideEvent" filterName="CtlHideEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlHideEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlIdleCompleteEvent" filterName="CtlIdleCompleteEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlIdleCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlIdleStartEvent" filterName="CtlIdleStartEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlIdleStartEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlListenCompleteEvent" filterName="CtlListenCompleteEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlListenCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlListenStartEvent" filterName="CtlListenStartEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlListenStartEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlMoveEvent" filterName="CtlMoveEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlMoveEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlRequestCompleteEvent" filterName="CtlRequestCompleteEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlRequestCompleteEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlRequestStartEvent" filterName="CtlRequestStartEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlRequestStartEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlShowEvent" filterName="CtlShowEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlShowEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSizeEvent" filterName="CtlSizeEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSizeEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSpeechEndEvent" filterName="CtlSpeechEndEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSpeechEndEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSpeechStartEvent" filterName="CtlSpeechStartEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSpeechStartEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.CtlSpeechWordEvent" filterName="CtlSpeechWordEvent" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.AxControl.CtlSpeechWordEvent.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.AxControl.EventMulticaster" filterName="EventMulticaster" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="DoubleAgent.Control" isExposed="True">
+        <Filter entryType="Class" fullName="DoubleAgent.Control.AnimationNames" filterName="AnimationNames" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.AudioOutput" filterName="AudioOutput" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Balloon" filterName="Balloon" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Balloon.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Balloon.ForeColor" filterName="ForeColor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Balloon.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Character" filterName="Character" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Character.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Character.Get" filterName="Get" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.Active" filterName="Active" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.AnimationNames" filterName="AnimationNames" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.GUID" filterName="GUID" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.IdleOn" filterName="IdleOn" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.Interface" filterName="Interface" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.SoundEffectsOn" filterName="SoundEffectsOn" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Character.SRStatus" filterName="SRStatus" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.CharacterFiles" filterName="CharacterFiles" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.CharacterFiles.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.CharacterFiles.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Characters" filterName="Characters" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Characters.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Characters.GetEnumerator" filterName="GetEnumerator" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Characters.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Command" filterName="Command" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Command.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Command.Confidence" filterName="Confidence" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Command.HelpContextID" filterName="HelpContextID" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Command.Interface" filterName="Interface" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Command.Voice" filterName="Voice" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Commands" filterName="Commands" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Commands.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Commands.GetEnumerator" filterName="GetEnumerator" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.HelpContextID" filterName="HelpContextID" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.Interface" filterName="Interface" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Commands.Voice" filterName="Voice" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.CommandsWindow" filterName="CommandsWindow" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.CommandsWindow.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.CommandsWindow.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Control" filterName="Control" isExposed="False">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Control.#ctor" filterName=".ctor" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindCharacterSREngines" filterName="FindCharacterSREngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindCharacterTTSEngines" filterName="FindCharacterTTSEngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindSREngines" filterName="FindSREngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.FindTTSEngines" filterName="FindTTSEngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.GetCharacterSREngine" filterName="GetCharacterSREngine" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.GetCharacterTTSEngine" filterName="GetCharacterTTSEngine" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Control.Control.ShowDefaultCharacterProperties" filterName="ShowDefaultCharacterProperties" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.AutoConnect" filterName="AutoConnect" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.AutoSize" filterName="AutoSize" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BackColor" filterName="BackColor" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderColor" filterName="BorderColor" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderStyle" filterName="BorderStyle" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderVisible" filterName="BorderVisible" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.BorderWidth" filterName="BorderWidth" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.CharacterFiles" filterName="CharacterFiles" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.Characters" filterName="Characters" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.CharacterStyle" filterName="CharacterStyle" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.CommandsWindow" filterName="CommandsWindow" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.Connected" filterName="Connected" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.ControlCharacter" filterName="ControlCharacter" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.MousePointer" filterName="MousePointer" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.PropertySheet" filterName="PropertySheet" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.RaiseRequestErrors" filterName="RaiseRequestErrors" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.Settings" filterName="Settings" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.SREngines" filterName="SREngines" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Control.TTSEngines" filterName="TTSEngines" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ActivateInput" filterName="ActivateInput" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ActiveClientChange" filterName="ActiveClientChange" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.AgentPropertyChange" filterName="AgentPropertyChange" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.BalloonHide" filterName="BalloonHide" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.BalloonShow" filterName="BalloonShow" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Bookmark" filterName="Bookmark" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Click" filterName="Click" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Command" filterName="Command" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DblClick" filterName="DblClick" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DeactivateInput" filterName="DeactivateInput" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DefaultCharacterChange" filterName="DefaultCharacterChange" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DragComplete" filterName="DragComplete" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.DragStart" filterName="DragStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Hide" filterName="Hide" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.IdleComplete" filterName="IdleComplete" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.IdleStart" filterName="IdleStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ListenComplete" filterName="ListenComplete" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.ListenStart" filterName="ListenStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Move" filterName="Move" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.RequestComplete" filterName="RequestComplete" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.RequestStart" filterName="RequestStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Show" filterName="Show" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.Size" filterName="Size" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.SpeechEnd" filterName="SpeechEnd" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.SpeechStart" filterName="SpeechStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Control.Control.SpeechWord" filterName="SpeechWord" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.FormattedText" filterName="FormattedText" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.FormattedText.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.FormattedText.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Delegate" fullName="DoubleAgent.Control.HelpCompleteEventHandler" filterName="HelpCompleteEventHandler" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IAnimationNames" filterName="IAnimationNames" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IAudioOutput" filterName="IAudioOutput" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IBalloon" filterName="IBalloon" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ICharacter" filterName="ICharacter" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ICharacterFiles" filterName="ICharacterFiles" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ICharacters" filterName="ICharacters" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ICommand" filterName="ICommand" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ICommands" filterName="ICommands" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ICommandsWindow" filterName="ICommandsWindow" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IControl" filterName="IControl" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IEvents2" filterName="IEvents2" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IFormattedText" filterName="IFormattedText" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IPropertySheet" filterName="IPropertySheet" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IRequest" filterName="IRequest" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ISettings" filterName="ISettings" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ISpeechInput" filterName="ISpeechInput" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ISREngine" filterName="ISREngine" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ISREngines" filterName="ISREngines" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ITTSEngine" filterName="ITTSEngine" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.ITTSEngines" filterName="ITTSEngines" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Control.IUserInput" filterName="IUserInput" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.PropertySheet" filterName="PropertySheet" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.PropertySheet.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.PropertySheet.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Request" filterName="Request" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Request.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Request.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Delegate" fullName="DoubleAgent.Control.RestartEventHandler" filterName="RestartEventHandler" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.Settings" filterName="Settings" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.Settings.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.Settings.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Delegate" fullName="DoubleAgent.Control.ShutdownEventHandler" filterName="ShutdownEventHandler" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.SinkHelper" filterName="SinkHelper" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.SpeechInput" filterName="SpeechInput" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Control.SREngine" filterName="SREngine" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.SREngine.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.SREngine.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.SREngines" filterName="SREngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.SREngines.Item" filterName="Item" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngine" filterName="TTSEngine" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.TTSEngine.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngine.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.TTSEngines" filterName="TTSEngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.TTSEngines.Item" filterName="Item" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Control.UserInput" filterName="UserInput" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Control.UserInput.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Control.UserInput.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="DoubleAgent.Control.Native" isExposed="False" />
+      <Filter entryType="Namespace" fullName="DoubleAgent.Server" isExposed="True">
+        <Filter entryType="Class" fullName="DoubleAgent.Server.AnimationNames" filterName="AnimationNames" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.AudioOutput" filterName="AudioOutput" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.Balloon" filterName="Balloon" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.BackColor" filterName="BackColor" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.BorderColor" filterName="BorderColor" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.CharsPerLine" filterName="CharsPerLine" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.Enabled" filterName="Enabled" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontBold" filterName="FontBold" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontCharSet" filterName="FontCharSet" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontItalic" filterName="FontItalic" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontName" filterName="FontName" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontSize" filterName="FontSize" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontStrikethru" filterName="FontStrikethru" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.FontUnderline" filterName="FontUnderline" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.NumberOfLines" filterName="NumberOfLines" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.Style" filterName="Style" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.TextColor" filterName="TextColor" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Balloon.Visible" filterName="Visible" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.Character" filterName="Character" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.Character.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetActive" filterName="GetActive" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetAnimationNames" filterName="GetAnimationNames" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetAutoPopupMenu" filterName="GetAutoPopupMenu" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetDescription" filterName="GetDescription" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetExtraData" filterName="GetExtraData" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetGUID" filterName="GetGUID" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetIdleOn" filterName="GetIdleOn" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetLanguageID" filterName="GetLanguageID" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetMoveCause" filterName="GetMoveCause" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetName" filterName="GetName" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetSoundEffectsOn" filterName="GetSoundEffectsOn" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetSRModeID" filterName="GetSRModeID" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetSRStatus" filterName="GetSRStatus" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetTTSModeID" filterName="GetTTSModeID" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetTTSPitch" filterName="GetTTSPitch" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetTTSSpeed" filterName="GetTTSSpeed" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetVisibilityCause" filterName="GetVisibilityCause" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.GetVisible" filterName="GetVisible" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.HasOtherClients" filterName="HasOtherClients" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetAutoPopupMenu" filterName="SetAutoPopupMenu" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetDescription" filterName="SetDescription" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetIdleOn" filterName="SetIdleOn" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetLanguageID" filterName="SetLanguageID" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetName" filterName="SetName" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetSoundEffectsOn" filterName="SetSoundEffectsOn" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetSRModeID" filterName="SetSRModeID" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Character.SetTTSModeID" filterName="SetTTSModeID" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Character.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.CharacterFiles" filterName="CharacterFiles" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.CharacterFiles.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.CharacterFiles.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.Command" filterName="Command" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.Caption" filterName="Caption" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.CommandID" filterName="CommandID" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.ConfidenceText" filterName="ConfidenceText" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.ConfidenceThreshold" filterName="ConfidenceThreshold" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.Enabled" filterName="Enabled" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.Visible" filterName="Visible" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.VoiceCaption" filterName="VoiceCaption" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Command.VoiceGrammar" filterName="VoiceGrammar" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.Commands" filterName="Commands" isExposed="False">
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Add" filterName="Add" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.AddEx" filterName="AddEx" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Insert" filterName="Insert" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.InsertEx" filterName="InsertEx" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.Remove" filterName="Remove" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Commands.RemoveAll" filterName="RemoveAll" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Caption" filterName="Caption" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Command" filterName="Command" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.DefaultCommand" filterName="DefaultCommand" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.FontName" filterName="FontName" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.FontSize" filterName="FontSize" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.GlobalVoiceCommandsEnabled" filterName="GlobalVoiceCommandsEnabled" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Item" filterName="Item" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.Visible" filterName="Visible" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.VoiceCaption" filterName="VoiceCaption" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Commands.VoiceGrammar" filterName="VoiceGrammar" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.CommandsWindow" filterName="CommandsWindow" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.CommandsWindow.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.CommandsWindow.GetVisible" filterName="GetVisible" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.CommandsWindow.SetVisible" filterName="SetVisible" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.CommandsWindow.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.EventSinkHelper" filterName="EventSinkHelper" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.FormattedText" filterName="FormattedText" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.FormattedText.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.FormattedText.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Delegate" fullName="DoubleAgent.Server.HelpCompleteEventHandler" filterName="HelpCompleteEventHandler" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IAnimationNames" filterName="IAnimationNames" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IAudioOutput" filterName="IAudioOutput" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IBalloon" filterName="IBalloon" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ICharacter" filterName="ICharacter" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ICharacterFiles" filterName="ICharacterFiles" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ICommand" filterName="ICommand" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ICommands" filterName="ICommands" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ICommandsWindow" filterName="ICommandsWindow" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IEvents" filterName="IEvents" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IFormattedText" filterName="IFormattedText" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IPropertySheet" filterName="IPropertySheet" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IServer" filterName="IServer" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ISettings" filterName="ISettings" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ISpeechInput" filterName="ISpeechInput" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ISREngine" filterName="ISREngine" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ISREngines" filterName="ISREngines" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ITTSEngine" filterName="ITTSEngine" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.ITTSEngines" filterName="ITTSEngines" isExposed="False" />
+        <Filter entryType="Interface" fullName="DoubleAgent.Server.IUserInput" filterName="IUserInput" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.PropertySheet" filterName="PropertySheet" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.PropertySheet.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.GetPage" filterName="GetPage" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.GetVisible" filterName="GetVisible" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.SetPage" filterName="SetPage" isExposed="False" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.PropertySheet.SetVisible" filterName="SetVisible" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.PropertySheet.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Delegate" fullName="DoubleAgent.Server.RestartEventHandler" filterName="RestartEventHandler" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.Server" filterName="Server" isExposed="False">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.Server.#ctor" filterName=".ctor" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindCharacterSREngines" filterName="FindCharacterSREngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindCharacterTTSEngines" filterName="FindCharacterTTSEngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindSREngines" filterName="FindSREngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.FindTTSEngines" filterName="FindTTSEngines" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.GetCharacterSREngine" filterName="GetCharacterSREngine" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.GetCharacterTTSEngine" filterName="GetCharacterTTSEngine" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.GetVersion" filterName="GetVersion" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Load" filterName="Load" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Register" filterName="Register" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.ShowDefaultCharacterProperties" filterName="ShowDefaultCharacterProperties" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Unload" filterName="Unload" isExposed="True" />
+          <Filter entryType="Method" fullName="DoubleAgent.Server.Server.Unregister" filterName="Unregister" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.Character" filterName="Character" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.CharacterFiles" filterName="CharacterFiles" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.CharacterStyle" filterName="CharacterStyle" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.CommandsWindow" filterName="CommandsWindow" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.PropertySheet" filterName="PropertySheet" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.Settings" filterName="Settings" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.SREngines" filterName="SREngines" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Server.TTSEngines" filterName="TTSEngines" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.ActivateInputState" filterName="ActivateInputState" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.ActiveClientChange" filterName="ActiveClientChange" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.AgentPropertyChange" filterName="AgentPropertyChange" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.BalloonVisibleState" filterName="BalloonVisibleState" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.BookMark" filterName="BookMark" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Click" filterName="Click" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Command" filterName="Command" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DblClick" filterName="DblClick" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DefaultCharacterChange" filterName="DefaultCharacterChange" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DragComplete" filterName="DragComplete" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.DragStart" filterName="DragStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Idle" filterName="Idle" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.ListeningState" filterName="ListeningState" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Move" filterName="Move" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.RequestComplete" filterName="RequestComplete" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.RequestStart" filterName="RequestStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.Size" filterName="Size" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.SpeechEnd" filterName="SpeechEnd" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.SpeechStart" filterName="SpeechStart" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.SpeechWord" filterName="SpeechWord" isExposed="True" />
+          <Filter entryType="Event" fullName="DoubleAgent.Server.Server.VisibleState" filterName="VisibleState" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.Settings" filterName="Settings" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.Settings.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.Settings.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Delegate" fullName="DoubleAgent.Server.ShutdownEventHandler" filterName="ShutdownEventHandler" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.SpeechInput" filterName="SpeechInput" isExposed="False" />
+        <Filter entryType="Class" fullName="DoubleAgent.Server.SREngine" filterName="SREngine" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.SREngine.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.SREngine.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.SREngines" filterName="SREngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.SREngines.Item" filterName="Item" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngine" filterName="TTSEngine" isExposed="True">
+          <Filter entryType="Constructor" fullName="DoubleAgent.Server.TTSEngine.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngine.Interface" filterName="Interface" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.TTSEngines" filterName="TTSEngines" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.TTSEngines.Item" filterName="Item" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="DoubleAgent.Server.UserInput" filterName="UserInput" isExposed="False">
+          <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.Count" filterName="Count" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.ItemCommandID" filterName="ItemCommandID" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.ItemConfidence" filterName="ItemConfidence" isExposed="True" />
+          <Filter entryType="Property" fullName="DoubleAgent.Server.UserInput.ItemText" filterName="ItemText" isExposed="True" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="DoubleAgent.Server.Native" isExposed="False" />
+      <Filter entryType="Namespace" fullName="System" isExposed="True">
+        <Filter entryType="Class" fullName="System.MarshalByRefObject" filterName="MarshalByRefObject" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="System.Windows.Forms" isExposed="True">
+        <Filter entryType="Class" fullName="System.Windows.Forms.AxHost" filterName="AxHost" isExposed="True">
+          <Filter entryType="Method" fullName="System.Windows.Forms.AxHost.DrawToBitmap" filterName="DrawToBitmap" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.BackColor" filterName="BackColor" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.BackgroundImage" filterName="BackgroundImage" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.BackgroundImageLayout" filterName="BackgroundImageLayout" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.Cursor" filterName="Cursor" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.Font" filterName="Font" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.ForeColor" filterName="ForeColor" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.AxHost.RightToLeft" filterName="RightToLeft" isExposed="False" />
+          <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.BackColorChanged" filterName="BackColorChanged" isExposed="False" />
+          <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.BackgroundImageChanged" filterName="BackgroundImageChanged" isExposed="False" />
+          <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.BackgroundImageLayoutChanged" filterName="BackgroundImageLayoutChanged" isExposed="False" />
+          <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.FontChanged" filterName="FontChanged" isExposed="False" />
+          <Filter entryType="Event" fullName="System.Windows.Forms.AxHost.ForeColorChanged" filterName="ForeColorChanged" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="System.Windows.Forms.Control" filterName="Control" isExposed="True">
+          <Filter entryType="Method" fullName="System.Windows.Forms.Control.Contains" filterName="Contains" isExposed="False" />
+          <Filter entryType="Method" fullName="System.Windows.Forms.Control.GetChildAtPoint" filterName="GetChildAtPoint" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.Control.AutoSize" filterName="AutoSize" isExposed="False" />
+          <Filter entryType="Property" fullName="System.Windows.Forms.Control.WindowTarget" filterName="WindowTarget" isExposed="False" />
+          <Filter entryType="Event" fullName="System.Windows.Forms.Control.AutoSizeChanged" filterName="AutoSizeChanged" isExposed="False" />
+        </Filter>
+      </Filter>
+    </ApiFilter>
     <Preliminary>False</Preliminary>
     <PresentationStyle>vs2010</PresentationStyle>
     <HelpFileFormat>MSHelpViewer</HelpFileFormat>
@@ -561,51 +562,26 @@
           </helpOutput>
         </component>
       </ComponentConfig>
-      <ComponentConfig id="Cached Framework Comments Index Data" enabled="True">
-        <component id="Cached Framework Comments Index Data" type="SandcastleBuilder.Components.CachedCopyFromIndexComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
-          <index name="comments" value="/doc/members/member" key="@name" cache="100">
+<ComponentConfig id="Cached Framework Comments Index Data" enabled="True"><component id="Cached Framework Comments Index Data" type="SandcastleBuilder.Components.CachedCopyFromIndexComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><index name="comments" value="/doc/members/member" key="@name" cache="100">
 						{@CachedFrameworkCommentList}
 						{@CommentFileList}
-					</index>
-          <copy name="comments" source="*" target="/document/comments" />
-        </component>
-      </ComponentConfig>
-      <ComponentConfig id="Code Block Component" enabled="True">
-        <component id="Code Block Component" type="SandcastleBuilder.Components.CodeBlockComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
-          <basePath value="{@HtmlEncProjectFolder}" />
-          <languageFilter value="false" />
-          <allowMissingSource value="false" />
-          <removeRegionMarkers value="false" />
-          <colorizer syntaxFile="{@SHFBFolder}Colorizer\highlight.xml" styleFile="{@SHFBFolder}Colorizer\highlight.xsl" copyImageUrl="../icons/CopyCode.gif" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
-        </component>
-      </ComponentConfig>
-      <ComponentConfig id="Post-transform Component" enabled="True">
-        <component id="Post-transform Component" type="SandcastleBuilder.Components.PostTransformComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll">
-          <!-- Code colorizer files (required).
+					</index><copy name="comments" source="*" target="/document/comments" /></component></ComponentConfig>
+<ComponentConfig id="Code Block Component" enabled="True"><component id="Code Block Component" type="SandcastleBuilder.Components.CodeBlockComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><basePath value="{@HtmlEncProjectFolder}" /><languageFilter value="false" /><allowMissingSource value="false" /><removeRegionMarkers value="false" /><colorizer syntaxFile="{@SHFBFolder}Colorizer\highlight.xml" styleFile="{@SHFBFolder}Colorizer\highlight.xsl" copyImageUrl="../icons/CopyCode.gif" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" /></component></ComponentConfig>
+<ComponentConfig id="Post-transform Component" enabled="True"><component id="Post-transform Component" type="SandcastleBuilder.Components.PostTransformComponent" assembly="{@SHFBFolder}SandcastleBuilder.Components.dll"><!-- Code colorizer files (required).
                  Attributes:
                     Stylesheet file (required)
                     Script file (required)
-                    "Copy" image file (required) -->
-          <colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" self-branded="{@SelfBranded}" />
-          <!-- Base output paths for the files (required).  These should match
+                    "Copy" image file (required) --><colorizer stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" copyImage="{@SHFBFolder}Colorizer\CopyCode.gif" self-branded="{@SelfBranded}" /><!-- Base output paths for the files (required).  These should match
                  the parent folder of the output path of the HTML files (see
-                 each of the SaveComponent instances below). -->
-          <outputPaths>
+                 each of the SaveComponent instances below). --><outputPaths>
 						{@HelpFormatOutputPaths}
-					</outputPaths>
-          <!-- Logo image file (optional).  Filename is required. The height,
+					</outputPaths><!-- Logo image file (optional).  Filename is required. The height,
                  width, altText, placement, and alignment attributes are
-                 optional. -->
-          <logoFile filename="C:\Dev\Images\Cinnamon.png" height="40" width="40" altText="" placement="right" alignment="left" />
-        </component>
-      </ComponentConfig>
-      <ComponentConfig id="API Token Resolution" enabled="True">
-        <component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
+                 optional. --><logoFile filename="C:\DoubleAgent\APIHelp\images\Cinnamon.png" height="40" width="40" altText="" placement="right" alignment="left" /></component></ComponentConfig>
+<ComponentConfig id="API Token Resolution" enabled="True"><component id="API Token Resolution" type="Microsoft.Ddue.Tools.SharedContentComponent" assembly="{@SandcastlePath}ProductionTools\BuildComponents.dll">
 
 					{@TokenFiles}
-					<replace elements="/*//token" item="string(.)" /></component>
-      </ComponentConfig>
-    </ComponentConfigurations>
+					<replace elements="/*//token" item="string(.)" /></component></ComponentConfig></ComponentConfigurations>
     <ProductTitle>Double Agent SDK</ProductTitle>
     <VendorName>Cinnamon Software</VendorName>
     <TocParentId>-1</TocParentId>
