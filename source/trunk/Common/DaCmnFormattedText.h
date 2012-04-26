@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -34,11 +34,11 @@ public:
 public:
 	CComContainedObject <CAgentTextObject>	mText;
 
-	const CAtlString & GetOriginal () const {return mRawText;}
+	const CAtlString& GetOriginal () const {return mRawText;}
 
 // Operations
 public:
-	HRESULT Initialize (LPUNKNOWN pObject, class CSapiVoice * pSapiVoice);
+	HRESULT Initialize (LPUNKNOWN pObject, class CSapiVoice* pSapiVoice);
 	HRESULT Initialize (LPUNKNOWN pObject, UINT pSapiVersion = 5);
 
 // Interfaces
@@ -52,7 +52,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get_WordIndex (long *WordIndex);
 	HRESULT STDMETHODCALLTYPE get_DisplayText (BSTR *DisplayText);
 	HRESULT STDMETHODCALLTYPE Parse (BSTR RawText);
-	HRESULT STDMETHODCALLTYPE Append (CDaCmnFormattedText * FormattedText);
+	HRESULT STDMETHODCALLTYPE Append (CDaCmnFormattedText* FormattedText);
 
 // Implementation
 protected:

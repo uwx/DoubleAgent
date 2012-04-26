@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -42,7 +42,7 @@ public:
 public:
 	void FinalRelease ();
 
-	HRESULT Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWaveFileName, CAgentStreamInfo * pStreamInfo);
+	HRESULT Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWaveFileName, CAgentStreamInfo* pStreamInfo);
 	HRESULT Disconnect (IGraphBuilder * pGraphBuilder = NULL);
 
 	HRESULT Start ();
@@ -58,8 +58,8 @@ public:
 
 public:
 	// ISampleGrabberCB
-	HRESULT STDMETHODCALLTYPE SampleCB (double SampleTime, IMediaSample *pSample);
-	HRESULT STDMETHODCALLTYPE BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen);
+	HRESULT STDMETHODCALLTYPE SampleCB (double SampleTime, IMediaSample*pSample);
+	HRESULT STDMETHODCALLTYPE BufferCB (double SampleTime, BYTE*pBuffer, long BufferLen);
 
 // Implementation
 protected:

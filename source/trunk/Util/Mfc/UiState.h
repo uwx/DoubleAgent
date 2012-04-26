@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -68,7 +68,7 @@ public:
 	static UINT GetUiDrawState (HWND pWindow, UINT pDrawState);
 
 	static void InitUiState (HWND pWindow = NULL);
-	static bool UpdateUiState (MSG & pMsg);
+	static bool UpdateUiState (MSG& pMsg);
 
 	static bool IsScreenReaderActive ();
 

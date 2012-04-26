@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -64,7 +64,7 @@ CQueuedAction::~CQueuedAction ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedAction::NotifyStarted (CEventNotify * pNotify)
+void CQueuedAction::NotifyStarted (CEventNotify* pNotify)
 {
 	if	(
 			(mReqID > 0)
@@ -79,7 +79,7 @@ void CQueuedAction::NotifyStarted (CEventNotify * pNotify)
 	}
 }
 
-void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <CEventNotify> & pNotify)
+void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <CEventNotify>& pNotify)
 {
 	mStarted = true;
 
@@ -93,7 +93,7 @@ void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <CEventNotify> & pNotify)
 	if	(mReqID > 0)
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("[%d(%d)] NotifyStarted   [%d]"), mCharID, mReqID, pNotify.GetCount());
@@ -105,7 +105,7 @@ void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <CEventNotify> & pNotify)
 	}
 }
 
-void CQueuedAction::NotifyComplete (CEventNotify * pNotify, HRESULT pReqStatus)
+void CQueuedAction::NotifyComplete (CEventNotify* pNotify, HRESULT pReqStatus)
 {
 	if	(
 			(mReqID > 0)
@@ -120,7 +120,7 @@ void CQueuedAction::NotifyComplete (CEventNotify * pNotify, HRESULT pReqStatus)
 	}
 }
 
-void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <CEventNotify> & pNotify, HRESULT pReqStatus)
+void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <CEventNotify>& pNotify, HRESULT pReqStatus)
 {
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive())
@@ -132,7 +132,7 @@ void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <CEventNotify> & pNotify, H
 	if	(mReqID > 0)
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("[%d(%d)] NotifyComplete  [%d]"), mCharID, mReqID, pNotify.GetCount());
@@ -160,7 +160,7 @@ CQueuedState::~CQueuedState ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedState::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedState::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	bool	lRet = false;
 
@@ -209,9 +209,9 @@ bool CQueuedState::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedState::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedState::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
-	bool				lRet = false;
+	bool	lRet = false;
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
@@ -226,7 +226,7 @@ bool CQueuedState::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 	return lRet;
 }
 
-bool CQueuedState::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedState::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool				lRet = false;
 	CQueuedGesture *	lQueuedGesture;
@@ -268,7 +268,7 @@ CQueuedGesture::~CQueuedGesture ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedGesture::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedGesture::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	bool	lRet = false;
 
@@ -320,7 +320,7 @@ bool CQueuedGesture::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedGesture::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedGesture::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool	lRet = false;
 #ifdef	_LOG_QUEUE_OPS
@@ -362,7 +362,7 @@ bool CQueuedGesture::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool
 	return lRet;
 }
 
-bool CQueuedGesture::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedGesture::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool	lRet = false;
 
@@ -401,11 +401,11 @@ CQueuedShow::~CQueuedShow ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedShow::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedShow::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	bool					lShown = true;
-	CAgentCharacterWnd *	lCharacterWnd;
+	bool				lRet = false;
+	bool				lShown = true;
+	CAgentCharacterWnd*	lCharacterWnd;
 
 	if	(mPaused)
 	{
@@ -421,7 +421,7 @@ bool CQueuedShow::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		{
 			if	(
 					(!mAnimationShown)
-				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				)
 			{
 				lShown = lCharacterWnd->ShowQueued (this);
@@ -485,7 +485,7 @@ bool CQueuedShow::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedShow::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedShow::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool	lRet = false;
 #ifdef	_LOG_QUEUE_OPS
@@ -527,7 +527,7 @@ bool CQueuedShow::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 	return lRet;
 }
 
-bool CQueuedShow::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedShow::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool			lRet = false;
 	CQueuedState *	lQueuedState;
@@ -567,12 +567,12 @@ CQueuedHide::~CQueuedHide ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedHide::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedHide::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd;
-	CAgentListeningWnd *	lListeningWnd;
+	bool				lRet = false;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentBalloonWnd*	lBalloonWnd;
+	CAgentListeningWnd*	lListeningWnd;
 
 	if	(mPaused)
 	{
@@ -582,7 +582,7 @@ bool CQueuedHide::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	{
 		if	(!mStarted)
 		{
-			if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			{
 				if	(
 						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
@@ -649,7 +649,7 @@ bool CQueuedHide::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Queued [%p(%d)] Hide"), pAgentWnd, mCharID, this, mReqID);
 				}
 #endif
-				if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				{
 					lCharacterWnd->HideQueued (this);
 				}
@@ -672,7 +672,7 @@ bool CQueuedHide::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedHide::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedHide::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool	lRet = false;
 #ifdef	_LOG_QUEUE_OPS
@@ -714,7 +714,7 @@ bool CQueuedHide::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 	return lRet;
 }
 
-bool CQueuedHide::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedHide::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool			lRet = false;
 	CQueuedState *	lQueuedState;
@@ -770,7 +770,7 @@ bool CQueuedMove::IsCycling () const
 	return false;
 }
 
-bool CQueuedMove::Cycle (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedMove::Cycle (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	bool	lRet = false;
 
@@ -811,13 +811,14 @@ bool CQueuedMove::Cycle (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedMove::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentPopupWnd *		lPopupWnd;
-	CPoint					lOffset;
-	CRect					lWinRect;
+	bool				lRet = false;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentPopupWnd*		lPopupWnd;
+	CAgentBalloonWnd*	lBalloonWnd;
+	CPoint				lOffset;
+	CRect				lWinRect;
 
 	if	(mPaused)
 	{
@@ -856,6 +857,15 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				if	(mTimeAllowed > 0)
 				{
 					CAtlOwnPtrList <CQueuedAction>	lQueue;
+
+					if	(
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
+						&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+						&&	(lBalloonWnd->IsWindow ())
+						)
+					{
+						lBalloonWnd->HideBalloon ();
+					}
 
 					if	(lOffset.x < 0)
 					{
@@ -936,7 +946,7 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					{
 						if	(
 								(!mEndAnimationShown)
-							&&	(lPopupWnd = dynamic_cast <CAgentPopupWnd *> (pAgentWnd))
+							&&	(lPopupWnd = dynamic_cast <CAgentPopupWnd*> (pAgentWnd))
 							)
 						{
 							lPopupWnd->MovePopup (mPosition, mCharID, MoveCause_ProgramMoved, true);
@@ -963,16 +973,16 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 						if	(pQueue.GetNextAction (QueueActionMove) == this)
 						{
 							pQueue.RemoveHead ();
-	#ifdef	_STRICT_COMPATIBILITY
+#ifdef	_STRICT_COMPATIBILITY
 							if	(
-									(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+									(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 								&&	(!lCharacterWnd->IsCharShown ())
 								)
 							{
 								NotifyComplete (pAgentWnd->mNotify, AGENTERR_CHARACTERNOTVISIBLE);
 							}
 							else
-	#endif
+#endif
 							{
 								NotifyComplete (pAgentWnd->mNotify);
 							}
@@ -994,7 +1004,7 @@ bool CQueuedMove::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedMove::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedMove::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool	lRet = false;
 #ifdef	_LOG_QUEUE_OPS
@@ -1047,7 +1057,7 @@ bool CQueuedMove::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 	return lRet;
 }
 
-bool CQueuedMove::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedMove::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool			lRet = false;
 	CQueuedState *	lQueuedState;
@@ -1097,11 +1107,11 @@ CQueuedWait::~CQueuedWait ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedWait::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CQueuedAction *			lOtherRequest;
-	CAgentCharacterWnd *	lRequestOwner = NULL;
+	bool				lRet = false;
+	CQueuedAction*		lOtherRequest;
+	CAgentCharacterWnd*	lRequestOwner = NULL;
 
 	if	(mPaused)
 	{
@@ -1123,7 +1133,7 @@ bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		if	(pQueue.GetNextAction (QueueActionWait) == this)
 		{
 			if	(
-					(lRequestOwner = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+					(lRequestOwner = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				&&	(lOtherRequest = lRequestOwner->FindOtherRequest (mOtherReqID, lRequestOwner))
 				&&	(lRequestOwner)
 				)
@@ -1169,7 +1179,7 @@ bool CQueuedWait::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedWait::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedWait::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool	lRet = false;
 
@@ -1181,7 +1191,7 @@ bool CQueuedWait::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pP
 	return lRet;
 }
 
-bool CQueuedWait::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedWait::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	return false;
 }
@@ -1203,12 +1213,12 @@ CQueuedInterrupt::~CQueuedInterrupt ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedInterrupt::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedInterrupt::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CQueuedAction *			lOtherRequest;
-	CAgentCharacterWnd *	lRequestOwner = NULL;
-	HRESULT					lStatus;
+	bool				lRet = false;
+	CQueuedAction*		lOtherRequest;
+	CAgentCharacterWnd*	lRequestOwner = NULL;
+	HRESULT				lStatus;
 
 	if	(mPaused)
 	{
@@ -1229,7 +1239,7 @@ bool CQueuedInterrupt::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		if	(pQueue.GetNextAction (QueueActionInterrupt) == this)
 		{
 			if	(
-					(lRequestOwner = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+					(lRequestOwner = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				&&	(lOtherRequest = lRequestOwner->FindOtherRequest (mOtherReqID, lRequestOwner))
 				&&	(lRequestOwner)
 				&&	(lRequestOwner->RemoveQueuedAction (lOtherRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Interrupt")))
@@ -1262,7 +1272,7 @@ bool CQueuedInterrupt::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedInterrupt::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedInterrupt::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool	lRet = false;
 
@@ -1274,7 +1284,7 @@ bool CQueuedInterrupt::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bo
 	return lRet;
 }
 
-bool CQueuedInterrupt::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedInterrupt::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	return false;
 }

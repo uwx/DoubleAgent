@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -40,16 +40,16 @@ public:
 
 // Overrides
 protected:
-	virtual const GUID & GetClassID ();
+	virtual const GUID& GetClassID ();
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName);
 	virtual CAtlString GetFilterName ();
-	virtual void GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
+	virtual void GetSeekingTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime);
 	virtual bool GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking);
 	virtual void InitializePins ();
 	virtual void OnJoinedFilterGraph ();
 	virtual void OnLeftFilterGraph ();
 	virtual HRESULT OnStateChanged (FILTER_STATE pOldState, FILTER_STATE pNewState);
-	virtual void OnPinConnected (class CDirectShowPin * pPin);
+	virtual void OnPinConnected (class CDirectShowPin* pPin);
 	virtual void OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate);
 	virtual void OnEndInputStream (INT_PTR pPendingSamples);
 	virtual void OnClockPulse ();
@@ -70,8 +70,8 @@ public:
 	// _IAgentStreamRender
 	HRESULT STDMETHODCALLTYPE GetRenderWnd (HWND *pRenderWnd);
 	HRESULT STDMETHODCALLTYPE SetRenderWnd (HWND pRenderWnd);
-	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF *pBkColor);
-	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF *pBkColor);
+	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF*pBkColor);
+	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF*pBkColor);
 	HRESULT STDMETHODCALLTYPE GetSmoothing (DWORD *pSmoothing);
 	HRESULT STDMETHODCALLTYPE SetSmoothing (DWORD pSmoothing);
 	HRESULT STDMETHODCALLTYPE GetImageSize (long *pImageWidth, long *pImageHeight);
@@ -115,12 +115,12 @@ public:
 protected:
 	HRESULT FinalConstruct ();
 
-	HRESULT GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME & pNextSampleTime);
-	HRESULT GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime);
-	bool GetSampleImage (IMediaSample * pSample);
+	HRESULT GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME& pNextSampleTime);
+	HRESULT GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr& pSample, REFERENCE_TIME& pSampleTime, REFERENCE_TIME& pNextSampleTime);
+	bool GetSampleImage (IMediaSample* pSample);
 
-	CImageBuffer * ScaleImage (const CSize & pImageSize, const CRect & pTargetRect);
-	CImageBuffer * SmoothImage (const CSize & pImageSize, const CRect & pTargetRect);
+	CImageBuffer* ScaleImage (const CSize& pImageSize, const CRect& pTargetRect);
+	CImageBuffer* SmoothImage (const CSize& pImageSize, const CRect& pTargetRect);
 
 protected:
 	CAtlString					mFilterName;

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -39,14 +39,14 @@ public:
 
 // Operations
 public:
-	CAgentStreamInfo & Initialize (CAgentFile * pAgentFile);
+	CAgentStreamInfo& Initialize (CAgentFile* pAgentFile);
 
 	void LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence* pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence* pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence* pSequence, LPCTSTR pFormat = NULL, ...);
 
 // Overrides
 
@@ -84,7 +84,7 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE GetSequenceLoop (long *pLoopDuration);
 	virtual HRESULT STDMETHODCALLTYPE CalcSequenceTimeNdx (long *pTimeNdx, long pFrameNum, boolean pClampFrameNum = false);
 	virtual HRESULT STDMETHODCALLTYPE CalcSequenceFrameNum (long *pFrameNum, long pTimeNdx, boolean pClampTimeNdx = false);
-	virtual HRESULT STDMETHODCALLTYPE CalcSequenceAnimationFrameNdx (long * pAnimationNdx, long *pFrameNdx, long pTimeNdx, boolean pClampTimeNdx = false);
+	virtual HRESULT STDMETHODCALLTYPE CalcSequenceAnimationFrameNdx (long* pAnimationNdx, long *pFrameNdx, long pTimeNdx, boolean pClampTimeNdx = false);
 
 	virtual HRESULT STDMETHODCALLTYPE SequenceAll ();
 	virtual HRESULT STDMETHODCALLTYPE SequenceAnimation (long pAnimationNdx, long pMaxLoopTime = 0);
@@ -101,11 +101,11 @@ public:
 	bool Lock ();	// Use carefully!
 	bool Unlock ();	// Use carefully!
 
-	CAnimationSequence * GetAnimationSequence ();
+	CAnimationSequence* GetAnimationSequence ();
 
 	long FindAudioSegment (long pFrameNum);
-	static long FindAudioSegment (CAnimationSequence * pAnimationSequence, long pFrameNum) ;
-	static bool ResyncAudioVideo (CAnimationSequence * pAnimationSequence);
+	static long FindAudioSegment (CAnimationSequence* pAnimationSequence, long pFrameNum) ;
+	static bool ResyncAudioVideo (CAnimationSequence* pAnimationSequence);
 
 	bool ResetMouthOverlays ();
 	bool SetMouthOverlay (short pMouthOverlayNdx, long pTimeNdx = 0);
@@ -116,7 +116,7 @@ public:
 	friend CAtlString MouthOverlayStr (short pMouthOverlayNdx);
 
 protected:
-	long SequenceAnimationFrames (CAnimationSequence * pSequence, long pAnimationNdx, long pStartFrameNdx, long pEndFrameNdx, long pLoopFrameNdx, long pMaxLoopTime, bool pExit = false);
+	long SequenceAnimationFrames (CAnimationSequence* pSequence, long pAnimationNdx, long pStartFrameNdx, long pEndFrameNdx, long pLoopFrameNdx, long pMaxLoopTime, bool pExit = false);
 
 protected:
 	long								mAnimationNdx;

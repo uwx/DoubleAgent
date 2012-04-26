@@ -38,7 +38,7 @@ public:
 protected:
 	static DWORD WINAPI AsyncThreadProc (PVOID lpParameter);
 	INT_PTR ReadLine (CFileTime * pLineTime, CFileTime * pFirstLineTime);
-	void ParseLineTime (LPCTSTR pDateStr, LPCTSTR pTimeStr, CFileTime & pLineTime);
+	void ParseLineTime (LPCTSTR pDateStr, LPCTSTR pTimeStr, CFileTime& pLineTime);
 
 protected:
 	mutable ::CCriticalSection	mCriticalSection;

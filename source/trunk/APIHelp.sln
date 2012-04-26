@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Web Developer Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Web Developer Express 2010
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "APIHelp", "APIHelp\", "{7AC5976E-310C-4CAF-8242-7ACBA36DA662}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFramework = "3.5"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/ApiHelp"
 		Debug.AspNetCompiler.PhysicalPath = "ApiHelp\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\ApiHelp\"

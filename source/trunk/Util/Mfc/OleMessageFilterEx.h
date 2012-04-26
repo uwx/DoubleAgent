@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -30,9 +30,9 @@ class COleMessageFilterEx : public COleMessageFilter
 {
 public:
 	COleMessageFilterEx (DWORD pNotRespondingTimeout = 8000, DWORD pBusyTimeout = 10000, UINT pLogLevelDlg = LogVerbose, UINT pLogLevelMsg = LogVerbose+1);
-	COleMessageFilterEx (const COleMessageFilter & pSource);
+	COleMessageFilterEx (const COleMessageFilter& pSource);
 	COleMessageFilterEx (const CWinThread * pThread);
-	COleMessageFilterEx & operator= (const COleMessageFilter & pSource);
+	COleMessageFilterEx& operator= (const COleMessageFilter& pSource);
 	virtual ~COleMessageFilterEx ();
 	DECLARE_DYNAMIC (COleMessageFilterEx)
 

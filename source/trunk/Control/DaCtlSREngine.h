@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrSREnginePtr		mServerObject;
+#endif
 	tPtr <CDaCmnSREngine>	mLocalObject;
 
 // Operations
@@ -78,10 +80,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_DisplayName (BSTR * DisplayName);
 	HRESULT STDMETHODCALLTYPE get_Manufacturer (BSTR * Manufacturer);
 	HRESULT STDMETHODCALLTYPE GetVersion (short * MajorVersion,  short * MinorVersion);
-	HRESULT STDMETHODCALLTYPE get_LanguageID (long * LanguageID);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long* LanguageID);
 	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName,  BSTR * LanguageName);
-	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY ** LanguageIDs);
-	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY ** LanguageNames);
+	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY** LanguageIDs);
+	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY** LanguageNames);
 
 // Implementation
 private:

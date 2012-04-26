@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -34,17 +34,17 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-bool CLocalize::LoadNlsString (UINT pId, WORD pLangId, BSTR & pString)
+bool CLocalize::LoadNlsString (UINT pId, WORD pLangId, BSTR& pString)
 {
 	return false;
 }
 
-bool CLocalize::LoadNlsMenu (UINT pMenuId, WORD pLangId, CByteArray & pMenuTemplate)
+bool CLocalize::LoadNlsMenu (UINT pMenuId, WORD pLangId, CByteArray& pMenuTemplate)
 {
 	return false;
 }
 
-bool CLocalize::LoadNlsDialog (UINT pDialogId, WORD pLangId, CByteArray & pDialogTemplate)
+bool CLocalize::LoadNlsDialog (UINT pDialogId, WORD pLangId, CByteArray& pDialogTemplate)
 {
 	return false;
 }

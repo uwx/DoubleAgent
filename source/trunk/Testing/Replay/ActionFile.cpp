@@ -206,7 +206,7 @@ INT_PTR CActionFile::ReadLine (CFileTime * pLineTime, CFileTime * pFirstLineTime
 	return lLineCount;
 }
 
-void CActionFile::ParseLineTime (LPCTSTR pDateStr, LPCTSTR pTimeStr, CFileTime & pLineTime)
+void CActionFile::ParseLineTime (LPCTSTR pDateStr, LPCTSTR pTimeStr, CFileTime& pLineTime)
 {
 	tS <SYSTEMTIME>	lLineTime;
 	LPCTSTR			lStrPtr = pDateStr;

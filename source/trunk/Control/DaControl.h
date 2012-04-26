@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -64,7 +64,10 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaServer2Ptr			mServer;
+	USHORT					mAutoConnect;
+#endif
 	IDispatchPtr			mCharacters;
 	IDispatchPtr			mSettings;
 	IDispatchPtr			mAudioOutput;
@@ -75,7 +78,6 @@ public:
 	IDispatchPtr			mTTSEngines;
 	IDispatchPtr			mSREngines;
 	bool					mRaiseRequestErrors;
-	USHORT					mAutoConnect;
 	CEventNotifyReflect		mLocalEventNotify;
 	DWORD					mLocalCharacterStyle;
 
@@ -98,14 +100,16 @@ public:
 	void CompleteRequests (bool pIdleTime = false);
 	void TerminateRequests (bool pFinal);
 
+#ifndef	_DACORE_LOCAL
 	HRESULT ConnectServer ();
 	HRESULT DisconnectServer (bool pForce);
+#endif
 	void DisconnectNotify (bool pForce);
 
 // Overrides
 public:
-	virtual HWND CreateControlWindow(HWND hWndParent, RECT& rcPos);
-	HRESULT CanCreateControlWindow ();
+	virtual HWND CreateControlWindow (HWND hWndParent, RECT& rcPos);
+	HRESULT CanCreateControlWindow (HWND * hWndParent = NULL, RECT * rcPos = NULL);
 	HRESULT OnPreVerbInPlaceActivate();
 	HRESULT OnPreVerbUIActivate();
 	HRESULT OnPreVerbShow();
@@ -233,7 +237,7 @@ public:
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnActivateApp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCompleteRequests(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBroadcastOptionsChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBroadcastDefaultCharacterChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -295,7 +299,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get_MouseIcon (IPictureDisp **MouseIcon);
 
 	HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles ** CharacterFiles);
-	HRESULT STDMETHODCALLTYPE get_CharacterStyle (long * CharacterStyle);
+	HRESULT STDMETHODCALLTYPE get_CharacterStyle (long* CharacterStyle);
 	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
 	HRESULT STDMETHODCALLTYPE get_TTSEngines (IDaCtlTTSEngines ** TTSEngines);
 	HRESULT STDMETHODCALLTYPE FindTTSEngines (VARIANT LanguageID,  VARIANT Gender,  IDaCtlTTSEngines ** TTSEngines);
@@ -363,13 +367,15 @@ protected:
 	bool IsDesigning ();
 	HWND GetMsgPostingWnd ();
 	void UpdateWindowStyles ();
-	bool CalcWindowStyles (DWORD & pStyle, DWORD & pExStyle);
+	bool CalcWindowStyles (DWORD& pStyle, DWORD& pExStyle);
 	static COLORREF GetOleColor (OLE_COLOR pColor);
 
 protected:
 	friend class CServerNotifySink;
 
+#ifndef	_DACORE_LOCAL
 	tPtr <CComObject <CServerNotifySink> >	mServerNotifySink;
+#endif
 	IDaCtlCharacter2Ptr						mControlCharacter;
 	CAtlMap <long, DaCtlRequest *>			mActiveRequests;
 	CAtlPtrTypeArray <DaCtlRequest>			mCompletedRequests;

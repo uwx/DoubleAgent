@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -53,7 +53,7 @@ CDaCmnCommands::~CDaCmnCommands ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCmnCommands::Initialize (long pCharID, CEventNotify * pNotify)
+void CDaCmnCommands::Initialize (long pCharID, CEventNotify* pNotify)
 {
 	mCharID = pCharID;
 	mNotify = pNotify;
@@ -89,24 +89,25 @@ bool CDaCmnCommands::SetLangID (LANGID pLangID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoiceCommandsWnd * pVoiceCommandsWnd)
+long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint& pPosition, CVoiceCommandsWnd* pVoiceCommandsWnd)
 {
-	long					lRet = 0;
-	CMenuHandle				lMenu;
-	CAtlString				lMenuText;
-	CAgentCharacterWnd *	lOwner;
-	HINSTANCE				lResourceInstance;
+	long				lRet = 0;
+	CMenuHandle			lMenu;
+	CAtlString			lMenuText;
+	CAgentCharacterWnd*	lOwner;
 
 	if	(lMenu.Attach (::CreatePopupMenu ()))
 	{
-		lResourceInstance = _AtlBaseModule.GetResourceInstance ();
+#ifndef	_DACORE_LOCAL
+		HINSTANCE	lResourceInstance = _AtlBaseModule.GetResourceInstance ();
 		_AtlBaseModule.SetResourceInstance (GetModuleHandle (_T("DaCore")));
+#endif
 
 		try
 		{
 			if	(
 					(mNotify)
-				&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> (mNotify->GetAgentWnd (pOwner)))
+				&&	(lOwner = dynamic_cast <CAgentCharacterWnd*> (mNotify->GetAgentWnd (pOwner)))
 				&&	(
 						(!lOwner->IsCharShown ())
 					||	(lOwner->IsHidingQueued ())
@@ -127,7 +128,7 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 					)
 				{
 					INT_PTR			lCommandNdx;
-					CDaCmnCommand *	lCommand;
+					CDaCmnCommand*	lCommand;
 					bool			lFirstCommand = true;
 
 					for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
@@ -158,21 +159,21 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 				&&	(mNotify->mAnchor)
 				)
 			{
-				CAgentFile *	lFile;
+				CAgentFile*	lFile;
 				INT_PTR			lFileNdx;
 
 				for	(lFileNdx = 0; lFile = mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 				{
 					CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 					INT_PTR								lClientNdx;
-					CDaCmnCharacter *					lCharacter;
+					CDaCmnCharacter*					lCharacter;
 
 					if	(mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
 					{
 						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 						{
 							if	(
-									(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+									(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 								&&	(lCharacter->IsValid (lFile))
 								&&	(lCharacter->GetCharID() == mCharID)
 								)
@@ -181,13 +182,13 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 							}
 							if	(lClientNdx > 0)
 							{
-								CDaCmnCommands *	lCommands;
-								bool				lFirstCommand = true;
+								CDaCmnCommands*	lCommands;
+								bool			lFirstCommand = true;
 
 								for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 								{
 									if	(
-											(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+											(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 										&&	(lCharacter->IsValid (lFile))
 										&&	(lCharacter->GetCharID() != mCharID)
 										)
@@ -234,7 +235,9 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 		}
 		catch AnyExceptionDebug
 
+#ifndef	_DACORE_LOCAL
 		_AtlBaseModule.SetResourceInstance (lResourceInstance);
+#endif
 		::SetForegroundWindow (pOwner);
 		lRet = (long)::TrackPopupMenu (lMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD|TPM_RIGHTBUTTON, pPosition.x, pPosition.y, 0, pOwner, NULL);
 	}
@@ -243,7 +246,7 @@ long CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoic
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCommand * CDaCmnCommands::GetDefaultCommand ()
+CDaCmnCommand* CDaCmnCommands::GetDefaultCommand ()
 {
 	if	(mDefaultId)
 	{
@@ -255,7 +258,7 @@ CDaCmnCommand * CDaCmnCommands::GetDefaultCommand ()
 INT_PTR CDaCmnCommands::FindCommand (USHORT pCommandId)
 {
 	INT_PTR			lCommandNdx;
-	CDaCmnCommand *	lCommand;
+	CDaCmnCommand*	lCommand;
 
 	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 	{
@@ -267,10 +270,10 @@ INT_PTR CDaCmnCommands::FindCommand (USHORT pCommandId)
 	return -1;
 }
 
-CDaCmnCommand * CDaCmnCommands::GetCommand (USHORT pCommandId)
+CDaCmnCommand* CDaCmnCommands::GetCommand (USHORT pCommandId)
 {
 	INT_PTR			lCommandNdx;
-	CDaCmnCommand *	lCommand;
+	CDaCmnCommand*	lCommand;
 
 	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 	{
@@ -284,9 +287,9 @@ CDaCmnCommand * CDaCmnCommands::GetCommand (USHORT pCommandId)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCommand * CDaCmnCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCTSTR pVoiceCaption, bool pEnabled, bool pVisible)
+CDaCmnCommand* CDaCmnCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCTSTR pVoiceCaption, bool pEnabled, bool pVisible)
 {
-	CDaCmnCommand *	lCommand;
+	CDaCmnCommand*	lCommand;
 
 	if	(lCommand = new CDaCmnCommand)
 	{
@@ -337,7 +340,7 @@ CAtlString CDaCmnCommands::GetVoiceCommandsCaption () const
 	return lCaption;
 }
 
-bool CDaCmnCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
+bool CDaCmnCommands::ShowVoiceCommands (CVoiceCommandsWnd* pVoiceCommandsWnd)
 {
 	bool	lRet = false;
 
@@ -347,7 +350,7 @@ bool CDaCmnCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
 		)
 	{
 		INT_PTR					lCommandNdx;
-		CDaCmnCommand *			lCommand;
+		CDaCmnCommand*			lCommand;
 		CAtlTypeArray <long>	lCmdId;
 		CAtlStringArray			lCmdName;
 
@@ -398,14 +401,14 @@ bool CDaCmnCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
 	return lRet;
 }
 
-bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext)
+bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext* pInputContext)
 {
 	bool	lRet = false;
 
 	if	(pInputContext)
 	{
 		INT_PTR					lCommandNdx;
-		CDaCmnCommand *			lCommand;
+		CDaCmnCommand*			lCommand;
 		CAtlTypeArray <long>	lCmdId;
 		CAtlStringArray			lCmdName;
 		CAtlStringArray			lCmdVoice;
@@ -482,7 +485,7 @@ bool CDaCmnCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext
 HRESULT CDaCmnCommands::Add (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption, long Enabled, long Visible, long *CommandID)
 {
 	HRESULT			lResult = S_OK;
-	CDaCmnCommand *	lCommand;
+	CDaCmnCommand*	lCommand;
 
 	if	(CommandID)
 	{
@@ -510,7 +513,7 @@ HRESULT CDaCmnCommands::Add (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption,
 HRESULT CDaCmnCommands::Insert (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption, long Enabled, long Visible, long RefCommandID, long Before, long *CommandID)
 {
 	HRESULT			lResult = S_OK;
-	CDaCmnCommand *	lCommand;
+	CDaCmnCommand*	lCommand;
 	INT_PTR			lInsertNdx;
 
 	if	(CommandID)

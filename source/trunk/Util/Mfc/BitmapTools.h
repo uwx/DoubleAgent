@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -31,24 +31,24 @@
 class CBitmapTools
 {
 public:
-	static bool CreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, LPBYTE * pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
-	static bool RecreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, LPBYTE * pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
+	static bool CreateColorBitmap (const CSize& pSize, CBitmap& pBitmap, LPBYTE* pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
+	static bool RecreateColorBitmap (const CSize& pSize, CBitmap& pBitmap, LPBYTE* pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
 
-	static bool CreateWindowBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
-	static bool RecreateWindowBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
+	static bool CreateWindowBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
+	static bool RecreateWindowBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
 
-	static bool CreateClientBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
-	static bool RecreateClientBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false, bool pExactFit = true);
+	static bool CreateClientBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false);
+	static bool RecreateClientBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits = NULL, bool pForBlending = true, bool pTopDown = false, bool pExactFit = true);
 
-	static bool ShrinkBitmap (CBitmap & pBitmap, LPBYTE & pBitmapBits, UINT pFactor, UINT pBlend = 1);
-	static bool ShrinkBitmap (CBitmap & pSrcBitmap, LPBYTE & pSrcBitmapBits, CBitmap & pTrgBitmap, LPBYTE & pTrgBitmapBits, UINT pBlend = 1);
-	static bool SmearBitmap (CBitmap & pBitmap, LPBYTE & pBitmapBits, UINT pFactor = 1);
+	static bool ShrinkBitmap (CBitmap& pBitmap, LPBYTE & pBitmapBits, UINT pFactor, UINT pBlend = 1);
+	static bool ShrinkBitmap (CBitmap& pSrcBitmap, LPBYTE & pSrcBitmapBits, CBitmap& pTrgBitmap, LPBYTE & pTrgBitmapBits, UINT pBlend = 1);
+	static bool SmearBitmap (CBitmap& pBitmap, LPBYTE & pBitmapBits, UINT pFactor = 1);
 
-	static bool GetBitmapInfo (HBITMAP pBitmap, BITMAPINFO & pBitmapInfo, BYTE ** pBitmapBits = NULL);
-	static bool GetBitmapInfo (CBitmap & pBitmap, BITMAPINFO & pBitmapInfo, BYTE ** pBitmapBits = NULL) {return GetBitmapInfo ((HBITMAP) pBitmap.GetSafeHandle (), pBitmapInfo, pBitmapBits);}
+	static bool GetBitmapInfo (HBITMAP pBitmap, BITMAPINFO& pBitmapInfo, BYTE** pBitmapBits = NULL);
+	static bool GetBitmapInfo (CBitmap& pBitmap, BITMAPINFO& pBitmapInfo, BYTE** pBitmapBits = NULL) {return GetBitmapInfo ((HBITMAP) pBitmap.GetSafeHandle (), pBitmapInfo, pBitmapBits);}
 
-	static bool MapBitmapColors (HBITMAP pBitmap, const CColor & pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07);
-	static bool MapBitmapColors (CBitmap & pBitmap, const CColor & pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07) {return MapBitmapColors ((HBITMAP) pBitmap.GetSafeHandle (), pColorFill, pColorLight, pColorDark, pColorWhite, pColorBlack, pVarianceMask);}
+	static bool MapBitmapColors (HBITMAP pBitmap, const CColor& pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07);
+	static bool MapBitmapColors (CBitmap& pBitmap, const CColor& pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07) {return MapBitmapColors ((HBITMAP) pBitmap.GetSafeHandle (), pColorFill, pColorLight, pColorDark, pColorWhite, pColorBlack, pVarianceMask);}
 };
 
 //////////////////////////////////////////////////////////////////////

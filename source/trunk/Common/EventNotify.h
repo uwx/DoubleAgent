@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -31,10 +31,10 @@ interface _IEventNotify
 	virtual void _CharacterNameChanged (long pCharID) {}
 	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID) {}
 	virtual void _CharacterListening (long pCharID, bool pListening, long pCause) {}
-	virtual bool _DownloadComplete (class CFileDownload * pDownload) {return false;}
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl) {return NULL;}
-	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
-	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
+	virtual bool _DownloadComplete (class CFileDownload* pDownload) {return false;}
+	virtual class CFileDownload* _FindSoundDownload (LPCTSTR pSoundUrl) {return NULL;}
+	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint& pPosition) {return false;}
+	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint& pPosition) {return false;}
 	virtual void _AppActivated (bool pActive) {}
 	virtual void _OptionsChanged () {}
 	virtual void _DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath) {}
@@ -48,10 +48,10 @@ interface _IEventReflect
 	virtual void _OnCharacterUnloaded (long pCharID) {}
 	virtual void _OnCharacterNameChanged (long pCharID) {}
 	virtual void _OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID) {}
-	virtual bool _OnDownloadComplete (class CFileDownload * pDownload) {return false;}
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl) {return NULL;}
-	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
-	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) {return false;}
+	virtual bool _OnDownloadComplete (class CFileDownload* pDownload) {return false;}
+	virtual class CFileDownload* _FindSoundDownload (LPCTSTR pSoundUrl) {return NULL;}
+	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint& pPosition) {return false;}
+	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint& pPosition) {return false;}
 	virtual void _OnAppActivated (bool pActive) {}
 	virtual void _OnOptionsChanged () {}
 	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath) {}
@@ -76,7 +76,7 @@ public:
 	virtual ~CEventNotify ();
 
 // Attributes
-	class CInstanceAnchor *	mAnchor;
+	class CInstanceAnchor*	mAnchor;
 	_IEventNotify *			mGlobal;
 
 	typedef CNotifySinksOwner <_IEventReflect> ReflectSinks;
@@ -85,8 +85,8 @@ public:
 // Operations
 public:
 	virtual long NextReqID ();
-	virtual class CAgentWnd * GetRequestOwner (long pReqID);
-	virtual class CAgentWnd * GetAgentWnd (HWND pWindow);
+	virtual class CAgentWnd* GetRequestOwner (long pReqID);
+	virtual class CAgentWnd* GetAgentWnd (HWND pWindow);
 	virtual long GetActiveClient (long pCharID, bool pUseDefault = true);
 	virtual long GetNotifyClient (long pCharID, bool pUseDefault = true);
 
@@ -109,10 +109,10 @@ public:
 	virtual void _CharacterNameChanged (long pCharID);
 	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
 	virtual void _CharacterListening (long pCharID, bool pListening, long pCause);
-	virtual bool _DownloadComplete (class CFileDownload * pDownload);
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
-	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
+	virtual bool _DownloadComplete (class CFileDownload* pDownload);
+	virtual class CFileDownload* _FindSoundDownload (LPCTSTR pSoundUrl);
+	virtual bool _ContextMenu (long pCharID, HWND pOwner, const CPoint& pPosition);
+	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint& pPosition);
 	virtual void _AppActivated (bool pActive);
 	virtual void _OptionsChanged ();
 	virtual void _DefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
@@ -187,7 +187,7 @@ public:
 
 // Attributes
 public:
-	CEventNotify *	mNotify;
+	CEventNotify*	mNotify;
 
 // Operations
 public:
@@ -208,8 +208,8 @@ public:
 public:
 	bool PreNotify ();
 
-	CEventNotify * GetActiveClientNotify (long pCharID, bool pUseDefault = true);
-	CEventNotify * GetNotifyClientNotify (long pCharID, bool pUseDefault = true);
+	CEventNotify* GetActiveClientNotify (long pCharID, bool pUseDefault = true);
+	CEventNotify* GetNotifyClientNotify (long pCharID, bool pUseDefault = true);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -309,10 +309,10 @@ bool CEventNotifiesClient<aBase>::PreNotify ()
 }
 
 template <class aBase>
-CEventNotify * CEventNotifiesClient<aBase>::GetActiveClientNotify (long pCharID, bool pUseDefault)
+CEventNotify* CEventNotifiesClient<aBase>::GetActiveClientNotify (long pCharID, bool pUseDefault)
 {
 	int				lNotifyNdx;
-	CEventNotify *	lNotify;
+	CEventNotify*	lNotify;
 
 	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 	{
@@ -325,10 +325,10 @@ CEventNotify * CEventNotifiesClient<aBase>::GetActiveClientNotify (long pCharID,
 }
 
 template <class aBase>
-CEventNotify * CEventNotifiesClient<aBase>::GetNotifyClientNotify (long pCharID, bool pUseDefault)
+CEventNotify* CEventNotifiesClient<aBase>::GetNotifyClientNotify (long pCharID, bool pUseDefault)
 {
 	int				lNotifyNdx;
-	CEventNotify *	lNotify;
+	CEventNotify*	lNotify;
 
 	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 	{

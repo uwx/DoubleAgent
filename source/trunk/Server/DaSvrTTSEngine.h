@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -44,7 +44,7 @@ public:
 public:
 	static DaSvrTTSEngine * CreateInstance (class CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName = NULL);
 #ifndef	_WIN64
-	static DaSvrTTSEngine * CreateInstance (class CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName = NULL);
+	static DaSvrTTSEngine * CreateInstance (class CSapi4VoiceInfo* pVoiceInfo, LPCTSTR pClientMutexName = NULL);
 #endif
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();

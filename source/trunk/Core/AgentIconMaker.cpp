@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -46,9 +46,10 @@ CAgentIconMaker::~CAgentIconMaker ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSize, const CRect * pClipRect)
+HICON CAgentIconMaker::MakeIcon (CAgentFile* pAgentFile, const CSize& pIconSize, const CRect* pClipRect)
 {
 	HICON			lIcon = NULL;
+	HBITMAP			lFrameImage;
 	CImageBuffer	lImageBuffer;
 	CRect			lImageRect;
 	CImageBuffer	lRenderBuffer;
@@ -56,9 +57,12 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 	CSize			lRenderSize;
 	tS <BITMAP>		lBitmapInfo;
 
-	if	(lImageBuffer.mImage = new ATL::CImage)
+	if	(
+			(lImageBuffer.mImage = new ATL::CImage)
+		&&	(lFrameImage = GetFrameImage (pAgentFile))
+		)
 	{
-		lImageBuffer.mImage->Attach (GetFrameImage (pAgentFile));
+		lImageBuffer.mImage->Attach (lFrameImage);
 	}
 	if	(lImageBuffer.GetImage ())
 	{
@@ -194,7 +198,7 @@ bool CAgentIconMaker::RemoveMargin (CImageBuffer & pBuffer)
 			lPixel.y = lMargin;
 			for	(lPixel.x = lMargin, lNdx = lPixel.y*lImagePitch; lPixel.x < lImageSize.cx-lMargin; lPixel.x++, lNdx += 4)
 			{
-				if	(*(DWORD *)(lImageBits + lNdx) != 0)
+				if	(*(DWORD*)(lImageBits + lNdx) != 0)
 				{
 					lPixelFound = true;
 					break;
@@ -205,7 +209,7 @@ bool CAgentIconMaker::RemoveMargin (CImageBuffer & pBuffer)
 				lPixel.y = lImageSize.cy-lMargin-1;
 				for	(lPixel.x = lMargin, lNdx = lPixel.y*lImagePitch; lPixel.x < lImageSize.cx-lMargin; lPixel.x++, lNdx += 4)
 				{
-					if	(*(DWORD *)(lImageBits + lNdx) != 0)
+					if	(*(DWORD*)(lImageBits + lNdx) != 0)
 					{
 						lPixelFound = true;
 						break;
@@ -218,7 +222,7 @@ bool CAgentIconMaker::RemoveMargin (CImageBuffer & pBuffer)
 				for	(lPixel.y = lMargin; lPixel.y < lImageSize.cy-lMargin; lPixel.y++)
 				{
 					lNdx = (lPixel.y * lImagePitch) + (lPixel.x * 4);
-					if	(*(DWORD *)(lImageBits + lNdx) != 0)
+					if	(*(DWORD*)(lImageBits + lNdx) != 0)
 					{
 						lPixelFound = true;
 						break;
@@ -231,7 +235,7 @@ bool CAgentIconMaker::RemoveMargin (CImageBuffer & pBuffer)
 				for	(lPixel.y = lMargin; lPixel.y < lImageSize.cy-lMargin; lPixel.y++)
 				{
 					lNdx = (lPixel.y * lImagePitch) + (lPixel.x * 4);
-					if	(*(DWORD *)(lImageBits + lNdx) != 0)
+					if	(*(DWORD*)(lImageBits + lNdx) != 0)
 					{
 						lPixelFound = true;
 						break;
@@ -272,69 +276,69 @@ bool CAgentIconMaker::RemoveMargin (CImageBuffer & pBuffer)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HBITMAP CAgentIconMaker::GetFrameImage (CAgentFile * pAgentFile)
+HBITMAP CAgentIconMaker::GetFrameImage (CAgentFile* pAgentFile)
 {
 	HBITMAP						lRet = NULL;
-	const CAgentFileAnimation *	lGesture;
+	const CAgentFileAnimation*	lGesture;
 
 	if	(
 			(pAgentFile)
 		&&	(
 				(
 					(lGesture = pAgentFile->GetGesture (_T("RestPose")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Speak")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Speaking")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Hide")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Hiding")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Listen")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Listening")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Think")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			||	(
 					(lGesture = pAgentFile->GetGesture (_T("Thinking")))
-				&&	(lGesture->mFrameCount > 0)
-				&&	(lGesture->mFrames [0].mImageCount > 0)
+				&&	(lGesture->FrameCount > 0)
+				&&	(lGesture->Frames [0].ImageCount > 0)
 				)
 			)
 		)
 	{
-		tS <CAgentFileImage>	lImage;
-		UINT					lImageFormatSize;
-		tArrayPtr <BYTE>		lImageFormat;
-		LPBITMAPINFO			lBitmapInfo;
-		ATL::CImage					lBitmap;
+		CAgentFileImage		lImage;
+		UINT				lImageFormatSize;
+		tArrayPtr <BYTE>	lImageFormat;
+		LPBITMAPINFO		lBitmapInfo;
+		ATL::CImage			lBitmap;
 
-		lImage.mImageSize = pAgentFile->GetImageSize ();
+		lImage.put_ImageSize (pAgentFile->Header.ImageSize);
 
 		if	(
 				(lImageFormatSize = pAgentFile->GetImageFormat (NULL, &lImage, true))
@@ -346,7 +350,7 @@ HBITMAP CAgentIconMaker::GetFrameImage (CAgentFile * pAgentFile)
 			lBitmap.Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, NULL, NULL, 0));
 			if	(
 					(GetImageBits (lBitmap))
-				&&	(pAgentFile->GetFrameBits (GetImageBits (lBitmap), lGesture->mFrames [0], true))
+				&&	(pAgentFile->GetFrameBits (GetImageBits (lBitmap), &lGesture->Frames [0], true))
 				)
 			{
 				GdiFlush ();

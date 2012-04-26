@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -67,34 +67,34 @@ enum LclSizeFormat
 class CLocalizeEx
 {
 public:
-	friend CString LclFormatDate (const SYSTEMTIME & pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatDate (const FILETIME & pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, bool pDateUTC = true, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatDate (const VARIANT & pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatDate (const COleDateTime & pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatDate (const CTime & pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatDate (const SYSTEMTIME& pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatDate (const FILETIME& pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, bool pDateUTC = true, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatDate (const VARIANT& pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatDate (const COleDateTime& pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatDate (const CTime& pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclDateFormatString (DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, WORD pLangId = LANG_USER_DEFAULT);
 
-	friend CString LclFormatTime (const SYSTEMTIME & pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatTime (const FILETIME & pTime, DWORD pFlags = 0, bool pTimeUTC = true, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatTime (const VARIANT & pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatTime (const COleDateTime & pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatTime (const CTime & pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatTime (const SYSTEMTIME& pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatTime (const FILETIME& pTime, DWORD pFlags = 0, bool pTimeUTC = true, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatTime (const VARIANT& pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatTime (const COleDateTime& pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatTime (const CTime& pTime, DWORD pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclTimeFormatString (DWORD pFlags = 0, WORD pLangId = 0);
 
 	friend CString LclFormatDuration (long pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
 	friend CString LclFormatDuration (LONGLONG pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
 	friend CString LclFormatDuration (double pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
-	friend CString LclFormatDuration (const FILETIME & pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
+	friend CString LclFormatDuration (const FILETIME& pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
 
 #ifdef	_FILETIME_H
-	friend CString LclFormatDate (const CFiletime & pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, bool pDateUTC = false, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatTime (const CFiletime & pTime, DWORD pFlags = 0, bool pTimeUTC = false, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatDuration (const CFiletimeSpan & pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
+	friend CString LclFormatDate (const CFiletime& pDate, DWORD pFlags = DATE_LONGDATE_NOWEEKDAY, bool pDateUTC = false, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatTime (const CFiletime& pTime, DWORD pFlags = 0, bool pTimeUTC = false, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatDuration (const CFiletimeSpan& pDuration, DWORD pFlags = DURATION_LONGNAMES, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = 1, int pMinDecimals = 0);
 #endif
 
-	friend CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatCurrency (VARIANT& pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
 #ifdef	__AFX_H__
-	friend CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatCurrency (COleCurrency& pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
 #endif
 
 	friend CString LclFormatNumber (long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);
@@ -104,14 +104,14 @@ public:
 	friend CString LclFormatNumber (ULONGLONG pNumber, bool pZeroNull = false, bool pNoThousands = false, int pMaxDecimals = -1, int pMinDecimals = 0, WORD pLangId = LANG_USER_DEFAULT);
 
 	friend double LclParseNumber (LPCTSTR pNumber, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase=10, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase=10, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase=10, CString * pRemainder = NULL);
-	friend bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, double& pValue, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, long& pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, ULONG& pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, LONGLONG& pValue, int pBase=10, CString * pRemainder = NULL);
+	friend bool LclParseNumber (LPCTSTR pNumber, ULONGLONG& pValue, int pBase=10, CString * pRemainder = NULL);
 
 	friend CString LclFormatPercent (double pNumber, int pRoundDigits = 0, WORD pLangId = LANG_USER_DEFAULT);
-	friend CString LclFormatPercent (const CString & pNumber, WORD pLangId = LANG_USER_DEFAULT);
+	friend CString LclFormatPercent (const CString& pNumber, WORD pLangId = LANG_USER_DEFAULT);
 
 	friend CString LclFormatSize (double pSize, UINT pFormat = LclSizeFormatDefault, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatSize (long pSize, UINT pFormat = LclSizeFormatDefault, WORD pLangId = LANG_USER_DEFAULT);
@@ -119,7 +119,7 @@ public:
 	friend CString LclFormatSize (LONGLONG pSize, UINT pFormat = LclSizeFormatDefault, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatSize (ULONGLONG pSize, UINT pFormat = LclSizeFormatDefault, WORD pLangId = LANG_USER_DEFAULT);
 
-	friend bool LclParseSize (LPCTSTR pSizeStr, double & pSize, UINT * pFormat = NULL);
+	friend bool LclParseSize (LPCTSTR pSizeStr, double& pSize, UINT* pFormat = NULL);
 	friend double LclParseSize (LPCTSTR pSizeStr);
 
 public:
@@ -132,9 +132,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 #ifdef	_FILETIME_H
-inline CString LclFormatDate (const CFiletime & pDate, DWORD pFlags, bool pDateUTC, WORD pLangId) {return LclFormatDate ((const FILETIME &) pDate, pFlags, pDateUTC, pLangId);}
-inline CString LclFormatTime (const CFiletime & pTime, DWORD pFlags, bool pTimeUTC, WORD pLangId) {return LclFormatTime ((const FILETIME &) pTime, pFlags, pTimeUTC, pLangId);}
-inline CString LclFormatDuration (const CFiletimeSpan & pDuration, DWORD pFlags, bool pZeroNull, bool pNoThousands, int pMaxDecimals, int pMinDecimals) {return LclFormatDuration ((LONGLONG) pDuration, pFlags, pZeroNull, pNoThousands, pMaxDecimals, pMinDecimals);}
+inline CString LclFormatDate (const CFiletime& pDate, DWORD pFlags, bool pDateUTC, WORD pLangId) {return LclFormatDate ((const FILETIME &) pDate, pFlags, pDateUTC, pLangId);}
+inline CString LclFormatTime (const CFiletime& pTime, DWORD pFlags, bool pTimeUTC, WORD pLangId) {return LclFormatTime ((const FILETIME &) pTime, pFlags, pTimeUTC, pLangId);}
+inline CString LclFormatDuration (const CFiletimeSpan& pDuration, DWORD pFlags, bool pZeroNull, bool pNoThousands, int pMaxDecimals, int pMinDecimals) {return LclFormatDuration ((LONGLONG) pDuration, pFlags, pZeroNull, pNoThousands, pMaxDecimals, pMinDecimals);}
 #endif
 
 inline CString LclFormatNumber (LONGLONG pNumber, bool pZeroNull, bool pNoThousands, int pMaxDecimals, int pMinDecimals, WORD pLangId) {return LclFormatNumber ((double) pNumber, pZeroNull, pNoThousands, 0, 0, pLangId);}
@@ -152,13 +152,13 @@ inline CString LclFormatSize (ULONGLONG pSize, UINT pFormat, WORD pLangId) {retu
 #define	DATETIME_DEFAULT	MAKELONG(DATE_SHORTDATE,TIME_FORCE24HOURFORMAT|TIME_NOTIMEMARKER)
 #define	DATETIME_NOSECONDS	MAKELONG(DATE_SHORTDATE,TIME_FORCE24HOURFORMAT|TIME_NOTIMEMARKER|TIME_NOSECONDS)
 
-static inline CString DebugDateTime (const SYSTEMTIME & pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
-static inline CString DebugDateTime (const FILETIME & pDateTime, DWORD pFlags = DATETIME_DEFAULT, bool pUTC = true) {return LclFormatDate(pDateTime,LOWORD(pFlags),pUTC) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags),pUTC);}
-static inline CString DebugDateTime (const VARIANT & pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
-static inline CString DebugDateTime (const COleDateTime & pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
-static inline CString DebugDateTime (const CTime & pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
+static inline CString DebugDateTime (const SYSTEMTIME& pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
+static inline CString DebugDateTime (const FILETIME& pDateTime, DWORD pFlags = DATETIME_DEFAULT, bool pUTC = true) {return LclFormatDate(pDateTime,LOWORD(pFlags),pUTC) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags),pUTC);}
+static inline CString DebugDateTime (const VARIANT& pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
+static inline CString DebugDateTime (const COleDateTime& pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
+static inline CString DebugDateTime (const CTime& pDateTime, DWORD pFlags = DATETIME_DEFAULT) {return LclFormatDate(pDateTime,LOWORD(pFlags)) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags));}
 #ifdef	_FILETIME_H
-static inline CString DebugDateTime (const CFiletime & pDateTime, DWORD pFlags = DATETIME_DEFAULT, bool pUTC = false) {return LclFormatDate(pDateTime,LOWORD(pFlags),pUTC) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags),pUTC);}
+static inline CString DebugDateTime (const CFiletime& pDateTime, DWORD pFlags = DATETIME_DEFAULT, bool pUTC = false) {return LclFormatDate(pDateTime,LOWORD(pFlags),pUTC) + _T(" ") + LclFormatTime(pDateTime,HIWORD(pFlags),pUTC);}
 #endif
 
 //////////////////////////////////////////////////////////////////////

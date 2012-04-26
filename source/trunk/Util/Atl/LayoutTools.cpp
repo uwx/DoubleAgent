@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -65,7 +65,7 @@ HDWP CLayoutTools::IsFormLayoutStarted () const
 
 //////////////////////////////////////////////////////////////////////
 
-inline void CLayoutTools::MoveAlignWnd (HWND pParent, HWND pAlign, CRect & pRect)
+inline void CLayoutTools::MoveAlignWnd (HWND pParent, HWND pAlign, CRect& pRect)
 {
 	if	(mRects)
 	{
@@ -110,7 +110,7 @@ inline void CLayoutTools::MoveAlignWnd (HWND pParent, HWND pAlign, CRect & pRect
 
 //////////////////////////////////////////////////////////////////////
 
-void CLayoutTools::GetAlignWndRect (HWND pAlign, CRect & pRect)
+void CLayoutTools::GetAlignWndRect (HWND pAlign, CRect& pRect)
 {
 	if	(
 			(!mRects)
@@ -121,7 +121,7 @@ void CLayoutTools::GetAlignWndRect (HWND pAlign, CRect & pRect)
 	}
 }
 
-void CLayoutTools::GetAlignWndRect (HWND pParent, HWND pAlign, CRect & pRect)
+void CLayoutTools::GetAlignWndRect (HWND pParent, HWND pAlign, CRect& pRect)
 {
 	GetAlignWndRect (pAlign, pRect);
 	if	(pParent)
@@ -130,7 +130,7 @@ void CLayoutTools::GetAlignWndRect (HWND pParent, HWND pAlign, CRect & pRect)
 	}
 }
 
-void CLayoutTools::GetAlignWndClient (HWND pAlign, CRect & pRect)
+void CLayoutTools::GetAlignWndClient (HWND pAlign, CRect& pRect)
 {
 	::GetClientRect (pAlign, &pRect);
 	::ClientToScreen (pAlign, &pRect);
@@ -140,7 +140,7 @@ void CLayoutTools::GetAlignWndClient (HWND pAlign, CRect & pRect)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CLayoutTools::AlignTo (HWND pAlign, HWND pAlignTo, const CRect * pMargin)
+bool CLayoutTools::AlignTo (HWND pAlign, HWND pAlignTo, const CRect* pMargin)
 {
 	if	(
 			(pAlign)
@@ -208,7 +208,7 @@ bool CLayoutTools::AlignPos (HWND pAlign, HWND pAlignTo)
 	return false;
 }
 
-bool CLayoutTools::AlignSize (HWND pAlign, HWND pAlignTo, CSize * pMult)
+bool CLayoutTools::AlignSize (HWND pAlign, HWND pAlignTo, CSize* pMult)
 {
 	if	(
 			(pAlign)
@@ -408,7 +408,7 @@ bool CLayoutTools::AlignBottom (HWND pAlign, HWND pAlignTo, bool pStretch, int p
 
 //////////////////////////////////////////////////////////////////////
 
-bool CLayoutTools::AlignCenter (HWND pAlign, HWND pAlignTo, const CRect * pMargin)
+bool CLayoutTools::AlignCenter (HWND pAlign, HWND pAlignTo, const CRect* pMargin)
 {
 	if	(
 			(pAlign)
@@ -446,7 +446,7 @@ bool CLayoutTools::AlignCenter (HWND pAlign, HWND pAlignTo, const CRect * pMargi
 	return false;
 }
 
-bool CLayoutTools::AlignVCenter (HWND pAlign, HWND pAlignTo, const CRect * pMargin)
+bool CLayoutTools::AlignVCenter (HWND pAlign, HWND pAlignTo, const CRect* pMargin)
 {
 	if	(
 			(pAlign)
@@ -702,7 +702,7 @@ bool CLayoutTools::AlignAbove (HWND pAlign, HWND pAlignTo, bool pStretch, int pG
 
 //////////////////////////////////////////////////////////////////////
 
-bool CLayoutTools::UpdateSize (HWND pWnd, const CSize & pSize)
+bool CLayoutTools::UpdateSize (HWND pWnd, const CSize& pSize)
 {
 	if	(pWnd)
 	{
@@ -759,7 +759,7 @@ bool CLayoutTools::UpdateHeight (HWND pWnd, int pHeight)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CLayoutTools::AdjustRect (HWND pWnd, const CPoint & pOffset)
+bool CLayoutTools::AdjustRect (HWND pWnd, const CPoint& pOffset)
 {
 	if	(pWnd)
 	{
@@ -774,7 +774,7 @@ bool CLayoutTools::AdjustRect (HWND pWnd, const CPoint & pOffset)
 	return false;
 }
 
-bool CLayoutTools::AdjustRect (HWND pWnd, const CRect & pMargin)
+bool CLayoutTools::AdjustRect (HWND pWnd, const CRect& pMargin)
 {
 	if	(pWnd)
 	{

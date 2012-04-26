@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -37,7 +37,7 @@ CNotifyObjects::~CNotifyObjects ()
 
 //////////////////////////////////////////////////////////////////////
 
-ULONG CNotifyObjects::AddNotifyObject (void * pNotifyObject, void * pSourceObject, CNotifyObjects * pTargetObjects)
+ULONG CNotifyObjects::AddNotifyObject (void* pNotifyObject, void* pSourceObject, CNotifyObjects * pTargetObjects)
 {
 	ULONG	lObjectId = 0;
 
@@ -62,7 +62,7 @@ ULONG CNotifyObjects::AddNotifyObject (void * pNotifyObject, void * pSourceObjec
 	return lObjectId;
 }
 
-bool CNotifyObjects::RemoveNotifyObject (void * pNotifyObject, void * pSourceObject, CNotifyObjects * pTargetObjects)
+bool CNotifyObjects::RemoveNotifyObject (void* pNotifyObject, void* pSourceObject, CNotifyObjects * pTargetObjects)
 {
 	bool	lRet = false;
 	INT_PTR	lNdx;
@@ -92,10 +92,10 @@ bool CNotifyObjects::RemoveNotifyObject (void * pNotifyObject, void * pSourceObj
 	return lRet;
 }
 
-bool CNotifyObjects::RemoveNotifyObject (INT_PTR pObjectNdx, void * pSourceObject, CNotifyObjects * pTargetObjects)
+bool CNotifyObjects::RemoveNotifyObject (INT_PTR pObjectNdx, void* pSourceObject, CNotifyObjects * pTargetObjects)
 {
 	bool	lRet = false;
-	void *	lNotifyObject = NULL;
+	void*	lNotifyObject = NULL;
 
 	if	(
 			(pObjectNdx >= 0)
@@ -136,7 +136,7 @@ INT_PTR CNotifyObjects::GetNotifyObjectCount () const
 	return (INT_PTR)mNotifyObjects.GetCount();
 }
 
-void * CNotifyObjects::GetNotifyObject (INT_PTR pNdx) const
+void* CNotifyObjects::GetNotifyObject (INT_PTR pNdx) const
 {
 	if	(
 			(pNdx >= 0)
@@ -148,7 +148,7 @@ void * CNotifyObjects::GetNotifyObject (INT_PTR pNdx) const
 	return NULL;
 }
 
-ULONG CNotifyObjects::FindNotifyObject (const void * pNotifyObject) const
+ULONG CNotifyObjects::FindNotifyObject (const void* pNotifyObject) const
 {
 	INT_PTR	lNdx;
 
@@ -165,7 +165,7 @@ ULONG CNotifyObjects::FindNotifyObject (const void * pNotifyObject) const
 	return 0;
 }
 
-void * CNotifyObjects::FindNotifyObject (ULONG pNotifyObjectId) const
+void* CNotifyObjects::FindNotifyObject (ULONG pNotifyObjectId) const
 {
 	INT_PTR	lNdx;
 
@@ -196,7 +196,7 @@ CNotifyObjects * CNotifyObjects::GetTargetObjects (INT_PTR pNdx) const
 	return NULL;
 }
 
-CNotifyObjects * CNotifyObjects::GetTargetObjects (const void * pNotifyObject) const
+CNotifyObjects * CNotifyObjects::GetTargetObjects (const void* pNotifyObject) const
 {
 	INT_PTR	lNdx;
 

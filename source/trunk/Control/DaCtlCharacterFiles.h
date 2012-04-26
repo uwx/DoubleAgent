@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCharacterFilesPtr		mServerObject;
+#endif
 	tPtr <CDaCmnCharacterFiles>	mLocalObject;
 
 // Operations
@@ -75,7 +77,7 @@ public:
 	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCharacterFiles
-	HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY ** FilePaths);
+	HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY** FilePaths);
 	HRESULT STDMETHODCALLTYPE get_SearchPath (BSTR * SearchPath);
 	HRESULT STDMETHODCALLTYPE put_SearchPath (BSTR SearchPath);
 	HRESULT STDMETHODCALLTYPE get_DefaultSearchPath (BSTR * DefaultSearchPath);

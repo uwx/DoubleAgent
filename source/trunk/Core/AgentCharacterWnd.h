@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -45,25 +45,25 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP virtual bool Attach (long pCharID, CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
-	_DACORE_IMPEXP virtual bool Detach (long pCharID, CEventNotify * pNotify);
+	_DACORE_IMPEXP virtual bool Attach (long pCharID, CEventNotify* pNotify, const CAgentIconData* pIconData, bool pSetActiveCharID);
+	_DACORE_IMPEXP virtual bool Detach (long pCharID, CEventNotify* pNotify);
 	_DACORE_IMPEXP bool SetLastActive ();
 	_DACORE_IMPEXP static HWND GetLastActive ();
 
-	_DACORE_IMPEXP class CAgentBalloonWnd * GetBalloonWnd (bool pCreate = false);
-	_DACORE_IMPEXP class CAgentListeningWnd * GetListeningWnd (bool pCreate = false);
+	_DACORE_IMPEXP class CAgentBalloonWnd* GetBalloonWnd (bool pCreate = false);
+	_DACORE_IMPEXP class CAgentListeningWnd* GetListeningWnd (bool pCreate = false);
 
 	_DACORE_IMPEXP long QueueShow (long pCharID, bool pFast = false, int pVisibilityCause = -1);
 	_DACORE_IMPEXP long QueueHide (long pCharID, bool pFast = false, int pVisibilityCause = -1);
-	_DACORE_IMPEXP long QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, class CAgentBalloonOptions * pBalloonOptions, UINT pSapiVersion = 5);
-	_DACORE_IMPEXP long QueueSpeak (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, class CSapiVoice * pVoice, class CAgentBalloonOptions * pBalloonOptions);
+	_DACORE_IMPEXP long QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject* pTextObject, class CAgentBalloonOptions* pBalloonOptions, UINT pSapiVersion = 5);
+	_DACORE_IMPEXP long QueueSpeak (long pCharID, LPCTSTR pText, class CAgentTextObject* pTextObject, LPCTSTR pSoundUrl, class CSapiVoice* pVoice, class CAgentBalloonOptions* pBalloonOptions);
 	_DACORE_IMPEXP long QueueWait (long pCharID, long pOtherCharID, long pOtherReqID);
 	_DACORE_IMPEXP long QueueInterrupt (long pCharID, long pOtherCharID, long pOtherReqID);
 
 	_DACORE_IMPEXP long IsShowingQueued ();
 	_DACORE_IMPEXP long IsHidingQueued ();
-	_DACORE_IMPEXP CQueuedAction * IsSpeakQueued (long pCharID = -1);
-	_DACORE_IMPEXP bool UpdateQueuedSpeak (long pCharID, class CSapiVoice * pVoice);
+	_DACORE_IMPEXP CQueuedAction* IsSpeakQueued (long pCharID = -1);
+	_DACORE_IMPEXP bool UpdateQueuedSpeak (long pCharID, class CSapiVoice* pVoice);
 
 // Overrides
 public:
@@ -78,23 +78,23 @@ protected:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnInputLangChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnInputLangChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentCharacterWnd)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
@@ -118,31 +118,31 @@ protected:
 	END_MSG_MAP()
 
 public:
-	bool KeepBalloonVisible (class CAgentBalloonWnd * pBalloon);
+	bool KeepBalloonVisible (class CAgentBalloonWnd* pBalloon);
 
-	_DACORE_IMPEXP virtual bool ShowQueued (CQueuedShow * pQueuedShow);
+	_DACORE_IMPEXP virtual bool ShowQueued (CQueuedShow* pQueuedShow);
 	_DACORE_IMPEXP virtual bool NotifyShown (long pForCharID, VisibilityCauseType pVisiblityCause);
-	_DACORE_IMPEXP virtual bool HideQueued (CQueuedHide * pQueuedHide);
+	_DACORE_IMPEXP virtual bool HideQueued (CQueuedHide* pQueuedHide);
 	_DACORE_IMPEXP virtual bool NotifyHidden (long pForCharID, VisibilityCauseType pVisiblityCause);
 
-	void SetLastSpeech (CAgentText & pSpeech);
+	void SetLastSpeech (CAgentText& pSpeech);
 	bool StartMouthAnimation (long pSpeakingDuration = -1);
 	bool StopMouthAnimation ();
 	bool PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlways);
 
-	CQueuedAction * FindOtherRequest (long pReqID, CAgentCharacterWnd *& pRequestOwner);
+	CQueuedAction* FindOtherRequest (long pReqID, CAgentCharacterWnd*& pRequestOwner);
 
 protected:
 	_DACORE_IMPEXP virtual void IsLastActive (bool pLastActive);
 
 	short NotifyKeyState () const;
-	void NotifyClick (short pButton, const CPoint & pPoint);
-	void NotifyDblClick (short pButton, const CPoint & pPoint);
+	void NotifyClick (short pButton, const CPoint& pPoint);
+	void NotifyDblClick (short pButton, const CPoint& pPoint);
 
 protected:
 	long								mCharID;
 	bool								mCharShown;
-	class CAgentBalloonWnd *			mBalloonWnd;
+	class CAgentBalloonWnd*			mBalloonWnd;
 	IUnknownPtr							mBalloonRefHolder;
 	tPtr <CAgentListeningWnd>			mListeningWnd;
 	CAgentText							mLastSpeech;

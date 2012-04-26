@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -37,7 +37,7 @@ _COM_SMARTPTR_TYPEDEF (ISpPhraseAlt, __uuidof(ISpPhraseAlt));
 interface _ISapi5InputEventSink
 {
 public:
-	virtual void OnSapi5InputEvent (const class CSpEvent & pEvent) = 0;
+	virtual void OnSapi5InputEvent (const class CSpEvent& pEvent) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ protected:
 	CSapi5Input ();
 public:
 	_DACORE_IMPEXP virtual ~CSapi5Input ();
-	_DACORE_IMPEXP static CSapi5Input * CreateInstance ();
+	_DACORE_IMPEXP static CSapi5Input* CreateInstance ();
 
 // Attributes
 	_DACORE_IMPEXP ISpRecognizer * SafeGetRecognizer () const;
@@ -65,17 +65,17 @@ public:
 	_DACORE_IMPEXP HRESULT PrepareToListen (bool pAllowAudioFormatChange = true);
 
 	_DACORE_IMPEXP tBstrPtr GetEngineId ();
-	_DACORE_IMPEXP HRESULT GetEngineId (CAtlString & pEngineId);
+	_DACORE_IMPEXP HRESULT GetEngineId (CAtlString& pEngineId);
 	_DACORE_IMPEXP HRESULT SetEngineId (LPCTSTR pEngineId);
 
 	_DACORE_IMPEXP tBstrPtr GetEngineName ();
-	_DACORE_IMPEXP HRESULT GetEngineName (CAtlString & pEngineName);
-	_DACORE_IMPEXP HRESULT GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages);
+	_DACORE_IMPEXP HRESULT GetEngineName (CAtlString& pEngineName);
+	_DACORE_IMPEXP HRESULT GetEngineLanguages (CAtlTypeArray <LANGID>& pLanguages);
 
 	_DACORE_IMPEXP tBstrPtr GetInputId ();
-	_DACORE_IMPEXP HRESULT GetInputId (CAtlString & pInputId);
+	_DACORE_IMPEXP HRESULT GetInputId (CAtlString& pInputId);
 	_DACORE_IMPEXP tBstrPtr GetInputName ();
-	_DACORE_IMPEXP HRESULT GetInputName (CAtlString & pInputName);
+	_DACORE_IMPEXP HRESULT GetInputName (CAtlString& pInputName);
 
 	_DACORE_IMPEXP void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 
@@ -93,7 +93,7 @@ protected:
 	CSapi5InputContext ();
 public:
 	_DACORE_IMPEXP virtual ~CSapi5InputContext ();
-	_DACORE_IMPEXP static CSapi5InputContext * CreateInstance ();
+	_DACORE_IMPEXP static CSapi5InputContext* CreateInstance ();
 
 // Attributes
 	_DACORE_IMPEXP bool SafeIsValid () const;
@@ -106,10 +106,10 @@ public:
 	const ULONGLONG	mGrammarIdGlobal;
 
 // Operations
-	_DACORE_IMPEXP HRESULT Initialize (CSapi5Input * pInput, LANGID pLangID);
+	_DACORE_IMPEXP HRESULT Initialize (CSapi5Input* pInput, LANGID pLangID);
 	_DACORE_IMPEXP LANGID GetLangID ();
 
-	_DACORE_IMPEXP HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pNames, const CAtlStringArray & pCommands);
+	_DACORE_IMPEXP HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long>& pIds, const CAtlStringArray& pNames, const CAtlStringArray& pCommands);
 	_DACORE_IMPEXP HRESULT SetGlobalCommands (USHORT pShowWndCmdId = 0, USHORT pHideWndCmdId = 0, USHORT pHideCharCmdId = 0);
 	_DACORE_IMPEXP bool RemoveGlobalCommands ();
 
@@ -121,10 +121,10 @@ public:
 	_DACORE_IMPEXP HRESULT StopListening ();
 	_DACORE_IMPEXP HRESULT PauseListening (bool pPause);
 
-	_DACORE_IMPEXP void FromPrevInputContext (CSapi5InputContext * pPrevInputContext);
+	_DACORE_IMPEXP void FromPrevInputContext (CSapi5InputContext* pPrevInputContext);
 
 	_DACORE_IMPEXP void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
-	_DACORE_IMPEXP friend void LogRecoResult (UINT pLogLevel, ISpRecoResult * pResult, LPCTSTR pFormat = NULL, ...);
+	_DACORE_IMPEXP friend void LogRecoResult (UINT pLogLevel, ISpRecoResult* pResult, LPCTSTR pFormat = NULL, ...);
 	_DACORE_IMPEXP friend void LogRecoPhrase (UINT pLogLevel, ISpPhrase * pPhrase, LPCTSTR pFormat = NULL, ...);
 	_DACORE_IMPEXP friend void LogRecoPhraseAlt (UINT pLogLevel, ISpPhraseAlt * pPhrase, LPCTSTR pFormat = NULL, ...);
 
@@ -137,14 +137,14 @@ public:
 // Implementation
 protected:
 	HRESULT MakeCharacterCommands ();
-	SPSTATEHANDLE MakeSpeechRule (ISpGrammarBuilder * pGrammar, DWORD pRuleId, LPCTSTR pRuleName, LPCTSTR pSpeech);
-	INT_PTR PutSpeechPhrases (ISpGrammarBuilder * pGrammar, SPSTATEHANDLE pInitialState, SPSTATEHANDLE & pFinalState, const CAtlString & pSpeech, INT_PTR pBegNdx = 0, INT_PTR pEndNdx = INT_MAX, TCHAR pEndAt = 0);
+	SPSTATEHANDLE MakeSpeechRule (ISpGrammarBuilder* pGrammar, DWORD pRuleId, LPCTSTR pRuleName, LPCTSTR pSpeech);
+	INT_PTR PutSpeechPhrases (ISpGrammarBuilder* pGrammar, SPSTATEHANDLE pInitialState, SPSTATEHANDLE& pFinalState, const CAtlString& pSpeech, INT_PTR pBegNdx = 0, INT_PTR pEndNdx = INT_MAX, TCHAR pEndAt = 0);
 
 private:
 	static void __stdcall InputNotifyCallback(WPARAM wParam, LPARAM lParam);
 
 protected:
-	CSapi5Input *																		mInput;
+	CSapi5Input*																		mInput;
 	LANGID																				mLangID;
 	ISpRecoContextPtr																	mRecoContext;
 	ISpRecoGrammarPtr																	mRecoGrammarCommands;

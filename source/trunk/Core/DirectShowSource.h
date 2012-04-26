@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -47,10 +47,10 @@ public:
 	virtual LONGLONG GetDuration ();
 	virtual LONGLONG GetPreroll ();
 protected:
-	virtual const GUID & GetClassID ();
+	virtual const GUID& GetClassID ();
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName);
 	virtual CAtlString GetFilterName ();
-	virtual void GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
+	virtual void GetSeekingTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime);
 	virtual void InitializePins ();
 	virtual void OnJoinedFilterGraph ();
 	virtual void OnLeftFilterGraph ();
@@ -78,8 +78,8 @@ public:
 	HRESULT STDMETHODCALLTYPE SetAgentFile (ULONG_PTR pAgentFile);
 	HRESULT STDMETHODCALLTYPE GetAgentStreamInfo (ULONG_PTR *pAgentStreamInfo);
 	HRESULT STDMETHODCALLTYPE SetAgentStreamInfo (ULONG_PTR pAgentStreamInfo);
-	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF *pBkColor);
-	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF *pBkColor);
+	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF*pBkColor);
+	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF*pBkColor);
 	HRESULT STDMETHODCALLTYPE SegmentDurationChanged (void);
 
 	// IFileSourceFilter
@@ -99,12 +99,12 @@ protected:
 	HRESULT OpenFile (LPCTSTR pFileName);
 	void ReadFile ();
 
-	HRESULT PutVideoSample (REFERENCE_TIME & pSampleTime, REFERENCE_TIME pStopTime);
+	HRESULT PutVideoSample (REFERENCE_TIME& pSampleTime, REFERENCE_TIME pStopTime);
 	bool PutVideoFrame ();
 	bool CueAudioSegments ();
-	bool CueAudioSegments (CAnimationSequence * pAnimationSequence);
+	bool CueAudioSegments (CAnimationSequence* pAnimationSequence);
 	void ConnectSequenceAudio ();
-	void ConnectSequenceAudio (CAnimationSequence * pAnimationSequence);
+	void ConnectSequenceAudio (CAnimationSequence* pAnimationSequence);
 	CDirectSoundPinPush * ConnectSequenceSound (long pSoundNdx);
 
 protected:

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -40,19 +40,25 @@ extern LPCTSTR _AtlProfilePath;
 
 ////////////////////////////////////////////////////////////////////////
 
+#ifndef	DECLARE_DLL_OBJECT
 #define	DECLARE_DLL_OBJECT(theClass) \
 public: \
 static void* __stdcall operator new(size_t nSize); \
-static void __stdcall operator delete(void* p); \
+static void __stdcall operator delete(void* p);
+#endif
 
+#ifndef	DECLARE_DLL_OBJECT_EX
 #define	DECLARE_DLL_OBJECT_EX(theClass, exDecl) \
 public: \
 exDecl static void* __stdcall operator new(size_t nSize); \
-exDecl static void __stdcall operator delete(void* p); \
+exDecl static void __stdcall operator delete(void* p);
+#endif
 
+#ifndef	IMPLEMENT_DLL_OBJECT
 #define	IMPLEMENT_DLL_OBJECT(theClass) \
 void* __stdcall theClass::operator new(size_t nSize) {return ::operator new(nSize);} \
-void __stdcall theClass::operator delete(void* p) {::operator delete(p);} \
+void __stdcall theClass::operator delete(void* p) {::operator delete(p);}
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -133,9 +139,9 @@ public:
 template <class TYPE> class CLockObject
 {
 public:
-	CLockObject (TYPE & pSyncObject) : mSyncObject (pSyncObject) {mSyncObject.Lock();}
+	CLockObject (TYPE& pSyncObject) : mSyncObject (pSyncObject) {mSyncObject.Lock();}
 	~CLockObject () {mSyncObject.Unlock();}
-	TYPE & mSyncObject;
+	TYPE& mSyncObject;
 };
 
 typedef CLockObject <CComCriticalSection>	CLockCS;
@@ -151,7 +157,7 @@ static inline void ScreenToClient (HWND pWnd, RECT * pRect)
 	::ScreenToClient (pWnd, (LPPOINT)&pRect->right);
 }
 
-static inline void ScreenToClient (HWND pWnd, RECT & pRect)
+static inline void ScreenToClient (HWND pWnd, RECT& pRect)
 {
 	::ScreenToClient (pWnd, (LPPOINT)&pRect.left);
 	::ScreenToClient (pWnd, (LPPOINT)&pRect.right);
@@ -163,7 +169,7 @@ static inline void ClientToScreen (HWND pWnd, RECT * pRect)
 	::ClientToScreen (pWnd, (LPPOINT)&pRect->right);
 }
 
-static inline void ClientToScreen (HWND pWnd, RECT & pRect)
+static inline void ClientToScreen (HWND pWnd, RECT& pRect)
 {
 	::ClientToScreen (pWnd, (LPPOINT)&pRect.left);
 	::ClientToScreen (pWnd, (LPPOINT)&pRect.right);
@@ -192,7 +198,7 @@ template <class T>
 class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd <T>, CWindow, CNullTraits>
 {
 public:
-	CMsgPostingWnd (T & pOwner)
+	CMsgPostingWnd (T& pOwner)
 	:	mOwner (pOwner)
 	{
 		Create (HWND_MESSAGE);

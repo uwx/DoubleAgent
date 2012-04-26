@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -66,7 +66,7 @@ CVoiceCommandsWnd::~CVoiceCommandsWnd ()
 	}
 }
 
-CVoiceCommandsWnd * CVoiceCommandsWnd::CreateInstance ()
+CVoiceCommandsWnd* CVoiceCommandsWnd::CreateInstance ()
 {
 	return new CVoiceCommandsWnd;
 }
@@ -75,7 +75,7 @@ CVoiceCommandsWnd * CVoiceCommandsWnd::CreateInstance ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CVoiceCommandsWnd::Create (CWindow * pOwnerWnd)
+bool CVoiceCommandsWnd::Create (CWindow* pOwnerWnd)
 {
 	bool			lRet = false;
 	HWND			lOwnerWnd = (pOwnerWnd) ? pOwnerWnd->m_hWnd : NULL;
@@ -294,7 +294,7 @@ void CVoiceCommandsWnd::SetTreeItemData (HWND pTree, HTREEITEM pTreeItem, LPARAM
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions)
+bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long>& pIds, const CAtlStringArray& pCaptions)
 {
 	bool		lRet = false;
 	bool		lSpeechEnabled = CDaSettingsConfig().LoadConfig().mSrEnabled;
@@ -307,7 +307,7 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 
 	if	(mCommandTree.m_hWnd)
 	{
-		HTREEITEM &	lCharRoot = mCharRoots [pCharID];
+		HTREEITEM&	lCharRoot = mCharRoots [pCharID];
 
 		if	(
 				(pIds.GetCount() > 0)
@@ -341,7 +341,7 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 				if	(lNdx < (INT_PTR)pIds.GetCount())
 				{
 #ifdef	_DEBUG_NOT
-					const_cast <CAtlStringArray &> (pCaptions) [lNdx].Format (_T("%s [%d] [%d]"), CAtlString((LPCTSTR)pCaptions [lNdx]), pIds[lNdx], mCharID);
+					const_cast <CAtlStringArray&> (pCaptions) [lNdx].Format (_T("%s [%d] [%d]"), CAtlString((LPCTSTR)pCaptions [lNdx]), pIds[lNdx], mCharID);
 #endif
 					if	(lCmdItem)
 					{
@@ -837,21 +837,21 @@ bool CVoiceCommandsWnd::SetLangID (LANGID pLangID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CVoiceCommandsWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CVoiceCommandsWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	SaveConfig ();
 	bHandled = FALSE;
 	return 0;
 }
 
-LRESULT CVoiceCommandsWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CVoiceCommandsWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = DefWindowProc ();
 	RecalcLayout ();
 	return lResult;
 }
 
-LRESULT CVoiceCommandsWnd::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CVoiceCommandsWnd::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	Hide ();
 	return 0;

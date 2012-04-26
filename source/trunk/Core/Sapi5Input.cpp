@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -60,7 +60,7 @@ IMPLEMENT_DLL_OBJECT(CSapi5Input)
 
 CSapi5Input::CSapi5Input ()
 {
-	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpInprocRecognizer, NULL, CLSCTX_SERVER, __uuidof (ISpRecognizer), (void **) &mRecognizer))))
+	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpInprocRecognizer, NULL, CLSCTX_SERVER, __uuidof (ISpRecognizer), (void**) &mRecognizer))))
 	{
 		mRecognizer->SetRecoState (SPRST_INACTIVE);
 	}
@@ -71,7 +71,7 @@ CSapi5Input::~CSapi5Input ()
 	SafeFreeSafePtr (mRecognizer);
 }
 
-CSapi5Input * CSapi5Input::CreateInstance ()
+CSapi5Input* CSapi5Input::CreateInstance ()
 {
 	return new CSapi5Input;
 }
@@ -140,7 +140,7 @@ tBstrPtr CSapi5Input::GetEngineId ()
 	return lEngineId.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetEngineId (CAtlString & pEngineId)
+HRESULT CSapi5Input::GetEngineId (CAtlString& pEngineId)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -215,7 +215,7 @@ tBstrPtr CSapi5Input::GetEngineName ()
 	return lInputName.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetEngineName (CAtlString & pEngineName)
+HRESULT CSapi5Input::GetEngineName (CAtlString& pEngineName)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -237,7 +237,7 @@ HRESULT CSapi5Input::GetEngineName (CAtlString & pEngineName)
 	return lResult;
 }
 
-HRESULT CSapi5Input::GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages)
+HRESULT CSapi5Input::GetEngineLanguages (CAtlTypeArray <LANGID>& pLanguages)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -268,7 +268,7 @@ tBstrPtr CSapi5Input::GetInputId ()
 	return lInputId.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetInputId (CAtlString & pInputId)
+HRESULT CSapi5Input::GetInputId (CAtlString& pInputId)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -297,7 +297,7 @@ tBstrPtr CSapi5Input::GetInputName ()
 	return lInputName.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetInputName (CAtlString & pInputName)
+HRESULT CSapi5Input::GetInputName (CAtlString& pInputName)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -374,7 +374,7 @@ CSapi5InputContext::~CSapi5InputContext ()
 	SafeFreeSafePtr (mRecoGrammarGlobal);
 }
 
-CSapi5InputContext * CSapi5InputContext::CreateInstance ()
+CSapi5InputContext* CSapi5InputContext::CreateInstance ()
 {
 	return new CSapi5InputContext;
 }
@@ -462,7 +462,7 @@ bool CSapi5InputContext::IsPaused () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CSapi5InputContext::Initialize (CSapi5Input * pInput, LANGID pLangID)
+HRESULT CSapi5InputContext::Initialize (CSapi5Input* pInput, LANGID pLangID)
 {
 	HRESULT				lResult = E_FAIL;
 	ISpRecognizerPtr	lRecognizer;
@@ -510,7 +510,7 @@ LANGID CSapi5InputContext::GetLangID ()
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pNames, const CAtlStringArray & pCommands)
+HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long>& pIds, const CAtlStringArray& pNames, const CAtlStringArray& pCommands)
 {
 	HRESULT	lResult = S_OK;
 	INT_PTR	lNdx;
@@ -1001,12 +1001,12 @@ struct GrammarPhrase
 	tPtr <GrammarPhrases>	mPhrases;
 
 	GrammarPhrase (TCHAR pTypeFlag = 0) : mTypeFlag (pTypeFlag) {}
-	GrammarPhrase (const CAtlString & pPhrase, TCHAR pTypeFlag = 0) : mTypeFlag (pTypeFlag), mPhrase (new CAtlString (pPhrase)) {}
+	GrammarPhrase (const CAtlString& pPhrase, TCHAR pTypeFlag = 0) : mTypeFlag (pTypeFlag), mPhrase (new CAtlString (pPhrase)) {}
 };
 
 //////////////////////////////////////////////////////////////////////
 
-static inline bool IsolatePhrase (const CAtlString & pSpeech, int pBegNdx, int pEndNdx, CAtlString & pPhrase)
+static inline bool IsolatePhrase (const CAtlString& pSpeech, int pBegNdx, int pEndNdx, CAtlString& pPhrase)
 {
 	pPhrase = pSpeech.Mid (pBegNdx, pEndNdx-pBegNdx+1);
 	pPhrase.TrimLeft ();
@@ -1016,7 +1016,7 @@ static inline bool IsolatePhrase (const CAtlString & pSpeech, int pBegNdx, int p
 
 //////////////////////////////////////////////////////////////////////
 
-static GrammarPhrase * ParseSpeech (const CAtlString & pSpeech, int pBegNdx, int & pEndNdx, TCHAR pEndAt = 0)
+static GrammarPhrase * ParseSpeech (const CAtlString& pSpeech, int pBegNdx, int& pEndNdx, TCHAR pEndAt = 0)
 {
 	tPtr <GrammarPhrase>	lPhrase;
 	tPtr <GrammarPhrases>	lPhrases = new GrammarPhrases;
@@ -1250,7 +1250,7 @@ static GrammarPhrase * ParseSpeech (const CAtlString & pSpeech, int pBegNdx, int
 
 //////////////////////////////////////////////////////////////////////
 
-static HRESULT PutPhrase (ISpGrammarBuilder * pGrammar, SPSTATEHANDLE pInitialState, SPSTATEHANDLE pFinalState, GrammarPhrase * pPhrase)
+static HRESULT PutPhrase (ISpGrammarBuilder* pGrammar, SPSTATEHANDLE pInitialState, SPSTATEHANDLE pFinalState, GrammarPhrase * pPhrase)
 {
 	HRESULT			lResult = S_OK;
 	SPSTATEHANDLE	lInitialState = pInitialState;
@@ -1401,7 +1401,7 @@ static HRESULT PutPhrase (ISpGrammarBuilder * pGrammar, SPSTATEHANDLE pInitialSt
 
 //////////////////////////////////////////////////////////////////////
 
-SPSTATEHANDLE CSapi5InputContext::MakeSpeechRule (ISpGrammarBuilder * pGrammar, DWORD pRuleId, LPCTSTR pRuleName, LPCTSTR pSpeech)
+SPSTATEHANDLE CSapi5InputContext::MakeSpeechRule (ISpGrammarBuilder* pGrammar, DWORD pRuleId, LPCTSTR pRuleName, LPCTSTR pSpeech)
 {
 	CAtlString				lRuleName (pRuleName);
 	CAtlString				lSpeech (pSpeech);
@@ -1481,7 +1481,7 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 {
 	try
 	{
-		CSapi5InputContext *	lThis = (CSapi5InputContext *) lParam;
+		CSapi5InputContext*	lThis = (CSapi5InputContext*) lParam;
 		CSpEvent				lEvent;
 
 #ifdef	_DEBUG_EVENTS_EX
@@ -1566,7 +1566,7 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 
 //////////////////////////////////////////////////////////////////////
 
-void CSapi5InputContext::FromPrevInputContext (CSapi5InputContext * pPrevInputContext)
+void CSapi5InputContext::FromPrevInputContext (CSapi5InputContext* pPrevInputContext)
 {
 	if	(pPrevInputContext)
 	{
@@ -1776,7 +1776,7 @@ void CSapi5InputContext::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-void LogRecoResult (UINT pLogLevel, ISpRecoResult * pResult, LPCTSTR pFormat, ...)
+void LogRecoResult (UINT pLogLevel, ISpRecoResult* pResult, LPCTSTR pFormat, ...)
 {
 	if	(LogIsActive (pLogLevel))
 	{

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -36,8 +36,8 @@ class CResName
 public:
 	CResName (WORD pResId, LPCTSTR pResType);
 	CResName (LPCTSTR pResName, LPCTSTR pResType);
-	CResName (const CResName & pSource);
-	CResName & operator= (const CResName & pSource);
+	CResName (const CResName& pSource);
+	CResName& operator= (const CResName& pSource);
 	virtual ~CResName () {}
 
 	LPCTSTR	Type() const {return mType;}

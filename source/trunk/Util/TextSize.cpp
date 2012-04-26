@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include "TextSize.h"
 #include "Log.h"
 
@@ -78,7 +79,7 @@ CTextSize::CTextSize (CFont * pFont, bool pMeasureTwips)
 #endif
 
 #ifdef	__AFXCTL_H__
-CTextSize::CTextSize (CFontHolder & pFont, bool pMeasureTwips)
+CTextSize::CTextSize (CFontHolder& pFont, bool pMeasureTwips)
 :	mOleFontHandle (0),
 	mOldFont (NULL)
 {
@@ -139,7 +140,7 @@ HFONT CTextSize::GetFont () const
 }
 #endif
 
-void CTextSize::GetTextMetrics (TEXTMETRIC & pMetrics)
+void CTextSize::GetTextMetrics (TEXTMETRIC& pMetrics)
 {
 	::GetTextMetrics (mDC, &pMetrics);
 }
@@ -241,7 +242,7 @@ CSize CTextSize::MeasureText (LPCTSTR pText, INT_PTR pTextLen, HDC pDC, HFONT pF
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CPoint CTextSize::TwipsToPels (HDC pDC, const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::TwipsToPels (HDC pDC, const CPoint& pPoint, bool pLogUnits)
 {
 	CPoint	lPoint (pPoint);
 	HDC		lTempDC = NULL;
@@ -268,7 +269,7 @@ CPoint CTextSize::TwipsToPels (HDC pDC, const CPoint & pPoint, bool pLogUnits)
 	return lPoint;
 }
 
-CPoint CTextSize::PelsToTwips (HDC pDC, const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::PelsToTwips (HDC pDC, const CPoint& pPoint, bool pLogUnits)
 {
 	CPoint	lPoint (pPoint);
 	HDC		lTempDC = NULL;
@@ -296,7 +297,7 @@ CPoint CTextSize::PelsToTwips (HDC pDC, const CPoint & pPoint, bool pLogUnits)
 	return lPoint;
 }
 
-CSize CTextSize::TwipsToPels (HDC pDC, const CSize & pSize, bool pLogUnits)
+CSize CTextSize::TwipsToPels (HDC pDC, const CSize& pSize, bool pLogUnits)
 {
 	CPoint	lOrigin (0, 0);
 	CPoint	lPoint (pSize);
@@ -325,7 +326,7 @@ CSize CTextSize::TwipsToPels (HDC pDC, const CSize & pSize, bool pLogUnits)
 	return lPoint - lOrigin;
 }
 
-CSize CTextSize::PelsToTwips (HDC pDC, const CSize & pSize, bool pLogUnits)
+CSize CTextSize::PelsToTwips (HDC pDC, const CSize& pSize, bool pLogUnits)
 {
 	CPoint	lOrigin (0, 0);
 	CPoint	lPoint (pSize);
@@ -355,19 +356,19 @@ CSize CTextSize::PelsToTwips (HDC pDC, const CSize & pSize, bool pLogUnits)
 	return lPoint;
 }
 
-CRect CTextSize::TwipsToPels (HDC pDC, const CRect & pRect, bool pLogUnits)
+CRect CTextSize::TwipsToPels (HDC pDC, const CRect& pRect, bool pLogUnits)
 {
 	return CRect (TwipsToPels (pDC, pRect.TopLeft (), pLogUnits), TwipsToPels (pDC, pRect.BottomRight (), pLogUnits));
 }
 
-CRect CTextSize::PelsToTwips (HDC pDC, const CRect & pRect, bool pLogUnits)
+CRect CTextSize::PelsToTwips (HDC pDC, const CRect& pRect, bool pLogUnits)
 {
 	return CRect (PelsToTwips (pDC, pRect.TopLeft (), pLogUnits), PelsToTwips (pDC, pRect.BottomRight (), pLogUnits));
 }
 
 //////////////////////////////////////////////////////////////////////
 
-CPoint CTextSize::DeciPointsToPels (HDC pDC, const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::DeciPointsToPels (HDC pDC, const CPoint& pPoint, bool pLogUnits)
 {
 	CPoint	lPoint (pPoint);
 	HDC		lTempDC = NULL;
@@ -394,7 +395,7 @@ CPoint CTextSize::DeciPointsToPels (HDC pDC, const CPoint & pPoint, bool pLogUni
 	return lPoint;
 }
 
-CPoint CTextSize::PelsToDeciPoints (HDC pDC, const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::PelsToDeciPoints (HDC pDC, const CPoint& pPoint, bool pLogUnits)
 {
 	CPoint	lPoint (pPoint);
 	HDC		lTempDC = NULL;
@@ -422,7 +423,7 @@ CPoint CTextSize::PelsToDeciPoints (HDC pDC, const CPoint & pPoint, bool pLogUni
 	return lPoint;
 }
 
-CSize CTextSize::DeciPointsToPels (HDC pDC, const CSize & pSize, bool pLogUnits)
+CSize CTextSize::DeciPointsToPels (HDC pDC, const CSize& pSize, bool pLogUnits)
 {
 	CPoint	lOrigin (0, 0);
 	CPoint	lPoint (pSize);
@@ -451,7 +452,7 @@ CSize CTextSize::DeciPointsToPels (HDC pDC, const CSize & pSize, bool pLogUnits)
 	return lPoint - lOrigin;
 }
 
-CSize CTextSize::PelsToDeciPoints (HDC pDC, const CSize & pSize, bool pLogUnits)
+CSize CTextSize::PelsToDeciPoints (HDC pDC, const CSize& pSize, bool pLogUnits)
 {
 	CPoint	lOrigin (0, 0);
 	CPoint	lPoint (pSize);
@@ -481,66 +482,66 @@ CSize CTextSize::PelsToDeciPoints (HDC pDC, const CSize & pSize, bool pLogUnits)
 	return lPoint;
 }
 
-CRect CTextSize::DeciPointsToPels (HDC pDC, const CRect & pRect, bool pLogUnits)
+CRect CTextSize::DeciPointsToPels (HDC pDC, const CRect& pRect, bool pLogUnits)
 {
 	return CRect (DeciPointsToPels (pDC, pRect.TopLeft (), pLogUnits), DeciPointsToPels (pDC, pRect.BottomRight (), pLogUnits));
 }
 
-CRect CTextSize::PelsToDeciPoints (HDC pDC, const CRect & pRect, bool pLogUnits)
+CRect CTextSize::PelsToDeciPoints (HDC pDC, const CRect& pRect, bool pLogUnits)
 {
 	return CRect (PelsToDeciPoints (pDC, pRect.TopLeft (), pLogUnits), PelsToDeciPoints (pDC, pRect.BottomRight (), pLogUnits));
 }
 
 //////////////////////////////////////////////////////////////////////
 
-CPoint CTextSize::TwipsToPels (const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::TwipsToPels (const CPoint& pPoint, bool pLogUnits)
 {
 	return TwipsToPels (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
-CPoint CTextSize::PelsToTwips (const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::PelsToTwips (const CPoint& pPoint, bool pLogUnits)
 {
 	return PelsToTwips (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
-CSize CTextSize::TwipsToPels (const CSize & pSize, bool pLogUnits)
+CSize CTextSize::TwipsToPels (const CSize& pSize, bool pLogUnits)
 {
 	return TwipsToPels (_MY_DC_HANDLE, pSize, pLogUnits);
 }
-CSize CTextSize::PelsToTwips (const CSize & pSize, bool pLogUnits)
+CSize CTextSize::PelsToTwips (const CSize& pSize, bool pLogUnits)
 {
 	return PelsToTwips (_MY_DC_HANDLE, pSize, pLogUnits);
 }
-CRect CTextSize::TwipsToPels (const CRect & pRect, bool pLogUnits)
+CRect CTextSize::TwipsToPels (const CRect& pRect, bool pLogUnits)
 {
 	return TwipsToPels (_MY_DC_HANDLE, pRect, pLogUnits);
 }
-CRect CTextSize::PelsToTwips (const CRect & pRect, bool pLogUnits)
+CRect CTextSize::PelsToTwips (const CRect& pRect, bool pLogUnits)
 {
 	return PelsToTwips (_MY_DC_HANDLE, pRect, pLogUnits);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-CPoint CTextSize::DeciPointsToPels (const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::DeciPointsToPels (const CPoint& pPoint, bool pLogUnits)
 {
 	return DeciPointsToPels (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
-CPoint CTextSize::PelsToDeciPoints (const CPoint & pPoint, bool pLogUnits)
+CPoint CTextSize::PelsToDeciPoints (const CPoint& pPoint, bool pLogUnits)
 {
 	return PelsToDeciPoints (_MY_DC_HANDLE, pPoint, pLogUnits);
 }
-CSize CTextSize::DeciPointsToPels (const CSize & pSize, bool pLogUnits)
+CSize CTextSize::DeciPointsToPels (const CSize& pSize, bool pLogUnits)
 {
 	return DeciPointsToPels (_MY_DC_HANDLE, pSize, pLogUnits);
 }
-CSize CTextSize::PelsToDeciPoints (const CSize & pSize, bool pLogUnits)
+CSize CTextSize::PelsToDeciPoints (const CSize& pSize, bool pLogUnits)
 {
 	return PelsToDeciPoints (_MY_DC_HANDLE, pSize, pLogUnits);
 }
-CRect CTextSize::DeciPointsToPels (const CRect & pRect, bool pLogUnits)
+CRect CTextSize::DeciPointsToPels (const CRect& pRect, bool pLogUnits)
 {
 	return DeciPointsToPels (_MY_DC_HANDLE, pRect, pLogUnits);
 }
-CRect CTextSize::PelsToDeciPoints (const CRect & pRect, bool pLogUnits)
+CRect CTextSize::PelsToDeciPoints (const CRect& pRect, bool pLogUnits)
 {
 	return PelsToDeciPoints (_MY_DC_HANDLE, pRect, pLogUnits);
 }

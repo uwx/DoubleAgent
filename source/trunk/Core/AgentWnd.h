@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -46,15 +46,15 @@ public:
 
 // Attributes
 public:
-	_DACORE_IMPEXP CAgentFile * GetAgentFile () const {return CAgentStreamUtils::GetAgentFile ();}
+	_DACORE_IMPEXP CAgentFile* GetAgentFile () const {return CAgentStreamUtils::GetAgentFile ();}
 
 // Operations
 public:
-	_DACORE_IMPEXP bool Open (CAgentFile * pAgentFile);
+	_DACORE_IMPEXP bool Open (CAgentFile* pAgentFile);
 
-	_DACORE_IMPEXP SAFEARRAY * GetStateNames ();
-	_DACORE_IMPEXP SAFEARRAY * GetGestureNames ();
-	_DACORE_IMPEXP SAFEARRAY * GetAnimationNames ();
+	_DACORE_IMPEXP SAFEARRAY* GetStateNames ();
+	_DACORE_IMPEXP SAFEARRAY* GetGestureNames ();
+	_DACORE_IMPEXP SAFEARRAY* GetAnimationNames ();
 
 	_DACORE_IMPEXP bool ShowState (LPCTSTR pStateName, bool pStopIdle = true, bool pClearQueue = false);
 	_DACORE_IMPEXP bool ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState = NULL, bool pStopIdle = true, bool pClearQueue = false);
@@ -65,21 +65,21 @@ public:
 	_DACORE_IMPEXP bool IsShowingAnimation (LPCTSTR pAnimationName);
 
 	_DACORE_IMPEXP long QueueState (long pCharID, LPCTSTR pStateName);
-	_DACORE_IMPEXP CQueuedAction * FindQueuedState (long pCharID, LPCTSTR pStateName);
-	_DACORE_IMPEXP tBstrPtr GetQueuedState (CQueuedAction * pQueuedState);
-	_DACORE_IMPEXP bool RemoveQueuedState (CQueuedAction * pQueuedState, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP CQueuedAction* FindQueuedState (long pCharID, LPCTSTR pStateName);
+	_DACORE_IMPEXP tBstrPtr GetQueuedState (CQueuedAction* pQueuedState);
+	_DACORE_IMPEXP bool RemoveQueuedState (CQueuedAction* pQueuedState, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	_DACORE_IMPEXP bool RemoveQueuedState (long pCharID, LPCTSTR pStateName, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 	_DACORE_IMPEXP bool ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueuedState);
 
 	_DACORE_IMPEXP long QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForState = NULL);
-	_DACORE_IMPEXP CQueuedAction * FindQueuedGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForState = NULL);
-	_DACORE_IMPEXP tBstrPtr GetQueuedGesture (CQueuedAction * pQueuedGesture);
-	_DACORE_IMPEXP bool RemoveQueuedGesture (CQueuedAction * pQueuedGesture, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP CQueuedAction* FindQueuedGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForState = NULL);
+	_DACORE_IMPEXP tBstrPtr GetQueuedGesture (CQueuedAction* pQueuedGesture);
+	_DACORE_IMPEXP bool RemoveQueuedGesture (CQueuedAction* pQueuedGesture, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
-	_DACORE_IMPEXP bool PutQueuedAction (CQueuedAction * pQueuedAction);
-	_DACORE_IMPEXP bool RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
-	_DACORE_IMPEXP CQueuedAction * FindQueuedAction (long pReqID);
-	_DACORE_IMPEXP CQueuedAction * NextQueuedAction (long pCharID = -1);
+	_DACORE_IMPEXP bool PutQueuedAction (CQueuedAction* pQueuedAction);
+	_DACORE_IMPEXP bool RemoveQueuedAction (CQueuedAction* pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP CQueuedAction* FindQueuedAction (long pReqID);
+	_DACORE_IMPEXP CQueuedAction* NextQueuedAction (long pCharID = -1);
 	_DACORE_IMPEXP UINT HasQueuedActions (long pCharID = -1);
 
 	_DACORE_IMPEXP bool RemoveQueuedActions (QueueAction pAction, long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
@@ -98,7 +98,7 @@ public:
 	_DACORE_IMPEXP bool EnableSound (bool pEnable);
 
 	_DACORE_IMPEXP bool SetBkColor (COLORREF pBkColor);
-	_DACORE_IMPEXP bool GetBkColor (COLORREF & pBkColor);
+	_DACORE_IMPEXP bool GetBkColor (COLORREF& pBkColor);
 	_DACORE_IMPEXP bool ResetBkColor ();
 
 	_DACORE_IMPEXP bool EnableIdle (bool pEnable);
@@ -130,8 +130,8 @@ protected:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentWnd)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
@@ -147,12 +147,12 @@ protected:
 	_DACORE_IMPEXP virtual int _PostDoQueue ();
 
 	_DACORE_IMPEXP virtual bool CanDoAnimationQueue ();
-	_DACORE_IMPEXP virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
+	_DACORE_IMPEXP virtual bool DoAnimationQueue (bool& pNextActivateImmediate, DWORD& pNextQueueTime);
 	_DACORE_IMPEXP bool DoAnimationLoop ();
 	_DACORE_IMPEXP virtual bool DoIdle ();
 
-	_DACORE_IMPEXP virtual void PauseQueuedAction (CQueuedAction * pQueuedAction, bool pPause);
-	_DACORE_IMPEXP virtual void AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP virtual void PauseQueuedAction (CQueuedAction* pQueuedAction, bool pPause);
+	_DACORE_IMPEXP virtual void AbortQueuedAction (CQueuedAction* pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	_DACORE_IMPEXP bool AnimationSequenceChanging (bool pStopNow = false, bool pStopAtEndOfStream = true);
 	_DACORE_IMPEXP void AnimationSequenceChanged ();

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -89,7 +89,7 @@ HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, int pCX, int p
 	return ::LoadImage (_GetResourceHandle (), pImageName, pImageType, pCX, pCY, pFlags);
 }
 
-HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId)
+HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, const SIZE& pSize, UINT pFlags, WORD pLangId)
 {
 	return LoadImage (pImageName, pImageType, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -99,7 +99,7 @@ HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, int pCX, int pCY, U
 	return LoadImage (MAKEINTRESOURCE (pImageId), pImageType, pCX, pCY, pFlags, pLangId);
 }
 
-HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId)
+HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, const SIZE& pSize, UINT pFlags, WORD pLangId)
 {
 	return LoadImage (MAKEINTRESOURCE (pImageId), pImageType, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -111,7 +111,7 @@ HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, int pCX, int pCY, UINT pFlags, WO
 	return (HBITMAP) LoadImage (MAKEINTRESOURCE (pBitmapId), IMAGE_BITMAP, pCX, pCY, pFlags, pLangId);
 }
 
-HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, const SIZE & pSize, UINT pFlags, WORD pLangId)
+HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, const SIZE& pSize, UINT pFlags, WORD pLangId)
 {
 	return (HBITMAP) LoadImage (MAKEINTRESOURCE (pBitmapId), IMAGE_BITMAP, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -121,7 +121,7 @@ HICON CLocalize::LoadIcon (UINT pIconId, WORD pLangId)
 	return (HICON) LoadImage (MAKEINTRESOURCE (pIconId), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR|LR_DEFAULTSIZE, pLangId);
 }
 
-HICON CLocalize::LoadIcon (UINT pIconId, const SIZE & pSize, UINT pFlags, WORD pLangId)
+HICON CLocalize::LoadIcon (UINT pIconId, const SIZE& pSize, UINT pFlags, WORD pLangId)
 {
 	return (HICON) LoadImage (MAKEINTRESOURCE (pIconId), IMAGE_ICON, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -159,7 +159,7 @@ HMENU CLocalize::LoadMenu (UINT pMenuId, WORD pLangId)
 #ifdef	__AFX_H__
 //////////////////////////////////////////////////////////////////////
 
-bool CLocalize::LoadMenu (CMenu & pMenu, UINT pMenuId, WORD pLangId)
+bool CLocalize::LoadMenu (CMenu& pMenu, UINT pMenuId, WORD pLangId)
 {
 	if	(pMenu.GetSafeHmenu ())
 	{
@@ -180,7 +180,7 @@ public:
 	BOOL SetTemplate(const DLGTEMPLATE* pTemplate, UINT cb) {return CDialogTemplate::SetTemplate (pTemplate, cb);}
 };
 
-bool CLocalize::LoadDialog (CDialogTemplate & pTemplate, UINT pDialogId, WORD pLangId)
+bool CLocalize::LoadDialog (CDialogTemplate& pTemplate, UINT pDialogId, WORD pLangId)
 {
 	bool		lRet = false;
 #ifdef	_UNICODE
@@ -207,7 +207,7 @@ bool CLocalize::LoadDialog (CDialogTemplate & pTemplate, UINT pDialogId, WORD pL
 #else	// __AFX_H__
 //////////////////////////////////////////////////////////////////////
 
-bool CLocalize::LoadMenu (CMenuHandle & pMenu, UINT pMenuId, WORD pLangId)
+bool CLocalize::LoadMenu (CMenuHandle& pMenu, UINT pMenuId, WORD pLangId)
 {
 	if	(pMenu.GetSafeHandle ())
 	{
@@ -220,7 +220,7 @@ bool CLocalize::LoadMenu (CMenuHandle & pMenu, UINT pMenuId, WORD pLangId)
 	return false;
 }
 
-bool CLocalize::LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLangId)
+bool CLocalize::LoadDialog (CGlobalHandle& pTemplate, UINT pDialogId, WORD pLangId)
 {
 	bool		lRet = false;
 	CByteArray	lNlsTemplate;
@@ -278,7 +278,7 @@ CString FormatString (UINT pId, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTSTR pIns
 	return FormatString (CLocalize::LoadString (pId), pInsert1, pInsert2, pInsert3);
 }
 
-CString FormatString (UINT pId, const CStringArray & pInsert)
+CString FormatString (UINT pId, const CStringArray& pInsert)
 {
 	return FormatString (CLocalize::LoadString (pId), pInsert);
 }
@@ -305,7 +305,7 @@ CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTS
 	return FormatString (pFormat, lInserts, 3);
 }
 
-CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert)
+CString FormatString (LPCTSTR pFormat, const CStringArray& pInsert)
 {
 	CString		lRet;
 	INT_PTR		lCount = pInsert.GetCount();

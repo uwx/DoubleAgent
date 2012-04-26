@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -39,17 +39,17 @@ CDaCmnSREngine::~CDaCmnSREngine ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCmnSREngine::Initialize (CSapi5InputInfo * pInputInfo)
+void CDaCmnSREngine::Initialize (CSapi5InputInfo* pInputInfo)
 {
 	mSapi5Input = pInputInfo;
 }
 
-bool CDaCmnSREngine::Initialize (CSapi5Input * pInput)
+bool CDaCmnSREngine::Initialize (CSapi5Input* pInput)
 {
 	bool				lRet = false;
 	CSapiInputCache *	lInputCache;
 	CSapi5Inputs *		lSapi5Inputs;
-	CSapi5InputInfo *	lSapi5Input;
+	CSapi5InputInfo*	lSapi5Input;
 
 	if	(
 			(pInput)
@@ -64,12 +64,12 @@ bool CDaCmnSREngine::Initialize (CSapi5Input * pInput)
 	return lRet;
 }
 
-bool CDaCmnSREngine::Initialize (CAgentFile * pFile)
+bool CDaCmnSREngine::Initialize (CAgentFile* pFile)
 {
 	bool				lRet = false;
 	CSapiInputCache *	lInputCache;
 	CSapi5Inputs *		lSapi5Inputs;
-	CSapi5InputInfo *	lSapi5Input;
+	CSapi5InputInfo*	lSapi5Input;
 
 	if	(
 			(pFile)
@@ -79,7 +79,7 @@ bool CDaCmnSREngine::Initialize (CAgentFile * pFile)
 		tPtr <CSapi5Input>	lSapiInput;
 
 		if	(
-				(lSapiInput = lInputCache->GetAgentInput (pFile->GetTts().mLanguage, true, false))
+				(lSapiInput = lInputCache->GetAgentInput (pFile->Tts.Language, true, false))
 			&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
 			&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CAtlString (lSapiInput->GetEngineId ())))
 			)
@@ -233,7 +233,7 @@ HRESULT CDaCmnSREngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *Langua
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnSREngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
+HRESULT CDaCmnSREngine::get_LanguageIDs (SAFEARRAY**LanguageIDs)
 {
 	HRESULT	lResult = S_OK;
 
@@ -272,7 +272,7 @@ HRESULT CDaCmnSREngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
 }
 
 
-HRESULT CDaCmnSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames)
+HRESULT CDaCmnSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY**LanguageNames)
 {
 	HRESULT	lResult = S_OK;
 

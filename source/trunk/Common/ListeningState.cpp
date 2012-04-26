@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -61,7 +61,7 @@ const UINT_PTR	CListeningState::mListenTimerIdHeard = RegisterWindowMessage (_T(
 
 /////////////////////////////////////////////////////////////////////////////
 
-CListeningState::CListeningState (CDaCmnCharacter & pCharacter)
+CListeningState::CListeningState (CDaCmnCharacter& pCharacter)
 :	mCharacter (pCharacter),
 	mSapi5Input (NULL),
 	mHearingStateShown (false),
@@ -549,10 +549,10 @@ HRESULT CListeningState::GetInputContext ()
 	return lResult;
 }
 
-HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputContext)
+HRESULT CListeningState::StartInputContext (CSapi5InputContext* pPrevInputContext)
 {
 	HRESULT				lResult = S_FALSE;
-	CDaCmnCommands *	lCommands;
+	CDaCmnCommands*	lCommands;
 
 	if	(
 			(mSapi5InputContext)
@@ -590,7 +590,7 @@ HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputConte
 HRESULT CListeningState::ShowListeningTip (bool pShow, bool pListening, LPCTSTR pReason)
 {
 	HRESULT					lResult = S_FALSE;
-	CAgentListeningWnd *	lListeningWnd = NULL;
+	CAgentListeningWnd*	lListeningWnd = NULL;
 
 	if	(
 			(pShow)
@@ -614,7 +614,7 @@ HRESULT CListeningState::ShowListeningTip (bool pShow, bool pListening, LPCTSTR 
 	{
 		if	(pShow)
 		{
-			CDaCmnCommands *	lCommands;
+			CDaCmnCommands*	lCommands;
 			CAtlString			lCommandsCaption;
 
 			if	(lCommands = mCharacter.GetCommands (true))
@@ -706,9 +706,9 @@ void CListeningState::StopListenTimers ()
 	mHearingStateShown = false;
 }
 
-void CListeningState::GrabListenTimers (CListeningState & pFromState)
+void CListeningState::GrabListenTimers (CListeningState& pFromState)
 {
-	CTimerNotify *	lTimer;
+	CTimerNotify*	lTimer;
 
 	if	(
 			(pFromState.mListenTimerManual)
@@ -753,7 +753,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTimerId)
+void CListeningState::OnTimerNotify (CTimerNotify* pTimerNotify, UINT_PTR pTimerId)
 {
 	if	(pTimerId)
 	{
@@ -818,7 +818,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 		else
 		if	(pTimerId == mListenTimerHeard)
 		{
-			CAgentListeningWnd *	lListeningWnd;
+			CAgentListeningWnd*	lListeningWnd;
 #ifdef	_DEBUG_LISTEN
 			LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] Listening Heard timeout"), this, GetCharID());
 #endif
@@ -852,7 +852,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
+void CListeningState::OnSapi5InputEvent (const CSpEvent& pEvent)
 {
 #ifdef	_DEBUG_LISTEN_NOT
 	if	(pEvent.eEventId == SPEI_INTERFERENCE)
@@ -891,12 +891,12 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	else
 	if	(pEvent.eEventId == SPEI_RECOGNITION)
 	{
-		CAgentListeningWnd *	lListeningWnd;
+		CAgentListeningWnd*	lListeningWnd;
 		ISpRecoResultPtr		lRecoResult = pEvent.RecoResult();
 		tMallocPtr <SPPHRASE>	lPhrase;
-		CDaCmnCharacter *		lCharacter;
-		CDaCmnCommands *		lCommands;
-		CDaCmnCommand *			lCommand = NULL;
+		CDaCmnCharacter*		lCharacter;
+		CDaCmnCommands*		lCommands;
+		CDaCmnCommand*			lCommand = NULL;
 
 		if	(
 				(lRecoResult != NULL)
@@ -1036,7 +1036,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	else
 	if	(pEvent.eEventId == SPEI_FALSE_RECOGNITION)
 	{
-		CAgentListeningWnd *	lListeningWnd;
+		CAgentListeningWnd*	lListeningWnd;
 
 		PlaySapiInputPrompt (false, _T("MisrecoSound"));
 
@@ -1051,7 +1051,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	else
 	if	(pEvent.eEventId == SPEI_START_SR_STREAM)
 	{
-		CAgentListeningWnd *	lListeningWnd;
+		CAgentListeningWnd*	lListeningWnd;
 
 #ifdef	_DEBUG_LISTEN
 		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SPEI_START_SR_STREAM"), this, GetCharID());
@@ -1067,7 +1067,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 	else
 	if	(pEvent.eEventId == SPEI_END_SR_STREAM)
 	{
-		CAgentListeningWnd *	lListeningWnd;
+		CAgentListeningWnd*	lListeningWnd;
 
 #ifdef	_DEBUG_LISTEN
 		LogMessage (_DEBUG_LISTEN, _T("[%p(%d)] SPEI_END_SR_STREAM"), this, GetCharID());
@@ -1133,20 +1133,20 @@ void CListeningState::SetSapiInputClients (long pCharID)
 		try
 		{
 			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
+			CAgentFile*	lFile;
 
 			for	(lFileNdx = 0; lFile = mCharacter.mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				CDaCmnCharacter *					lCharacter;
+				CDaCmnCharacter*					lCharacter;
 
 				if	(mCharacter.mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
@@ -1179,14 +1179,14 @@ void CListeningState::SetSapiInputNames (long pCharID)
 		try
 		{
 			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
+			CAgentFile*	lFile;
 
 			for	(lFileNdx = 0; lFile = mCharacter.mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				CDaCmnCharacter *					lCharacter;
-				CDaCmnCommands *					lCommands;
+				CDaCmnCharacter*					lCharacter;
+				CDaCmnCommands*					lCommands;
 				BSTR								lName;
 
 				if	(mCharacter.mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
@@ -1194,7 +1194,7 @@ void CListeningState::SetSapiInputNames (long pCharID)
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
@@ -1279,7 +1279,7 @@ void CListeningState::_OnCharacterActivated (long pActiveCharID, long pInputActi
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CListeningAnchor::CListeningAnchor (CListeningGlobal & pGlobal)
+CListeningAnchor::CListeningAnchor (CListeningGlobal& pGlobal)
 :	mGlobal (pGlobal),
 	mOwnerWnd (NULL),
 	mHotKeyWnd (NULL),
@@ -1335,9 +1335,9 @@ void CListeningAnchor::Shutdown ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CVoiceCommandsWnd * CListeningAnchor::GetVoiceCommandsWnd (bool pCreate, long pCharID)
+CVoiceCommandsWnd* CListeningAnchor::GetVoiceCommandsWnd (bool pCreate, long pCharID)
 {
-	CVoiceCommandsWnd *	lRet = mGlobal.GetVoiceCommandsWnd (pCreate, mOwnerWnd);
+	CVoiceCommandsWnd*	lRet = mGlobal.GetVoiceCommandsWnd (pCreate, mOwnerWnd);
 
 	if	(pCharID > 0)
 	{
@@ -1368,7 +1368,7 @@ bool CListeningAnchor::HasListeningTimer (UINT_PTR pTimerId)
 	return (mTimerNotifies.FindTimer (pTimerId) >= 0);
 }
 
-CTimerNotify * CListeningAnchor::GetListeningTimer (UINT_PTR pTimerId)
+CTimerNotify* CListeningAnchor::GetListeningTimer (UINT_PTR pTimerId)
 {
 	return mTimerNotifies.GetTimer (pTimerId);
 }
@@ -1378,7 +1378,7 @@ CTimerNotify * CListeningAnchor::GetListeningTimer (UINT_PTR pTimerId)
 bool CListeningAnchor::AddTimerNotify (HWND pTimerWnd, UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink)
 {
 	bool			lRet = false;
-	CTimerNotify *	lTimer;
+	CTimerNotify*	lTimer;
 
 	if	(
 			(pTimerId != 0)
@@ -1420,7 +1420,7 @@ bool CListeningAnchor::DelTimerNotify (HWND pTimerWnd, UINT_PTR pTimerId)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CListeningGlobal::CListeningGlobal (class CGlobalAnchor & pAnchor)
+CListeningGlobal::CListeningGlobal (class CGlobalAnchor& pAnchor)
 :	mAnchor (pAnchor),
 	mLastHotKey (0),
 	mStarted (false),
@@ -1500,7 +1500,7 @@ void CListeningGlobal::Resume ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CVoiceCommandsWnd * CListeningGlobal::GetVoiceCommandsWnd (bool pCreate, CWindow * pOwnerWnd)
+CVoiceCommandsWnd* CListeningGlobal::GetVoiceCommandsWnd (bool pCreate, CWindow* pOwnerWnd)
 {
 	if	(
 			(!mVoiceCommandsWnd)
@@ -1533,8 +1533,8 @@ void CListeningGlobal::SetVoiceCommandCharacter (long pCharID)
 	{
 		try
 		{
-			CDaCmnCharacter *	lCharacter;
-			CDaCmnCommands *	lCommands = NULL;
+			CDaCmnCharacter*	lCharacter;
+			CDaCmnCommands*	lCommands = NULL;
 			BSTR				lName = NULL;
 
 			if	(lCharacter = mAnchor.GetGlobalCharacter (pCharID))
@@ -1557,20 +1557,20 @@ void CListeningGlobal::SetVoiceCommandClients (long pCharID)
 		try
 		{
 			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
+			CAgentFile*	lFile;
 
 			for	(lFileNdx = 0; lFile = mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				CDaCmnCharacter *					lCharacter;
+				CDaCmnCharacter*					lCharacter;
 
 				if	(mAnchor.GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
@@ -1605,14 +1605,14 @@ void CListeningGlobal::SetVoiceCommandNames (long pCharID)
 		try
 		{
 			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
+			CAgentFile*	lFile;
 
 			for	(lFileNdx = 0; lFile = mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				CDaCmnCharacter *					lCharacter;
-				CDaCmnCommands *					lCommands;
+				CDaCmnCharacter*					lCharacter;
+				CDaCmnCommands*					lCommands;
 				BSTR								lName;
 
 				if	(mAnchor.GetFileClients (lFile, lFileClients))
@@ -1620,7 +1620,7 @@ void CListeningGlobal::SetVoiceCommandNames (long pCharID)
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 							&&	(lCharacter->IsValid (lFile))
 							&&	(
 									(pCharID <= 0)
@@ -1808,7 +1808,7 @@ bool CListeningGlobal::OnHotKey (WPARAM wParam, LPARAM lParam)
 #endif
 		try
 		{
-			CDaCmnCharacter *	lCharacter = mAnchor.GetGlobalCharacter (mAnchor.GetListenCharacter ());
+			CDaCmnCharacter*	lCharacter = mAnchor.GetGlobalCharacter (mAnchor.GetListenCharacter ());
 
 			if	(lCharacter)
 			{

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -42,7 +42,7 @@ public:
 
 // Operations
 public:
-	static DaSvrUserInput * CreateInstance (interface ISpRecoResult * pRecoResult, bool pGlobalCommand, LPCTSTR pClientMutexName = NULL);
+	static DaSvrUserInput * CreateInstance (interface ISpRecoResult* pRecoResult, bool pGlobalCommand, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 

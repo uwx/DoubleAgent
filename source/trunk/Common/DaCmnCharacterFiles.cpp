@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -139,26 +139,26 @@ void CDaCmnCharacterFiles::GetFilePaths ()
 				{
 					try
 					{
-						tPtr <CAgentFile>	lFile = CAgentFile::CreateInstance();
+						tPtr <CAgentFile>	lFile = CAgentFile::CreateInstance (lFoundPath);
 
 						if	(SUCCEEDED (lFile->Open (lFoundPath)))
 						{
 							if	(
 									(
 										(!(mFilter & FilesFilter_ExcludeNonCompliant))
-									||	(lFile->GetStyle() & CharStyleStandard)
+									||	(lFile->Header.Style & CharStyleStandard)
 									)
 								&&	(
 										(!(mFilter & FilesFilter_ExcludeCompliant))
-									||	(!(lFile->GetStyle() & CharStyleStandard))
+									||	(!(lFile->Header.Style & CharStyleStandard))
 									)
 								&&	(
 										(!(mFilter & FilesFilter_ExcludeNonSpeaking))
-									||	(!IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
+									||	(!IsEqualGUID (lFile->Tts.Mode, GUID_NULL))
 									)
 								&&	(
 										(!(mFilter & FilesFilter_ExcludeSpeaking))
-									||	(IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
+									||	(IsEqualGUID (lFile->Tts.Mode, GUID_NULL))
 									)
 								)
 							{
@@ -231,7 +231,7 @@ void CDaCmnCharacterFiles::UpdateFilter (DWORD pNewFilter)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
+HRESULT CDaCmnCharacterFiles::get_FilePaths (SAFEARRAY**FilePaths)
 {
 	HRESULT	lResult = S_OK;
 

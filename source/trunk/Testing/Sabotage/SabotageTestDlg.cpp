@@ -888,7 +888,7 @@ bool CSabotageTestDlg::Stop ()
 
 static BOOL CALLBACK GetUsedRects (HWND pWindow, LPARAM pLparam)
 {
-	CAtlTypeArray<CRect> *	lUsedRects = (CAtlTypeArray<CRect> *) pLparam;
+	CAtlTypeArray<CRect>*	lUsedRects = (CAtlTypeArray<CRect>*) pLparam;
 	CRect					lUsedRect;
 
 	if	(
@@ -905,7 +905,7 @@ static BOOL CALLBACK GetUsedRects (HWND pWindow, LPARAM pLparam)
 	return TRUE;
 }
 
-CPoint CSabotageTestDlg::GetInitialPos (const CSize & pInitialSize)
+CPoint CSabotageTestDlg::GetInitialPos (const CSize& pInitialSize)
 {
 	CPoint					lInitialPos;
 	CRect					lBounds (pInitialSize.cx, pInitialSize.cy, GetSystemMetrics(SM_CXSCREEN)-pInitialSize.cx, GetSystemMetrics(SM_CYSCREEN)-pInitialSize.cy);

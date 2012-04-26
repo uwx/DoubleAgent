@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -43,7 +43,7 @@ public:
 
 // Operations
 public:
-	static DaSvrCharacter * CreateInstance (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor, LPCTSTR pClientMutexName = NULL);
+	static DaSvrCharacter * CreateInstance (long pCharID, CEventNotify* pNotify, _IListeningAnchor* pListeningAnchor, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void Abandon ();
 	void FinalRelease ();
@@ -52,10 +52,10 @@ public:
 public:
 	virtual bool VerifyClientLifetime ();
 	virtual void OnClientEnded ();
-	virtual bool IsValid (const CAgentFile * pFile) const;
-	virtual class CDaCmnCommands * GetCommands (bool pCreateObject);
-	virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject);
-	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult * pRecoResult, bool pGlobalCommand);
+	virtual bool IsValid (const CAgentFile* pFile) const;
+	virtual class CDaCmnCommands* GetCommands (bool pCreateObject);
+	virtual class CDaCmnBalloon* GetBalloon (bool pCreateObject);
+	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult* pRecoResult, bool pGlobalCommand);
 protected:
 	virtual bool _PreNotify ();
 	virtual bool _PostNotify ();
@@ -213,11 +213,11 @@ public:
 	HRESULT STDMETHODCALLTYPE get_MoveCause (MoveCauseType *MoveCause);
 	HRESULT STDMETHODCALLTYPE get_VisibilityCause (VisibilityCauseType *VisibilityCause);
 	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
-	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY **Animations);
-	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY **States);
+	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY**Animations);
+	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY**States);
 
 	// IStdMarshalInfo
-    HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
+    HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void*pvDestContext, CLSID *pClsid);
 
 // Implementation
 protected:

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -30,6 +30,14 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr		(void*)NULL
+#define	LogServerConnected	FALSE
+#else
+#define	LogServerPtr		mServerObject.GetInterfacePtr()
+#define	LogServerConnected	CoIsHandlerConnected(mServerObject)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlBalloon::DaCtlBalloon ()
@@ -38,7 +46,7 @@ DaCtlBalloon::DaCtlBalloon ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::DaCtlBalloon (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::DaCtlBalloon (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -51,7 +59,7 @@ DaCtlBalloon::~DaCtlBalloon ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::~DaCtlBalloon (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::~DaCtlBalloon (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 #ifdef	_DEBUG
@@ -81,7 +89,7 @@ void DaCtlBalloon::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	Terminate (false);
@@ -95,10 +103,11 @@ void DaCtlBalloon::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, LogServerConnected);
 		}
 #endif
 #endif
+#ifndef	_DACORE_LOCAL
 		if	(pFinal)
 		{
 			mServerObject.Detach ();
@@ -107,7 +116,7 @@ void DaCtlBalloon::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-
+#endif
 		SafeFreeSafePtr (mLocalObject);
 		mOwner = NULL;
 #ifdef	_DEBUG
@@ -129,6 +138,7 @@ HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		if	(mOwner->mServerObject)
 		{
 			mServerObject = mOwner->mServerObject;
@@ -138,6 +148,7 @@ HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 			}
 		}
 		else
+#endif
 		if	(mOwner->mLocalObject)
 		{
 			if	(mLocalObject = new CDaCmnBalloon)
@@ -157,7 +168,7 @@ HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr);
 	}
 #endif
 	return lResult;
@@ -209,6 +220,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -219,6 +231,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 	if	(Enabled)
 	{
 		(*Enabled) = lEnabled;
@@ -265,6 +278,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_NumberOfLines (long *NumberOfLines)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -275,6 +289,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_NumberOfLines (long *NumberOfLines)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -293,7 +308,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NumberOfLines (long NumberOfLines)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_NumberOfLines"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_FALSE;
 
 	if	(mLocalObject)
 	{
@@ -303,6 +318,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NumberOfLines (long NumberOfLines)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -313,6 +329,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NumberOfLines (long NumberOfLines)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -355,6 +372,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_CharsPerLine (long *CharsPerLine)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -365,6 +383,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_CharsPerLine (long *CharsPerLine)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -393,6 +412,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_CharsPerLine (long CharsPerLine)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -403,7 +423,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_CharsPerLine (long CharsPerLine)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
-
+#endif
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -440,6 +460,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontName (BSTR *FontName)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -450,6 +471,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontName (BSTR *FontName)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -478,6 +500,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontName (BSTR FontName)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -488,6 +511,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontName (BSTR FontName)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -526,6 +550,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontSize (long *FontSize)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -536,7 +561,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontSize (long *FontSize)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-
+#endif
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(lDC.Attach (CreateCompatibleDC (NULL)))
@@ -592,6 +617,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontSize (long FontSize)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -602,6 +628,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontSize (long FontSize)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -642,6 +669,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontBold (VARIANT_BOOL *FontBold)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -652,6 +680,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontBold (VARIANT_BOOL *FontBold)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -680,6 +709,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontBold (VARIANT_BOOL FontBold)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -690,6 +720,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontBold (VARIANT_BOOL FontBold)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -730,6 +761,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontItalic (VARIANT_BOOL *FontItalic
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -740,6 +772,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontItalic (VARIANT_BOOL *FontItalic
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -768,6 +801,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -778,6 +812,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -818,6 +853,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontStrikethru (VARIANT_BOOL *FontSt
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -828,6 +864,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontStrikethru (VARIANT_BOOL *FontSt
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -856,6 +893,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontStrikethru (VARIANT_BOOL FontStr
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -866,6 +904,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontStrikethru (VARIANT_BOOL FontStr
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -906,6 +945,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontUnderline (VARIANT_BOOL *FontUnd
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -916,6 +956,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontUnderline (VARIANT_BOOL *FontUnd
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -944,6 +985,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontUnderline (VARIANT_BOOL FontUnde
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -954,6 +996,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontUnderline (VARIANT_BOOL FontUnde
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -988,6 +1031,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontCharSet (short *FontCharSet)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -998,6 +1042,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontCharSet (short *FontCharSet)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1025,6 +1070,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontCharSet (short FontCharSet)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1035,6 +1081,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontCharSet (short FontCharSet)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1086,6 +1133,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_TextColor (OLE_COLOR *TextColor)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1096,6 +1144,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_TextColor (OLE_COLOR *TextColor)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1123,6 +1172,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_TextColor (OLE_COLOR TextColor)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1133,6 +1183,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_TextColor (OLE_COLOR TextColor)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1184,6 +1235,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_BackColor (OLE_COLOR *BackColor)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1194,6 +1246,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_BackColor (OLE_COLOR *BackColor)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1221,6 +1274,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_BackColor (OLE_COLOR BackColor)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1231,6 +1285,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_BackColor (OLE_COLOR BackColor)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1282,6 +1337,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1292,6 +1348,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+ #endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1319,6 +1376,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_BorderColor (OLE_COLOR BorderColor)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1329,6 +1387,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_BorderColor (OLE_COLOR BorderColor)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1358,6 +1417,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Visible (VARIANT_BOOL *Visible)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1368,6 +1428,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Visible (VARIANT_BOOL *Visible)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1395,6 +1456,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Visible (VARIANT_BOOL Visible)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1405,6 +1467,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Visible (VARIANT_BOOL Visible)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1448,6 +1511,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Style (long *Style)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1467,6 +1531,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Style (long *Style)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1502,6 +1567,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Style (long Style)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1520,6 +1586,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Style (long Style)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1554,6 +1621,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_SizeToText (VARIANT_BOOL *SizeToText
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1564,6 +1632,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_SizeToText (VARIANT_BOOL *SizeToText
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 
 		(*SizeToText) = (lStyle & BalloonStyle_SizeToText) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
@@ -1602,6 +1671,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_SizeToText (VARIANT_BOOL SizeToText)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1623,6 +1693,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_SizeToText (VARIANT_BOOL SizeToText)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1655,6 +1726,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoHide (VARIANT_BOOL *AutoHide)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1665,6 +1737,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoHide (VARIANT_BOOL *AutoHide)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 
 		(*AutoHide) = (lStyle & BalloonStyle_AutoHide) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
@@ -1703,6 +1776,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoHide (VARIANT_BOOL AutoHide)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1724,6 +1798,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoHide (VARIANT_BOOL AutoHide)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1756,6 +1831,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoPace (VARIANT_BOOL *AutoPace)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1766,6 +1842,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoPace (VARIANT_BOOL *AutoPace)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 
 		(*AutoPace) = (lStyle & BalloonStyle_AutoPace) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
@@ -1804,6 +1881,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoPace (VARIANT_BOOL AutoPace)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1825,6 +1903,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoPace (VARIANT_BOOL AutoPace)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1857,6 +1936,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_NoAppend (VARIANT_BOOL *NoAppend)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1867,6 +1947,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_NoAppend (VARIANT_BOOL *NoAppend)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 
 		(*NoAppend) = (lStyle & BalloonStyle_NoAppend) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
@@ -1905,6 +1986,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NoAppend (VARIANT_BOOL NoAppend)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -1926,6 +2008,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NoAppend (VARIANT_BOOL NoAppend)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
@@ -1958,6 +2041,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_ShowPartialLines (VARIANT_BOOL *Show
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -1968,6 +2052,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_ShowPartialLines (VARIANT_BOOL *Show
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 
 		(*ShowPartialLines) = (lStyle & BalloonStyle_ShowPartialLines) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
@@ -2006,6 +2091,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_ShowPartialLines (VARIANT_BOOL ShowP
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -2027,6 +2113,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_ShowPartialLines (VARIANT_BOOL ShowP
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS

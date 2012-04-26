@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -47,10 +47,10 @@ public:
 	int FireSpeechWord(long CharacterID, IDaSvrFormattedText* FormattedText, long WordNdx);
 
 public:
-	CDaSvrEventDispatch (CComDynamicUnkArray & pUnkArray, CAtlTypeArray <long> & pUnregisterDelayed) : mUnkArray (pUnkArray), mUnregisterDelayed (pUnregisterDelayed) {}
+	CDaSvrEventDispatch (CComDynamicUnkArray& pUnkArray, CAtlTypeArray <long>& pUnregisterDelayed) : mUnkArray (pUnkArray), mUnregisterDelayed (pUnregisterDelayed) {}
 protected:
-	CComDynamicUnkArray &	mUnkArray;
-	CAtlTypeArray <long> &	mUnregisterDelayed;
+	CComDynamicUnkArray&	mUnkArray;
+	CAtlTypeArray <long>&	mUnregisterDelayed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -88,10 +88,10 @@ __if_exists(T::SpeechStart)
 }
 
 public:
-	CDaSvrEventCaller (CComDynamicUnkArray & pUnkArray, CAtlTypeArray <long> & pUnregisterDelayed) : mUnkArray (pUnkArray), mUnregisterDelayed (pUnregisterDelayed) {}
+	CDaSvrEventCaller (CComDynamicUnkArray& pUnkArray, CAtlTypeArray <long>& pUnregisterDelayed) : mUnkArray (pUnkArray), mUnregisterDelayed (pUnregisterDelayed) {}
 protected:
-	CComDynamicUnkArray &	mUnkArray;
-	CAtlTypeArray <long> &	mUnregisterDelayed;
+	CComDynamicUnkArray&	mUnkArray;
+	CAtlTypeArray <long>&	mUnregisterDelayed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -100,35 +100,35 @@ template <class T>
 class CProxy_DaSvrEvents2 : public IConnectionPointImpl<T, &__uuidof(_DaSvrEvents2), CComDynamicUnkArray>, public CDaSvrEventDispatch
 {
 public:
-	CProxy_DaSvrEvents2 (CAtlTypeArray <long> & pUnregisterDelayed) : CDaSvrEventDispatch (m_vec, pUnregisterDelayed) {}
+	CProxy_DaSvrEvents2 (CAtlTypeArray <long>& pUnregisterDelayed) : CDaSvrEventDispatch (m_vec, pUnregisterDelayed) {}
 };
 
 template <class T>
 class CProxyIDaSvrNotifySink : public IConnectionPointImpl<T, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>, public CDaSvrEventCaller<IDaSvrNotifySink>
 {
 public:
-	CProxyIDaSvrNotifySink (CAtlTypeArray <long> & pUnregisterDelayed) : CDaSvrEventCaller<IDaSvrNotifySink> (m_vec, pUnregisterDelayed) {}
+	CProxyIDaSvrNotifySink (CAtlTypeArray <long>& pUnregisterDelayed) : CDaSvrEventCaller<IDaSvrNotifySink> (m_vec, pUnregisterDelayed) {}
 };
 
 template <class T>
 class CProxyIDaSvrNotifySink2 : public IConnectionPointImpl<T, &__uuidof(IDaSvrNotifySink2), CComDynamicUnkArray>, public CDaSvrEventCaller<IDaSvrNotifySink2>
 {
 public:
-	CProxyIDaSvrNotifySink2 (CAtlTypeArray <long> & pUnregisterDelayed) : CDaSvrEventCaller<IDaSvrNotifySink2> (m_vec, pUnregisterDelayed) {}
+	CProxyIDaSvrNotifySink2 (CAtlTypeArray <long>& pUnregisterDelayed) : CDaSvrEventCaller<IDaSvrNotifySink2> (m_vec, pUnregisterDelayed) {}
 };
 
 template <class T>
 class CProxyIAgentNotifySink : public IConnectionPointImpl<T, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>, public CDaSvrEventCaller<IAgentNotifySink>
 {
 public:
-	CProxyIAgentNotifySink (CAtlTypeArray <long> & pUnregisterDelayed) : CDaSvrEventCaller<IAgentNotifySink> (m_vec, pUnregisterDelayed) {}
+	CProxyIAgentNotifySink (CAtlTypeArray <long>& pUnregisterDelayed) : CDaSvrEventCaller<IAgentNotifySink> (m_vec, pUnregisterDelayed) {}
 };
 
 template <class T>
 class CProxyIAgentNotifySinkEx : public IConnectionPointImpl<T, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray>, public CDaSvrEventCaller<IAgentNotifySinkEx>
 {
 public:
-	CProxyIAgentNotifySinkEx (CAtlTypeArray <long> & pUnregisterDelayed) : CDaSvrEventCaller<IAgentNotifySinkEx> (m_vec, pUnregisterDelayed) {}
+	CProxyIAgentNotifySinkEx (CAtlTypeArray <long>& pUnregisterDelayed) : CDaSvrEventCaller<IAgentNotifySinkEx> (m_vec, pUnregisterDelayed) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////

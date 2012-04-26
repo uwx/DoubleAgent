@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -49,7 +49,7 @@ class CItemIdList
 {
 public:
 	CItemIdList (LPCITEMIDLIST pIdl = NULL, IMalloc * pMalloc = NULL) : mMalloc (pMalloc), mIdl (NULL) {operator= (pIdl);}
-	CItemIdList (const CItemIdList & pIdList) : mMalloc (pIdList.mMalloc), mIdl (NULL) {operator= (pIdList.mIdl);}
+	CItemIdList (const CItemIdList& pIdList) : mMalloc (pIdList.mMalloc), mIdl (NULL) {operator= (pIdList.mIdl);}
 	~CItemIdList () {Free ();}
 
 	LPITEMIDLIST Ptr() {return mIdl;}
@@ -63,7 +63,7 @@ public:
     operator bool () const {return (mIdl != NULL);}
     bool operator! () const {return (mIdl == NULL);}
 
-	CItemIdList & operator= (LPCITEMIDLIST pIdl)
+	CItemIdList& operator= (LPCITEMIDLIST pIdl)
 	{
 		Free ();
 		if	(pIdl)
@@ -75,7 +75,7 @@ public:
 		return *this;
 	}
 
-	CItemIdList & operator= (const CItemIdList & pIdList)
+	CItemIdList& operator= (const CItemIdList& pIdList)
 	{
 		return operator= (pIdList.mIdl);
 	}
@@ -108,7 +108,7 @@ public:
 		}
 	}
 
-	CItemIdList & operator+= (LPCITEMIDLIST pIdl)
+	CItemIdList& operator+= (LPCITEMIDLIST pIdl)
 	{
 		if	(
 				(pIdl)
@@ -134,22 +134,22 @@ public:
 		return (*this);
 	}
 
-	CItemIdList operator+ (const ITEMIDLIST & pIdl)
+	CItemIdList operator+ (const ITEMIDLIST& pIdl)
 	{
 		return operator+ (&pIdl);
 	}
 
-	CItemIdList & operator+= (const ITEMIDLIST & pIdl)
+	CItemIdList& operator+= (const ITEMIDLIST& pIdl)
 	{
 		return operator+= (&pIdl);
 	}
 
-	CItemIdList operator+ (const CItemIdList & pIdList)
+	CItemIdList operator+ (const CItemIdList& pIdList)
 	{
 		return operator+ (pIdList.mIdl);
 	}
 
-	CItemIdList & operator+= (const CItemIdList & pIdList)
+	CItemIdList& operator+= (const CItemIdList& pIdList)
 	{
 		return operator+= (pIdList.mIdl);
 	}
@@ -170,12 +170,12 @@ public:
 		return false;
 	}
 
-	bool operator==	(const ITEMIDLIST & pIdl) const
+	bool operator==	(const ITEMIDLIST& pIdl) const
 	{
 		return operator== ((LPCITEMIDLIST) &pIdl);
 	}
 
-	bool operator==	(const CItemIdList & pIdList) const
+	bool operator==	(const CItemIdList& pIdList) const
 	{
 		return operator== ((LPCITEMIDLIST) pIdList);
 	}
@@ -185,17 +185,17 @@ public:
 		return !operator== (pIdl);
 	}
 
-	bool operator!=	(const ITEMIDLIST & pIdl) const
+	bool operator!=	(const ITEMIDLIST& pIdl) const
 	{
 		return !operator== (pIdl);
 	}
 
-	bool operator!=	(const CItemIdList & pIdList) const
+	bool operator!=	(const CItemIdList& pIdList) const
 	{
 		return !operator== (pIdList);
 	}
 
-	CItemIdList & Alloc (UINT pSize)
+	CItemIdList& Alloc (UINT pSize)
 	{
 		ASSERT (mIdl == NULL);
 		Free ();
@@ -228,7 +228,7 @@ public:
 		return &mIdl;
 	}
 
-	CItemIdList & Attach (LPITEMIDLIST pIdl)
+	CItemIdList& Attach (LPITEMIDLIST pIdl)
 	{
 		Free ();
 		mIdl = pIdl;
@@ -242,7 +242,7 @@ public:
 		return lRet;
 	}
 
-	CItemIdList & Empty ()
+	CItemIdList& Empty ()
 	{
 		tS <ITEMIDLIST> lEmpty;
 		return operator= (&lEmpty);

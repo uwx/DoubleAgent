@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -59,14 +59,14 @@ public:
 
 // Operations
 public:
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd) = 0;
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause) = 0;
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL) = 0;
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd) = 0;
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause) = 0;
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL) = 0;
 
-	void NotifyStarted (class CEventNotify * pNotify);
-	void NotifyStarted (CAtlPtrTypeArray <class CEventNotify> & pNotify);
-	void NotifyComplete (class CEventNotify * pNotify, HRESULT pReqStatus = S_OK);
-	void NotifyComplete (CAtlPtrTypeArray <class CEventNotify> & pNotify, HRESULT pReqStatus = S_OK);
+	void NotifyStarted (class CEventNotify* pNotify);
+	void NotifyStarted (CAtlPtrTypeArray <class CEventNotify>& pNotify);
+	void NotifyComplete (class CEventNotify* pNotify, HRESULT pReqStatus = S_OK);
+	void NotifyComplete (CAtlPtrTypeArray <class CEventNotify>& pNotify, HRESULT pReqStatus = S_OK);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 protected:
@@ -87,9 +87,9 @@ public:
 	CAtlStringArray	mGestures;
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -108,9 +108,9 @@ public:
 	CAtlString	mGestureName;
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -130,9 +130,9 @@ public:
 	bool	mAnimationShown;
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -152,9 +152,9 @@ public:
 	bool	mAnimationShown;
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -180,12 +180,12 @@ public:
 
 // Operations
 	bool IsCycling () const;
-	bool Cycle (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	bool Cycle (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -195,26 +195,26 @@ public:
 class CQueuedThink : public CQueuedAction
 {
 public:
-	CQueuedThink (class CAgentBalloonOptions * pBalloonOptions, long pCharID, long pReqID = -1);
+	CQueuedThink (class CAgentBalloonOptions* pBalloonOptions, long pCharID, long pReqID = -1);
 	virtual ~CQueuedThink ();
 
 // Attributes
 public:
 	tPtr <class CAgentText>				mText;
-	class CAgentTextObject *			mTextObject;
+	class CAgentTextObject*				mTextObject;
 	IUnknownPtr							mTextObjectRef;
 	tPtr <class CAgentBalloonOptions>	mBalloonOptions;
 
 // Operations
-	void Initialize (class CAgentText & pText);
-	void Initialize (class CAgentTextObject * pTextObject);
+	void Initialize (class CAgentText& pText);
+	void Initialize (class CAgentTextObject* pTextObject);
 
 	CAtlString GetFullText ();
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -224,14 +224,14 @@ public:
 class CQueuedSpeak : public CQueuedAction, public CSapiVoiceClient
 {
 public:
-	CQueuedSpeak (class CAgentBalloonOptions * pBalloonOptions, long pCharID, long pReqID = -1);
+	CQueuedSpeak (class CAgentBalloonOptions* pBalloonOptions, long pCharID, long pReqID = -1);
 	virtual ~CQueuedSpeak ();
 
 // Attributes
 public:
-	class CSapiVoice *					mVoice;
+	class CSapiVoice*					mVoice;
 	tPtr <class CAgentText>				mText;
-	class CAgentTextObject *			mTextObject;
+	class CAgentTextObject*				mTextObject;
 	IUnknownPtr							mTextObjectRef;
 	CAtlString							mSoundUrl;
 	tPtr <class CAgentBalloonOptions>	mBalloonOptions;
@@ -241,25 +241,25 @@ public:
 	bool ShowBalloon () const {return !!mBalloonOptions;}
 
 // Operations
-	void Initialize (class CAgentText & pText, class CSapiVoice * pVoice);
-	void Initialize (class CAgentTextObject * pTextObject, class CSapiVoice * pVoice);
-	bool SetVoice (class CSapiVoice * pVoice);
+	void Initialize (class CAgentText& pText, class CSapiVoice* pVoice);
+	void Initialize (class CAgentTextObject* pTextObject, class CSapiVoice* pVoice);
+	bool SetVoice (class CSapiVoice* pVoice);
 
 	CAtlString GetFullText ();
 	CAtlString GetSpeechText ();
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 // Implementation
 protected:
-	bool SpeechIsBusy (class CAgentWnd * pAgentWnd);
-	HRESULT SpeechIsReady (class CAgentWnd * pAgentWnd);
-	HRESULT PrepareSpeech (class CAgentWnd * pAgentWnd);
-	HRESULT StartSpeech (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	bool ShowSpeechAnimation (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
+	bool SpeechIsBusy (class CAgentWnd* pAgentWnd);
+	HRESULT SpeechIsReady (class CAgentWnd* pAgentWnd);
+	HRESULT PrepareSpeech (class CAgentWnd* pAgentWnd);
+	HRESULT StartSpeech (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	bool ShowSpeechAnimation (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 
@@ -281,9 +281,9 @@ public:
 	long	mOtherReqID;
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };
@@ -302,9 +302,9 @@ public:
 	long	mOtherReqID;
 
 // Overrides
-	virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 	virtual void LogAction (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 };

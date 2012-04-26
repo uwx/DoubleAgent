@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
+#pragma unmanaged
 #include <math.h>
 #include <float.h>
 #include "Color.h"
@@ -40,52 +41,52 @@ CColor::CColor (COLORREF pColor)
 {
 }
 
-CColor::CColor (const CColor & pSource)
+CColor::CColor (const CColor& pSource)
 :	mColor (pSource.mColor)
 {
 }
 
-CColor & CColor::operator= (const CColor & pSource)
+CColor& CColor::operator= (const CColor& pSource)
 {
 	mColor = pSource.mColor;
 	return *this;
 }
 
-CColor & CColor::operator= (COLORREF pColor)
+CColor& CColor::operator= (COLORREF pColor)
 {
 	mColor = pColor;
 	return *this;
 }
 
-bool CColor::operator== (const CColor & pColor) const
+bool CColor::operator== (const CColor& pColor) const
 {
 	return (mColor == pColor.mColor);
 }
 
-bool CColor::operator!= (const CColor & pColor) const
+bool CColor::operator!= (const CColor& pColor) const
 {
 	return (mColor != pColor.mColor);
 }
 
-CColor & CColor::operator|= (const CColor & pSource)
+CColor& CColor::operator|= (const CColor& pSource)
 {
 	mColor |= pSource.mColor;
 	return *this;
 }
 
-CColor & CColor::operator|= (COLORREF pColor)
+CColor& CColor::operator|= (COLORREF pColor)
 {
 	mColor |= pColor;
 	return *this;
 }
 
-CColor & CColor::operator&= (const CColor & pSource)
+CColor& CColor::operator&= (const CColor& pSource)
 {
 	mColor &= pSource.mColor;
 	return *this;
 }
 
-CColor & CColor::operator&= (COLORREF pColor)
+CColor& CColor::operator&= (COLORREF pColor)
 {
 	mColor &= pColor;
 	return *this;
@@ -116,14 +117,14 @@ void CColor::Dump (CDumpContext& dc) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CColor::GetRGB (BYTE & pRed, BYTE & pGreen, BYTE & pBlue) const
+void CColor::GetRGB (BYTE& pRed, BYTE& pGreen, BYTE& pBlue) const
 {
 	pRed = GetRValue (mColor);
 	pGreen = GetGValue (mColor);
 	pBlue = GetBValue (mColor);
 }
 
-void CColor::GetRGBA (BYTE & pRed, BYTE & pGreen, BYTE & pBlue, BYTE & pAlpha) const
+void CColor::GetRGBA (BYTE& pRed, BYTE& pGreen, BYTE& pBlue, BYTE& pAlpha) const
 {
 	pRed = GetRValue (mColor);
 	pGreen = GetGValue (mColor);
@@ -131,24 +132,24 @@ void CColor::GetRGBA (BYTE & pRed, BYTE & pGreen, BYTE & pBlue, BYTE & pAlpha) c
 	pAlpha = LOBYTE (mColor>>24);
 }
 
-void CColor::GetHSL (float & pHue, float & pSaturation, float & pLuminosity) const
+void CColor::GetHSL (float& pHue, float& pSaturation, float& pLuminosity) const
 {
 	RgbToHsl (GetRValue (mColor), GetGValue (mColor), GetBValue (mColor), pHue, pSaturation, pLuminosity);
 }
 
-CColor & CColor::SetRGB (BYTE pRed, BYTE pGreen, BYTE pBlue)
+CColor& CColor::SetRGB (BYTE pRed, BYTE pGreen, BYTE pBlue)
 {
 	mColor = RGB (pRed, pGreen, pBlue);
 	return *this;
 }
 
-CColor & CColor::SetRGBA (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE pAlpha)
+CColor& CColor::SetRGBA (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE pAlpha)
 {
 	mColor = RGB (pRed, pGreen, pBlue) | (((COLORREF) pAlpha) << 24);
 	return *this;
 }
 
-CColor & CColor::SetHSL (float pHue, float pSaturation, float pLuminosity)
+CColor& CColor::SetHSL (float pHue, float pSaturation, float pLuminosity)
 {
 	BYTE	lRed, lGreen, lBlue;
 
@@ -157,7 +158,7 @@ CColor & CColor::SetHSL (float pHue, float pSaturation, float pLuminosity)
 	return *this;
 }
 
-void CColor::GetRGB (TRIVERTEX & pVertex) const
+void CColor::GetRGB (TRIVERTEX& pVertex) const
 {
 	pVertex.Red = MAKEWORD (0, GetRValue (mColor));
 	pVertex.Green = MAKEWORD (0, GetGValue (mColor));
@@ -165,7 +166,7 @@ void CColor::GetRGB (TRIVERTEX & pVertex) const
 	pVertex.Alpha = 0;
 }
 
-void CColor::GetRGBA (TRIVERTEX & pVertex) const
+void CColor::GetRGBA (TRIVERTEX& pVertex) const
 {
 	pVertex.Red = MAKEWORD (0, GetRValue (mColor));
 	pVertex.Green = MAKEWORD (0, GetGValue (mColor));
@@ -430,7 +431,7 @@ CColor CColor::ClampHSL (float pMinHue, float pMaxHue, float pMinSaturation, flo
 	return CColor (RGB (lRed, lGreen, lBlue) | GetAlphaMask ());
 }
 
-CColor CColor::GetAverage (const CColor & pColor1, const CColor & pColor2)
+CColor CColor::GetAverage (const CColor& pColor1, const CColor& pColor2)
 {
 	CColor	lRet;
 	RGBQUAD	lRgb1;
@@ -453,7 +454,7 @@ CColor CColor::GetAverage (const CColor & pColor1, const CColor & pColor2)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-void CColor::RgbToHsl (BYTE pRed, BYTE pGreen, BYTE pBlue, float & pHue, float & pSaturation, float & pLuminosity)
+void CColor::RgbToHsl (BYTE pRed, BYTE pGreen, BYTE pBlue, float& pHue, float& pSaturation, float& pLuminosity)
 {
 	float	lRed = ((float) (short) (unsigned short) pRed) / 255.0f;
 	float	lGreen = ((float) (short) (unsigned short) pGreen) / 255.0f;
@@ -510,7 +511,7 @@ void CColor::RgbToHsl (BYTE pRed, BYTE pGreen, BYTE pBlue, float & pHue, float &
 	}
 }
 
-void CColor::HslToRgb (float pHue, float pSaturation, float pLuminosity, BYTE & pRed, BYTE & pGreen, BYTE & pBlue)
+void CColor::HslToRgb (float pHue, float pSaturation, float pLuminosity, BYTE& pRed, BYTE& pGreen, BYTE& pBlue)
 {
 	while (pHue < 0.0f)
 	{
@@ -621,7 +622,7 @@ void CColor::HslToRgb (float pHue, float pSaturation, float pLuminosity, BYTE & 
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-void CColor::RgbToHsl (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE & pHue, BYTE & pSaturation, BYTE & pLuminosity)
+void CColor::RgbToHsl (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE& pHue, BYTE& pSaturation, BYTE& pLuminosity)
 {
 	float	lHue;
 	float	lSaturation;
@@ -634,7 +635,7 @@ void CColor::RgbToHsl (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE & pHue, BYTE & p
 	pLuminosity = (BYTE) (UINT) (long) (lLuminosity * 255.0f);
 }
 
-void CColor::HslToRgb (BYTE pHue, BYTE pSaturation, BYTE pLuminosity, BYTE & pRed, BYTE & pGreen, BYTE & pBlue)
+void CColor::HslToRgb (BYTE pHue, BYTE pSaturation, BYTE pLuminosity, BYTE& pRed, BYTE& pGreen, BYTE& pBlue)
 {
 	float	lHue = ((float) (int) pHue) / 255.0f;
 	float	lSaturation = ((float) (int) pSaturation) / 255.0f;
@@ -645,14 +646,14 @@ void CColor::HslToRgb (BYTE pHue, BYTE pSaturation, BYTE pLuminosity, BYTE & pRe
 
 //////////////////////////////////////////////////////////////////////
 
-void CColor::RgbToXyz (float pRed, float pGreen, float pBlue, float & pXVal, float & pYVal, float & pZVal)
+void CColor::RgbToXyz (float pRed, float pGreen, float pBlue, float& pXVal, float& pYVal, float& pZVal)
 {
 	pXVal =	((pRed * (0.412453f / 255.0f)) + (pGreen * (0.357580f / 255.0f)) + (pBlue * (0.180423f / 255.0f))) / 0.0095047f;
 	pYVal =	((pRed * (0.212671f / 255.0f)) + (pGreen * (0.715160f / 255.0f)) + (pBlue * (0.072169f / 255.0f))) / 0.0100000f;
 	pZVal =	((pRed * (0.019334f / 255.0f)) + (pGreen * (0.119193f / 255.0f)) + (pBlue * (0.950227f / 255.0f))) / 0.0108883f;
 }
 
-void CColor::RgbToXyz (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE & pXVal, BYTE & pYVal, BYTE & pZVal, bool pScaled)
+void CColor::RgbToXyz (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE& pXVal, BYTE& pYVal, BYTE& pZVal, bool pScaled)
 {
 	float	lXVal;
 	float	lYVal;

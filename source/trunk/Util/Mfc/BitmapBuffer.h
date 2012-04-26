@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -42,23 +42,23 @@ public:
 
 //	Operations
 public:
-	bool StartBuffer (CDC * pCompatibleDC = NULL);
+	bool StartBuffer (CDC* pCompatibleDC = NULL);
 	void EndBuffer (bool pReleaseBuffer = false, bool pReleaseDC = true);
 	bool PauseBuffer ();
 	bool ResumeBuffer ();
 
-	bool CreateScaledBuffer (const CSize & pSize, bool pForBlending = false, UINT pScale = 3);
+	bool CreateScaledBuffer (const CSize& pSize, bool pForBlending = false, UINT pScale = 3);
 	bool UnscaleBuffer (UINT pScale = 3, UINT pBlend = 1);
 
-	virtual bool CreateBuffer (const CSize & pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
-	virtual bool DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
+	virtual bool CreateBuffer (const CSize& pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
+	virtual bool DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
 
 	CSize GetBitmapSize () const;
 	static bool SaveBitmap (HBITMAP pBitmap, LPCTSTR pFileName);
 
 // Implementation
 protected:
-	bool NewBufferRequired (CBitmap & pBitmap, const CSize & pSize, bool pForBlending, int pSizeFactor = 3);
+	bool NewBufferRequired (CBitmap& pBitmap, const CSize& pSize, bool pForBlending, int pSizeFactor = 3);
 
 #ifdef	_DEBUG
 public:
@@ -71,7 +71,7 @@ public:
 protected:
 	virtual UINT IsInUse () const;
 	virtual UINT IsDcInUse () const;
-	virtual UINT IsBitmapUnUse (DWORD & pBitmapBytes) const;
+	virtual UINT IsBitmapUnUse (DWORD& pBitmapBytes) const;
 	virtual void LogBitmapUnUse (UINT pLogLevel) const;
 
 private:
@@ -113,8 +113,8 @@ public:
 
 //	Operations
 public:
-	virtual bool CreateBuffer (const CSize & pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
-	virtual bool DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
+	virtual bool CreateBuffer (const CSize& pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
+	virtual bool DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
 	virtual void EraseBuffer (COLORREF pColor);
 	virtual bool UnscaleBuffer ();
 
@@ -125,7 +125,7 @@ private:
 
 #ifdef	_DEBUG_BITMAP_BUFFERS
 protected:
-	virtual UINT IsBitmapUnUse (DWORD & pBitmapBytes) const;
+	virtual UINT IsBitmapUnUse (DWORD& pBitmapBytes) const;
 	virtual void LogBitmapUnUse (UINT pLogLevel) const;
 #endif
 };

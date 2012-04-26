@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -21,8 +21,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <shlwapi.h>
-#include <shellapi.h>
 #include "ImageDebugger.h"
 #include "ImageAlpha.h"
 #include "Log.h"
@@ -423,7 +421,7 @@ bool CImageDebugger::CreateMyWindow (LPCTSTR pTitle)
 	return false;
 }
 
-void CImageDebugger::SetWindowSize (CSize & pSize)
+void CImageDebugger::SetWindowSize (CSize& pSize)
 {
 	CSize	lScreenSize;
 	CRect	lOldRect;
@@ -465,7 +463,7 @@ void CImageDebugger::SetWindowSize (CSize & pSize)
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-LRESULT CImageDebugger::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CImageDebugger::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	CAtlString		lTitle;
 	CRect			lRect;
@@ -486,7 +484,7 @@ LRESULT CImageDebugger::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	return 0;
 }
 
-LRESULT CImageDebugger::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CImageDebugger::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	//if	(m_nFlags & WF_MODALLOOP)
 	//{
@@ -496,7 +494,7 @@ LRESULT CImageDebugger::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &
 	return 0;
 }
 
-LRESULT CImageDebugger::OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CImageDebugger::OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	//if	(m_nFlags & WF_MODALLOOP)
 	//{
@@ -506,7 +504,7 @@ LRESULT CImageDebugger::OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	return 0;
 }
 
-LRESULT CImageDebugger::OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CImageDebugger::OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	//if	(m_nFlags & WF_MODALLOOP)
 	//{
@@ -516,7 +514,7 @@ LRESULT CImageDebugger::OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	return 0;
 }
 
-LRESULT CImageDebugger::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CImageDebugger::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	if	(mBitmap.GetSafeHandle ())
 	{
@@ -528,7 +526,7 @@ LRESULT CImageDebugger::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, B
 
 ////////////////////////////////////////////////////////////////////////
 
-LRESULT CImageDebugger::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CImageDebugger::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	tS <PAINTSTRUCT>	lPaintStruct;
 	CMemDCHandle		lPaintDC;
@@ -746,7 +744,7 @@ LRESULT CImageDebugger::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &
 
 ////////////////////////////////////////////////////////////////////////
 
-void CImageDebugger::DrawLabel (HDC pDC, const CRect & pRect, LPCTSTR pLabel)
+void CImageDebugger::DrawLabel (HDC pDC, const CRect& pRect, LPCTSTR pLabel)
 {
 	SaveDC (pDC);
 	SetTextColor (pDC, RGB (0x00, 0x00, 0xDD));
@@ -760,7 +758,7 @@ void CImageDebugger::DrawLabel (HDC pDC, const CRect & pRect, LPCTSTR pLabel)
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-bool CImageDebugger::CopyBitmap (CBitmapHandle & pTrg, HBITMAP pSrc)
+bool CImageDebugger::CopyBitmap (CBitmapHandle& pTrg, HBITMAP pSrc)
 {
 	bool			lRet = false;
 	tS <BITMAP>		lBitmap;
@@ -808,7 +806,7 @@ bool CImageDebugger::CopyBitmap (CBitmapHandle & pTrg, HBITMAP pSrc)
 	return lRet;
 }
 
-bool CImageDebugger::CreateBitmap (HDC pDC, const CSize & pSize, UINT pBitCount, CBitmapHandle & pBitmap)
+bool CImageDebugger::CreateBitmap (HDC pDC, const CSize& pSize, UINT pBitCount, CBitmapHandle& pBitmap)
 {
 	bool			lRet = false;
 	CMemDCHandle	lDC;
@@ -834,7 +832,7 @@ bool CImageDebugger::CreateBitmap (HDC pDC, const CSize & pSize, UINT pBitCount,
 
 	pBitmap.Close ();
 
-	if	(pBitmap.Attach (CreateDIBSection (pDC, &lBmpInfo, DIB_RGB_COLORS, (void **) &lBmpBits, NULL, NULL)))
+	if	(pBitmap.Attach (CreateDIBSection (pDC, &lBmpInfo, DIB_RGB_COLORS, (void**) &lBmpBits, NULL, NULL)))
 	{
 		memset (lBmpBits, 0, lBmpInfo.bmiHeader.biSizeImage);
 		GdiFlush ();
@@ -931,7 +929,7 @@ bool CImageDebugger::DumpBitmapInfo (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pT
 	return false;
 }
 
-bool CImageDebugger::DumpBitmapInfo (UINT pLogLevel, BITMAPINFO & pBitmap, LPCTSTR pTitle)
+bool CImageDebugger::DumpBitmapInfo (UINT pLogLevel, BITMAPINFO& pBitmap, LPCTSTR pTitle)
 {
 	LogMessage (pLogLevel, _T("%s"), (pTitle ? pTitle : _T("Bitmap")));
 
@@ -1023,7 +1021,7 @@ bool CImageDebugger::DumpBitmap (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pTitle
 	return false;
 }
 
-bool CImageDebugger::DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
+bool CImageDebugger::DumpBitmap (UINT pLogLevel, BITMAP& pBitmap, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
 {
 	bool	lRet = false;
 
@@ -1108,7 +1106,7 @@ bool CImageDebugger::DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTitl
 							}   break;
 							case 16:
 							{
-								WORD *	lPel = (WORD *) (((BYTE *) pBitmap.bmBits) + lNdx);
+								WORD *	lPel = (WORD *) (((BYTE*) pBitmap.bmBits) + lNdx);
 								RGBQUAD	lColor;
 
 								lColor.rgbBlue = ((*lPel) & 0x001F) << 3;
@@ -1154,7 +1152,7 @@ bool CImageDebugger::DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTitl
 	return lRet;
 }
 
-bool CImageDebugger::DumpBitmap (UINT pLogLevel, BITMAPINFO & pBitmap, LPBYTE pBits, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
+bool CImageDebugger::DumpBitmap (UINT pLogLevel, BITMAPINFO& pBitmap, LPBYTE pBits, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
 {
 	try
 	{
@@ -1928,7 +1926,7 @@ UINT CImageDebugger::UpdateSeries (HBITMAP pBitmap, bool pTakeBitmap)
 	return lRet;
 }
 
-UINT CImageDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, INT_PTR pMinNdx, INT_PTR pMaxNdx)
+UINT CImageDebugger::SaveSeries (const CSize& pSize, UINT pBitCount, INT_PTR pMinNdx, INT_PTR pMaxNdx)
 {
 	UINT			lRet = 0;
 	CBitmapHandle	lSeries;

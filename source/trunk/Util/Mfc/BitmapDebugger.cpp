@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -457,7 +457,7 @@ bool CBitmapDebugger::CreateMyWindow (LPCTSTR pTitle)
 	return false;
 }
 
-void CBitmapDebugger::SetWindowSize (CSize & pSize)
+void CBitmapDebugger::SetWindowSize (CSize& pSize)
 {
 	CSize	lScreenSize;
 	CRect	lOldRect;
@@ -499,7 +499,7 @@ void CBitmapDebugger::SetWindowSize (CSize & pSize)
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-bool CBitmapDebugger::CopyBitmap (CBitmap & pTrg, HBITMAP pSrc)
+bool CBitmapDebugger::CopyBitmap (CBitmap& pTrg, HBITMAP pSrc)
 {
 	bool			lRet = false;
 	tS <BITMAP>		lBitmap;
@@ -547,7 +547,7 @@ bool CBitmapDebugger::CopyBitmap (CBitmap & pTrg, HBITMAP pSrc)
 	return lRet;
 }
 
-bool CBitmapDebugger::CreateBitmap (CDC & pDC, const CSize & pSize, UINT pBitCount, CBitmap & pBitmap)
+bool CBitmapDebugger::CreateBitmap (CDC& pDC, const CSize& pSize, UINT pBitCount, CBitmap& pBitmap)
 {
 	bool			lRet = false;
 	CDC				lDC;
@@ -573,7 +573,7 @@ bool CBitmapDebugger::CreateBitmap (CDC & pDC, const CSize & pSize, UINT pBitCou
 
 	pBitmap.DeleteObject ();
 
-	if	(pBitmap.Attach (CreateDIBSection (pDC, &lBmpInfo, DIB_RGB_COLORS, (void **) &lBmpBits, NULL, NULL)))
+	if	(pBitmap.Attach (CreateDIBSection (pDC, &lBmpInfo, DIB_RGB_COLORS, (void**) &lBmpBits, NULL, NULL)))
 	{
 		memset (lBmpBits, 0, lBmpInfo.bmiHeader.biSizeImage);
 		GdiFlush ();
@@ -583,7 +583,7 @@ bool CBitmapDebugger::CreateBitmap (CDC & pDC, const CSize & pSize, UINT pBitCou
 	return lRet;
 }
 
-bool CBitmapDebugger::AlphaBlend (CDC & pDst, const CRect & pDstRect, CDC & pSrc, const CRect & pSrcRect, BYTE pAlpha)
+bool CBitmapDebugger::AlphaBlend (CDC& pDst, const CRect& pDstRect, CDC& pSrc, const CRect& pSrcRect, BYTE pAlpha)
 {
 	bool			lRet = false;
 	BLENDFUNCTION	lBlend = {AC_SRC_OVER, 0, pAlpha, AC_SRC_ALPHA};
@@ -883,7 +883,7 @@ void CBitmapDebugger::OnPaint ()
 
 ////////////////////////////////////////////////////////////////////////
 
-void CBitmapDebugger::DrawLabel (CDC & pDC, const CRect & pRect, LPCTSTR pLabel)
+void CBitmapDebugger::DrawLabel (CDC& pDC, const CRect& pRect, LPCTSTR pLabel)
 {
 	pDC.SaveDC ();
 	pDC.SetTextColor (RGB (0x00, 0x00, 0xDD));
@@ -964,7 +964,7 @@ bool CBitmapDebugger::DumpBitmapInfo (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR p
 	return false;
 }
 
-bool CBitmapDebugger::DumpBitmapInfo (UINT pLogLevel, BITMAPINFO & pBitmap, LPCTSTR pTitle)
+bool CBitmapDebugger::DumpBitmapInfo (UINT pLogLevel, BITMAPINFO& pBitmap, LPCTSTR pTitle)
 {
 	LogMessage (pLogLevel, _T("%s"), (pTitle ? pTitle : _T("Bitmap")));
 
@@ -1056,7 +1056,7 @@ bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pTitl
 	return false;
 }
 
-bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
+bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, BITMAP& pBitmap, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
 {
 	bool	lRet = false;
 
@@ -1141,7 +1141,7 @@ bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTit
 							}   break;
 							case 16:
 							{
-								WORD *	lPel = (WORD *) (((BYTE *) pBitmap.bmBits) + lNdx);
+								WORD *	lPel = (WORD *) (((BYTE*) pBitmap.bmBits) + lNdx);
 								RGBQUAD	lColor;
 
 								lColor.rgbBlue = ((*lPel) & 0x001F) << 3;
@@ -1187,7 +1187,7 @@ bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTit
 	return lRet;
 }
 
-bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, BITMAPINFO & pBitmap, LPBYTE pBits, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
+bool CBitmapDebugger::DumpBitmap (UINT pLogLevel, BITMAPINFO& pBitmap, LPBYTE pBits, LPCTSTR pTitle, bool pAlphaOnly, UINT pMaxWidth, UINT pMaxHeight)
 {
 	try
 	{
@@ -1966,7 +1966,7 @@ UINT CBitmapDebugger::UpdateSeries (HBITMAP pBitmap, bool pTakeBitmap)
 	return lRet;
 }
 
-UINT CBitmapDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNdx, int pMaxNdx)
+UINT CBitmapDebugger::SaveSeries (const CSize& pSize, UINT pBitCount, int pMinNdx, int pMaxNdx)
 {
 	UINT		lRet = 0;
 	CBitmap		lSeries;

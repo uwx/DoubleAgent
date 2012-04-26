@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -88,20 +88,20 @@ extern bool				gLogAllWinErr;
 
 #ifdef	_LOG_DISABLED
 
-static inline unsigned long LogStart (bool pNewLogFile = false, const void * pLogFileName = 0, unsigned int pLogLevel = 0) {return 0;}
+static inline unsigned long LogStart (bool pNewLogFile = false, const void* pLogFileName = 0, unsigned int pLogLevel = 0) {return 0;}
 static inline void LogStop (unsigned int pPutLogEnd = 15) {}
-static inline void LogControl (void * pLogFileName, unsigned int & pLogLevel) {}
+static inline void LogControl (void* pLogFileName, unsigned int& pLogLevel) {}
 static inline bool LogLock () {return false;}
 static inline bool LogUnlock () {return false;}
 static inline bool LogIsActive (unsigned int pLogLevel = LogIfActive) {return false;}
-static inline bool LogMessage (unsigned int pLogLevel, const void * pFormat, ...) {return true;}
-static inline void LogWrite (const void * pStr, const void * pLogFileName = 0) {}
-static inline int LogWriteCache (const void * pLogFileName = 0) {}
+static inline bool LogMessage (unsigned int pLogLevel, const void* pFormat, ...) {return true;}
+static inline void LogWrite (const void* pStr, const void* pLogFileName = 0) {}
+static inline int LogWriteCache (const void* pLogFileName = 0) {}
 static inline bool LogEmptyCache () {return false;}
-static inline bool LogDump (unsigned int pLogLevel, void * pBuffer, unsigned int pBufferSize, const void * pPrefix = 0, bool pDumpOffsets = false) {return true;}
-static inline bool LogDumpBits (unsigned int pLogLevel, void * pBuffer, unsigned int pBufferSize, const void * pPrefix = 0, unsigned int pBytesPerLine = 8) {return true;}
-static inline unsigned long LogWinErr (unsigned int pLogLevel, unsigned long pError, const void * pFormat = 0, ...) {return pError;}
-static inline long LogComErr (unsigned int pLogLevel, long pError, const void * pFormat = 0, ...) {return pError;}
+static inline bool LogDump (unsigned int pLogLevel, void* pBuffer, unsigned int pBufferSize, const void* pPrefix = 0, bool pDumpOffsets = false) {return true;}
+static inline bool LogDumpBits (unsigned int pLogLevel, void* pBuffer, unsigned int pBufferSize, const void* pPrefix = 0, unsigned int pBytesPerLine = 8) {return true;}
+static inline unsigned long LogWinErr (unsigned int pLogLevel, unsigned long pError, const void* pFormat = 0, ...) {return pError;}
+static inline long LogComErr (unsigned int pLogLevel, long pError, const void* pFormat = 0, ...) {return pError;}
 static inline void LogDebugRuntime (bool pDebugRuntime = true, bool pAsserts = true, bool pErrors = true, bool pWarnings = false) {}
 static inline int LogDebugMemory (int pDbgFlag = 0) {return 0;}
 #define	LogWinErrAnon LogWinErr
@@ -116,7 +116,7 @@ EXTERN_C {
 
 DWORD LogStart (bool pNewLogFile = false, LPCTSTR pLogFileName = NULL, UINT pLogLevel = 0);
 void LogStop (unsigned int pPutLogEnd = 15);
-void LogControl (LPTSTR pLogFileName, UINT & pLogLevel);
+void LogControl (LPTSTR pLogFileName, UINT& pLogLevel);
 bool LogLock ();
 bool LogUnlock ();
 bool LogIsActive (UINT pLogLevel = LogIfActive);
@@ -156,7 +156,7 @@ DEFINE_LogErrFL(Com,HRESULT)
 
 extern DWORD LogStart (int pNewLogFile = false, LPCTSTR pLogFileName = NULL, UINT pLogLevel = 0);
 extern void LogStop (unsigned int pPutLogEnd = 15);
-extern void LogControl (LPTSTR pLogFileName, UINT & pLogLevel);
+extern void LogControl (LPTSTR pLogFileName, UINT& pLogLevel);
 extern bool LogLock ();
 extern bool LogUnlock ();
 extern int LogIsActive (unsigned int pLogLevel = LogIfActive);
@@ -239,7 +239,12 @@ static inline void LogCliException (UINT pLogLevel, System::Exception^ pExceptio
 			lMsg = PtrToStringChars (pException->ToString());
 			LogMessage (pLogLevel, _T("Exception [%s] at %hs %d"), (const System::Char*)lMsg, pFile, pLine);
 
-			lTypeLoadException = safe_cast <System::Reflection::ReflectionTypeLoadException^> (pException);
+			try
+			{
+				lTypeLoadException = safe_cast <System::Reflection::ReflectionTypeLoadException^> (pException);
+			}
+			catch (...)
+			{}
 			if	(
 					(lTypeLoadException != nullptr)
 				&&	(lTypeLoadException->LoaderExceptions != nullptr)

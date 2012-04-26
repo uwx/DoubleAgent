@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,7 +27,7 @@
 class CDaCmnSettings
 {
 public:
-	CDaCmnSettings (class CGlobalAnchor * pAnchor);
+	CDaCmnSettings (class CGlobalAnchor* pAnchor);
 	virtual ~CDaCmnSettings ();
 
 // Interfaces
@@ -50,7 +50,7 @@ protected:
 	AudioStatusType GetAudioStatus ();
 
 protected:
-	class CGlobalAnchor *	mAnchor;
+	class CGlobalAnchor*	mAnchor;
 };
 
 /////////////////////////////////////////////////////////////////////////////

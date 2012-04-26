@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -23,15 +23,11 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnAnimationNames::Initialize (CAgentFile & pAgentFile)
+HRESULT CDaCmnAnimationNames::Initialize (CAgentFile& pAgentFile)
 {
-	const CAgentFileGestures &	lGestures = pAgentFile.GetGestures ();
+	const CAgentFileGestures&	lGestures = pAgentFile.Gestures;
 	INT_PTR						lNdx;
 
-	if	(lGestures.mNames.GetCount() <= 0)
-	{
-		pAgentFile.ReadGestures ();
-	}
 	if	(mAnimationNames = new CComVariant [lGestures.mNames.GetCount()+1])
 	{
 		for	(lNdx = 0; lNdx < (INT_PTR)lGestures.mNames.GetCount(); lNdx++)
@@ -43,7 +39,7 @@ HRESULT CDaCmnAnimationNames::Initialize (CAgentFile & pAgentFile)
 	return mEnumVARIANT.Init (&(mAnimationNames[0]), &(mAnimationNames[(INT_PTR)lGestures.mNames.GetCount()]), NULL);
 }
 
-HRESULT CDaCmnAnimationNames::Initialize (CDaCmnAnimationNames & pSource, LPUNKNOWN pUnknown)
+HRESULT CDaCmnAnimationNames::Initialize (CDaCmnAnimationNames& pSource, LPUNKNOWN pUnknown)
 {
 	HRESULT	lResult;
 

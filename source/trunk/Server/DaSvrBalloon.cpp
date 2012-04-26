@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -58,9 +58,9 @@ DaSvrBalloon::~DaSvrBalloon ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CInstanceAnchor * pAnchor, CAgentFile * pFile, CAgentCharacterWnd * pOwner, LPCTSTR pClientMutexName)
+DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CInstanceAnchor* pAnchor, CAgentFile* pFile, CAgentCharacterWnd* pOwner, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrBalloon> *	lInstance = NULL;
+	CComObject<DaSvrBalloon>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrBalloon>::CreateInstance (&lInstance))))
 	{

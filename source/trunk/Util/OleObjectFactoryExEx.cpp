@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -149,19 +149,19 @@ void COleObjectFactoryExEx::UnregisterDefCategory ()
 	UnregisterDefCategory (m_clsid);
 }
 
-void COleObjectFactoryExEx::RegisterCategory (const GUID & pCatId)
+void COleObjectFactoryExEx::RegisterCategory (const GUID& pCatId)
 {
 	RegisterCategory (m_clsid, pCatId);
 }
 
-void COleObjectFactoryExEx::UnregisterCategory (const GUID & pCatId)
+void COleObjectFactoryExEx::UnregisterCategory (const GUID& pCatId)
 {
 	UnregisterCategory (m_clsid, pCatId);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterDefCategory (const GUID & pClsid)
+void COleObjectFactoryExEx::RegisterDefCategory (const GUID& pClsid)
 {
 	GUID	lDefCatid;
 
@@ -169,7 +169,7 @@ void COleObjectFactoryExEx::RegisterDefCategory (const GUID & pClsid)
 	RegisterCategory (pClsid, lDefCatid);
 }
 
-void COleObjectFactoryExEx::UnregisterDefCategory (const GUID & pClsid)
+void COleObjectFactoryExEx::UnregisterDefCategory (const GUID& pClsid)
 {
 	GUID	lDefCatid;
 
@@ -177,12 +177,12 @@ void COleObjectFactoryExEx::UnregisterDefCategory (const GUID & pClsid)
 	UnregisterCategory (pClsid, lDefCatid);
 }
 
-void COleObjectFactoryExEx::RegisterCategory (const GUID & pClsid, const GUID & pCatId)
+void COleObjectFactoryExEx::RegisterCategory (const GUID& pClsid, const GUID& pCatId)
 {
 	ICatRegisterPtr	lCatRegister;
 
 	if	(
-			(SUCCEEDED (LogComErr (LogIfActive, CoCreateInstance (CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_INPROC_SERVER, __uuidof (ICatRegister), (void **) &lCatRegister))))
+			(SUCCEEDED (LogComErr (LogIfActive, CoCreateInstance (CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_INPROC_SERVER, __uuidof (ICatRegister), (void**) &lCatRegister))))
 		&&	(SUCCEEDED (LogComErr (LogIfActive, lCatRegister->RegisterClassImplCategories (pClsid, 1, const_cast <GUID *> (&pCatId)))))
 		)
 	{
@@ -193,12 +193,12 @@ void COleObjectFactoryExEx::RegisterCategory (const GUID & pClsid, const GUID & 
 	}
 }
 
-void COleObjectFactoryExEx::UnregisterCategory (const GUID & pClsid, const GUID & pCatId)
+void COleObjectFactoryExEx::UnregisterCategory (const GUID& pClsid, const GUID& pCatId)
 {
 	ICatRegisterPtr	lCatRegister;
 
 	if	(
-			(SUCCEEDED (LogComErr (LogIfActive, CoCreateInstance (CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_INPROC_SERVER, __uuidof (ICatRegister), (void **) &lCatRegister))))
+			(SUCCEEDED (LogComErr (LogIfActive, CoCreateInstance (CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_INPROC_SERVER, __uuidof (ICatRegister), (void**) &lCatRegister))))
 		&&	(SUCCEEDED (LogComErr (LogIfActive, lCatRegister->UnRegisterClassImplCategories (pClsid, 1, const_cast <GUID *> (&pCatId)))))
 		)
 	{
@@ -245,7 +245,7 @@ bool COleObjectFactoryExEx::RegisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdV
 	return RegisterProgIdVer (m_clsid, pProgId, pProgIdVersionned, pProgIdName);
 }
 
-bool COleObjectFactoryExEx:: RegisterProgIdVer (const GUID & pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName)
+bool COleObjectFactoryExEx:: RegisterProgIdVer (const GUID& pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName)
 {
 	CRegKeyEx	lClassIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid), false);
 	CString		lProgIdName (pProgIdName);
@@ -320,14 +320,14 @@ void COleObjectFactoryExEx::UnregisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgI
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterAppId (const GUID & pAppId, UINT pAppNameId, LPCTSTR pRunAs, LPCTSTR pLocalService)
+void COleObjectFactoryExEx::RegisterAppId (const GUID& pAppId, UINT pAppNameId, LPCTSTR pRunAs, LPCTSTR pLocalService)
 {
 	CString	lAppName;
 	lAppName.LoadString (pAppNameId);
 	RegisterAppId (pAppId, (LPCTSTR)lAppName, pRunAs, pLocalService);
 }
 
-void COleObjectFactoryExEx::RegisterAppId (const GUID & pAppId, LPCTSTR pAppName, LPCTSTR pRunAs, LPCTSTR pLocalService)
+void COleObjectFactoryExEx::RegisterAppId (const GUID& pAppId, LPCTSTR pAppName, LPCTSTR pRunAs, LPCTSTR pLocalService)
 {
 	CRegString (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("AppID"), true).Update (CGuidStr (pAppId));
 	if	(pAppName)
@@ -344,21 +344,21 @@ void COleObjectFactoryExEx::RegisterAppId (const GUID & pAppId, LPCTSTR pAppName
 	}
 }
 
-void COleObjectFactoryExEx::UnregisterAppId (const GUID & pAppId)
+void COleObjectFactoryExEx::UnregisterAppId (const GUID& pAppId)
 {
 	CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false).Delete ();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterExeAppId (const GUID & pAppId, UINT pAppNameId, LPCTSTR pExeName)
+void COleObjectFactoryExEx::RegisterExeAppId (const GUID& pAppId, UINT pAppNameId, LPCTSTR pExeName)
 {
 	CString	lAppName;
 	lAppName.LoadString (pAppNameId);
 	RegisterExeAppId (pAppId, (LPCTSTR) lAppName, pExeName);
 }
 
-void COleObjectFactoryExEx::RegisterExeAppId (const GUID & pAppId, LPCTSTR pAppName, LPCTSTR pExeName)
+void COleObjectFactoryExEx::RegisterExeAppId (const GUID& pAppId, LPCTSTR pAppName, LPCTSTR pExeName)
 {
 	CString	lExeName (pExeName);
 
@@ -402,7 +402,7 @@ void COleObjectFactoryExEx::UnregisterExeAppId (LPCTSTR pExeName)
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterDllSurrogate (const GUID & pAppId, LPCTSTR pSurrogatePath)
+void COleObjectFactoryExEx::RegisterDllSurrogate (const GUID& pAppId, LPCTSTR pSurrogatePath)
 {
 	CRegKeyEx	lRegKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false);
 	CRegString	lSurrogate (lRegKey, _T("DllSurrogate"), true);
@@ -413,7 +413,7 @@ void COleObjectFactoryExEx::RegisterDllSurrogate (const GUID & pAppId, LPCTSTR p
 	}
 }
 
-void COleObjectFactoryExEx::UnegisterDllSurrogate (const GUID & pAppId)
+void COleObjectFactoryExEx::UnegisterDllSurrogate (const GUID& pAppId)
 {
 	CRegKeyEx	lRegKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID")), CGuidStr (pAppId), false);
 	CRegString	lSurrogate (lRegKey, _T("DllSurrogate"));
@@ -438,7 +438,7 @@ void COleObjectFactoryExEx::RegisterElevated (LPCTSTR pClassNamePath)
 	}
 }
 
-void COleObjectFactoryExEx::RegisterTypeLib (const GUID & pTypeLib)
+void COleObjectFactoryExEx::RegisterTypeLib (const GUID& pTypeLib)
 {
 	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("TypeLib"), false, true), NULL, true).Update (CGuidStr (pTypeLib));
 }
@@ -594,7 +594,7 @@ void COleObjectFactoryExEx::RegisterLocalizedString (LPCTSTR pClassNamePath)
 	}
 }
 
-void COleObjectFactoryExEx::RegisterDefaultIcon (int pIconId, int pOpenIconId, LPCTSTR pProgId, const GUID * pClassId)
+void COleObjectFactoryExEx::RegisterDefaultIcon (int pIconId, int pOpenIconId, LPCTSTR pProgId, const GUID* pClassId)
 {
 	CString	lModuleName;
 
@@ -603,7 +603,7 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (int pIconId, int pOpenIconId, L
 	RegisterDefaultIcon (lModuleName, pIconId, pOpenIconId, pProgId, pClassId);
 }
 
-void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId, LPCTSTR pProgId, const GUID * pClassId)
+void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId, LPCTSTR pProgId, const GUID* pClassId)
 {
 	CString	lIconFile (pIconFile);
 	CString	lLongName;
@@ -663,7 +663,7 @@ void COleObjectFactoryExEx::RegisterInfoTip (LPCTSTR pInfoTip)
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterPropSheetHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName)
+void COleObjectFactoryExEx::RegisterPropSheetHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName)
 {
 	if	(!pHandlerName)
 	{
@@ -695,12 +695,12 @@ void COleObjectFactoryExEx::UnregisterPropSheetHandler (LPCTSTR pProgId, LPCTSTR
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterContextMenuHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName)
+void COleObjectFactoryExEx::RegisterContextMenuHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName)
 {
 	RegisterContextMenuHandler (m_lpszProgID, pHandlerClsid, pHandlerName);
 }
 
-void COleObjectFactoryExEx::UnregisterContextMenuHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName)
+void COleObjectFactoryExEx::UnregisterContextMenuHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName)
 {
 	UnregisterContextMenuHandler (m_lpszProgID, pHandlerClsid, pHandlerName);
 }
@@ -715,7 +715,7 @@ void COleObjectFactoryExEx::UnregisterContextMenuHandler (LPCTSTR pProgId, LPCTS
 	UnregisterContextMenuHandler (pProgId, m_clsid, pHandlerName);
 }
 
-void COleObjectFactoryExEx::RegisterContextMenuHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, LPCTSTR pHandlerName)
+void COleObjectFactoryExEx::RegisterContextMenuHandler (LPCTSTR pProgId, const GUID& pHandlerClsid, LPCTSTR pHandlerName)
 {
 	CString	lHandlerName (pHandlerName);
 
@@ -734,7 +734,7 @@ void COleObjectFactoryExEx::RegisterContextMenuHandler (LPCTSTR pProgId, const G
 	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("ContextMenuHandlers"), false, true), lHandlerName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
 }
 
-void COleObjectFactoryExEx::UnregisterContextMenuHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, LPCTSTR pHandlerName)
+void COleObjectFactoryExEx::UnregisterContextMenuHandler (LPCTSTR pProgId, const GUID& pHandlerClsid, LPCTSTR pHandlerName)
 {
 	CString	lHandlerName (pHandlerName);
 
@@ -767,7 +767,7 @@ void COleObjectFactoryExEx::UnregisterContextMenuHandler (LPCTSTR pProgId, const
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterDragDropHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName)
+void COleObjectFactoryExEx::RegisterDragDropHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName)
 {
 	if	(!pHandlerName)
 	{
@@ -799,7 +799,7 @@ void COleObjectFactoryExEx::UnregisterDragDropHandler (LPCTSTR pProgId, LPCTSTR 
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterIconHandler (const GUID & pHandlerClsid)
+void COleObjectFactoryExEx::RegisterIconHandler (const GUID& pHandlerClsid)
 {
 	RegisterGenericHandler (m_lpszProgID, pHandlerClsid, GUID_NULL, _T("IconHandler"));
 }
@@ -816,7 +816,7 @@ void COleObjectFactoryExEx::UnregisterIconHandler (LPCTSTR pProgId)
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterInfoTipHandler (const GUID & pHandlerClsid)
+void COleObjectFactoryExEx::RegisterInfoTipHandler (const GUID& pHandlerClsid)
 {
 	RegisterGenericHandler (m_lpszProgID, pHandlerClsid, GUID_NULL, _T("{00021500-0000-0000-C000-000000000046}"));
 }
@@ -833,7 +833,7 @@ void COleObjectFactoryExEx::UnregisterInfoTipHandler (LPCTSTR pProgId)
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, const GUID & pHandlerId, LPCTSTR pHandlerTypeName)
+void COleObjectFactoryExEx::RegisterGenericHandler (LPCTSTR pProgId, const GUID& pHandlerClsid, const GUID& pHandlerId, LPCTSTR pHandlerTypeName)
 {
 	CString	lHandlerTypeName (pHandlerTypeName);
 	if	(lHandlerTypeName.IsEmpty())
@@ -843,7 +843,7 @@ void COleObjectFactoryExEx::RegisterGenericHandler (LPCTSTR pProgId, const GUID 
 	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), lHandlerTypeName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
 }
 
-void COleObjectFactoryExEx::UnregisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerId, LPCTSTR pHandlerTypeName)
+void COleObjectFactoryExEx::UnregisterGenericHandler (LPCTSTR pProgId, const GUID& pHandlerId, LPCTSTR pHandlerTypeName)
 {
 	CString	lHandlerTypeName (pHandlerTypeName);
 	if	(lHandlerTypeName.IsEmpty())
@@ -862,7 +862,7 @@ void COleObjectFactoryExEx::UnregisterGenericHandler (LPCTSTR pProgId, const GUI
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, UINT pHandlerNameId, HKEY pRootKey)
+void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID& pHandlerClsid, UINT pHandlerNameId, HKEY pRootKey)
 {
 	CString	lHandlerName;
 
@@ -870,7 +870,7 @@ void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & 
 	RegisterNamespace (pNamespace, pHandlerClsid, lHandlerName, pRootKey);
 }
 
-void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, LPCTSTR pHandlerName, HKEY pRootKey)
+void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID& pHandlerClsid, LPCTSTR pHandlerName, HKEY pRootKey)
 {
 	if	(
 			(pNamespace)
@@ -884,17 +884,17 @@ void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & 
 	}
 }
 
-void COleObjectFactoryExEx::RegisterNamespaceOption (const GUID & pHandlerClsid, LPCTSTR pOption, HKEY pRootKey)
+void COleObjectFactoryExEx::RegisterNamespaceOption (const GUID& pHandlerClsid, LPCTSTR pOption, HKEY pRootKey)
 {
 	CRegString (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), pOption, true).Update (_T(""));
 }
 
-void COleObjectFactoryExEx::RegisterNamespaceAttrs (const GUID & pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey)
+void COleObjectFactoryExEx::RegisterNamespaceAttrs (const GUID& pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey)
 {
 	CRegDWord (CRegKeyEx (CRegKeyEx (CRegKeyEx (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), _T("Attributes"), true).SetValue (pShellAttrs).Update ();
 }
 
-void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, HKEY pRootKey)
+void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID& pHandlerClsid, HKEY pRootKey)
 {
 	if	(
 			(pNamespace)
@@ -910,7 +910,7 @@ void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID 
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterBrowserHelperObject (const GUID & pClassId, LPCTSTR pClassName)
+void COleObjectFactoryExEx::RegisterBrowserHelperObject (const GUID& pClassId, LPCTSTR pClassName)
 {
 	CRegKeyEx	lRegKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects"), false);
 	CRegKeyEx	lHelperObject (lRegKey, (LPCTSTR) CGuidStr (pClassId), false, true);
@@ -921,7 +921,7 @@ void COleObjectFactoryExEx::RegisterBrowserHelperObject (const GUID & pClassId, 
 	}
 }
 
-void COleObjectFactoryExEx::UnegisterBrowserHelperObject (const GUID & pClassId)
+void COleObjectFactoryExEx::UnegisterBrowserHelperObject (const GUID& pClassId)
 {
 	CRegKeyEx	lRegKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects"), false);
 	CRegKeyEx	lHelperObject (lRegKey, (LPCTSTR) CGuidStr (pClassId), false, false);
@@ -934,7 +934,7 @@ void COleObjectFactoryExEx::UnegisterBrowserHelperObject (const GUID & pClassId)
 
 //////////////////////////////////////////////////////////////////////
 
-bool COleObjectFactoryExEx::FindExtProgId (LPCTSTR pExt, CString & pProgId, CString * pProgIdName)
+bool COleObjectFactoryExEx::FindExtProgId (LPCTSTR pExt, CString& pProgId, CString * pProgIdName)
 {
 	bool		lRet = false;
 	CRegKeyEx	lExtKey (HKEY_CLASSES_ROOT, pExt, true);

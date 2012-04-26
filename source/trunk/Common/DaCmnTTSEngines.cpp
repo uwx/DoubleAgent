@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -25,7 +25,7 @@
 #include "Sapi5Voices.h"
 #ifndef	_WIN64
 #include "Sapi4Voices.h"
-static int __cdecl SortRankDescending (const void * pElem1, const void * pElem2)
+static int __cdecl SortRankDescending (const void* pElem1, const void* pElem2)
 {
 	return -ATL::CElementTraits<int>::CompareElementsOrdered (*(int *)pElem1, *(int*)pElem2);
 }
@@ -89,7 +89,7 @@ HRESULT CDaCmnTTSEngines::UseAllVoices ()
 	return lResult;
 }
 
-HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, short pGender)
+HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile* pFile, LANGID pLangId, short pGender)
 {
 	HRESULT								lResult = S_FALSE;
 	CSapiVoiceCache *					lVoiceCache;
@@ -117,15 +117,14 @@ HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, sh
 
 		if	(pFile)
 		{
-			lFileTts = pFile->GetTts ();
-			lFileTts.mMode = GUID_NULL;
-			lFileTts.mModeId = NULL;
+			lFileTts = pFile->Tts;
+			lFileTts.put_Mode (GUID_NULL);
 		}
 		else
 		{
-			lFileTts.mGender = pGender;
+			lFileTts.put_Gender (pGender);
 		}
-		lFileTts.mLanguage = pLangId;
+		lFileTts.put_Language (pLangId);
 
 		if	(lVoiceCache->GetSapiVersionRestriction () != 4)
 		{
@@ -246,9 +245,9 @@ CSapi5VoiceInfo * CDaCmnTTSEngines::GetSapi5VoiceAt (INT_PTR pIndex) const
 	return lRet;
 }
 
-CSapi4VoiceInfo * CDaCmnTTSEngines::GetSapi4VoiceAt (INT_PTR pIndex) const
+CSapi4VoiceInfo* CDaCmnTTSEngines::GetSapi4VoiceAt (INT_PTR pIndex) const
 {
-	CSapi4VoiceInfo *	lRet = NULL;
+	CSapi4VoiceInfo*	lRet = NULL;
 
 	if	(mVoiceNdxMap.GetCount() > 0)
 	{

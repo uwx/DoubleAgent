@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -42,10 +42,10 @@ public:
 	INT_PTR GetSize () const;
 	INT_PTR GetUpperBound() const;
 	bool IsEmpty () const;
-	CStringArray const & OrderArray () const;
+	const CStringArray& OrderArray () const;
 
 // Operations
-	bool Lookup (LPCTSTR pKey, VALUE & pValue) const;
+	bool Lookup (LPCTSTR pKey, VALUE& pValue) const;
 	INT_PTR SetAt (LPCTSTR pKey, ARG_VALUE pValue);
 	INT_PTR AddSorted (LPCTSTR pKey, ARG_VALUE pValue);					// Allows duplicates
 	void RemoveAt (INT_PTR pIndex);
@@ -60,11 +60,11 @@ public:
 
 	INT_PTR FindValue (ARG_VALUE pValue) const;
 	INT_PTR FindKey (LPCTSTR pKey) const;
-	const CString & KeyAt (INT_PTR pIndex) const;
+	const CString& KeyAt (INT_PTR pIndex) const;
 
-	VALUE & operator [] (LPCTSTR pKey);
-	const VALUE & operator [] (INT_PTR pIndex) const;
-	VALUE & operator [] (INT_PTR pIndex);
+	VALUE& operator [] (LPCTSTR pKey);
+	const VALUE& operator [] (INT_PTR pIndex) const;
+	VALUE& operator [] (INT_PTR pIndex);
 
 	const VALUE * operator () (LPCTSTR pKey) const;
 	VALUE * operator () (LPCTSTR pKey);
@@ -79,17 +79,17 @@ private:
 
 		_CSortPredicate (const CString ** pFound, bool pCaseInsensitive) : mFound (pFound), mCaseInsensitive (pCaseInsensitive) {}
 
-		bool operator () (const CString & x, const CString & y) const
+		bool operator () (const CString& x, const CString& y) const
 		{
 			return ((mCaseInsensitive ? x.CollateNoCase (y) : x.Collate (y)) < 0);
 		}
 
-		bool operator () (const CString & x, LPCTSTR y) const
+		bool operator () (const CString& x, LPCTSTR y) const
 		{
 			return ((mCaseInsensitive ? x.CollateNoCase (y) : x.Collate (y)) < 0);
 		}
 
-		bool operator () (LPCTSTR x, const CString & y) const
+		bool operator () (LPCTSTR x, const CString& y) const
 		{
 			(*mFound) = &y;
 			return ((mCaseInsensitive ? y.CollateNoCase (x) : y.Collate (x)) > 0);
@@ -107,7 +107,7 @@ public:
 	void PASCAL operator delete(void* p) {CObject::operator delete (p);}
 #ifdef	_DEBUG
 	void* PASCAL operator new(size_t nSize, LPCSTR lpszFileName, int nLine) {return CObject::operator new (nSize, lpszFileName, nLine);}
-	void PASCAL operator delete(void *p, LPCSTR lpszFileName, int nLine) {CObject::operator delete (p, lpszFileName, nLine);}
+	void PASCAL operator delete(void*p, LPCSTR lpszFileName, int nLine) {CObject::operator delete (p, lpszFileName, nLine);}
 #endif
 };
 
@@ -139,7 +139,7 @@ AFX_INLINE bool CStringMap <VALUE, ARG_VALUE>::IsEmpty () const
 }
 
 template <typename VALUE, typename ARG_VALUE>
-AFX_INLINE CStringArray const & CStringMap <VALUE, ARG_VALUE>::OrderArray () const
+AFX_INLINE const CStringArray& CStringMap <VALUE, ARG_VALUE>::OrderArray () const
 {
 	return mOrder;
 }
@@ -147,12 +147,12 @@ AFX_INLINE CStringArray const & CStringMap <VALUE, ARG_VALUE>::OrderArray () con
 //////////////////////////////////////////////////////////////////////
 
 template <typename VALUE, typename ARG_VALUE>
-AFX_INLINE bool CStringMap <VALUE, ARG_VALUE>::Lookup (LPCTSTR pKey, VALUE & pValue) const
+AFX_INLINE bool CStringMap <VALUE, ARG_VALUE>::Lookup (LPCTSTR pKey, VALUE& pValue) const
 {
 	INT_PTR	lNdx = SearchKey (pKey);
 	if	(lNdx >= 0)
 	{
-		pValue = const_cast <CStringMap <VALUE, ARG_VALUE> *> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (lNdx);
+		pValue = const_cast <CStringMap <VALUE, ARG_VALUE>*> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (lNdx);
 		return true;
 	}
 	return false;
@@ -275,7 +275,7 @@ INT_PTR CStringMap <VALUE, ARG_VALUE>::FindValue (ARG_VALUE pValue) const
 	INT_PTR	lNdx;
 	for	(lNdx = CArray <VALUE, ARG_VALUE>::GetUpperBound(); lNdx >= 0; lNdx--)
 	{
-		if	(const_cast <CStringMap <VALUE, ARG_VALUE> *> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (lNdx) == pValue)
+		if	(const_cast <CStringMap <VALUE, ARG_VALUE>*> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (lNdx) == pValue)
 		{
 			return lNdx;
 		}
@@ -290,14 +290,14 @@ INT_PTR CStringMap <VALUE, ARG_VALUE>::FindKey (LPCTSTR pKey) const
 }
 
 template <typename VALUE, typename ARG_VALUE>
-const CString & CStringMap <VALUE, ARG_VALUE>::KeyAt (INT_PTR pIndex) const
+const CString& CStringMap <VALUE, ARG_VALUE>::KeyAt (INT_PTR pIndex) const
 {
 	ASSERT_VALID (this);
-	return const_cast <CStringArray &> (mOrder).ElementAt (pIndex);
+	return const_cast <CStringArray&> (mOrder).ElementAt (pIndex);
 }
 
 template <typename VALUE, typename ARG_VALUE>
-VALUE & CStringMap <VALUE, ARG_VALUE>::operator [] (LPCTSTR pKey)
+VALUE& CStringMap <VALUE, ARG_VALUE>::operator [] (LPCTSTR pKey)
 {
 	ASSERT_VALID (this);
 
@@ -330,14 +330,14 @@ VALUE & CStringMap <VALUE, ARG_VALUE>::operator [] (LPCTSTR pKey)
 }
 
 template <typename VALUE, typename ARG_VALUE>
-const VALUE & CStringMap <VALUE, ARG_VALUE>::operator [] (INT_PTR pIndex) const
+const VALUE& CStringMap <VALUE, ARG_VALUE>::operator [] (INT_PTR pIndex) const
 {
 	ASSERT_VALID (this);
-	return const_cast <CStringMap <VALUE, ARG_VALUE> *> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (pIndex);
+	return const_cast <CStringMap <VALUE, ARG_VALUE>*> (this)->CArray <VALUE, ARG_VALUE>::ElementAt (pIndex);
 }
 
 template <typename VALUE, typename ARG_VALUE>
-VALUE & CStringMap <VALUE, ARG_VALUE>::operator [] (INT_PTR pIndex)
+VALUE& CStringMap <VALUE, ARG_VALUE>::operator [] (INT_PTR pIndex)
 {
 	ASSERT_VALID (this);
 	return CArray <VALUE, ARG_VALUE>::ElementAt (pIndex);

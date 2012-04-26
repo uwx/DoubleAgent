@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -170,14 +170,14 @@ void CPropPageOutput::EnableControls ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageOutput::OnBalloonEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnBalloonEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	EnableControls ();
 	return 0;
 }
 
-LRESULT CPropPageOutput::OnBalloonFontDefault(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnBalloonFontDefault(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(mBalloonConfig.mFont)
 	{
@@ -192,7 +192,7 @@ LRESULT CPropPageOutput::OnBalloonFontDefault(WORD wNotifyCode, WORD wID, HWND h
 	return 0;
 }
 
-LRESULT CPropPageOutput::OnBalloonFontCustom(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnBalloonFontCustom(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(!mBalloonConfig.mFont)
 	{
@@ -207,7 +207,7 @@ LRESULT CPropPageOutput::OnBalloonFontCustom(WORD wNotifyCode, WORD wID, HWND hW
 	return 0;
 }
 
-LRESULT CPropPageOutput::OnBalloonFontChoose(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnBalloonFontChoose(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	tSS <CHOOSEFONT, DWORD>	lChooseFont;
 	tPtr <LOGFONT>			lFont;
@@ -262,14 +262,14 @@ LRESULT CPropPageOutput::OnBalloonFontChoose(WORD wNotifyCode, WORD wID, HWND hW
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageOutput::OnTtsEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnTtsEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	EnableControls ();
 	return 0;
 }
 
-LRESULT CPropPageOutput::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageOutput::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 
@@ -287,7 +287,7 @@ LRESULT CPropPageOutput::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageOutput::OnSoundEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnSoundEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	return 0;

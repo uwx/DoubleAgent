@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -55,9 +55,9 @@ public:
 	int FireSpeechWord(LPCTSTR CharacterID, LPDISPATCH FormattedText, long WordIndex);
 
 protected:
-	CDaCtlEventDispatch (CComDynamicUnkArray & pUnkArray) : mUnkArray (pUnkArray) {}
+	CDaCtlEventDispatch (CComDynamicUnkArray& pUnkArray) : mUnkArray (pUnkArray) {}
 
-	CComDynamicUnkArray &	mUnkArray;
+	CComDynamicUnkArray&	mUnkArray;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -162,7 +162,7 @@ public:
 public:
 	STDMETHOD_(ULONG, AddRef) () {return _NotifyBase::AddRef ();}
 	STDMETHOD_(ULONG, Release) () {return _NotifyBase::Release ();}
-	STDMETHOD(QueryInterface) (REFIID iid, void ** ppvObject) {return _NotifyBase::QueryInterface (iid, ppvObject);}
+	STDMETHOD(QueryInterface) (REFIID iid, void** ppvObject) {return _NotifyBase::QueryInterface (iid, ppvObject);}
 
 	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput) {return _NotifyBase::Command (CommandID, UserInput);}
 	HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated) {return _NotifyBase::ActivateInputState (CharacterID, Activated);}

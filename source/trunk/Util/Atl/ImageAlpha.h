@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -31,26 +31,26 @@
 class CImageAlpha
 {
 public:
-	static bool AlphaBlend (HDC pDst, const CRect & pDstRect, HDC pSrc, const CRect & pSrcRect, BYTE pAlpha = 255, bool pAllowInternal = true);
+	static bool AlphaBlend (HDC pDst, const CRect& pDstRect, HDC pSrc, const CRect& pSrcRect, BYTE pAlpha = 255, bool pAllowInternal = true);
 	static bool AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha = 255, bool pAllowInternal = true);
 
 	static HBRUSH GetAlphaBrush (COLORREF pColor, BYTE pAlpha, bool pAlphaPrecalc = true);
-	static bool AlphaScaleImage (ATL::CImage & pImage, BYTE pAlpha);
+	static bool AlphaScaleImage (ATL::CImage& pImage, BYTE pAlpha);
 
-	static bool AlphaClearImage (ATL::CImage & pImage, COLORREF pClearColor, BYTE pAlpha = 255);
-	static bool AlphaFillImage (ATL::CImage & pImage, BYTE pAlpha = 255, bool pClearBlack = false, bool pClearWhite = false);
-	static bool AlphaSaturateImage (ATL::CImage & pImage, BYTE pMinAlpha = 0, BYTE pMaxAlpha = 255);
-	static bool AlphaInvertImage (ATL::CImage & pImage, bool pClearBlack = true, bool pSkipBlack = false, bool pSkipWhite = false);
-	static bool AlphaFixImage (ATL::CImage & pImage, BYTE pMinAlpha = 0);
-	static bool AlphaClampImage (ATL::CImage & pImage, BYTE pMinAlpha, BYTE pMaxAlpha, BYTE pNewAlpha);
-	static bool AlphaFeatherImage (ATL::CImage & pImage, const CRect & pCenter, BYTE pAlpha = 255, bool pRectangular = true, bool pPrecalc = true);
-	static bool AlphaCalcImage (ATL::CImage & pImage, COLORREF pOpaqueColor = 0xFFFFFFFF, COLORREF pSaturateColor = 0);
-	static bool AlphaHitTestImage (ATL::CImage & pImage, const CPoint & pPoint, const CRect & pBounds, const CRect * pAperture = NULL, BYTE pMinAlpha = 1, BYTE pMaxAlpha = 255);
+	static bool AlphaClearImage (ATL::CImage& pImage, COLORREF pClearColor, BYTE pAlpha = 255);
+	static bool AlphaFillImage (ATL::CImage& pImage, BYTE pAlpha = 255, bool pClearBlack = false, bool pClearWhite = false);
+	static bool AlphaSaturateImage (ATL::CImage& pImage, BYTE pMinAlpha = 0, BYTE pMaxAlpha = 255);
+	static bool AlphaInvertImage (ATL::CImage& pImage, bool pClearBlack = true, bool pSkipBlack = false, bool pSkipWhite = false);
+	static bool AlphaFixImage (ATL::CImage& pImage, BYTE pMinAlpha = 0);
+	static bool AlphaClampImage (ATL::CImage& pImage, BYTE pMinAlpha, BYTE pMaxAlpha, BYTE pNewAlpha);
+	static bool AlphaFeatherImage (ATL::CImage& pImage, const CRect& pCenter, BYTE pAlpha = 255, bool pRectangular = true, bool pPrecalc = true);
+	static bool AlphaCalcImage (ATL::CImage& pImage, COLORREF pOpaqueColor = 0xFFFFFFFF, COLORREF pSaturateColor = 0);
+	static bool AlphaHitTestImage (ATL::CImage& pImage, const CPoint& pPoint, const CRect& pBounds, const CRect* pAperture = NULL, BYTE pMinAlpha = 1, BYTE pMaxAlpha = 255);
 
-	static bool AlphaPreDrawBuffer (ATL::CImage & pImage, COLORREF pFillColor = RGB (0xFF,0xFF,0xFF));
-	static bool AlphaPostDrawBuffer (ATL::CImage & pImage, COLORREF pMaskColor = RGB (0x00,0x00,0x00), bool pAlphaPreCalc = false);
+	static bool AlphaPreDrawBuffer (ATL::CImage& pImage, COLORREF pFillColor = RGB (0xFF,0xFF,0xFF));
+	static bool AlphaPostDrawBuffer (ATL::CImage& pImage, COLORREF pMaskColor = RGB (0x00,0x00,0x00), bool pAlphaPreCalc = false);
 private:
-	static bool InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool & pLogSizeMismatch, bool & pDevSizeMismatch);
+	static bool InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool& pLogSizeMismatch, bool& pDevSizeMismatch);
 };
 
 //////////////////////////////////////////////////////////////////////

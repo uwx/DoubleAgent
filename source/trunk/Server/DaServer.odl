@@ -1,5 +1,5 @@
 #include "..\Include\DaVersion.h"
-#include "..\ApiHelp\DaApiHelp.h"
+#include "..\ApiHelp\Source\DaApiHelp.h"
 
 [
 	uuid(1147E501-A208-11DE-ABF2-002421116FB2),
@@ -669,7 +669,7 @@ cpp_quote("#endif")
 		[helpstring("The character's commands"), helpcontext(APIHELP_Svr_Character_Commands),
 			id(DISPID_IDaSvrCharacter2_Commands), propget] HRESULT Commands ([out, retval] IDaSvrCommands2** Commands);
 		[helpstring("The character's style flags (see: CharacterStyleFlags)"), helpcontext(APIHELP_Svr_Character_Style),
-			id(DISPID_IDaSvrCharacter2_Style), propget, bindable] HRESULT Style ([out, retval] long * Style);
+			id(DISPID_IDaSvrCharacter2_Style), propget, bindable] HRESULT Style ([out, retval] long* Style);
 			[id(DISPID_IDaSvrCharacter2_Style), propput, bindable] HRESULT Style ([in] long Style);
 		[helpstring("Does the character have a task bar icon?"), helpcontext(APIHELP_Svr_Character_HasIcon),
 			id(DISPID_IDaSvrCharacter2_HasIcon), propget, readonly, bindable, displaybind] HRESULT HasIcon ([out, retval] VARIANT_BOOL *HasIcon);
@@ -681,9 +681,9 @@ cpp_quote("#endif")
 			id(DISPID_IDaSvrCharacter2_IconIdentity), propget, bindable, displaybind] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
 			[id(DISPID_IDaSvrCharacter2_IconIdentity), propput, bindable, displaybind] HRESULT IconIdentity ([in] BSTR IconIdentity);
 		[helpstring("Get the GUID used to identify the task bar icon to the system"), helpcontext(APIHELP_Svr_Character_GetIconIdentity),
-			id(DISPID_IDaSvrCharacter2_GetIconIdentity), hidden, restricted] HRESULT GetIconIdentity ([out] GUID * IconIdentity);
+			id(DISPID_IDaSvrCharacter2_GetIconIdentity), hidden, restricted] HRESULT GetIconIdentity ([out] GUID* IconIdentity);
 		[helpstring("Set the GUID used to identify the task bar icon to the system"), helpcontext(APIHELP_Svr_Character_SetIconIdentity),
-			id(DISPID_IDaSvrCharacter2_SetIconIdentity), hidden, restricted] HRESULT SetIconIdentity ([in] const GUID * IconIdentity);
+			id(DISPID_IDaSvrCharacter2_SetIconIdentity), hidden, restricted] HRESULT SetIconIdentity ([in] const GUID* IconIdentity);
 		[helpstring("The tip associated with the task bar icon (if empty, the chracter's name is used)"), helpcontext(APIHELP_Svr_Character_IconTip),
 			id(DISPID_IDaSvrCharacter2_IconTip), propget, bindable, displaybind] HRESULT IconTip ([out, retval] BSTR * IconTip);
 			[id(DISPID_IDaSvrCharacter2_IconTip), propput, bindable, displaybind] HRESULT IconTip ([in] BSTR IconTip);
@@ -705,7 +705,7 @@ cpp_quote("#endif")
 
 		[helpstring("The unique identifier assigned to the Character object when it was loaded"), helpcontext(APIHELP_Svr_Character_CharacterID),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
-			id(DISPID_IDaSvrCharacter2_CharacterID), propget, readonly, bindable, displaybind, defaultbind] HRESULT CharacterID ([out, retval] long * CharacterID);
+			id(DISPID_IDaSvrCharacter2_CharacterID), propget, readonly, bindable, displaybind, defaultbind] HRESULT CharacterID ([out, retval] long* CharacterID);
 		[helpstring("The character's unique identifier"), helpcontext(APIHELP_Svr_Character_UniqueID),
 			id(DISPID_IDaSvrCharacter2_UniqueID), propget, readonly, bindable, displaybind] HRESULT UniqueID ([out, retval] BSTR * CharGUID);
 		[helpstring("The character's name"), helpcontext(APIHELP_Svr_Character_Name),
@@ -721,7 +721,7 @@ cpp_quote("#endif")
 		[helpstring("The path of the file the character was loaded from"), helpcontext(APIHELP_Svr_Character_FilePath),
 			id(DISPID_IDaSvrCharacter2_FilePath), propget, readonly, bindable, displaybind] HRESULT FilePath ([out, retval] BSTR * FilePath);
 		[helpstring("The character's language identifier"), helpcontext(APIHELP_Svr_Character_LanguageID),
-			id(DISPID_IDaSvrCharacter2_LanguageID), propget, bindable, displaybind] HRESULT LanguageID ([out, retval] long * LanguageID);
+			id(DISPID_IDaSvrCharacter2_LanguageID), propget, bindable, displaybind] HRESULT LanguageID ([out, retval] long* LanguageID);
 			[id(DISPID_IDaSvrCharacter2_LanguageID), propput, bindable, displaybind] HRESULT LanguageID ([in] long LanguageID);
 		[helpstring("The character's Text-to-Speech Engine identifier"), helpcontext(APIHELP_Svr_Character_TTSModeID),
 			id(DISPID_IDaSvrCharacter2_TTSModeID), propget, bindable, displaybind] HRESULT TTSModeID ([out, retval] BSTR * TTSModeID);
@@ -753,7 +753,7 @@ cpp_quote("#endif")
 		[helpstring("Is the character idling?"), helpcontext(APIHELP_Svr_Character_IdleState),
 			id(DISPID_IDaSvrCharacter2_IdleState), propget, readonly, bindable, displaybind] HRESULT IdleState ([out, retval] VARIANT_BOOL * IdleState);
 		[helpstring("The number of other programs using this character"), helpcontext(APIHELP_Svr_Character_OtherClientCount),
-			id(DISPID_IDaSvrCharacter2_OtherClientCount), propget, readonly, bindable] HRESULT OtherClientCount ([out, retval] long * OtherClientCount);
+			id(DISPID_IDaSvrCharacter2_OtherClientCount), propget, readonly, bindable] HRESULT OtherClientCount ([out, retval] long* OtherClientCount);
 		[helpstring("The reason the character moved"), helpcontext(APIHELP_Svr_Character_MoveCause),
 			id(DISPID_IDaSvrCharacter2_MoveCause), propget, readonly, bindable, displaybind] HRESULT MoveCause ([out, retval] MoveCauseType * MoveCause);
 		[helpstring("The reason the character was shown or hidden"), helpcontext(APIHELP_Svr_Character_VisibilityCause),
@@ -1048,7 +1048,7 @@ cpp_quote("#endif")
 		[helpstring("A Command object (by index)"), helpcontext(APIHELP_Svr_Commands_Item),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrCommand2 ** Command);
 		[helpstring("The count of Command objects in the collection"), helpcontext(APIHELP_Svr_Commands_Count),
-			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT Count ([out, retval] long * Count);
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT Count ([out, retval] long* Count);
 		[helpstring("A Command object (by CommandID)"), helpcontext(APIHELP_Svr_Commands_Command),
 			id(DISPID_IDaSvrCommands2_Command), propget] HRESULT Command ([in] long CommandID, [out, retval] IDaSvrCommand2** Command);
 		[helpstring("The commands' title"), helpcontext(APIHELP_Svr_Commands_Caption),
@@ -1622,7 +1622,7 @@ cpp_quote("#endif")
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrTTSEngine ** TTSEngine);
 		[helpstring("The count of Text-to-Speech Engines in the collection"), helpcontext(APIHELP_Svr_TTSEngines_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
-			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Count);
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long* Count);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
 	};
 
@@ -1683,7 +1683,7 @@ cpp_quote("#endif")
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrSREngine ** SREngine);
 		[helpstring("The count of Speech Recognition Engines in the collection"), helpcontext(APIHELP_Svr_SREngines_Count),
 			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
-			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Count);
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long* Count);
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
 	};
 

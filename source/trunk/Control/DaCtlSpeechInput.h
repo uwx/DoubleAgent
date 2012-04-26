@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -82,9 +82,11 @@ public:
 
 // Implementation
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrSpeechInputPtr	mServerObject;
+#endif
 private:
-	DaControl *					mOwner;
+	DaControl *				mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

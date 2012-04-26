@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -45,11 +45,11 @@
 CTraceSamples::CTraceSamples ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::CTraceSamples (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::CTraceSamples (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 #ifdef	_TRACE_SAMPLE_TRACER
 	// Does not work yet
-	if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
+	if	(SUCCEEDED (LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mGrabberFilter))))
 	{
 		mGrabberFilter = (new CTraceFilter(mGrabberFilter, _T("Grabber"), _TRACE_SAMPLE_TRACER))->GetControllingUnknown();
 	}
@@ -59,12 +59,12 @@ CTraceSamples::CTraceSamples ()
 CTraceSamples::~CTraceSamples ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::~CTraceSamples (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::~CTraceSamples (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	Disconnect ();
 }
 
-CTraceSamples & CTraceSamples::Initialize (LPCTSTR pFilterName)
+CTraceSamples& CTraceSamples::Initialize (LPCTSTR pFilterName)
 {
 	mFilterName = pFilterName;
 	if	(mFilterName.IsEmpty())
@@ -72,7 +72,7 @@ CTraceSamples & CTraceSamples::Initialize (LPCTSTR pFilterName)
 		mFilterName = _T("TraceSamples");
 	}
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceSamples::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -88,7 +88,7 @@ void CTraceSamples::FinalRelease ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBaseFilter * pDownstreamFilter, IPin * pDownstreamPin, AM_MEDIA_TYPE * pMediaType)
+CTraceSamples& CTraceSamples::ConnectBefore (IFilterGraph* pFilterGraph, IBaseFilter* pDownstreamFilter, IPin* pDownstreamPin, AM_MEDIA_TYPE* pMediaType)
 {
 	try
 	{
@@ -129,7 +129,7 @@ CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBase
 			if	(
 					(
 						(mGrabberFilter != NULL)
-					||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter))))
+					||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mGrabberFilter))))
 					)
 				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pFilterGraph->AddFilter (mGrabberFilter, mFilterName))))
 				)
@@ -161,7 +161,7 @@ CTraceSamples & CTraceSamples::ConnectBefore (IFilterGraph * pFilterGraph, IBase
 	return *this;
 }
 
-CTraceSamples & CTraceSamples::ConnectAfter (IFilterGraph * pFilterGraph, IBaseFilter * pUpstreamFilter, IPin * pUpstreamPin, AM_MEDIA_TYPE * pMediaType)
+CTraceSamples& CTraceSamples::ConnectAfter (IFilterGraph* pFilterGraph, IBaseFilter* pUpstreamFilter, IPin* pUpstreamPin, AM_MEDIA_TYPE* pMediaType)
 {
 	try
 	{
@@ -198,7 +198,7 @@ CTraceSamples & CTraceSamples::ConnectAfter (IFilterGraph * pFilterGraph, IBaseF
 	return *this;
 }
 
-CTraceSamples & CTraceSamples::Disconnect ()
+CTraceSamples& CTraceSamples::Disconnect ()
 {
 	try
 	{
@@ -231,7 +231,7 @@ CTraceSamples & CTraceSamples::Disconnect ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CTraceSamples & CTraceSamples::LogSamples (UINT pLogLevel, bool pOneShot)
+CTraceSamples& CTraceSamples::LogSamples (UINT pLogLevel, bool pOneShot)
 {
 	try
 	{
@@ -251,7 +251,7 @@ CTraceSamples & CTraceSamples::LogSamples (UINT pLogLevel, bool pOneShot)
 	return *this;
 }
 
-CTraceSamples & CTraceSamples::DumpSamples (UINT pByteCount, UINT pLogLevel, bool pOneShot)
+CTraceSamples& CTraceSamples::DumpSamples (UINT pByteCount, UINT pLogLevel, bool pOneShot)
 {
 	try
 	{
@@ -277,7 +277,7 @@ CTraceSamples & CTraceSamples::DumpSamples (UINT pByteCount, UINT pLogLevel, boo
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTraceSamples::SampleCB (double SampleTime, IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CTraceSamples::SampleCB (double SampleTime, IMediaSample*pSample)
 {
 	try
 	{
@@ -287,7 +287,7 @@ HRESULT STDMETHODCALLTYPE CTraceSamples::SampleCB (double SampleTime, IMediaSamp
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceSamples::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
+HRESULT STDMETHODCALLTYPE CTraceSamples::BufferCB (double SampleTime, BYTE*pBuffer, long BufferLen)
 {
 	try
 	{
@@ -306,18 +306,18 @@ CTraceFilter::CTraceFilter ()
 :	mLogLevelPins (LogVerbose|LogTime)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::CTraceFilter (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
 CTraceFilter::~CTraceFilter ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::~CTraceFilter (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::~CTraceFilter (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
-CTraceFilter & CTraceFilter::Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName, UINT pLogLevelPins)
+CTraceFilter& CTraceFilter::Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName, UINT pLogLevelPins)
 {
 	mFilterName = pFilterName;
 	if	(mFilterName.IsEmpty())
@@ -328,7 +328,7 @@ CTraceFilter & CTraceFilter::Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName
 	Aggregate (pUnknown);
 
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTraceFilter::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -514,7 +514,7 @@ HRESULT STDMETHODCALLTYPE CTraceFilter::EnumPins (IEnumPins **ppEnum)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::FindPin (LPCWSTR Id, IPin **ppPin)
+HRESULT STDMETHODCALLTYPE CTraceFilter::FindPin (LPCWSTR Id, IPin**ppPin)
 {
 #ifdef	_DEBUG_BASEFILTER
 	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::FindPin"), this, max(m_dwRef,-1), mFilterName);
@@ -542,7 +542,7 @@ HRESULT STDMETHODCALLTYPE CTraceFilter::QueryFilterInfo (FILTER_INFO *pInfo)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName)
+HRESULT STDMETHODCALLTYPE CTraceFilter::JoinFilterGraph (IFilterGraph*pGraph, LPCWSTR pName)
 {
 #ifdef	_DEBUG_BASEFILTER
 	LogMessage (_DEBUG_BASEFILTER, _T("[%p(%d)] %s::JoinFilterGraph [%p] [%ls]"), this, max(m_dwRef,-1), mFilterName, pGraph, pName);
@@ -907,7 +907,7 @@ HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurrentBuffer (long *pBufferSize, lon
 	return mInnerSampleGrabber->GetCurrentBuffer (pBufferSize, pBuffer);
 }
 
-HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurrentSample (IMediaSample **ppSample)
+HRESULT STDMETHODCALLTYPE CTraceFilter::GetCurrentSample (IMediaSample**ppSample)
 {
 	return mInnerSampleGrabber->GetCurrentSample (ppSample);
 }
@@ -946,18 +946,18 @@ CTracePins::CTracePins ()
 	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::CTracePins (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::CTracePins (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
 CTracePins::~CTracePins ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::~CTracePins (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::~CTracePins (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
-CTracePins & CTracePins::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins)
+CTracePins& CTracePins::Initialize (LPUNKNOWN pUnknown, IBaseFilter* pFilter, UINT pLogLevelPins)
 {
 	mFilter = pFilter;
 	mLogLevelPins = pLogLevelPins;
@@ -965,7 +965,7 @@ CTracePins & CTracePins::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, 
 	mInnerEnum = pUnknown;
 
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p] CTracePins::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -981,7 +981,7 @@ void CTracePins::FinalRelease ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePins::Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched)
+HRESULT STDMETHODCALLTYPE CTracePins::Next (ULONG cPins, IPin**ppPins, ULONG *pcFetched)
 {
 	HRESULT	lResult;
 	ULONG	lFetched = 0;
@@ -1038,18 +1038,18 @@ CTracePin::CTracePin ()
 	mUnknown (NULL)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::CTracePin (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::CTracePin (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
 CTracePin::~CTracePin ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::~CTracePin (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::~CTracePin (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 }
 
-CTracePin & CTracePin::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevel)
+CTracePin& CTracePin::Initialize (LPUNKNOWN pUnknown, IBaseFilter* pFilter, UINT pLogLevel)
 {
 	mFilter = pFilter;
 	mLogLevel = pLogLevel;
@@ -1064,7 +1064,7 @@ CTracePin & CTracePin::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UI
 	ATLASSERT(mInnerPin != NULL);
 	mName = PinIdStr (mInnerPin);
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::Initialize (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 #endif
 	return *this;
 }
@@ -1193,7 +1193,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::Disconnect (void)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::ConnectedTo (IPin **pPin)
+HRESULT STDMETHODCALLTYPE CTracePin::ConnectedTo (IPin**pPin)
 {
 #ifdef	_DEBUG_QUERIES
 	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::ConnectedTo"), this, max(m_dwRef,-1), mName);
@@ -1329,7 +1329,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::EnumMediaTypes (IEnumMediaTypes **ppEnum)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
+HRESULT STDMETHODCALLTYPE CTracePin::QueryInternalConnections (IPin**apPin, ULONG *nPin)
 {
 #ifdef	_DEBUG_QUERIES
 	LogMessage (MaxLogLevel (_DEBUG_QUERIES,mLogLevel), _T("[%p(%d)] %s::QueryInternalConnections"), this, max(m_dwRef,-1), mName);
@@ -1407,7 +1407,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::EndFlush (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::GetAllocator (IMemAllocator **ppAllocator)
+HRESULT STDMETHODCALLTYPE CTracePin::GetAllocator (IMemAllocator**ppAllocator)
 {
 #ifdef	_DEBUG_MEMINPUTPIN
 	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::GetAllocator"), this, max(m_dwRef,-1), mName);
@@ -1427,7 +1427,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::GetAllocator (IMemAllocator **ppAllocator)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
+HRESULT STDMETHODCALLTYPE CTracePin::NotifyAllocator (IMemAllocator*pAllocator, BOOL bReadOnly)
 {
 #ifdef	_DEBUG_MEMINPUTPIN
 	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::NotifyAllocator [%p] ReadOnly [%d]"), this, max(m_dwRef,-1), mName, pAllocator, bReadOnly);
@@ -1470,7 +1470,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::GetAllocatorRequirements (ALLOCATOR_PROPERT
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::Receive (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CTracePin::Receive (IMediaSample*pSample)
 {
 #ifdef	_DEBUG_MEMINPUTPIN
 	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::Receive"), this, max(m_dwRef,-1), mName);
@@ -1485,7 +1485,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::Receive (IMediaSample *pSample)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
+HRESULT STDMETHODCALLTYPE CTracePin::ReceiveMultiple (IMediaSample**pSamples, long nSamples, long *nSamplesProcessed)
 {
 #ifdef	_DEBUG_MEMINPUTPIN
 	LogMessage (MaxLogLevel (_DEBUG_MEMINPUTPIN,mLogLevel), _T("[%p(%d)] %s::ReceiveMultiple"), this, max(m_dwRef,-1), mName);
@@ -1517,7 +1517,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::ReceiveCanBlock (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CTracePin::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
+HRESULT STDMETHODCALLTYPE CTracePin::RequestAllocator (IMemAllocator*pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator**ppActual)
 {
 #ifdef	_DEBUG_ASYNCREADER
 	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::RequestAllocator"), this, max(m_dwRef,-1), mName);
@@ -1548,7 +1548,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::RequestAllocator (IMemAllocator *pPreferred
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::Request (IMediaSample *pSample, DWORD_PTR dwUser)
+HRESULT STDMETHODCALLTYPE CTracePin::Request (IMediaSample*pSample, DWORD_PTR dwUser)
 {
 #ifdef	_DEBUG_ASYNCREADER
 	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::Request"), this, max(m_dwRef,-1), mName);
@@ -1562,7 +1562,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::Request (IMediaSample *pSample, DWORD_PTR d
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample, DWORD_PTR *pdwUser)
+HRESULT STDMETHODCALLTYPE CTracePin::WaitForNext (DWORD dwTimeout, IMediaSample**ppSample, DWORD_PTR *pdwUser)
 {
 #ifdef	_DEBUG_ASYNCREADER
 	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::WaitForNext"), this, max(m_dwRef,-1), mName);
@@ -1576,7 +1576,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::WaitForNext (DWORD dwTimeout, IMediaSample 
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::SyncReadAligned (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CTracePin::SyncReadAligned (IMediaSample*pSample)
 {
 #ifdef	_DEBUG_ASYNCREADER
 	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::SyncReadAligned"), this, max(m_dwRef,-1), mName);
@@ -1590,7 +1590,7 @@ HRESULT STDMETHODCALLTYPE CTracePin::SyncReadAligned (IMediaSample *pSample)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CTracePin::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
+HRESULT STDMETHODCALLTYPE CTracePin::SyncRead (LONGLONG llPosition, LONG lLength, BYTE*pBuffer)
 {
 #ifdef	_DEBUG_ASYNCREADER
 	LogMessage (MaxLogLevel (_DEBUG_ASYNCREADER,mLogLevel), _T("[%p(%d)] %s::SyncRead"), this, max(m_dwRef,-1), mName);

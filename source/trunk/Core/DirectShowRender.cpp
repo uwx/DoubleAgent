@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -96,7 +96,7 @@ CDirectShowRender::CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -106,7 +106,7 @@ CDirectShowRender::~CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -120,7 +120,7 @@ HRESULT CDirectShowRender::FinalConstruct ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-const GUID & CDirectShowRender::GetClassID ()
+const GUID& CDirectShowRender::GetClassID ()
 {
 	return GUID_NULL;
 }
@@ -138,7 +138,7 @@ CAtlString CDirectShowRender::GetFilterName ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowRender::GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime)
+void CDirectShowRender::GetSeekingTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime)
 {
 	GetTimes (pCurrTime, pStopTime);
 }
@@ -294,7 +294,7 @@ HRESULT CDirectShowRender::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 	return lResult;
 }
 
-void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
+void CDirectShowRender::OnPinConnected (CDirectShowPin* pPin)
 {
 	VIDEOINFOHEADER *	lVideoInfo;
 	IMediaEventSinkPtr	lEventSink;
@@ -482,7 +482,7 @@ void CDirectShowRender::OnClockPulse ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME & pNextSampleTime)
+HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME& pNextSampleTime)
 {
 	HRESULT		lResult = E_UNEXPECTED;
 	CLockMutex	lLock (mDataLock);
@@ -519,7 +519,7 @@ HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERE
 	return lResult;
 }
 
-HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime)
+HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr& pSample, REFERENCE_TIME& pSampleTime, REFERENCE_TIME& pNextSampleTime)
 {
 	HRESULT		lResult = E_UNEXPECTED;
 	CLockMutex	lLock (mDataLock);
@@ -622,7 +622,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
+bool CDirectShowRender::GetSampleImage (IMediaSample* pSample)
 {
 	bool		lRet = false;
 	CLockMutex	lLock (mDataLock);
@@ -823,7 +823,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 
 /////////////////////////////////////////////////////////////////////////////
 
-CImageBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CRect & pTargetRect)
+CImageBuffer* CDirectShowRender::ScaleImage (const CSize& pImageSize, const CRect& pTargetRect)
 {
 	tPtr <CImageBuffer>	lTargetBuffer;
 
@@ -849,7 +849,7 @@ CImageBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CR
 	return NULL;
 }
 
-CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
+CImageBuffer* CDirectShowRender::SmoothImage (const CSize& pImageSize, const CRect& pTargetRect)
 {
 	tPtr <CImageBuffer>	lTargetBuffer;
 
@@ -1018,7 +1018,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetRenderWnd (HWND pRenderWnd)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBkColor (COLORREF *pBkColor)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBkColor (COLORREF*pBkColor)
 {
 	HRESULT		lResult = S_FALSE;
 	CLockMutex	lLock (mStateLock);
@@ -1046,7 +1046,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBkColor (COLORREF *pBkColor)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBkColor (const COLORREF *pBkColor)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBkColor (const COLORREF*pBkColor)
 {
 	HRESULT		lResult = S_OK;
 	CLockMutex	lLock (mStateLock);
@@ -1387,10 +1387,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationLeft (long Destinati
 	HRESULT	lResult = S_OK;
 	CRect	lClientRect;
 
-	mSourceRect.OffsetRect (DestinationLeft - mSourceRect.left, 0);
+	mRenderRect.OffsetRect (DestinationLeft - mRenderRect.left, 0);
 	if	(IsWindow (mRenderWnd))
 	{
 		::GetClientRect (mRenderWnd, &lClientRect);
+		mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+		mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 		::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 	}
 	return lResult;
@@ -1426,6 +1428,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationWidth (long Destinat
 		if	(IsWindow (mRenderWnd))
 		{
 			::GetClientRect (mRenderWnd, &lClientRect);
+			mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+			mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
@@ -1456,6 +1460,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationTop (long Destinatio
 	if	(IsWindow (mRenderWnd))
 	{
 		::GetClientRect (mRenderWnd, &lClientRect);
+		mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+		mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 		::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 	}
 	return lResult;
@@ -1491,6 +1497,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::put_DestinationHeight (long Destina
 		if	(IsWindow (mRenderWnd))
 		{
 			::GetClientRect (mRenderWnd, &lClientRect);
+			mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+			mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}
@@ -1593,6 +1601,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetDestinationPosition (long Left, 
 		if	(IsWindow (mRenderWnd))
 		{
 			::GetClientRect (mRenderWnd, &lClientRect);
+			mRenderRect.OffsetRect (min (lClientRect.right - mRenderRect.right, 0), min (lClientRect.bottom - mRenderRect.bottom, 0));
+			mRenderRect.OffsetRect (max (lClientRect.left - mRenderRect.left, 0), max (lClientRect.top - mRenderRect.top, 0));
 			::IntersectRect (&mRenderRect, &mRenderRect, &lClientRect);
 		}
 	}

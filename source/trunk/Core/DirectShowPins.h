@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -40,20 +40,20 @@ public:
 	tMediaTypePtr		mMediaType;
 	CMediaTypes			mMediaTypes;
 
-	IPin * SafeGetConnection () const;
-	IMemAllocator * SafeGetAllocator () const;
+	IPin* SafeGetConnection () const;
+	IMemAllocator* SafeGetAllocator () const;
 	bool SafeIsFlushing () const;
 	bool SafeIsEndOfStream () const;
 
 // Operations
 public:
-	CDirectShowPin & Initialize (class CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
+	CDirectShowPin& Initialize (class CDirectShowFilter& pFilter, PIN_DIRECTION pDirection, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
 	void FinalRelease ();
 
 	virtual HRESULT BeginOutput ();
 	virtual HRESULT EndOutput ();
-	virtual HRESULT GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime = NULL, const REFERENCE_TIME * pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
-	virtual HRESULT PutOutputSample (IMediaSample * pSample, ULONG pSampleSize = 0);
+	virtual HRESULT GetOutputSample (IMediaSample** pSample, const REFERENCE_TIME* pStartTime = NULL, const REFERENCE_TIME* pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
+	virtual HRESULT PutOutputSample (IMediaSample* pSample, ULONG pSampleSize = 0);
 	virtual HRESULT BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
 	virtual HRESULT EndOutputStream ();
 	virtual HRESULT BeginOutputFlush ();
@@ -61,8 +61,8 @@ public:
 
 	virtual HRESULT BeginInput ();
 	virtual HRESULT EndInput ();
-	virtual HRESULT PeekInputSample (IMediaSample ** pSample, DWORD pLockTime = 100);
-	virtual HRESULT GetInputSample (IMediaSample ** pSample, DWORD pLockTime = 100);
+	virtual HRESULT PeekInputSample (IMediaSample** pSample, DWORD pLockTime = 100);
+	virtual HRESULT GetInputSample (IMediaSample** pSample, DWORD pLockTime = 100);
 	virtual HRESULT BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
 	virtual HRESULT EndInputStream ();
 	virtual HRESULT BeginInputFlush ();
@@ -82,14 +82,14 @@ public:
 	HRESULT STDMETHODCALLTYPE Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE Disconnect (void);
-	HRESULT STDMETHODCALLTYPE ConnectedTo (IPin **pPin);
+	HRESULT STDMETHODCALLTYPE ConnectedTo (IPin**pPin);
 	HRESULT STDMETHODCALLTYPE ConnectionMediaType (AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE QueryPinInfo (PIN_INFO *pInfo);
 	HRESULT STDMETHODCALLTYPE QueryDirection (PIN_DIRECTION *pPinDir);
 	HRESULT STDMETHODCALLTYPE QueryId (LPWSTR *Id);
 	HRESULT STDMETHODCALLTYPE QueryAccept (const AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE EnumMediaTypes (IEnumMediaTypes **ppEnum);
-	HRESULT STDMETHODCALLTYPE QueryInternalConnections (IPin **apPin, ULONG *nPin);
+	HRESULT STDMETHODCALLTYPE QueryInternalConnections (IPin**apPin, ULONG *nPin);
 	HRESULT STDMETHODCALLTYPE EndOfStream (void);
 	HRESULT STDMETHODCALLTYPE BeginFlush (void);
 	HRESULT STDMETHODCALLTYPE EndFlush (void);
@@ -100,8 +100,8 @@ protected:
 	static HRESULT WINAPI DelegateIMediaSeeking (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw);
 
 	virtual HRESULT CanConnect (IPin *pReceivePin);
-	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
-	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE* pMediaType);
+	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE* pMediaType);
 	virtual HRESULT InternalDisconnect ();
 
 protected:
@@ -138,20 +138,20 @@ public:
 
 // Operations
 public:
-	CDirectShowPinIn & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0, UINT pMaxSampleCount = 0);
+	CDirectShowPinIn& Initialize (class CDirectShowFilter& pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0, UINT pMaxSampleCount = 0);
 
 // Overrides
 public:
 	virtual HRESULT BeginInput ();
 	virtual HRESULT EndInput ();
-	virtual HRESULT PeekInputSample (IMediaSample ** pSample, DWORD pLockTime = 100);
-	virtual HRESULT GetInputSample (IMediaSample ** pSample, DWORD pLockTime = 100);
+	virtual HRESULT PeekInputSample (IMediaSample** pSample, DWORD pLockTime = 100);
+	virtual HRESULT GetInputSample (IMediaSample** pSample, DWORD pLockTime = 100);
 	virtual HRESULT BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
 	virtual HRESULT EndInputStream ();
 	virtual HRESULT BeginInputFlush ();
 	virtual HRESULT EndInputFlush ();
 protected:
-	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE* pMediaType);
 	virtual HRESULT InternalDisconnect ();
 
 // Interfaces
@@ -164,11 +164,11 @@ public:
 
 public:
 	// IMemInputPin
-	HRESULT STDMETHODCALLTYPE GetAllocator (IMemAllocator **ppAllocator);
-	HRESULT STDMETHODCALLTYPE NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly);
+	HRESULT STDMETHODCALLTYPE GetAllocator (IMemAllocator**ppAllocator);
+	HRESULT STDMETHODCALLTYPE NotifyAllocator (IMemAllocator*pAllocator, BOOL bReadOnly);
 	HRESULT STDMETHODCALLTYPE GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps);
-	HRESULT STDMETHODCALLTYPE Receive (IMediaSample *pSample);
-	HRESULT STDMETHODCALLTYPE ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed);
+	HRESULT STDMETHODCALLTYPE Receive (IMediaSample*pSample);
+	HRESULT STDMETHODCALLTYPE ReceiveMultiple (IMediaSample**pSamples, long nSamples, long *nSamplesProcessed);
 	HRESULT STDMETHODCALLTYPE ReceiveCanBlock (void);
 
 	// IPinConnection
@@ -180,8 +180,8 @@ public:
 // Implementation
 protected:
 	HRESULT ProvideAllocator ();
-	HRESULT ReceiveAllocator (IMemAllocator * pAllocator, bool pReadOnly);
-	HRESULT PutInputSample (IMediaSample * pSample, DWORD pLockTime = INFINITE);
+	HRESULT ReceiveAllocator (IMemAllocator* pAllocator, bool pReadOnly);
+	HRESULT PutInputSample (IMediaSample* pSample, DWORD pLockTime = INFINITE);
 
 	void EmptyCache ();
 
@@ -211,26 +211,26 @@ public:
 
 // Operations
 public:
-	CDirectShowPinOut & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0);
+	CDirectShowPinOut& Initialize (class CDirectShowFilter& pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0);
 
 // Overrides
 public:
 	virtual HRESULT BeginOutput ();
 	virtual HRESULT EndOutput ();
-	virtual HRESULT GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime = NULL, const REFERENCE_TIME * pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
-	virtual HRESULT PutOutputSample (IMediaSample * pSample, ULONG pSampleSize = 0);
+	virtual HRESULT GetOutputSample (IMediaSample** pSample, const REFERENCE_TIME* pStartTime = NULL, const REFERENCE_TIME* pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
+	virtual HRESULT PutOutputSample (IMediaSample* pSample, ULONG pSampleSize = 0);
 	virtual HRESULT BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
 	virtual HRESULT EndOutputStream ();
 	virtual HRESULT BeginOutputFlush ();
 	virtual HRESULT EndOutputFlush ();
 protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
-	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE* pMediaType);
 	virtual HRESULT InternalDisconnect ();
 
 // Implementation
 protected:
-	HRESULT NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType);
+	HRESULT NegotiateAllocator (const AM_MEDIA_TYPE* pMediaType);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -248,7 +248,7 @@ public:
 
 // Operations
 public:
-	CDirectShowPinPull & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
+	CDirectShowPinPull& Initialize (class CDirectShowFilter& pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
 	HRESULT SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize, bool pCopyBuffer = false);
 
 // Overrides
@@ -258,7 +258,7 @@ public:
 	virtual HRESULT EndOutputFlush ();
 protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
-	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
+	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE* pMediaType);
 	virtual HRESULT InternalDisconnect ();
 
 // Interfaces
@@ -271,11 +271,11 @@ public:
 
 public:
 	// IAsyncReader
-	HRESULT STDMETHODCALLTYPE RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual);
-	HRESULT STDMETHODCALLTYPE Request (IMediaSample *pSample, DWORD_PTR dwUser);
-	HRESULT STDMETHODCALLTYPE WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser);
-	HRESULT STDMETHODCALLTYPE SyncReadAligned (IMediaSample *pSample);
-	HRESULT STDMETHODCALLTYPE SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer);
+	HRESULT STDMETHODCALLTYPE RequestAllocator (IMemAllocator*pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator**ppActual);
+	HRESULT STDMETHODCALLTYPE Request (IMediaSample*pSample, DWORD_PTR dwUser);
+	HRESULT STDMETHODCALLTYPE WaitForNext (DWORD dwTimeout, IMediaSample**ppSample,DWORD_PTR *pdwUser);
+	HRESULT STDMETHODCALLTYPE SyncReadAligned (IMediaSample*pSample);
+	HRESULT STDMETHODCALLTYPE SyncRead (LONGLONG llPosition, LONG lLength, BYTE*pBuffer);
 	HRESULT STDMETHODCALLTYPE Length (LONGLONG *pTotal, LONGLONG *pAvailable);
 	HRESULT STDMETHODCALLTYPE BeginFlush (void);
 	HRESULT STDMETHODCALLTYPE EndFlush (void);
@@ -285,12 +285,12 @@ public:
 
 // Implementation
 protected:
-	HRESULT UseAllocator (IMemAllocator * pAllocator);
+	HRESULT UseAllocator (IMemAllocator* pAllocator);
 	HRESULT GetAllocator (const ALLOCATOR_PROPERTIES * pRequest = NULL);
-	HRESULT FillSample (IMediaSample * pSample);
-	HRESULT FillBuffer (LPBYTE pBuffer, LONGLONG pStart, long & pLength);
+	HRESULT FillSample (IMediaSample* pSample);
+	HRESULT FillBuffer (LPBYTE pBuffer, LONGLONG pStart, long& pLength);
 	HRESULT ValidateSampleAlign (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime);
-	HRESULT ValidateSampleAlign (IMediaSample *pSample);
+	HRESULT ValidateSampleAlign (IMediaSample*pSample);
 
 	virtual HRESULT BeginPullFlush ();
 	virtual HRESULT EndPullFlush ();
@@ -303,7 +303,7 @@ protected:
 protected:
 	struct PullRequest
 	{
-		IMediaSample *	mSample;
+		IMediaSample*	mSample;
 		DWORD_PTR		mUserVal;
 	};
 

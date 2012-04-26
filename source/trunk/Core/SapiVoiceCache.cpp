@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -70,14 +70,14 @@ CSapiVoiceCache::~CSapiVoiceCache ()
 
 CSapiVoiceCache * CSapiVoiceCache::GetStaticInstance ()
 {
-	return &_AtlModule;
+	return &_CoreAnchor;
 }
 
 void CSapiVoiceCache::TerminateStaticInstance (DWORD pWaitForCompletion)
 {
 	try
 	{
-		_AtlModule.CSapiVoiceCache::Terminate (pWaitForCompletion);
+		_CoreAnchor.CSapiVoiceCache::Terminate (pWaitForCompletion);
 	}
 	catch AnyExceptionSilent
 }
@@ -86,7 +86,7 @@ void CSapiVoiceCache::CleanupStaticInstance ()
 {
 	try
 	{
-		_AtlModule.CSapiVoiceCache::DeleteUnusedVoices ();
+		_CoreAnchor.CSapiVoiceCache::DeleteUnusedVoices ();
 	}
 	catch AnyExceptionSilent
 }
@@ -114,7 +114,7 @@ void CSapiVoiceCache::Terminate (DWORD pWaitForCompletion)
 
 				for	(lPosition = mVoiceClients.GetStartPosition(); lPosition;)
 				{
-					const CAtlOwnPtrMap <CSapiVoice *, CAtlPtrTypeArray <CSapiVoiceClient> >::CPair *	lPair = mVoiceClients.GetNext (lPosition);
+					const CAtlOwnPtrMap <CSapiVoice*, CAtlPtrTypeArray <CSapiVoiceClient> >::CPair *	lPair = mVoiceClients.GetNext (lPosition);
 					if	(lPair->m_value)
 					{
 						LogMessage (_LOG_TERMINATE, _T("  Voice {%p] Clients [%s]"), lPair->m_key, FormatArray(*lPair->m_value));
@@ -172,7 +172,7 @@ bool CSapiVoiceCache::DeleteUnusedVoices ()
 		try
 		{
 			INT_PTR			lVoiceNdx;
-			CSapiVoice *	lVoice;
+			CSapiVoice*	lVoice;
 
 			mVoiceDeletePending = false;
 
@@ -180,7 +180,7 @@ bool CSapiVoiceCache::DeleteUnusedVoices ()
 			{
 				if	(lVoice = mCachedVoices [lVoiceNdx])
 				{
-					tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [lVoice];
+					tPtr <CAtlPtrTypeArray <CSapiVoiceClient> >&	lClients = mVoiceClients [lVoice];
 
 					if	(
 							(!lClients)
@@ -326,9 +326,9 @@ bool CSapiVoiceCache::PreferSapiVersion (UINT pSapiVersion)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSapiVoice * CSapiVoiceCache::GetAgentVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached)
+CSapiVoice* CSapiVoiceCache::GetAgentVoice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, bool pCached)
 {
-	CSapiVoice *	lRet = NULL;
+	CSapiVoice*	lRet = NULL;
 
 #ifdef	_WIN64
 	lRet = GetAgentSapi5Voice (pAgentFileTts, pUseDefaults, pCached);
@@ -392,9 +392,9 @@ CSapiVoice * CSapiVoiceCache::GetAgentVoice (const struct CAgentFileTts & pAgent
 	return lRet;
 }
 
-CSapiVoice * CSapiVoiceCache::GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
+CSapiVoice* CSapiVoiceCache::GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
 {
-	CSapiVoice *	lRet = NULL;
+	CSapiVoice*	lRet = NULL;
 
 #ifdef	_WIN64
 	lRet = GetAgentSapi5Voice (pVoiceName, pLangID, pUseDefaults, pCached);
@@ -438,9 +438,9 @@ CSapiVoice * CSapiVoiceCache::GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID,
 
 //////////////////////////////////////////////////////////////////////
 
-CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached)
+CSapi5Voice* CSapiVoiceCache::GetAgentSapi5Voice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, bool pCached)
 {
-	CSapi5Voice *	lRet = NULL;
+	CSapi5Voice*	lRet = NULL;
 
 	if	(GetSapi5Voices())
 	{
@@ -456,7 +456,7 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 
 				if	(pCached)
 				{
-					lRet = dynamic_cast <CSapi5Voice *> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
+					lRet = dynamic_cast <CSapi5Voice*> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
 				}
 				if	(
 						(!lRet)
@@ -494,7 +494,7 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 			}
 			if	(
 					(!lRet)
-				&&	(lSapi5Voice = (CSapi5Voice *)CSapi5Voice::CreateObject())
+				&&	(lSapi5Voice = (CSapi5Voice*)CSapi5Voice::CreateObject())
 				)
 			{
 				lSapi5Voice->SetVoiceId (lSapi5VoiceInfo->mVoiceIdLong);
@@ -509,9 +509,9 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 	return lRet;
 }
 
-CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
+CSapi5Voice* CSapiVoiceCache::GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
 {
-	CSapi5Voice *		lRet = NULL;
+	CSapi5Voice*		lRet = NULL;
 	CSapi5VoiceInfo *	lSapi5VoiceInfo;
 	tPtr <CSapi5Voice>	lSapi5Voice;
 
@@ -527,7 +527,7 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pL
 		{
 			if	(pCached)
 			{
-				lRet = dynamic_cast <CSapi5Voice *> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
+				lRet = dynamic_cast <CSapi5Voice*> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
 			}
 			if	(
 					(!lRet)
@@ -549,9 +549,9 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pL
 #ifndef	_WIN64
 //////////////////////////////////////////////////////////////////////
 
-CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached)
+CSapi4Voice* CSapiVoiceCache::GetAgentSapi4Voice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, bool pCached)
 {
-	CSapi4Voice *	lRet = NULL;
+	CSapi4Voice*	lRet = NULL;
 
 	if	(GetSapi4Voices())
 	{
@@ -562,12 +562,12 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & 
 		{
 			for	(lInfoNdx = 0; lInfoNdx < (INT_PTR)lInfoArray->GetCount(); lInfoNdx++)
 			{
-				CSapi4VoiceInfo *	lSapi4VoiceInfo = (*lInfoArray) [lInfoNdx];
+				CSapi4VoiceInfo*	lSapi4VoiceInfo = (*lInfoArray) [lInfoNdx];
 				tPtr <CSapi4Voice>	lSapi4Voice;
 
 				if	(pCached)
 				{
-					lRet = dynamic_cast <CSapi4Voice *> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
+					lRet = dynamic_cast <CSapi4Voice*> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
 				}
 				if	(
 						(!lRet)
@@ -599,10 +599,10 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & 
 	return lRet;
 }
 
-CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
+CSapi4Voice* CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached)
 {
-	CSapi4Voice *		lRet = NULL;
-	CSapi4VoiceInfo *	lSapi4VoiceInfo;
+	CSapi4Voice*		lRet = NULL;
+	CSapi4VoiceInfo*	lSapi4VoiceInfo;
 	tPtr <CSapi4Voice>	lSapi4Voice;
 	GUID				lModeId = CGuidStr::Parse (pVoiceName);
 
@@ -619,7 +619,7 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pL
 		{
 			if	(pCached)
 			{
-				lRet = dynamic_cast <CSapi4Voice *> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
+				lRet = dynamic_cast <CSapi4Voice*> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
 			}
 			if	(
 					(!lRet)
@@ -645,7 +645,7 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pL
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClient)
+bool CSapiVoiceCache::CacheVoice (CSapiVoice* pVoice, CSapiVoiceClient * pClient)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -658,7 +658,7 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 			)
 		{
 			INT_PTR											lVoiceNdx;
-			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
+			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> >&	lClients = mVoiceClients [pVoice];
 
 			lVoiceNdx = mCachedVoices.Find (pVoice);
 			if	(lVoiceNdx < 0)
@@ -709,7 +709,7 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 	return lRet;
 }
 
-bool CSapiVoiceCache::UncacheVoice (CSapiVoice * pVoice)
+bool CSapiVoiceCache::UncacheVoice (CSapiVoice* pVoice)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -740,9 +740,9 @@ bool CSapiVoiceCache::UncacheVoice (CSapiVoice * pVoice)
 
 //////////////////////////////////////////////////////////////////////
 
-CSapiVoice * CSapiVoiceCache::GetCachedVoice (INT_PTR pVoiceNdx)
+CSapiVoice* CSapiVoiceCache::GetCachedVoice (INT_PTR pVoiceNdx)
 {
-	CSapiVoice *	lRet = NULL;
+	CSapiVoice*	lRet = NULL;
 	CLockCS			lLock (mCritSec);
 
 	try
@@ -754,14 +754,14 @@ CSapiVoice * CSapiVoiceCache::GetCachedVoice (INT_PTR pVoiceNdx)
 	return lRet;
 }
 
-CSapiVoice * CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
+CSapiVoice* CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
 {
-	CSapiVoice *	lRet = NULL;
+	CSapiVoice*	lRet = NULL;
 	CLockCS			lLock (mCritSec);
 
 	try
 	{
-		CSapiVoice *	lSapiVoice;
+		CSapiVoice*	lSapiVoice;
 		CAtlString		lVoiceName (pVoiceId);
 		INT_PTR			lNdx;
 
@@ -783,7 +783,7 @@ CSapiVoice * CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient)
+bool CSapiVoiceCache::AddVoiceClient (CSapiVoice* pVoice, CSapiVoiceClient * pClient)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -796,7 +796,7 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pC
 			&&	(mCachedVoices.Find (pVoice) >= 0)
 			)
 		{
-			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
+			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> >&	lClients = mVoiceClients [pVoice];
 
 			if	(!lClients)
 			{
@@ -832,7 +832,7 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pC
 	return lRet;
 }
 
-bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice)
+bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice* pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -847,7 +847,7 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 			&&	((lVoiceNdx = mCachedVoices.Find (pVoice)) >= 0)
 			)
 		{
-			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
+			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> >&	lClients = mVoiceClients [pVoice];
 
 			if	(
 					(lClients)
@@ -919,14 +919,14 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 	return lRet;
 }
 
-bool CSapiVoiceCache::GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients)
+bool CSapiVoiceCache::GetVoiceClients (CSapiVoice* pVoice, CAtlPtrTypeArray <CSapiVoiceClient>& pClients)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
 
 	try
 	{
-		CAtlPtrTypeArray <CSapiVoiceClient> *	lClients = NULL;
+		CAtlPtrTypeArray <CSapiVoiceClient>*	lClients = NULL;
 
 		if	(
 				(pVoice)

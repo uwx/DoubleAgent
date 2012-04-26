@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -34,7 +34,7 @@
 
 interface _ITimerNotifySink
 {
-	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId) = 0;
+	virtual void OnTimerNotify (class CTimerNotify* pTimerNotify, UINT_PTR pTimerId) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ public:
 // Operations
 public:
 	INT_PTR FindTimer (UINT_PTR pTimerId) const;
-	CTimerNotify * GetTimer (UINT_PTR pTimerId);
+	CTimerNotify* GetTimer (UINT_PTR pTimerId);
 	bool RemoveTimer (UINT_PTR pTimerId);
 
 	bool OnTimer (UINT_PTR pTimerId);

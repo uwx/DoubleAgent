@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -59,11 +59,11 @@ public:
 //---------------------------------------------------------------------------
 
 	static bool DumpBitmapInfo (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pTitle = NULL);
-	static bool DumpBitmapInfo (UINT pLogLevel, BITMAPINFO & pBitmap, LPCTSTR pTitle = NULL);
+	static bool DumpBitmapInfo (UINT pLogLevel, BITMAPINFO& pBitmap, LPCTSTR pTitle = NULL);
 
 	static bool DumpBitmap (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
-	static bool DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
-	static bool DumpBitmap (UINT pLogLevel, BITMAPINFO & pBitmap, LPBYTE pBits, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
+	static bool DumpBitmap (UINT pLogLevel, BITMAP& pBitmap, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
+	static bool DumpBitmap (UINT pLogLevel, BITMAPINFO& pBitmap, LPBYTE pBits, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
 
 	static bool DumpPalette (UINT pLogLevel, HPALETTE pPalette, LPCTSTR pTitle = NULL);
 
@@ -84,8 +84,8 @@ public:
 
 //---------------------------------------------------------------------------
 
-	static bool CopyBitmap (CBitmapHandle & pTrg, HBITMAP pSrc);
-	static bool CreateBitmap (HDC pDC, const CSize & pSize, UINT pBitCount, CBitmapHandle & pBitmap);
+	static bool CopyBitmap (CBitmapHandle& pTrg, HBITMAP pSrc);
+	static bool CreateBitmap (HDC pDC, const CSize& pSize, UINT pBitCount, CBitmapHandle& pBitmap);
 	static HBRUSH CreateHalftoneBrush ();
 
 protected:
@@ -98,20 +98,20 @@ protected:
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnRButtonDown)
 	END_MSG_MAP()
 
-	LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	//}}AFX_MSG
 
 private:
 	bool CreateMyWindow (LPCTSTR pTitle);
-	void SetWindowSize (CSize & pSize);
-	void DrawLabel (HDC pDC, const CRect & pRect, LPCTSTR pLabel);
+	void SetWindowSize (CSize& pSize);
+	void DrawLabel (HDC pDC, const CRect& pRect, LPCTSTR pLabel);
 
-	UINT SaveSeries (const CSize & pSize, UINT pBitCount, INT_PTR pMinNdx, INT_PTR pMaxNdx);
+	UINT SaveSeries (const CSize& pSize, UINT pBitCount, INT_PTR pMinNdx, INT_PTR pMaxNdx);
 	static CAtlString GetDefaultPath ();
 	static bool MakePathExist (LPCTSTR pPath);
 	static CAtlString GetNewFileName (const CAtlString pFileName);

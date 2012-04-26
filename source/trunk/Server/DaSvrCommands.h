@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -47,7 +47,7 @@ public:
 
 // Operations
 public:
-	static DaSvrCommands * CreateInstance (long pCharID, CEventNotify * pNotify, LPCTSTR pClientMutexName = NULL);
+	static DaSvrCommands * CreateInstance (long pCharID, CEventNotify* pNotify, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
@@ -55,7 +55,7 @@ public:
 public:
 	virtual void OnClientEnded ();
 protected:
-	virtual CDaCmnCommand * NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true);
+	virtual CDaCmnCommand* NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true);
 
 // Declarations
 public:

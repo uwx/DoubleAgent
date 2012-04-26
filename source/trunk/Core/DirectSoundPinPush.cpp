@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -56,7 +56,7 @@ CDirectSoundPinPush::CDirectSoundPinPush ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), mConvertCache, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), mConvertCache, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -66,7 +66,7 @@ CDirectSoundPinPush::~CDirectSoundPinPush ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::~CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), mConvertCache, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::~CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), mConvertCache, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	NotGatedInstance<CDirectSoundPinPush> (this);
@@ -79,7 +79,7 @@ CDirectSoundPinPush::~CDirectSoundPinPush ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDirectSoundPinPush & CDirectSoundPinPush::Initialize (CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx)
+CDirectSoundPinPush& CDirectSoundPinPush::Initialize (CDirectShowFilter& pFilter, CDirectSoundConvertCache& pConvertCache, long pSoundNdx)
 {
 	CDirectShowPinOut::Initialize (pFilter);
 	InitMediaSeeking (*this, pFilter, 0, AM_SEEKING_CanDoSegments);
@@ -94,7 +94,7 @@ CDirectSoundPinPush & CDirectSoundPinPush::Initialize (CDirectShowFilter & pFilt
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::Initialize [%p] (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), mConvertCache, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::Initialize [%p] (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), mConvertCache, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -234,12 +234,12 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 			lFilterName.Format (_T("Audio Render (%d)"), mSoundNdx);
 
 #ifdef	_NO_FILTER_CACHE
-			if	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
+			if	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mAudioRender))))
 #else
 			LogComErr (LogNormal|LogTime, GetFilterFromCache (CLSID_DSoundRender, lGraphBuilder, &mAudioRender));
 			if	(
 					(mAudioRender != NULL)
-				||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
+				||	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mAudioRender))))
 				)
 #endif
 			{

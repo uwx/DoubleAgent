@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -122,7 +122,7 @@ CString CUserSecurity::GetComputerName ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString & pUserName, CString & pDomainName)
+bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString& pUserName, CString& pDomainName)
 {
 	bool	lRet = false;
 
@@ -145,10 +145,10 @@ bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString & pUserName, CStrin
 			if	(
 					(lInfoSize)
 				&&	(lTokenUser = new BYTE [lInfoSize])
-				&&	(GetTokenInformation (pUserToken, TokenUser, (BYTE *) lTokenUser, lInfoSize, &lInfoSize))
+				&&	(GetTokenInformation (pUserToken, TokenUser, (BYTE*) lTokenUser, lInfoSize, &lInfoSize))
 				)
 			{
-				if	(LookupAccountSid (NULL, ((TOKEN_USER *) (BYTE *) lTokenUser)->User.Sid, pUserName.GetBuffer (lUserNameSize), &lUserNameSize, pDomainName.GetBuffer (lDomainNameSize), &lDomainNameSize, &lNameUse))
+				if	(LookupAccountSid (NULL, ((TOKEN_USER *) (BYTE*) lTokenUser)->User.Sid, pUserName.GetBuffer (lUserNameSize), &lUserNameSize, pDomainName.GetBuffer (lDomainNameSize), &lDomainNameSize, &lNameUse))
 				{
 					lRet = true;
 				}
@@ -176,7 +176,7 @@ bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString & pUserName, CStrin
 	return lRet;
 }
 
-bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString & pUserId)
+bool CUserSecurity::GetTokenUser (HANDLE pUserToken, CString& pUserId)
 {
 	bool	lRet = false;
 
@@ -362,7 +362,7 @@ CString CUserSecurity::GetSidStr (PSID pSid)
 	return lRet;
 }
 
-bool CUserSecurity::GetNameSid (LPCTSTR pAccountName, CByteArray & pAccountSid, CString * pDomainName, SID_NAME_USE * pAccountType)
+bool CUserSecurity::GetNameSid (LPCTSTR pAccountName, CByteArray& pAccountSid, CString * pDomainName, SID_NAME_USE * pAccountType)
 {
 	bool	lRet = false;
 
@@ -626,7 +626,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 						}
 						lSubIds [lSubCount] = DOMAIN_GROUP_RID_USERS;
 
-						if	(AllocateAndInitializeSid (GetSidIdentifierAuthority (lRootSid), lSubCount+1, lSubIds [0], lSubIds [1], lSubIds [2], lSubIds [3], lSubIds [4], lSubIds [5], lSubIds [6], lSubIds [7], (void **) lSid.Free ()))
+						if	(AllocateAndInitializeSid (GetSidIdentifierAuthority (lRootSid), lSubCount+1, lSubIds [0], lSubIds [1], lSubIds [2], lSubIds [3], lSubIds [4], lSubIds [5], lSubIds [6], lSubIds [7], (void**) lSid.Free ()))
 						{
 #ifdef	__AFXCOLL_H__
 							lAllUsersSid.SetSize (GetLengthSid (lSid));
@@ -669,7 +669,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 #ifdef	_UNICODE
 //////////////////////////////////////////////////////////////////////
 
-PSID CUserSecurity::SidMe (tSidPtr & pSid)
+PSID CUserSecurity::SidMe (tSidPtr& pSid)
 {
 	CString			lUserName;
 	DWORD			lUserNameSize;
@@ -684,7 +684,7 @@ PSID CUserSecurity::SidMe (tSidPtr & pSid)
 		LookupAccountName (NULL, lUserName, NULL, &lSidSize, NULL, &lDomainSize, &lSidUse);
 
 		if	(
-				(AllocateAndInitializeSid (&sWorldAuthority, 8, 0, 0, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+				(AllocateAndInitializeSid (&sWorldAuthority, 8, 0, 0, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 			&&	(lSidSize <= GetLengthSid(pSid))
 			&&	(LookupAccountName (NULL, lUserName, pSid, &lSidSize, lDomainName.GetBuffer(lDomainSize), &lDomainSize, &lSidUse))
 			)
@@ -699,54 +699,54 @@ PSID CUserSecurity::SidMe (tSidPtr & pSid)
 	return NULL;
 }
 
-PSID CUserSecurity::SidEveryone (tSidPtr & pSid)
+PSID CUserSecurity::SidEveryone (tSidPtr& pSid)
 {
-	if	(AllocateAndInitializeSid (&sWorldAuthority, 1, SECURITY_WORLD_RID, 0, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+	if	(AllocateAndInitializeSid (&sWorldAuthority, 1, SECURITY_WORLD_RID, 0, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 	{
 		return pSid;
 	}
 	return NULL;
 }
 
-PSID CUserSecurity::SidSystem (tSidPtr & pSid)
+PSID CUserSecurity::SidSystem (tSidPtr& pSid)
 {
-	if	(AllocateAndInitializeSid (&sNtAuthority, 1, SECURITY_LOCAL_SYSTEM_RID, 0, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+	if	(AllocateAndInitializeSid (&sNtAuthority, 1, SECURITY_LOCAL_SYSTEM_RID, 0, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 	{
 		return pSid;
 	}
 	return NULL;
 }
 
-PSID CUserSecurity::SidService (tSidPtr & pSid)
+PSID CUserSecurity::SidService (tSidPtr& pSid)
 {
-	if	(AllocateAndInitializeSid (&sNtAuthority, 1, SECURITY_LOCAL_SERVICE_RID, 0, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+	if	(AllocateAndInitializeSid (&sNtAuthority, 1, SECURITY_LOCAL_SERVICE_RID, 0, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 	{
 		return pSid;
 	}
 	return NULL;
 }
 
-PSID CUserSecurity::SidNetService (tSidPtr & pSid)
+PSID CUserSecurity::SidNetService (tSidPtr& pSid)
 {
-	if	(AllocateAndInitializeSid (&sNtAuthority, 1, SECURITY_NETWORK_SERVICE_RID, 0, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+	if	(AllocateAndInitializeSid (&sNtAuthority, 1, SECURITY_NETWORK_SERVICE_RID, 0, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 	{
 		return pSid;
 	}
 	return NULL;
 }
 
-PSID CUserSecurity::SidAdministrators (tSidPtr & pSid)
+PSID CUserSecurity::SidAdministrators (tSidPtr& pSid)
 {
-	if	(AllocateAndInitializeSid (&sNtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+	if	(AllocateAndInitializeSid (&sNtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 	{
 		return pSid;
 	}
 	return NULL;
 }
 
-PSID CUserSecurity::SidUsers (tSidPtr & pSid)
+PSID CUserSecurity::SidUsers (tSidPtr& pSid)
 {
-	if	(AllocateAndInitializeSid (&sNtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_USERS, 0, 0, 0, 0, 0, 0, (void **) pSid.Free ()))
+	if	(AllocateAndInitializeSid (&sNtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_USERS, 0, 0, 0, 0, 0, 0, (void**) pSid.Free ()))
 	{
 		return pSid;
 	}
@@ -956,7 +956,7 @@ bool CUserSecurity::IsUserAdministrator ()
 		tSidPtr	lAdministratorsGroup;
 		BOOL	lIsMember = FALSE;
 
-		if	(AllocateAndInitializeSid (&sNtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, (void **) lAdministratorsGroup.Free ()))
+		if	(AllocateAndInitializeSid (&sNtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, (void**) lAdministratorsGroup.Free ()))
 		{
 			if	(
 					(CheckTokenMembership (NULL, lAdministratorsGroup, &lIsMember))

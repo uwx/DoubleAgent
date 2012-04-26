@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -47,7 +47,7 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapAlpha::AlphaBlend (HDC pDst, const CRect & pDstRect, HDC pSrc, const CRect & pSrcRect, BYTE pAlpha, bool pAllowInternal)
+bool CBitmapAlpha::AlphaBlend (HDC pDst, const CRect& pDstRect, HDC pSrc, const CRect& pSrcRect, BYTE pAlpha, bool pAllowInternal)
 {
 	return AlphaBlend (pDst, pDstRect.left, pDstRect.top, pDstRect.Width (), pDstRect.Height (), pSrc, pSrcRect.left, pSrcRect.top, pSrcRect.Width (), pSrcRect.Height (), pAlpha, pAllowInternal);
 }
@@ -194,7 +194,7 @@ bool CBitmapAlpha::AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int p
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapAlpha::InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool & pLogSizeMismatch, bool & pDevSizeMismatch)
+bool CBitmapAlpha::InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool& pLogSizeMismatch, bool& pDevSizeMismatch)
 {
 	bool		lRet = false;
 	CRect		lDstRect (CPoint (pDstX, pDstY), CSize (pDstCx, pDstCy));
@@ -375,7 +375,7 @@ CBrush * CBitmapAlpha::GetAlphaBrush (HDC pDC, COLORREF pColor, BYTE pAlpha, boo
 
 	if	(
 			(lBrush = new CBrush)
-		&&	(lBrushBmp.Attach (CreateDIBSection (pDC, &lBmpInfo, DIB_RGB_COLORS, (void **) &lBrushBits, NULL, NULL)))
+		&&	(lBrushBmp.Attach (CreateDIBSection (pDC, &lBmpInfo, DIB_RGB_COLORS, (void**) &lBrushBits, NULL, NULL)))
 		)
 	{
 		GdiFlush ();
@@ -441,7 +441,7 @@ CBrush * CBitmapAlpha::GetAlphaBrush (HDC pDC, COLORREF pColor, BYTE pAlpha, boo
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapAlpha::AlphaScaleBitmap (CBitmap & pBitmap, BYTE pAlpha, LPBYTE * pBitmapBits)
+bool CBitmapAlpha::AlphaScaleBitmap (CBitmap& pBitmap, BYTE pAlpha, LPBYTE* pBitmapBits)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -493,7 +493,7 @@ bool CBitmapAlpha::AlphaScaleBitmap (CBitmap & pBitmap, BYTE pAlpha, LPBYTE * pB
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapAlpha::AlphaClearBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pClearColor, BYTE pAlpha)
+bool CBitmapAlpha::AlphaClearBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pClearColor, BYTE pAlpha)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -508,7 +508,7 @@ bool CBitmapAlpha::AlphaClearBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLO
 			)
 		)
 	{
-		COLORREF *	lBitmapBits = (COLORREF *) pBitmapBits;
+		COLORREF*	lBitmapBits = (COLORREF*) pBitmapBits;
 		COLORREF	lClearColor = (pClearColor & 0x00FFFFFF) | (((COLORREF) pAlpha) << 24);
 		long		lMaxNdx = lBitmap.bmHeight * lBitmap.bmWidthBytes / sizeof (COLORREF);
 		long		lNdx;
@@ -528,7 +528,7 @@ bool CBitmapAlpha::AlphaClearBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLO
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaFillBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pAlpha, bool pClearBlack, bool pClearWhite)
+bool CBitmapAlpha::AlphaFillBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pAlpha, bool pClearBlack, bool pClearWhite)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -599,7 +599,7 @@ bool CBitmapAlpha::AlphaFillBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE 
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaSaturateBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha, BYTE pMaxAlpha)
+bool CBitmapAlpha::AlphaSaturateBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha, BYTE pMaxAlpha)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -635,7 +635,7 @@ bool CBitmapAlpha::AlphaSaturateBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, B
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaInvertBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, bool pClearBlack, bool pSkipBlack, bool pSkipWhite)
+bool CBitmapAlpha::AlphaInvertBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, bool pClearBlack, bool pSkipBlack, bool pSkipWhite)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -712,7 +712,7 @@ bool CBitmapAlpha::AlphaInvertBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, boo
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaFixBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha)
+bool CBitmapAlpha::AlphaFixBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -749,7 +749,7 @@ bool CBitmapAlpha::AlphaFixBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE p
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaClampBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha, BYTE pMaxAlpha, BYTE pNewAlpha)
+bool CBitmapAlpha::AlphaClampBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha, BYTE pMaxAlpha, BYTE pNewAlpha)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -789,7 +789,7 @@ bool CBitmapAlpha::AlphaClampBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapAlpha::AlphaFeatherBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, const CRect & pCenter, BYTE pAlpha, bool pRectangular, bool pPrecalc)
+bool CBitmapAlpha::AlphaFeatherBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, const CRect& pCenter, BYTE pAlpha, bool pRectangular, bool pPrecalc)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -921,7 +921,7 @@ bool CBitmapAlpha::AlphaFeatherBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, co
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaCalcBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pOpaqueColor, COLORREF pSaturateColor)
+bool CBitmapAlpha::AlphaCalcBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pOpaqueColor, COLORREF pSaturateColor)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -998,7 +998,7 @@ bool CBitmapAlpha::AlphaCalcBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLOR
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaHitTestBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, const CPoint & pPoint, const CRect & pBounds, const CRect * pAperture, BYTE pMinAlpha, BYTE pMaxAlpha)
+bool CBitmapAlpha::AlphaHitTestBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, const CPoint& pPoint, const CRect& pBounds, const CRect* pAperture, BYTE pMinAlpha, BYTE pMaxAlpha)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmapDef;
@@ -1066,7 +1066,7 @@ bool CBitmapAlpha::AlphaHitTestBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, co
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapAlpha::AlphaPreDrawBuffer (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pFillColor)
+bool CBitmapAlpha::AlphaPreDrawBuffer (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pFillColor)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;
@@ -1102,7 +1102,7 @@ bool CBitmapAlpha::AlphaPreDrawBuffer (CBitmap & pBitmap, LPBYTE pBitmapBits, CO
 	return lRet;
 }
 
-bool CBitmapAlpha::AlphaPostDrawBuffer (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pMaskColor, bool pAlphaPreCalc)
+bool CBitmapAlpha::AlphaPostDrawBuffer (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pMaskColor, bool pAlphaPreCalc)
 {
 	bool		lRet = false;
 	tS <BITMAP>	lBitmap;

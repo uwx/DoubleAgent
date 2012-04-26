@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -74,7 +74,7 @@ void CPropPageCharacter::FinalRelease ()
 
 CPropPageCharacter * CPropPageCharacter::CreateInstance ()
 {
-	CComObject<CPropPageCharacter> *	lInstance = NULL;
+	CComObject<CPropPageCharacter>*	lInstance = NULL;
 	LogComErr (LogIfActive|LogTime, CComObject<CPropPageCharacter>::CreateInstance (&lInstance));
 	return lInstance;
 }
@@ -192,7 +192,7 @@ BOOL CPropPageCharacter::OnInitDialog()
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCharacter::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCharacter::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnDestroy"), this, max(m_dwRef,-1));
@@ -202,7 +202,7 @@ LRESULT CPropPageCharacter::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	return 0;
 }
 
-LRESULT CPropPageCharacter::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCharacter::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT lResult = 0;
 
@@ -224,7 +224,7 @@ LRESULT CPropPageCharacter::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lPara
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCharacter::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCharacter::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 
@@ -259,11 +259,11 @@ void CPropPageCharacter::NoCharacter ()
 
 void CPropPageCharacter::ShowCharacter ()
 {
-	CAgentFileName *	lName;
-	DWORD				lVersion = mAgentFile->GetVersion();
+	CAgentFileName*	lName;
+	DWORD				lVersion = mAgentFile->Version;
 	CAtlString			lVersionStr;
-	CAtlString			lGuid (CGuidStr (mAgentFile->GetGuid()));
-	CAtlString			lTtsModeID ((BSTR)mAgentFile->GetTts().mModeId);
+	CAtlString			lGuid (CGuidStr (mAgentFile->Header.Guid));
+	CAtlString			lTtsModeID ((BSTR)mAgentFile->Tts.ModeId);
 
 	mCharName.ShowWindow (SW_SHOWNA);
 	mCharDesc.ShowWindow (SW_SHOWNA);
@@ -272,8 +272,8 @@ void CPropPageCharacter::ShowCharacter ()
 
 	if	(lName = mAgentFile->FindName ())
 	{
-		mCharName.SetWindowText (CAtlString ((BSTR)lName->mName));
-		mCharDesc.SetWindowText (CAtlString ((BSTR)lName->mDesc1));
+		mCharName.SetWindowText (CAtlString ((BSTR)lName->Name));
+		mCharDesc.SetWindowText (CAtlString ((BSTR)lName->Desc1));
 	}
 
 	lVersionStr.Format (_T("%u.%2.2u"), HIWORD(lVersion), LOWORD(lVersion));
@@ -286,7 +286,7 @@ void CPropPageCharacter::ShowCharacter ()
 	mCharGuid.SetWindowText (lGuid);
 	mCharTtsModeID.SetWindowText (lTtsModeID);
 
-	if	(mAgentFile->GetStyle() & CharStyleStandard)
+	if	(mAgentFile->Header.Style & CharStyleStandard)
 	{
 		mCharStandard.SetWindowText (_T("2.0"));
 	}
@@ -309,7 +309,7 @@ void CPropPageCharacter::ShowPreview ()
 	if	(
 			(mPreviewWnd = CAgentPreviewWnd::CreateInstance())
 		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd, &lPreviewRect))
-		&&	(mPreviewWnd->Open (CAtlString ((BSTR)mAgentFile->GetPath())))
+		&&	(mPreviewWnd->Open (CAtlString ((BSTR)mAgentFile->Path)))
 		)
 	{
 		mCharPreview.ShowWindow (SW_SHOWNA);

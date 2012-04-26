@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -392,7 +392,7 @@ bool CSecurityDesc::LimitInformation (SECURITY_INFORMATION pInformationType)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSecurityDesc & CSecurityDesc::operator= (LPCTSTR pDescriptorString)
+CSecurityDesc& CSecurityDesc::operator= (LPCTSTR pDescriptorString)
 {
 	Clear ();
 #ifdef	_UNICODE
@@ -465,7 +465,7 @@ CSecurityDesc::operator CString () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSecurityDesc & CSecurityDesc::operator= (HANDLE pToken)
+CSecurityDesc& CSecurityDesc::operator= (HANDLE pToken)
 {
 	Clear ();
 #ifdef	_UNICODE
@@ -538,7 +538,7 @@ CSecurityDesc & CSecurityDesc::operator= (HANDLE pToken)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDesc::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -571,7 +571,7 @@ DWORD CSecurityDesc::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAc
 	return lError;
 }
 
-DWORD CSecurityDesc::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -607,7 +607,7 @@ DWORD CSecurityDesc::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAcc
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDesc::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -680,7 +680,7 @@ DWORD CSecurityDesc::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAcc
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDesc::GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -986,9 +986,9 @@ DWORD CSecurityDesc::UngrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 						try
 						{
 							if	(
-									(GetAce (mDAcl, lAceNdx, (void **) &lAce))
+									(GetAce (mDAcl, lAceNdx, (void**) &lAce))
 								&&	(lAce->Header.AceType == ACCESS_ALLOWED_ACE_TYPE)
-								&&	(lAceSid = (PSID) (void **) &lAce->SidStart)
+								&&	(lAceSid = (PSID) (void**) &lAce->SidStart)
 								&&	(IsValidSid (lAceSid))
 								)
 							{
@@ -1266,9 +1266,9 @@ DWORD CSecurityDesc::UndenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 						try
 						{
 							if	(
-									(GetAce (mDAcl, lAceNdx, (void **) &lAce))
+									(GetAce (mDAcl, lAceNdx, (void**) &lAce))
 								&&	(lAce->Header.AceType == ACCESS_DENIED_ACE_TYPE)
-								&&	(lAceSid = (PSID) (void **) &lAce->SidStart)
+								&&	(lAceSid = (PSID) (void**) &lAce->SidStart)
 								&&	(IsValidSid (lAceSid))
 								)
 							{
@@ -1341,7 +1341,7 @@ bool CSecurityDesc::ConsolidateExplicitAccess (bool pAccessGrants, bool pAccessD
 				try
 				{
 					if	(
-							(GetAce (mDAcl, lAceNdx1, (void **) &lAce1))
+							(GetAce (mDAcl, lAceNdx1, (void**) &lAce1))
 						&&	(
 								(
 									(pAccessGrants)
@@ -1352,17 +1352,17 @@ bool CSecurityDesc::ConsolidateExplicitAccess (bool pAccessGrants, bool pAccessD
 								&&	(lAce1->Header.AceType == ACCESS_DENIED_ACE_TYPE)
 								)
 							)
-						&&	(lAceSid1 = (PSID) (void **) &lAce1->SidStart)
+						&&	(lAceSid1 = (PSID) (void**) &lAce1->SidStart)
 						&&	(IsValidSid (lAceSid1))
 						)
 					{
 						for	(lAceNdx2 = lAceNdx1-1; lAceNdx2 >= 0; lAceNdx2--)
 						{
 							if	(
-									(GetAce (mDAcl, lAceNdx2, (void **) &lAce2))
+									(GetAce (mDAcl, lAceNdx2, (void**) &lAce2))
 								&&	(lAce2->Header.AceType == lAce1->Header.AceType)
 								&&	(lAce2->Header.AceFlags == lAce1->Header.AceFlags)
-								&&	(lAceSid2 = (PSID) (void **) &lAce2->SidStart)
+								&&	(lAceSid2 = (PSID) (void**) &lAce2->SidStart)
 								&&	(EqualSid (lAceSid2, lAceSid1))
 								)
 							{
@@ -1650,7 +1650,7 @@ DWORD CSecurityDesc::SetGroup (PSID pGroupSid)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDesc::AccessCheck (ACCESS_MASK & pAccess, bool pThreadAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::AccessCheck (ACCESS_MASK& pAccess, bool pThreadAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 

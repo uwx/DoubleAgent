@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -55,9 +55,9 @@ DaSvrAnimationNames::~DaSvrAnimationNames ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrAnimationNames * DaSvrAnimationNames::CreateInstance (CAgentFile & pAgentFile, LPCTSTR pClientMutexName)
+DaSvrAnimationNames * DaSvrAnimationNames::CreateInstance (CAgentFile& pAgentFile, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrAnimationNames> *	lInstance = NULL;
+	CComObject<DaSvrAnimationNames>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrAnimationNames>::CreateInstance (&lInstance))))
 	{
@@ -161,7 +161,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Reset (void)
 HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Clone(IEnumVARIANT** ppEnum)
 {
 	HRESULT								lResult;
-	CComObject<DaSvrAnimationNames> *	lClone = NULL;
+	CComObject<DaSvrAnimationNames>*	lClone = NULL;
 
 	if	(
 			(SUCCEEDED (LogComErr (LogIfActive|LogTime, lResult = CComObject<DaSvrAnimationNames>::CreateInstance (&lClone))))

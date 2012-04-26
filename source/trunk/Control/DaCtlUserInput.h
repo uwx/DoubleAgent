@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -40,7 +40,9 @@ public:
 	CAtlString				mCharacterID;
 	long					mCommandID;
 	class DaCtlCommands *	mCommands;
+#ifndef	_DACORE_LOCAL
 	IDaSvrUserInput2Ptr		mServerObject;
+#endif
 	tPtr <CDaCmnUserInput>	mLocalObject;
 
 // Operations
@@ -75,13 +77,13 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Count (short * Count);
 	HRESULT STDMETHODCALLTYPE get_Name (BSTR * Name);
 	HRESULT STDMETHODCALLTYPE get_CharacterID (BSTR * CharacterID);
-	HRESULT STDMETHODCALLTYPE get_Confidence (long * Confidence);
+	HRESULT STDMETHODCALLTYPE get_Confidence (long* Confidence);
 	HRESULT STDMETHODCALLTYPE get_Voice (BSTR * Voice);
 	HRESULT STDMETHODCALLTYPE get_Alt1Name (BSTR * Alt1Name);
-	HRESULT STDMETHODCALLTYPE get_Alt1Confidence (long * Alt1Confidence);
+	HRESULT STDMETHODCALLTYPE get_Alt1Confidence (long* Alt1Confidence);
 	HRESULT STDMETHODCALLTYPE get_Alt1Voice (BSTR * Alt1Voice);
 	HRESULT STDMETHODCALLTYPE get_Alt2Name (BSTR * Alt2Name);
-	HRESULT STDMETHODCALLTYPE get_Alt2Confidence (long * Alt2Confidence);
+	HRESULT STDMETHODCALLTYPE get_Alt2Confidence (long* Alt2Confidence);
 	HRESULT STDMETHODCALLTYPE get_Alt2Voice (BSTR * Alt2Voice);
 };
 

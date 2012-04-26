@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -42,7 +42,7 @@ public:
 
 // Operations
 public:
-	static DaSvrSREngine * CreateInstance (class CSapi5InputInfo * pInputInfo, LPCTSTR pClientMutexName = NULL);
+	static DaSvrSREngine * CreateInstance (class CSapi5InputInfo* pInputInfo, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
@@ -81,8 +81,8 @@ public:
 	HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
 	HRESULT STDMETHODCALLTYPE get_LanguageID (long *LanguageID);
 	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
-	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY **LanguageIds);
-	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames);
+	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY**LanguageIds);
+	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY**LanguageNames);
 
 // Implementation
 protected:

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -44,18 +44,18 @@ public:
 	bool HasInformation (SECURITY_INFORMATION pInformationType) const;
 
 // Conversions
-	CSecurityDesc & operator= (LPCTSTR pDescriptorString);
-	CSecurityDesc & operator= (HANDLE pToken);
+	CSecurityDesc& operator= (LPCTSTR pDescriptorString);
+	CSecurityDesc& operator= (HANDLE pToken);
 	operator CString () const;
 
 // Operations
 	bool LimitInformation (SECURITY_INFORMATION pInformationType);
 	bool ConsolidateExplicitAccess (bool pAccessGrants = true, bool pAccessDenials = true);
 
-	DWORD GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
-	DWORD GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
-	DWORD GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
-	DWORD GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
+	DWORD GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
+	DWORD GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
+	DWORD GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
+	DWORD GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK& pAccess, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
 
 	DWORD GrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DWORD pInheritance = NO_PROPAGATE_INHERIT_ACE);
 	DWORD GrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SID_NAME_USE pSidType = SidTypeUnknown, DWORD pInheritance = NO_PROPAGATE_INHERIT_ACE);
@@ -71,7 +71,7 @@ public:
 	DWORD SetGroup (LPCTSTR pGroup);
 	DWORD SetGroup (PSID pGroupSid);
 
-	DWORD AccessCheck (ACCESS_MASK & pAccess, bool pThreadAccess = true, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
+	DWORD AccessCheck (ACCESS_MASK& pAccess, bool pThreadAccess = true, ACCESS_MASK pMask = STANDARD_RIGHTS_ALL|FILE_ALL_ACCESS);
 
 // Logging
 public:
@@ -108,7 +108,7 @@ private:
 class tSidPtrFree
 {
 protected:
-	static inline void _Init (SID * & pPtr) {}
+	static inline void _Init (SID*& pPtr) {}
 	static inline void _Free (SID * pPtr)
 	{
 		if	(pPtr)
@@ -123,9 +123,9 @@ class tSidPtr : public tPtr <SID, tSidPtrFree>
 public:
 	tSidPtr () {}
 	tSidPtr (const SID * pPtr) {operator= (pPtr);}
-	tSidPtr (const tSidPtr & pPtr) {operator= (pPtr);}
+	tSidPtr (const tSidPtr& pPtr) {operator= (pPtr);}
 
-	tSidPtr & operator= (const SID * pPtr)
+	tSidPtr& operator= (const SID * pPtr)
 	{
 		PBYTE	lSubAuthorityCount;
 		BYTE	lSubAuthorityNum;

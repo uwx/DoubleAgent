@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -32,9 +32,29 @@
 #endif
 #endif
 
-static inline CString DebugStr (LPCTSTR pString)
+////////////////////////////////////////////////////////////////////////
+#ifdef	__cplusplus_cli
+////////////////////////////////////////////////////////////////////////
+
+static System::String^ DebugStr (System::String^ pString)
 {
-	CString	lString (pString);
+	if	(System::String::IsNullOrEmpty (pString))
+	{
+		return System::String::Empty;
+	}
+	else
+	{
+		return pString->Replace ("\r", "\\r")->Replace ("\n", "\\n")->Replace ("\t", "\\t")->Replace ("\f", "\\f");
+	}
+}
+
+////////////////////////////////////////////////////////////////////////
+#else	// __cplusplus_cli
+////////////////////////////////////////////////////////////////////////
+
+static inline CAtlString DebugStr (LPCTSTR pString)
+{
+	CAtlString	lString (pString);
 	lString.Replace (_T("\r"), _T("\\r"));
 	lString.Replace (_T("\n"), _T("\\n"));
 	lString.Replace (_T("\t"), _T("\\t"));
@@ -46,14 +66,14 @@ static inline CString DebugStr (LPCTSTR pString)
 
 #ifdef _CPPRTTI
 #include <typeinfo.h>
-template <typename TYPE> static CString ObjTypeName (TYPE const * pObject)
+template <typename TYPE> static CAtlString ObjTypeName (TYPE const * pObject)
 {
-	CString	lTypeName;
+	CAtlString	lTypeName;
 	if	(pObject)
 	{
 		try
 		{
-			lTypeName = CString (typeid(*pObject).name());
+			lTypeName = CAtlString (typeid(*pObject).name());
 			if	(lTypeName.Left (5) == _T("class"))
 			{
 				lTypeName = lTypeName.Mid (5);
@@ -65,7 +85,7 @@ template <typename TYPE> static CString ObjTypeName (TYPE const * pObject)
 		{
 			try
 			{
-				lTypeName = CString (typeid(pObject).name());
+				lTypeName = CAtlString (typeid(pObject).name());
 			}
 			catch (...)
 			{
@@ -82,9 +102,9 @@ template <typename TYPE> static CString ObjTypeName (TYPE const * pObject)
 #endif
 
 #ifdef	__AFX_H__
-static CString ObjClassName (CObject const * pObject)
+static CAtlString ObjClassName (CObject const * pObject)
 {
-	CString	lClassName;
+	CAtlString	lClassName;
 	if	(pObject)
 	{
 		try
@@ -104,9 +124,9 @@ static CString ObjClassName (CObject const * pObject)
 }
 #endif
 
-static CString WndClassName (HWND pWnd)
+static CAtlString WndClassName (HWND pWnd)
 {
-	CString	lClassName;
+	CAtlString	lClassName;
 	if	(pWnd)
 	{
 		if	(IsWindow (pWnd))
@@ -127,7 +147,7 @@ static CString WndClassName (HWND pWnd)
 }
 
 #ifdef	__AFXWIN_H__
-static CString WndClassName (CWnd const * pWnd)
+static CAtlString WndClassName (CWnd const * pWnd)
 {
 	return ObjClassName (pWnd);
 }
@@ -139,9 +159,9 @@ static CString WndClassName (CWnd const * pWnd)
 
 __if_not_exists(VarTypeStr)
 {
-	inline CString VarTypeStr (VARTYPE pVarType)
+	inline CAtlString VarTypeStr (VARTYPE pVarType)
 	{
-		CString	lRet;
+		CAtlString	lRet;
 
 		switch (pVarType & VT_TYPEMASK)
 		{
@@ -223,21 +243,21 @@ __if_not_exists(VarTypeStr)
 
 __if_not_exists(VariantString)
 {
-	inline CString VariantString (const VARIANT & pVariant)
+	inline CAtlString VariantString (const VARIANT& pVariant)
 	{
 		if	(V_VT (&pVariant) == VT_BSTR)
 		{
-			return CString (V_BSTR (&pVariant));
+			return CAtlString (V_BSTR (&pVariant));
 		}
 		else
 		if	(V_VT (&pVariant) == VT_LPSTR)
 		{
-			return CString ((LPCSTR) pVariant.byref);
+			return CAtlString ((LPCSTR) pVariant.byref);
 		}
 		else
 		if	(V_VT (&pVariant) == VT_LPWSTR)
 		{
-			return CString ((LPCWSTR) pVariant.byref);
+			return CAtlString ((LPCWSTR) pVariant.byref);
 		}
 		else
 		{
@@ -247,18 +267,19 @@ __if_not_exists(VariantString)
 			{
 				lVariant.ChangeType (VT_BSTR);
 			}
-			catch AnyExceptionSilent
+			catch (...)
+			{}
 
 			if	(V_VT (&lVariant) == VT_BSTR)
 			{
-				return CString (V_BSTR (&lVariant));
+				return CAtlString (V_BSTR (&lVariant));
 			}
 		}
-		return CString();
+		return CAtlString();
 	}
 }
 
-inline CString DebugVariant (VARIANT & pVariant)
+inline CAtlString DebugVariant (VARIANT& pVariant)
 {
 	return _T("[") + VariantString (pVariant) + _T("] (") + VarTypeStr (V_VT(&pVariant)) + _T(")");
 }
@@ -276,9 +297,9 @@ inline CString DebugVariant (VARIANT & pVariant)
 
 //////////////////////////////////////////////////////////////////////
 
-static inline CString FormatPoint (const POINT & pPoint, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+static inline CAtlString FormatPoint (const POINT& pPoint, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
 {
-	CString	lRet;
+	CAtlString	lRet;
 	if	(pAligned)
 	{
 		if	(pSigned)
@@ -302,12 +323,12 @@ static inline CString FormatPoint (const POINT & pPoint, USHORT pAligned = _DEBU
 			lRet.Format (_T("%d %d"), pPoint.x, pPoint.y);
 		}
 	}
-	return CString ((LPCTSTR)lRet);
+	return CAtlString ((LPCTSTR)lRet);
 }
 
-inline CString FormatSize (const SIZE & pSize, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+inline CAtlString FormatSize (const SIZE& pSize, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
 {
-	CString	lRet;
+	CAtlString	lRet;
 	if	(pAligned)
 	{
 		if	(pSigned)
@@ -331,12 +352,12 @@ inline CString FormatSize (const SIZE & pSize, USHORT pAligned = _DEBUG_FORMAT_A
 			lRet.Format (_T("%d %d"), pSize.cx, pSize.cy);
 		}
 	}
-	return CString ((LPCTSTR)lRet);
+	return CAtlString ((LPCTSTR)lRet);
 }
 
-static inline CString FormatRect (const RECT & pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+static inline CAtlString FormatRect (const RECT& pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
 {
-	CString	lRet;
+	CAtlString	lRet;
 	if	(pAligned)
 	{
 		if	(pSigned)
@@ -360,12 +381,12 @@ static inline CString FormatRect (const RECT & pRect, USHORT pAligned = _DEBUG_F
 			lRet.Format (_T("%d %d %d %d (%d %d)"), pRect.left, pRect.top, pRect.right, pRect.bottom, pRect.right-pRect.left, pRect.bottom-pRect.top);
 		}
 	}
-	return CString ((LPCTSTR)lRet);
+	return CAtlString ((LPCTSTR)lRet);
 }
 
-static inline CString FormatMargin (const RECT & pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+static inline CAtlString FormatMargin (const RECT& pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
 {
-	CString	lRet;
+	CAtlString	lRet;
 	if	(pAligned)
 	{
 		if	(pSigned)
@@ -389,16 +410,16 @@ static inline CString FormatMargin (const RECT & pRect, USHORT pAligned = _DEBUG
 			lRet.Format (_T("%d %d %d %d"), pRect.left, pRect.top, pRect.right, pRect.bottom);
 		}
 	}
-	return CString ((LPCTSTR)lRet);
+	return CAtlString ((LPCTSTR)lRet);
 }
 
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-static CString DrawTextFlags (UINT pFlags, bool pIncludeDefaults = true)
+static CAtlString DrawTextFlags (UINT pFlags, bool pIncludeDefaults = true)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	if	(
 			(pIncludeDefaults)
@@ -517,9 +538,9 @@ static CString DrawTextFlags (UINT pFlags, bool pIncludeDefaults = true)
 
 ////////////////////////////////////////////////////////////////////////
 
-static CString ItemDrawType (UINT pCtlType)
+static CAtlString ItemDrawType (UINT pCtlType)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	switch (pCtlType)
 	{
@@ -533,18 +554,18 @@ static CString ItemDrawType (UINT pCtlType)
 	return lRet;
 }
 
-static CString ItemDrawType (LPDRAWITEMSTRUCT pDIS)
+static CAtlString ItemDrawType (LPDRAWITEMSTRUCT pDIS)
 {
 	if	(pDIS)
 	{
 		return ItemDrawType (pDIS->CtlType);
 	}
-	return CString();
+	return CAtlString();
 }
 
-static CString ItemDrawAction (UINT pAction)
+static CAtlString ItemDrawAction (UINT pAction)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	if	(pAction & ODA_DRAWENTIRE)
 	{
@@ -563,18 +584,18 @@ static CString ItemDrawAction (UINT pAction)
 	return lRet;
 }
 
-static CString ItemDrawAction (LPDRAWITEMSTRUCT pDIS)
+static CAtlString ItemDrawAction (LPDRAWITEMSTRUCT pDIS)
 {
 	if	(pDIS)
 	{
 		return ItemDrawAction (pDIS->itemAction);
 	}
-	return CString();
+	return CAtlString();
 }
 
-static CString ItemDrawState (UINT pState)
+static CAtlString ItemDrawState (UINT pState)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	if	(pState & ODS_SELECTED)
 	{
@@ -633,20 +654,22 @@ static CString ItemDrawState (UINT pState)
 	return lRet;
 }
 
-static CString ItemDrawState (LPDRAWITEMSTRUCT pDIS)
+static CAtlString ItemDrawState (LPDRAWITEMSTRUCT pDIS)
 {
 	if	(pDIS)
 	{
 		return ItemDrawState (pDIS->itemState);
 	}
-	return CString();
+	return CAtlString();
 }
 
 ////////////////////////////////////////////////////////////////////////
+#ifdef	CDDS_PREPAINT
+////////////////////////////////////////////////////////////////////////
 
-static CString CustomDrawStage (DWORD pStage)
+static CAtlString CustomDrawStage (DWORD pStage)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	switch (pStage & ~CDDS_ITEM & ~CDDS_SUBITEM)
 	{
@@ -659,18 +682,18 @@ static CString CustomDrawStage (DWORD pStage)
 	return lRet;
 }
 
-static CString CustomDrawStage (LPNMCUSTOMDRAW pCustomDraw)
+static CAtlString CustomDrawStage (LPNMCUSTOMDRAW pCustomDraw)
 {
 	if	(pCustomDraw)
 	{
 		return CustomDrawStage (pCustomDraw->dwDrawStage);
 	}
-	return CString();
+	return CAtlString();
 }
 
-static CString CustomDrawState (UINT pState)
+static CAtlString CustomDrawState (UINT pState)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	if	(pState & CDIS_SELECTED)
 	{
@@ -737,18 +760,18 @@ static CString CustomDrawState (UINT pState)
 	return lRet;
 }
 
-static CString CustomDrawState (LPNMCUSTOMDRAW pCustomDraw)
+static CAtlString CustomDrawState (LPNMCUSTOMDRAW pCustomDraw)
 {
 	if	(pCustomDraw)
 	{
 		return CustomDrawState (pCustomDraw->uItemState);
 	}
-	return CString();
+	return CAtlString();
 }
 
-static CString CustomDrawResult (LRESULT pResult)
+static CAtlString CustomDrawResult (LRESULT pResult)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	if	(pResult & CDRF_NEWFONT)
 	{
@@ -796,10 +819,12 @@ static CString CustomDrawResult (LRESULT pResult)
 }
 
 ////////////////////////////////////////////////////////////////////////
+#endif	// CDDS_PREPAINT
+////////////////////////////////////////////////////////////////////////
 
-static inline CString WinStyleStr (DWORD pStyle)
+static inline CAtlString WinStyleStr (DWORD pStyle)
 {
-	CString	lStyleStr;
+	CAtlString	lStyleStr;
 
 	if	(pStyle & WS_VISIBLE)
 	{
@@ -895,9 +920,9 @@ static inline CString WinStyleStr (DWORD pStyle)
 	return lStyleStr;
 }
 
-static inline CString WinExStyleStr (DWORD pExStyle)
+static inline CAtlString WinExStyleStr (DWORD pExStyle)
 {
-	CString	lExStyleStr;
+	CAtlString	lExStyleStr;
 
 	if	(pExStyle & WS_EX_DLGMODALFRAME)
 	{
@@ -994,9 +1019,9 @@ static inline CString WinExStyleStr (DWORD pExStyle)
 
 //////////////////////////////////////////////////////////////////////
 
-static inline CString WinPosFlagsStr (UINT pFlags)
+static inline CAtlString WinPosFlagsStr (UINT pFlags)
 {
-	CString	lFlagsStr;
+	CAtlString	lFlagsStr;
 
 	if	(pFlags & SWP_NOMOVE)
 	{
@@ -1055,9 +1080,9 @@ static inline CString WinPosFlagsStr (UINT pFlags)
 	return lFlagsStr;
 }
 
-static inline CString WinPosAfterStr (HWND pAfter)
+static inline CAtlString WinPosAfterStr (HWND pAfter)
 {
-	CString	lAfterStr;
+	CAtlString	lAfterStr;
 
 	if	(pAfter == HWND_TOP)
 	{
@@ -1086,32 +1111,34 @@ static inline CString WinPosAfterStr (HWND pAfter)
 	return lAfterStr;
 }
 
-static inline CString WindowPosStr (WINDOWPOS & pWindowPos)
+static inline CAtlString WindowPosStr (WINDOWPOS & pWindowPos)
 {
-	CString	lStr = WinPosFlagsStr (pWindowPos.flags);
+	CAtlString	lStr = WinPosFlagsStr (pWindowPos.flags);
 
 	if	((pWindowPos.flags & (SWP_NOMOVE|SWP_NOSIZE)) == 0)
 	{
-		lStr.Format (_T("%s Move/Size [%d %d %d %d (%d %d)]"), CString((LPCTSTR)lStr), pWindowPos.x, pWindowPos.y, pWindowPos.x+pWindowPos.cx, pWindowPos.y+pWindowPos.cy, pWindowPos.cx, pWindowPos.cy);
+		lStr.Format (_T("%s Move/Size [%d %d %d %d (%d %d)]"), CAtlString((LPCTSTR)lStr), pWindowPos.x, pWindowPos.y, pWindowPos.x+pWindowPos.cx, pWindowPos.y+pWindowPos.cy, pWindowPos.cx, pWindowPos.cy);
 	}
 	else
 	if	((pWindowPos.flags & SWP_NOMOVE) == 0)
 	{
-		lStr.Format (_T("%s Move [%d %d]"), CString((LPCTSTR)lStr), pWindowPos.x, pWindowPos.y);
+		lStr.Format (_T("%s Move [%d %d]"), CAtlString((LPCTSTR)lStr), pWindowPos.x, pWindowPos.y);
 	}
 	else
 	if	((pWindowPos.flags & SWP_NOSIZE) == 0)
 	{
-		lStr.Format (_T("%s Size [%d %d]"), CString((LPCTSTR)lStr), pWindowPos.cx, pWindowPos.cy);
+		lStr.Format (_T("%s Size [%d %d]"), CAtlString((LPCTSTR)lStr), pWindowPos.cx, pWindowPos.cy);
 	}
 
 	if	((pWindowPos.flags & SWP_NOACTIVATE) == 0)
 	{
-		lStr.Format (_T("%s After [%s]"), CString((LPCTSTR)lStr), WinPosAfterStr (pWindowPos.hwndInsertAfter));
+		lStr.Format (_T("%s After [%s]"), CAtlString((LPCTSTR)lStr), WinPosAfterStr (pWindowPos.hwndInsertAfter));
 	}
 
 	return lStr;
 }
 
 //////////////////////////////////////////////////////////////////////
-#endif // _DEBUGSTR_H_
+#endif	// __cplusplus_cli
+//////////////////////////////////////////////////////////////////////
+#endif	// _DEBUGSTR_H_

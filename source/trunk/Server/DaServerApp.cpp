@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -190,7 +190,7 @@ CDaServerModule::~CDaServerModule ()
 		UninitializeCom ();
 	}
 	m_bComInitialized = FALSE;
-#endif	
+#endif
 	LogStop (LogIfActive);
 	LogCrash_Terminate ();
 }
@@ -367,7 +367,7 @@ void CDaServerModule::RunMessageLoop ()
 			if	(mModelessPropSheets.GetCount() > 0)
 			{
 				INT_PTR				lNdx;
-				CAtlPropertySheet *	lPropertySheet;
+				CAtlPropertySheet*	lPropertySheet;
 
 				for	(lNdx = (INT_PTR)mModelessPropSheets.GetCount()-1; lNdx >= 0; lNdx--)
 				{
@@ -406,7 +406,7 @@ void CDaServerModule::RunMessageLoop ()
 				TranslateMessage (&lMsg);
 				DispatchMessage (&lMsg);
 			}
-			
+
 			if	(mObjectWasAbandoned)
 			{
 				mObjectWasAbandoned = false;
@@ -436,7 +436,7 @@ void CDaServerModule::UninitializeCom ()
 	{}
 }
 
-CComMessageFilter * CDaServerModule::GetMessageFilter ()
+CComMessageFilter* CDaServerModule::GetMessageFilter ()
 {
 	return mMessageFilter;
 }
@@ -608,7 +608,7 @@ HRESULT CDaServerModule::UnregisterAppId ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrPropertySheet * CDaServerModule::GetSvrPropertySheet (bool pCreate, LPCTSTR pClientMutexName)
+DaSvrPropertySheet* CDaServerModule::GetSvrPropertySheet (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
 			(!mSvrPropertySheet)
@@ -620,7 +620,7 @@ DaSvrPropertySheet * CDaServerModule::GetSvrPropertySheet (bool pCreate, LPCTSTR
 	return mSvrPropertySheet;
 }
 
-void CDaServerModule::OnDeleteSvrPropertySheet (DaSvrPropertySheet * pSvrPropertySheet)
+void CDaServerModule::OnDeleteSvrPropertySheet (DaSvrPropertySheet* pSvrPropertySheet)
 {
 	if	(pSvrPropertySheet == mSvrPropertySheet)
 	{
@@ -631,7 +631,7 @@ void CDaServerModule::OnDeleteSvrPropertySheet (DaSvrPropertySheet * pSvrPropert
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSettings * CDaServerModule::GetSvrSettings (bool pCreate, LPCTSTR pClientMutexName)
+DaSvrSettings* CDaServerModule::GetSvrSettings (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
 			(!mSvrSettings)
@@ -643,7 +643,7 @@ DaSvrSettings * CDaServerModule::GetSvrSettings (bool pCreate, LPCTSTR pClientMu
 	return mSvrSettings;
 }
 
-void CDaServerModule::OnDeleteSvrSettings (DaSvrSettings * pSvrSettings)
+void CDaServerModule::OnDeleteSvrSettings (DaSvrSettings* pSvrSettings)
 {
 	if	(pSvrSettings == mSvrSettings)
 	{
@@ -653,7 +653,7 @@ void CDaServerModule::OnDeleteSvrSettings (DaSvrSettings * pSvrSettings)
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrAudioOutput * CDaServerModule::GetSvrAudioOutput (bool pCreate, LPCTSTR pClientMutexName)
+DaSvrAudioOutput* CDaServerModule::GetSvrAudioOutput (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
 			(!mSvrAudioOutput)
@@ -665,7 +665,7 @@ DaSvrAudioOutput * CDaServerModule::GetSvrAudioOutput (bool pCreate, LPCTSTR pCl
 	return mSvrAudioOutput;
 }
 
-void CDaServerModule::OnDeleteSvrAudioOutput (DaSvrAudioOutput * pSvrAudioOutput)
+void CDaServerModule::OnDeleteSvrAudioOutput (DaSvrAudioOutput* pSvrAudioOutput)
 {
 	if	(pSvrAudioOutput == mSvrAudioOutput)
 	{
@@ -675,7 +675,7 @@ void CDaServerModule::OnDeleteSvrAudioOutput (DaSvrAudioOutput * pSvrAudioOutput
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSpeechInput * CDaServerModule::GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName)
+DaSvrSpeechInput* CDaServerModule::GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
 			(!mSvrSpeechInput)
@@ -687,7 +687,7 @@ DaSvrSpeechInput * CDaServerModule::GetSvrSpeechInput (bool pCreate, LPCTSTR pCl
 	return mSvrSpeechInput;
 }
 
-void CDaServerModule::OnDeleteSvrSpeechInput (DaSvrSpeechInput * pSvrSpeechInput)
+void CDaServerModule::OnDeleteSvrSpeechInput (DaSvrSpeechInput* pSvrSpeechInput)
 {
 	if	(pSvrSpeechInput == mSvrSpeechInput)
 	{
@@ -697,7 +697,7 @@ void CDaServerModule::OnDeleteSvrSpeechInput (DaSvrSpeechInput * pSvrSpeechInput
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommandsWindow * CDaServerModule::GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName)
+DaSvrCommandsWindow* CDaServerModule::GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
 			(!mSvrCommandsWindow)
@@ -709,7 +709,7 @@ DaSvrCommandsWindow * CDaServerModule::GetSvrCommandsWindow (bool pCreate, LPCTS
 	return mSvrCommandsWindow;
 }
 
-void CDaServerModule::OnDeleteSvrCommandsWindow (DaSvrCommandsWindow * pSvrCommandsWindow)
+void CDaServerModule::OnDeleteSvrCommandsWindow (DaSvrCommandsWindow* pSvrCommandsWindow)
 {
 	if	(pSvrCommandsWindow == mSvrCommandsWindow)
 	{
@@ -719,7 +719,7 @@ void CDaServerModule::OnDeleteSvrCommandsWindow (DaSvrCommandsWindow * pSvrComma
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCharacterFiles * CDaServerModule::GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName)
+DaSvrCharacterFiles* CDaServerModule::GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
 			(!mSvrCharacterFiles)
@@ -731,7 +731,7 @@ DaSvrCharacterFiles * CDaServerModule::GetSvrCharacterFiles (bool pCreate, LPCTS
 	return mSvrCharacterFiles;
 }
 
-void CDaServerModule::OnDeleteSvrCharacterFiles (DaSvrCharacterFiles * pSvrCharacterFiles)
+void CDaServerModule::OnDeleteSvrCharacterFiles (DaSvrCharacterFiles* pSvrCharacterFiles)
 {
 	if	(pSvrCharacterFiles == mSvrCharacterFiles)
 	{
@@ -743,7 +743,7 @@ void CDaServerModule::OnDeleteSvrCharacterFiles (DaSvrCharacterFiles * pSvrChara
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaServerModule::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTimerId)
+void CDaServerModule::OnTimerNotify (CTimerNotify* pTimerNotify, UINT_PTR pTimerId)
 {
 	if	(pTimerId == mClientLifetimeTimer)
 	{
@@ -754,7 +754,7 @@ void CDaServerModule::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaServerModule::OnShowModelessPropertySheet (CAtlPropertySheet * pPropertySheet)
+void CDaServerModule::OnShowModelessPropertySheet (CAtlPropertySheet* pPropertySheet)
 {
 #ifdef	_DEBUG_MODELESS_PROPSHEET
 	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnShowModelessPropertySheet [%p] [%s]"), pPropertySheet, AtlTypeName(pPropertySheet));
@@ -762,7 +762,7 @@ void CDaServerModule::OnShowModelessPropertySheet (CAtlPropertySheet * pProperty
 	mModelessPropSheets.AddUnique (pPropertySheet);
 }
 
-void CDaServerModule::OnHideModelessPropertySheet (CAtlPropertySheet * pPropertySheet)
+void CDaServerModule::OnHideModelessPropertySheet (CAtlPropertySheet* pPropertySheet)
 {
 #ifdef	_DEBUG_MODELESS_PROPSHEET
 	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnHideModelessPropertySheet [%p] [%s]"), pPropertySheet, AtlTypeName(pPropertySheet));
@@ -774,7 +774,7 @@ void CDaServerModule::OnHideModelessPropertySheet (CAtlPropertySheet * pProperty
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CDaServerModule::OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CDaServerModule::OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	if	(CListeningGlobal::OnHotKey (wParam, lParam))
@@ -784,13 +784,13 @@ LRESULT CDaServerModule::OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-LRESULT CDaServerModule::OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CDaServerModule::OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	_OptionsChanged ();
 	return 0;
 }
 
-LRESULT CDaServerModule::OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CDaServerModule::OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	CEventGlobal::_DefaultCharacterChanged ();
 	return 0;
@@ -968,7 +968,7 @@ bool CDaServerModule::StartActionTrace (long pCharID)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	try
 	{
-		CDaCmnCharacter *	lCharacter;
+		CDaCmnCharacter*	lCharacter;
 
 		if	(
 				(CRegDWord (CRegKeyEx (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, true), _T(_SERVER_REGNAME), true), _T("ActionTrace")).Value() != 0)
@@ -986,7 +986,7 @@ bool CDaServerModule::StartActionTrace (long pCharID)
 			}
 
 			GetLocalTime (&lTraceTime);
-			lTraceFilePath = lCharacter->GetFile()->GetFileName();
+			lTraceFilePath = lCharacter->GetFile()->FileName;
 			PathStripPath (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
 			PathRemoveExtension (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
 #ifdef	_DEBUG

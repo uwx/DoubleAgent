@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -52,7 +52,7 @@ CDirectShowFilter::CDirectShowFilter()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::CDirectShowFilter (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::CDirectShowFilter (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -62,7 +62,7 @@ CDirectShowFilter::~CDirectShowFilter()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::~CDirectShowFilter (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::~CDirectShowFilter (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
@@ -75,7 +75,7 @@ void CDirectShowFilter::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::FinalRelease (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::FinalRelease (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
@@ -279,7 +279,7 @@ HRESULT CDirectShowFilter::StartPins ()
 	{
 		HRESULT				lPinResult;
 		INT_PTR				lPinNdx;
-		CDirectShowPin *	lPin;
+		CDirectShowPin*	lPin;
 
 		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
@@ -331,7 +331,7 @@ HRESULT CDirectShowFilter::StopPins ()
 	{
 		HRESULT				lPinResult;
 		INT_PTR				lPinNdx;
-		CDirectShowPin *	lPin;
+		CDirectShowPin*	lPin;
 
 		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
@@ -376,7 +376,7 @@ HRESULT CDirectShowFilter::StopPins ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowFilter::StartInputPin (CDirectShowPin * pPin)
+HRESULT CDirectShowFilter::StartInputPin (CDirectShowPin* pPin)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -392,7 +392,7 @@ HRESULT CDirectShowFilter::StartInputPin (CDirectShowPin * pPin)
 	return lResult;
 }
 
-HRESULT CDirectShowFilter::StopInputPin (CDirectShowPin * pPin)
+HRESULT CDirectShowFilter::StopInputPin (CDirectShowPin* pPin)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -410,7 +410,7 @@ HRESULT CDirectShowFilter::StopInputPin (CDirectShowPin * pPin)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowFilter::StartOutputPin (CDirectShowPin * pPin)
+HRESULT CDirectShowFilter::StartOutputPin (CDirectShowPin* pPin)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -426,7 +426,7 @@ HRESULT CDirectShowFilter::StartOutputPin (CDirectShowPin * pPin)
 	return lResult;
 }
 
-HRESULT CDirectShowFilter::StopOutputPin (CDirectShowPin * pPin)
+HRESULT CDirectShowFilter::StopOutputPin (CDirectShowPin* pPin)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -456,7 +456,7 @@ HRESULT CDirectShowFilter::StartOutputStreams ()
 #endif
 		HRESULT				lPinResult;
 		INT_PTR				lPinNdx;
-		CDirectShowPin *	lPin;
+		CDirectShowPin*	lPin;
 
 		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
@@ -493,7 +493,7 @@ HRESULT CDirectShowFilter::StopOutputStreams ()
 #endif
 		HRESULT				lPinResult;
 		INT_PTR				lPinNdx;
-		CDirectShowPin *	lPin;
+		CDirectShowPin*	lPin;
 
 		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
@@ -520,7 +520,7 @@ HRESULT CDirectShowFilter::StopOutputStreams ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowFilter::StartOutputStream (CDirectShowPin * pPin)
+HRESULT CDirectShowFilter::StartOutputStream (CDirectShowPin* pPin)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -541,7 +541,7 @@ HRESULT CDirectShowFilter::StartOutputStream (CDirectShowPin * pPin)
 	return lResult;
 }
 
-HRESULT CDirectShowFilter::StopOutputStream (CDirectShowPin * pPin)
+HRESULT CDirectShowFilter::StopOutputStream (CDirectShowPin* pPin)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -559,7 +559,7 @@ HRESULT CDirectShowFilter::StopOutputStream (CDirectShowPin * pPin)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowFilter::GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime)
+void CDirectShowFilter::GetSeekingTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime)
 {
 	pCurrTime = 0;
 	pStopTime = 0;
@@ -579,7 +579,7 @@ bool CDirectShowFilter::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 
 		try
 		{
-			CDirectShowPin *	lInputPin;
+			CDirectShowPin*	lInputPin;
 
 			if	(
 					(mInputPins.GetCount() > 0)
@@ -628,7 +628,7 @@ void CDirectShowFilter::BeginFlush ()
 	try
 	{
 		INT_PTR				lPinNdx;
-		CDirectShowPin *	lPin;
+		CDirectShowPin*	lPin;
 
 		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
@@ -648,7 +648,7 @@ void CDirectShowFilter::EndFlush ()
 	try
 	{
 		INT_PTR				lPinNdx;
-		CDirectShowPin *	lPin;
+		CDirectShowPin*	lPin;
 
 		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
@@ -680,11 +680,11 @@ void CDirectShowFilter::OnLeftFilterGraph ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowFilter::OnPinConnected (CDirectShowPin * pPin)
+void CDirectShowFilter::OnPinConnected (CDirectShowPin* pPin)
 {
 }
 
-void CDirectShowFilter::OnPinDisconnected (CDirectShowPin * pPin)
+void CDirectShowFilter::OnPinDisconnected (CDirectShowPin* pPin)
 {
 }
 
@@ -707,7 +707,7 @@ void CDirectShowFilter::OnEndInputStream (INT_PTR pPendingSamples)
 	}
 }
 
-void CDirectShowFilter::OnGotInputSample (CDirectShowPin * pPin)
+void CDirectShowFilter::OnGotInputSample (CDirectShowPin* pPin)
 {
 }
 
@@ -884,7 +884,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::EnumPins (IEnumPins **ppEnum)
 	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::EnumPins"), this, max(m_dwRef,-1), AtlTypeName(this));
 #endif
 	HRESULT						lResult = S_OK;
-	CComObject <CEnumPins> *	lEnum = NULL;
+	CComObject <CEnumPins>*	lEnum = NULL;
 	IEnumPinsPtr				lInterface;
 
 	if	(!ppEnum)
@@ -908,7 +908,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::EnumPins (IEnumPins **ppEnum)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::FindPin (LPCWSTR Id, IPin **ppPin)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::FindPin (LPCWSTR Id, IPin**ppPin)
 {
 #ifdef	_DEBUG_FILTER
 	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::FindPin"), this, max(m_dwRef,-1), AtlTypeName(this));
@@ -968,7 +968,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::QueryFilterInfo (FILTER_INFO *pInfo
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::JoinFilterGraph (IFilterGraph*pGraph, LPCWSTR pName)
 {
 #ifdef	_DEBUG_FILTER
 	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::JoinFilterGraph [%p] [%ls]"), this, max(m_dwRef,-1), AtlTypeName(this), pGraph, pName);

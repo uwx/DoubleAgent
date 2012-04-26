@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -35,13 +35,13 @@ class CVoiceCommandsWnd;
 
 interface _IListeningAnchor
 {
-	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0) = 0;
+	virtual CVoiceCommandsWnd* GetVoiceCommandsWnd (bool pCreate, long pCharID = 0) = 0;
 	virtual bool IsHotKeyStillPressed () const = 0;
 
 	virtual bool AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink) = 0;
 	virtual bool DelListeningTimer (UINT_PTR pTimerId) = 0;
 	virtual bool HasListeningTimer (UINT_PTR pTimerId) = 0;
-	virtual CTimerNotify * GetListeningTimer (UINT_PTR pTimerId) = 0;
+	virtual CTimerNotify* GetListeningTimer (UINT_PTR pTimerId) = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ class CListeningState :
 	public _ISapi5InputEventSink
 {
 public:
-	CListeningState (CDaCmnCharacter & pCharacter);
+	CListeningState (CDaCmnCharacter& pCharacter);
 	virtual ~CListeningState ();
 
 // Attributes
@@ -83,8 +83,8 @@ public:
 
 // Overrides
 public:
-	virtual void OnSapi5InputEvent (const class CSpEvent & pEvent);
-	virtual void OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTimerId);
+	virtual void OnSapi5InputEvent (const class CSpEvent& pEvent);
+	virtual void OnTimerNotify (CTimerNotify* pTimerNotify, UINT_PTR pTimerId);
 	virtual void _OnCharacterLoaded (long pCharID);
 	virtual void _OnCharacterUnloaded (long pCharID);
 	virtual void _OnCharacterNameChanged (long pCharID);
@@ -93,16 +93,16 @@ public:
 // Implementation
 protected:
 	HRESULT GetInputContext ();
-	HRESULT StartInputContext (CSapi5InputContext * pPrevInputContext = NULL);
+	HRESULT StartInputContext (CSapi5InputContext* pPrevInputContext = NULL);
 	HRESULT ShowListeningTip (bool pShow, bool pListening, LPCTSTR pReason = NULL);
 
 	void StartListenTimers (bool pManual);
 	void StopListenTimers ();
-	void GrabListenTimers (CListeningState & pFromState);
+	void GrabListenTimers (CListeningState& pFromState);
 
 protected:
-	CDaCmnCharacter &			mCharacter;
-	CSapi5Input *				mSapi5Input;
+	CDaCmnCharacter&			mCharacter;
+	CSapi5Input*				mSapi5Input;
 	tPtr <CSapi5InputContext>	mSapi5InputContext;
 	bool						mHearingStateShown;
 	bool						mListenSuspended;
@@ -126,13 +126,13 @@ class CListeningAnchor :
 	public _IListeningAnchor
 {
 public:
-	CListeningAnchor (class CListeningGlobal & pGlobal);
+	CListeningAnchor (class CListeningGlobal& pGlobal);
 	virtual ~CListeningAnchor ();
 
 // Attributes
 public:
-	class CListeningGlobal &	mGlobal;
-	CWindow *					mOwnerWnd;
+	class CListeningGlobal&	mGlobal;
+	CWindow*					mOwnerWnd;
 
 	bool IsStarted () const {return mStarted;}
 
@@ -141,13 +141,13 @@ public:
 	void Startup (HWND pHotKeyWnd);
 	void Shutdown ();
 
-	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0);
+	virtual CVoiceCommandsWnd* GetVoiceCommandsWnd (bool pCreate, long pCharID = 0);
 	virtual bool IsHotKeyStillPressed () const;
 
 	virtual bool AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
 	virtual bool DelListeningTimer (UINT_PTR pTimerId);
 	virtual bool HasListeningTimer (UINT_PTR pTimerId);
-	virtual CTimerNotify * GetListeningTimer (UINT_PTR pTimerId);
+	virtual CTimerNotify* GetListeningTimer (UINT_PTR pTimerId);
 
 // Implementation
 protected:
@@ -165,12 +165,12 @@ protected:
 class CListeningGlobal : public virtual _IEventNotify
 {
 public:
-	CListeningGlobal (class CGlobalAnchor & pAnchor);
+	CListeningGlobal (class CGlobalAnchor& pAnchor);
 	virtual ~CListeningGlobal ();
 
 // Attributes
 public:
-	class CGlobalAnchor &	mAnchor;
+	class CGlobalAnchor&	mAnchor;
 
 	bool IsStarted () const {return mStarted;}
 	bool IsSuspended () const {return mSuspended;}
@@ -182,7 +182,7 @@ public:
 	void Suspend ();
 	void Resume ();
 
-	CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate = false, CWindow * pOwnerWnd = NULL);
+	CVoiceCommandsWnd* GetVoiceCommandsWnd (bool pCreate = false, CWindow* pOwnerWnd = NULL);
 
 	void SetVoiceCommandCharacter (long pCharID);
 	void SetVoiceCommandClients (long pCharID);

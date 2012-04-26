@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -30,7 +30,7 @@ static const REFERENCE_TIME sDefaultClockInterval = 50000;
 class tHandleTypeRegisteredWait : public tHandleType <HANDLE>
 {
 private:
-	virtual bool __Close (HANDLE & pHandle) {return UnregisterWait (pHandle) ? false : true;}
+	virtual bool __Close (HANDLE& pHandle) {return UnregisterWait (pHandle) ? false : true;}
 };
 typedef tHandle <HANDLE, tHandleTypeRegisteredWait>	CRegisteredWaitHandle;
 

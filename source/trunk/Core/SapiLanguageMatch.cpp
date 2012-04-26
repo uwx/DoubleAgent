@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -33,7 +33,7 @@ CSapiLanguageMatch::~CSapiLanguageMatch ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CSapiLanguageMatch::MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults) const
+void CSapiLanguageMatch::MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID>& pLanguageIds, bool pUseDefaults) const
 {
 	pLanguageIds.RemoveAll ();
 
@@ -72,7 +72,7 @@ void CSapiLanguageMatch::MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArra
 	}
 }
 
-INT_PTR CSapiLanguageMatch::FindLanguageMatch (LANGID pLanguageId, const CAtlTypeArray <LANGID> & pLanguageIds) const
+INT_PTR CSapiLanguageMatch::FindLanguageMatch (LANGID pLanguageId, const CAtlTypeArray <LANGID>& pLanguageIds) const
 {
 	INT_PTR	lLanguageNdx = pLanguageIds.Find (pLanguageId);
 

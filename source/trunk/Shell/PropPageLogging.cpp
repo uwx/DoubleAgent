@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -181,7 +181,7 @@ void CPropPageLogging::ShowLogging (INT_PTR pKeyNdx)
 	ShowLogPath (*lLogPath, pKeyNdx);
 }
 
-void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel, INT_PTR pKeyNdx)
+void CPropPageLogging::ShowLogLevel (const CRegDWord& pLogLevel, INT_PTR pKeyNdx)
 {
 	DWORD	lLogLevel = pLogLevel.Value() & LogLevelMask;
 
@@ -192,7 +192,7 @@ void CPropPageLogging::ShowLogLevel (const CRegDWord & pLogLevel, INT_PTR pKeyNd
 	Button_SetCheck (mLogLevelVerbose, lLogLevel == LogVerbose);
 }
 
-void CPropPageLogging::ShowLogPath (const CRegString & pLogPath, INT_PTR pKeyNdx)
+void CPropPageLogging::ShowLogPath (const CRegString& pLogPath, INT_PTR pKeyNdx)
 {
 	CAtlString	lFilePath;
 	CAtlString	lFileName;
@@ -289,7 +289,7 @@ void CPropPageLogging::UpdateLogging ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::SplitLogPath (LPCTSTR pLogPath, CAtlString & pFilePath, CAtlString & pFileName)
+void CPropPageLogging::SplitLogPath (LPCTSTR pLogPath, CAtlString& pFilePath, CAtlString& pFileName)
 {
 	pFilePath = pLogPath;
 	pFilePath.TrimLeft ();
@@ -430,13 +430,13 @@ CAtlString CPropPageLogging::MakeLogPath (bool pDefaultBlank)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageLogging::OnLogComponent(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogComponent(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	ShowLogging ();
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	CRegKeyEx *	lLogKey;
 	DWORD		lLogLevel = Button_GetCheck (mLogLevelIfActive) ? LogIfActive : Button_GetCheck (mLogLevelNormal) ? LogNormal : Button_GetCheck (mLogLevelDetail) ? LogDetail : Button_GetCheck (mLogLevelVerbose) ? LogVerbose : 0;
@@ -460,7 +460,7 @@ LRESULT CPropPageLogging::OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogTraceActions(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogTraceActions(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(mLogTraceValue)
 	{
@@ -470,7 +470,7 @@ LRESULT CPropPageLogging::OnLogTraceActions(WORD wNotifyCode, WORD wID, HWND hWn
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogCrashDump(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogCrashDump(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(mLogCrashValue)
 	{
@@ -482,14 +482,14 @@ LRESULT CPropPageLogging::OnLogCrashDump(WORD wNotifyCode, WORD wID, HWND hWndCt
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageLogging::OnLogFileChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogFileChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	UpdateLogPath (mKeyNdx);
 	bHandled = FALSE;
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogFileBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogFileBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	CAtlString	lFilePath = MakeLogPath (false);
 	CAtlString	lFileName;
@@ -505,7 +505,7 @@ LRESULT CPropPageLogging::OnLogFileBrowse(WORD wNotifyCode, WORD wID, HWND hWndC
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogFileReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogFileReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	CAtlString	lFileName;
 	CAtlString	lFilePath;
@@ -520,14 +520,14 @@ LRESULT CPropPageLogging::OnLogFileReset(WORD wNotifyCode, WORD wID, HWND hWndCt
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageLogging::OnLogPathChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogPathChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	UpdateLogPath (mKeyNdx);
 	bHandled = FALSE;
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogPathBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogPathBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	CAtlString	lFilePath;
 	CAtlString	lFileName;
@@ -544,7 +544,7 @@ LRESULT CPropPageLogging::OnLogPathBrowse(WORD wNotifyCode, WORD wID, HWND hWndC
 	return 0;
 }
 
-LRESULT CPropPageLogging::OnLogPathReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogPathReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	CAtlString	lFileName;
 	CAtlString	lFilePath;
@@ -561,7 +561,7 @@ LRESULT CPropPageLogging::OnLogPathReset(WORD wNotifyCode, WORD wID, HWND hWndCt
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CPropPageLogging::BrowseForFile (CAtlString & pFileName, DWORD pFlags)
+bool CPropPageLogging::BrowseForFile (CAtlString& pFileName, DWORD pFlags)
 {
 	bool						lRet = false;
 	tSS <OPENFILENAME, DWORD>	lOpenFile;
@@ -583,7 +583,7 @@ bool CPropPageLogging::BrowseForFile (CAtlString & pFileName, DWORD pFlags)
 	return lRet;
 }
 
-bool CPropPageLogging::BrowseForFolder (CAtlString & pFolderPath)
+bool CPropPageLogging::BrowseForFolder (CAtlString& pFolderPath)
 {
 	bool			lRet = false;
 	tS <BROWSEINFO>	lBrowseInfo;
@@ -667,7 +667,7 @@ int CALLBACK CPropPageLogging::BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM l
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageLogging::OnLogRegistry(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageLogging::OnLogRegistry(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	CAtlString	lLogPath;
 
@@ -1036,7 +1036,7 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pClassTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
+bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pClassTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged)
 {
 	CRegKeyEx	lClassIdKey (pRootKey, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
 
@@ -1060,7 +1060,7 @@ bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pCl
 	return false;
 }
 
-bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
+bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged)
 {
 	CRegKeyEx	lAppIdKey (pRootKey, _T("APPID\\")+(CString)CGuidStr(pAppId), true);
 
@@ -1084,7 +1084,7 @@ bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTit
 	return false;
 }
 
-bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProgIdTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
+bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProgIdTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged)
 {
 	CRegKeyEx	lProgIdKey (pRootKey, pProgId, true);
 
@@ -1108,7 +1108,7 @@ bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProg
 	return false;
 }
 
-bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
+bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged)
 {
 	CRegKeyEx	lTypeLibKey (pRootKey, _T("TYPELIB\\")+(CString)CGuidStr(pTypeLibId), true);
 
@@ -1132,7 +1132,7 @@ bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR p
 	return false;
 }
 
-bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
+bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged)
 {
 	CRegKeyEx	lInterfaceKey (pRootKey, _T("INTERFACE\\")+(CString)CGuidStr(pInterfaceId), true);
 
@@ -1160,7 +1160,7 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::LogRegKey (UINT pLogLevel, CRegKeyEx & pRegKey, LPCTSTR pTitle, UINT pIndent)
+void CPropPageLogging::LogRegKey (UINT pLogLevel, CRegKeyEx& pRegKey, LPCTSTR pTitle, UINT pIndent)
 {
 	CAtlString			lTitle (pTitle);
 	CAtlString			lIndent (_T(' '), (int)pIndent);

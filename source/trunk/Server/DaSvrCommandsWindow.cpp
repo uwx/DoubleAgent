@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -65,9 +65,9 @@ DaSvrCommandsWindow::~DaSvrCommandsWindow ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommandsWindow * DaSvrCommandsWindow::CreateInstance (CVoiceCommandsWnd * pVoiceCommandsWnd, LPCTSTR pClientMutexName)
+DaSvrCommandsWindow* DaSvrCommandsWindow::CreateInstance (CVoiceCommandsWnd* pVoiceCommandsWnd, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrCommandsWindow> *	lInstance = NULL;
+	CComObject<DaSvrCommandsWindow>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrCommandsWindow>::CreateInstance (&lInstance))))
 	{

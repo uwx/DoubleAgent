@@ -65,16 +65,16 @@ public:
 	_DACORE_IMPEXP virtual HRESULT Pause () = 0;
 	_DACORE_IMPEXP virtual HRESULT Resume () = 0;
 
-	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
-	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr& pUniqueId);
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr& pDisplayName);
 
-	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG& pRate);
 	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
 
-	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT& pVolume);
 	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
 
-	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT & pPitch);
+	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT& pPitch);
 	_DACORE_IMPEXP virtual HRESULT SetPitch (USHORT pPitch);
 
 	_DACORE_IMPEXP long GetEventCharID () const;

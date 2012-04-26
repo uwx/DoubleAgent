@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -42,26 +42,26 @@ protected:
 	_DACORE_IMPEXP virtual ~CNotifyObjects ();
 
 protected:
-	_DACORE_IMPEXP virtual ULONG AddNotifyObject (void * pNotifyObject, void * pSourceObject, CNotifyObjects * pTargetObjects);
-	_DACORE_IMPEXP virtual bool RemoveNotifyObject (void * pNotifyObject, void * pSourceObject, CNotifyObjects * pTargetObjects);
-	_DACORE_IMPEXP virtual bool RemoveNotifyObject (INT_PTR pObjectNdx, void * pSourceObject, CNotifyObjects * pTargetObjects);
+	_DACORE_IMPEXP virtual ULONG AddNotifyObject (void* pNotifyObject, void* pSourceObject, CNotifyObjects * pTargetObjects);
+	_DACORE_IMPEXP virtual bool RemoveNotifyObject (void* pNotifyObject, void* pSourceObject, CNotifyObjects * pTargetObjects);
+	_DACORE_IMPEXP virtual bool RemoveNotifyObject (INT_PTR pObjectNdx, void* pSourceObject, CNotifyObjects * pTargetObjects);
 	_DACORE_IMPEXP virtual bool ClearNotifyObjects ();
 
 	_DACORE_IMPEXP virtual INT_PTR GetNotifyObjectCount () const;
-	_DACORE_IMPEXP virtual void * GetNotifyObject (INT_PTR pNdx) const;
-	_DACORE_IMPEXP virtual ULONG FindNotifyObject (const void * pNotifyObject) const;
-	_DACORE_IMPEXP virtual void * FindNotifyObject (ULONG pNotifyObjectId) const;
+	_DACORE_IMPEXP virtual void* GetNotifyObject (INT_PTR pNdx) const;
+	_DACORE_IMPEXP virtual ULONG FindNotifyObject (const void* pNotifyObject) const;
+	_DACORE_IMPEXP virtual void* FindNotifyObject (ULONG pNotifyObjectId) const;
 
 	_DACORE_IMPEXP virtual CNotifyObjects * GetTargetObjects (INT_PTR pNdx) const;
-	_DACORE_IMPEXP virtual CNotifyObjects * GetTargetObjects (const void * pNotifyObject) const;
+	_DACORE_IMPEXP virtual CNotifyObjects * GetTargetObjects (const void* pNotifyObject) const;
 
 private:
 	struct tNotifyObject
 	{
-		void *				mObject;
+		void*				mObject;
 		ULONG				mObjectId;
 		CNotifyObjects *	mTargetObjects;
-		tNotifyObject (void * pObject = NULL, ULONG pObjectId = 0, CNotifyObjects * pTargetObjects = NULL) : mObject (pObject), mObjectId (pObjectId), mTargetObjects (pTargetObjects) {}
+		tNotifyObject (void* pObject = NULL, ULONG pObjectId = 0, CNotifyObjects * pTargetObjects = NULL) : mObject (pObject), mObjectId (pObjectId), mTargetObjects (pTargetObjects) {}
 	};
 	CAtlStructArray <tNotifyObject>	mNotifyObjects;
 	ULONG							mNextObjectId;
@@ -114,12 +114,12 @@ public:
 	virtual ~CNotifySinksOwner2 () {ClearNotifySinks ();}
 
 public:
-	ULONG AddNotifySink (aSink * pNotifySink, CNotifySourcesOwner <aSource> * pNotifySources = NULL);
+	ULONG AddNotifySink (aSink * pNotifySink, CNotifySourcesOwner <aSource>* pNotifySources = NULL);
 	virtual bool RemoveNotifySink (aSink * pNotifySink);
 	virtual bool ClearNotifySinks ();
 
-	CNotifySourcesOwner <aSource> * GetNotifySources (INT_PTR pNdx) const {return (CNotifySourcesOwner <aSource> *) GetTargetObjects (pNdx);}
-	CNotifySourcesOwner <aSource> * GetNotifySources (const void * pNotifyObject) const {return (CNotifySourcesOwner <aSource> *) GetTargetObjects (pNotifyObject);}
+	CNotifySourcesOwner <aSource>* GetNotifySources (INT_PTR pNdx) const {return (CNotifySourcesOwner <aSource>*) GetTargetObjects (pNdx);}
+	CNotifySourcesOwner <aSource>* GetNotifySources (const void* pNotifyObject) const {return (CNotifySourcesOwner <aSource>*) GetTargetObjects (pNotifyObject);}
 
 public:
 	inline aSource * _GetNotifySource () {return static_cast <aSource *> (static_cast <aBase *> (this));}
@@ -134,12 +134,12 @@ public:
 	virtual ~CNotifySourcesOwner2 () {ClearNotifySources ();}
 
 public:
-	ULONG AddNotifySource (aSource * pNotifySource, CNotifySinksOwner <aSink> * pNotifySinks = NULL);
+	ULONG AddNotifySource (aSource * pNotifySource, CNotifySinksOwner <aSink>* pNotifySinks = NULL);
 	virtual bool RemoveNotifySource (aSource * pNotifySource);
 	virtual bool ClearNotifySources ();
 
-	CNotifySinksOwner <aSource> * GetNotifySinks (INT_PTR pNdx) const {return (CNotifySinksOwner <aSource> *) GetTargetObjects (pNdx);}
-	CNotifySinksOwner <aSource> * GetNotifySinks (const void * pNotifyObject) const {return (CNotifySinksOwner <aSource> *) GetTargetObjects (pNotifyObject);}
+	CNotifySinksOwner <aSource>* GetNotifySinks (INT_PTR pNdx) const {return (CNotifySinksOwner <aSource>*) GetTargetObjects (pNdx);}
+	CNotifySinksOwner <aSource>* GetNotifySinks (const void* pNotifyObject) const {return (CNotifySinksOwner <aSource>*) GetTargetObjects (pNotifyObject);}
 
 public:
 	inline aSink * _GetNotifySink () {return static_cast <aSink *> (static_cast <aBase *> (this));}
@@ -234,7 +234,7 @@ bool CNotifySourcesOwner<aSource>::ClearNotifySources ()
 //////////////////////////////////////////////////////////////////////
 
 template <class aSink, class aSource, class aBase>
-ULONG CNotifySinksOwner2<aSink,aSource,aBase>::AddNotifySink (aSink * pNotifySink, CNotifySourcesOwner <aSource> * pNotifySources)
+ULONG CNotifySinksOwner2<aSink,aSource,aBase>::AddNotifySink (aSink * pNotifySink, CNotifySourcesOwner <aSource>* pNotifySources)
 {
 	ULONG		lNotifySinkId;
 	aSource *	lNotifySource;
@@ -329,7 +329,7 @@ bool CNotifySinksOwner2<aSink,aSource,aBase>::ClearNotifySinks ()
 //////////////////////////////////////////////////////////////////////
 
 template <class aSource, class aSink, class aBase>
-ULONG CNotifySourcesOwner2<aSource,aSink,aBase>::AddNotifySource (aSource * pNotifySource, CNotifySinksOwner <aSink> * pNotifySinks)
+ULONG CNotifySourcesOwner2<aSource,aSink,aBase>::AddNotifySource (aSource * pNotifySource, CNotifySinksOwner <aSink>* pNotifySinks)
 {
 	ULONG	lNotifySourceId;
 	aSink *	lNotifySink;

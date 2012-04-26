@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -88,7 +88,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** EnumVariant);
 	HRESULT STDMETHODCALLTYPE Unload (BSTR CharacterID);
 	HRESULT STDMETHODCALLTYPE Load (BSTR CharacterID, VARIANT Provider, IDaCtlRequest ** ppidRequest);
-	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
+	HRESULT STDMETHODCALLTYPE get_Count (long* Count);
 	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCharacter2 ** Character);
 
 // Implementation

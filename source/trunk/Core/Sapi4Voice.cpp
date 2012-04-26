@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -142,7 +142,7 @@ CSapi4Voice::~CSapi4Voice ()
 #endif
 }
 
-CSapi4Voice * CSapi4Voice::CreateInstance ()
+CSapi4Voice* CSapi4Voice::CreateInstance ()
 {
 	return new CSapi4Voice;
 }
@@ -208,10 +208,10 @@ bool CSapi4Voice::_IsSpeaking () const
 			{
 				_SAPI4_LOG::LogMessage (_TRACE_STATE, _T("[%p] *** BusyTime %f [Queueing %f Parsing %f Speaking %f Resetting %f] ***"), this, ((double)lElapsed)/1000.0, ((double)lQueueingElapsed)/1000.0, ((double)lParsingElapsed)/1000.0, ((double)lSpeakingElapsed)/1000.0, ((double)lResettingElapsed)/1000.0);
 				_SAPI4_LOG::LogWriteCache ();
-				const_cast <CSapi4Voice *> (this)->mIsQueueing = NULL;
-				const_cast <CSapi4Voice *> (this)->mIsParsing = NULL;
-				const_cast <CSapi4Voice *> (this)->mIsSpeaking = NULL;
-				const_cast <CSapi4Voice *> (this)->mResetPending = NULL;
+				const_cast <CSapi4Voice*> (this)->mIsQueueing = NULL;
+				const_cast <CSapi4Voice*> (this)->mIsParsing = NULL;
+				const_cast <CSapi4Voice*> (this)->mIsSpeaking = NULL;
+				const_cast <CSapi4Voice*> (this)->mResetPending = NULL;
 			}
 		}
 #endif
@@ -632,7 +632,7 @@ HRESULT CSapi4Voice::Resume ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CSapi4Voice::GetEngineId (GUID & pEngineId)
+HRESULT CSapi4Voice::GetEngineId (GUID& pEngineId)
 {
 	HRESULT				lResult = E_UNEXPECTED;
 	tS <TTSMODEINFO>	lModeInfo;
@@ -647,7 +647,7 @@ HRESULT CSapi4Voice::GetEngineId (GUID & pEngineId)
 	return lResult;
 }
 
-HRESULT CSapi4Voice::GetModeId (GUID & pModeId)
+HRESULT CSapi4Voice::GetModeId (GUID& pModeId)
 {
 	HRESULT				lResult = E_UNEXPECTED;
 	tS <TTSMODEINFO>	lModeInfo;
@@ -662,7 +662,7 @@ HRESULT CSapi4Voice::GetModeId (GUID & pModeId)
 	return lResult;
 }
 
-HRESULT CSapi4Voice::SetModeId (const GUID & pModeId)
+HRESULT CSapi4Voice::SetModeId (const GUID& pModeId)
 {
 	HRESULT		lResult = E_UNEXPECTED;
 	ITTSEnumPtr	lEnum;
@@ -670,8 +670,8 @@ HRESULT CSapi4Voice::SetModeId (const GUID & pModeId)
 
 	if	(
 			(mEngine == NULL)
-		&&	(SUCCEEDED (lResult = _SAPI4_LOG::LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_SERVER, IID_ITTSEnum, (void **) &lEnum))))
-		&&	(SUCCEEDED (lResult = _SAPI4_LOG::LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MMAudioDest, NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void **) &lAudioDest))))
+		&&	(SUCCEEDED (lResult = _SAPI4_LOG::LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_TTSEnumerator, NULL, CLSCTX_SERVER, IID_ITTSEnum, (void**) &lEnum))))
+		&&	(SUCCEEDED (lResult = _SAPI4_LOG::LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_MMAudioDest, NULL, CLSCTX_SERVER, __uuidof(IUnknown), (void**) &lAudioDest))))
 		)
 	{
 		mAudioDest = NULL;
@@ -700,7 +700,7 @@ tBstrPtr CSapi4Voice::GetDisplayName ()
 	return CSapiVoice::GetDisplayName ();
 }
 
-HRESULT CSapi4Voice::GetDisplayName (tBstrPtr & pDisplayName)
+HRESULT CSapi4Voice::GetDisplayName (tBstrPtr& pDisplayName)
 {
 	HRESULT				lResult = E_UNEXPECTED;
 	tS <TTSMODEINFO>	lModeInfo;
@@ -722,7 +722,7 @@ tBstrPtr CSapi4Voice::GetUniqueId ()
 	return CSapiVoice::GetUniqueId ();
 }
 
-HRESULT CSapi4Voice::GetUniqueId (tBstrPtr & pUniqueId)
+HRESULT CSapi4Voice::GetUniqueId (tBstrPtr& pUniqueId)
 {
 	HRESULT		lResult;
 	GUID		lModeId;
@@ -748,7 +748,7 @@ ULONG CSapi4Voice::GetRate ()
 	return CSapiVoice::GetRate();
 }
 
-HRESULT CSapi4Voice::GetRate (ULONG & pRate)
+HRESULT CSapi4Voice::GetRate (ULONG& pRate)
 {
 	HRESULT				lResult = E_UNEXPECTED;
 	ITTSAttributesPtr	lAttributes (mEngine);
@@ -784,7 +784,7 @@ USHORT CSapi4Voice::GetVolume ()
 	return CSapiVoice::GetVolume();
 }
 
-HRESULT CSapi4Voice::GetVolume (USHORT & pVolume)
+HRESULT CSapi4Voice::GetVolume (USHORT& pVolume)
 {
 	HRESULT				lResult = E_UNEXPECTED;
 	ITTSAttributesPtr	lAttributes (mEngine);
@@ -822,7 +822,7 @@ USHORT CSapi4Voice::GetPitch ()
 	return CSapiVoice::GetPitch();
 }
 
-HRESULT CSapi4Voice::GetPitch (USHORT & pPitch)
+HRESULT CSapi4Voice::GetPitch (USHORT& pPitch)
 {
 	HRESULT				lResult = E_UNEXPECTED;
 	ITTSAttributesPtr	lAttributes (mEngine);
@@ -954,7 +954,7 @@ static CAtlString InterfaceFlagsString (DWORD pFlags)
 
 /////////////////////////////////////////////////////////////////////////////
 
-static void SubtractCurrentTime (FILETIME & pFileTime)
+static void SubtractCurrentTime (FILETIME& pFileTime)
 {
 	FILETIME		lCurrFileTime;
 	ULARGE_INTEGER	lLargeFileTime [2];
@@ -1228,7 +1228,7 @@ static CAtlString MouthOverlayStr (short pMouthOverlayNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice & pOwner)
+CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice& pOwner)
 :	mOwner (pOwner),
 	mRegisteredKey (0)
 {

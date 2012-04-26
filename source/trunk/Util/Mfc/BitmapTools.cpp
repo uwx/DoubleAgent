@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -35,7 +35,7 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::CreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, LPBYTE * pBmpBits, bool pForBlending, bool pTopDown)
+bool CBitmapTools::CreateColorBitmap (const CSize& pSize, CBitmap& pBitmap, LPBYTE* pBmpBits, bool pForBlending, bool pTopDown)
 {
 	bool			lRet = false;
 	CDC				lDC;
@@ -66,7 +66,7 @@ bool CBitmapTools::CreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, LP
 
 	lDC.CreateCompatibleDC (0);
 	pBitmap.DeleteObject ();
-	if	(pBitmap.Attach (CreateDIBSection (lDC, &lBmpInfo, DIB_RGB_COLORS, (void **) &lBmpBits, NULL, NULL)))
+	if	(pBitmap.Attach (CreateDIBSection (lDC, &lBmpInfo, DIB_RGB_COLORS, (void**) &lBmpBits, NULL, NULL)))
 	{
 		GdiFlush ();
 		SetBitmapDimensionEx ((HBITMAP) pBitmap.GetSafeHandle (), pSize.cx, pSize.cy, NULL);
@@ -84,7 +84,7 @@ bool CBitmapTools::CreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, LP
 	return lRet;
 }
 
-bool CBitmapTools::RecreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, LPBYTE * pBmpBits, bool pForBlending, bool pTopDown)
+bool CBitmapTools::RecreateColorBitmap (const CSize& pSize, CBitmap& pBitmap, LPBYTE* pBmpBits, bool pForBlending, bool pTopDown)
 {
 	tS <BITMAP>	lBitmap;
 	WORD		lBitCount;
@@ -114,7 +114,7 @@ bool CBitmapTools::RecreateColorBitmap (const CSize & pSize, CBitmap & pBitmap, 
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::CreateWindowBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits, bool pForBlending, bool pTopDown)
+bool CBitmapTools::CreateWindowBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits, bool pForBlending, bool pTopDown)
 {
 	if	(IsWindow (pWindow.m_hWnd))
 	{
@@ -126,7 +126,7 @@ bool CBitmapTools::CreateWindowBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE
 	return false;
 }
 
-bool CBitmapTools::RecreateWindowBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits, bool pForBlending, bool pTopDown)
+bool CBitmapTools::RecreateWindowBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits, bool pForBlending, bool pTopDown)
 {
 	if	(IsWindow (pWindow.m_hWnd))
 	{
@@ -150,7 +150,7 @@ bool CBitmapTools::RecreateWindowBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBY
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::CreateClientBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits, bool pForBlending, bool pTopDown)
+bool CBitmapTools::CreateClientBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits, bool pForBlending, bool pTopDown)
 {
 	if	(IsWindow (pWindow.m_hWnd))
 	{
@@ -162,7 +162,7 @@ bool CBitmapTools::CreateClientBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE
 	return false;
 }
 
-bool CBitmapTools::RecreateClientBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBYTE * pBmpBits, bool pForBlending, bool pTopDown, bool pExactFit)
+bool CBitmapTools::RecreateClientBitmap (CWnd& pWindow, CBitmap& pBitmap, LPBYTE* pBmpBits, bool pForBlending, bool pTopDown, bool pExactFit)
 {
 	if	(IsWindow (pWindow.m_hWnd))
 	{
@@ -199,7 +199,7 @@ bool CBitmapTools::RecreateClientBitmap (CWnd & pWindow, CBitmap & pBitmap, LPBY
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::ShrinkBitmap (CBitmap & pBitmap, LPBYTE & pBitmapBits, UINT pFactor, UINT pBlend)
+bool CBitmapTools::ShrinkBitmap (CBitmap& pBitmap, LPBYTE & pBitmapBits, UINT pFactor, UINT pBlend)
 {
 	bool			lRet = false;
 	CBitmap			lBitmap;
@@ -317,7 +317,7 @@ bool CBitmapTools::ShrinkBitmap (CBitmap & pBitmap, LPBYTE & pBitmapBits, UINT p
 	return lRet;
 }
 
-bool CBitmapTools::ShrinkBitmap (CBitmap & pSrcBitmap, LPBYTE & pSrcBitmapBits, CBitmap & pTrgBitmap, LPBYTE & pTrgBitmapBits, UINT pBlend)
+bool CBitmapTools::ShrinkBitmap (CBitmap& pSrcBitmap, LPBYTE & pSrcBitmapBits, CBitmap& pTrgBitmap, LPBYTE & pTrgBitmapBits, UINT pBlend)
 {
 	bool			lRet = false;
 	tS <BITMAP>		lTrgBitmap;
@@ -429,10 +429,10 @@ bool CBitmapTools::ShrinkBitmap (CBitmap & pSrcBitmap, LPBYTE & pSrcBitmapBits, 
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::SmearBitmap (CBitmap & pBitmap, LPBYTE & pBitmapBits, UINT pFactor)
+bool CBitmapTools::SmearBitmap (CBitmap& pBitmap, LPBYTE & pBitmapBits, UINT pFactor)
 {
 	bool		lRet = false;
-	CBitmap &	lSrcBitmap = pBitmap;
+	CBitmap&	lSrcBitmap = pBitmap;
 	CBitmap		lTrgBitmap;
 	LPBYTE &	lSrcBits = pBitmapBits;
 	LPBYTE		lTrgBits = NULL;
@@ -509,7 +509,7 @@ bool CBitmapTools::SmearBitmap (CBitmap & pBitmap, LPBYTE & pBitmapBits, UINT pF
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::GetBitmapInfo (HBITMAP pBitmap, BITMAPINFO & pBitmapInfo, BYTE ** pBitmapBits)
+bool CBitmapTools::GetBitmapInfo (HBITMAP pBitmap, BITMAPINFO& pBitmapInfo, BYTE** pBitmapBits)
 {
 	bool			lRet = false;
 	tS <BITMAP>		lBitmap;
@@ -560,7 +560,7 @@ bool CBitmapTools::GetBitmapInfo (HBITMAP pBitmap, BITMAPINFO & pBitmapInfo, BYT
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapTools::MapBitmapColors (HBITMAP pBitmap, const CColor & pColorFill, const CColor * pColorLight, const CColor * pColorDark, const CColor * pColorWhite, const CColor * pColorBlack, BYTE pVarianceMask)
+bool CBitmapTools::MapBitmapColors (HBITMAP pBitmap, const CColor& pColorFill, const CColor * pColorLight, const CColor * pColorDark, const CColor * pColorWhite, const CColor * pColorBlack, BYTE pVarianceMask)
 {
 	bool			lRet = false;
 	CBitmapBuffer	lBuffer;

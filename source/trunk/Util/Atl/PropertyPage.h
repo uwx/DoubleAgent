@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -39,7 +39,7 @@ public:
 
 // Implementation
 protected:
-	LRESULT HandleInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT HandleInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAtlPropertyPage)
 		MESSAGE_HANDLER(WM_INITDIALOG, HandleInitDialog)
@@ -49,7 +49,7 @@ protected:
 	void SetModified (BOOL pModified = TRUE) {PropSheet_Changed (::GetParent(m_hWnd), m_hWnd);}
 
 private:
-	static UINT CALLBACK PropPageCallback (HWND hwnd, UINT message, PROPSHEETPAGE * pPropPage);
+	static UINT CALLBACK PropPageCallback (HWND hwnd, UINT message, PROPSHEETPAGE* pPropPage);
 
 protected:
 	CString	mCaption;

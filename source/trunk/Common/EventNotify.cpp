@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -100,12 +100,12 @@ long CEventNotify::NextReqID ()
 	return mAnchor->mAnchor.NextReqID ();
 }
 
-class CAgentWnd * CEventNotify::GetRequestOwner (long pReqID)
+class CAgentWnd* CEventNotify::GetRequestOwner (long pReqID)
 {
 	return mAnchor->mAnchor.GetRequestOwner (pReqID);
 }
 
-class CAgentWnd * CEventNotify::GetAgentWnd (HWND pWindow)
+class CAgentWnd* CEventNotify::GetAgentWnd (HWND pWindow)
 {
 	return mAnchor->mAnchor.GetAgentWnd (pWindow);
 }
@@ -408,7 +408,7 @@ void CEventNotify::_CharacterListening (long pCharID, bool pListening, long pCau
 	}
 }
 
-bool CEventNotify::_DownloadComplete (class CFileDownload * pDownload)
+bool CEventNotify::_DownloadComplete (class CFileDownload* pDownload)
 {
 	bool	lRet = false;
 
@@ -438,9 +438,9 @@ bool CEventNotify::_DownloadComplete (class CFileDownload * pDownload)
 	return lRet;
 }
 
-class CFileDownload * CEventNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
+class CFileDownload* CEventNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
 {
-	class CFileDownload *	lRet = NULL;
+	class CFileDownload*	lRet = NULL;
 
 	try
 	{
@@ -466,7 +466,7 @@ class CFileDownload * CEventNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CEventNotify::_ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition)
+bool CEventNotify::_ContextMenu (long pCharID, HWND pOwner, const CPoint& pPosition)
 {
 	bool	lRet = false;
 
@@ -497,7 +497,7 @@ bool CEventNotify::_ContextMenu (long pCharID, HWND pOwner, const CPoint & pPosi
 	return lRet;
 }
 
-bool CEventNotify::_DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition)
+bool CEventNotify::_DefaultCommand (long pCharID, HWND pOwner, const CPoint& pPosition)
 {
 	bool	lRet = false;
 
@@ -630,7 +630,7 @@ void CEventGlobal::_CharacterLoaded (long pCharID)
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -648,7 +648,7 @@ void CEventGlobal::_CharacterUnloaded (long pCharID)
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -666,7 +666,7 @@ void CEventGlobal::_CharacterNameChanged (long pCharID)
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -684,7 +684,7 @@ void CEventGlobal::_CharacterActivated (long pActiveCharID, long pInputActiveCha
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -706,7 +706,7 @@ void CEventGlobal::_CharacterListening (long pCharID, bool pListening, long pCau
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -723,7 +723,7 @@ void CEventGlobal::_AppActivated (bool pActive)
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -738,7 +738,7 @@ void CEventGlobal::_OptionsChanged ()
 	try
 	{
 		INT_PTR			lNotifyNdx;
-		CEventNotify *	lNotify;
+		CEventNotify*	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -753,27 +753,27 @@ void CEventGlobal::_DefaultCharacterChanged ()
 	try
 	{
 		INT_PTR				lNotifyNdx;
-		CEventNotify *		lNotify;
+		CEventNotify*		lNotify;
 		tPtr <CAgentFile>	lFile;
 		CAtlString			lDefCharPath ((BSTR)CAgentFiles::GetDefCharPath());
 
 		if	(
 				(!lDefCharPath.IsEmpty ())
-			&&	(lFile = CAgentFile::CreateInstance())
+			&&	(lFile = CAgentFile::CreateInstance (lDefCharPath))
 			&&	(SUCCEEDED (lFile->Open (lDefCharPath)))
 			)
 		{
 #ifdef	_DEBUG_DEFAULT_CHAR
-			LogMessage (_DEBUG_DEFAULT_CHAR, _T("CEventGlobal::_DefaultCharacterChanged [%s] [%s]"), CGuidStr::GuidName(lFile->GetGuid()), (BSTR)lFile->GetFileName());
+			LogMessage (_DEBUG_DEFAULT_CHAR, _T("CEventGlobal::_DefaultCharacterChanged [%s] [%s]"), CGuidStr::GuidName(lFile->Header.Guid), (BSTR)lFile->FileName);
 #endif
 			for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
 			{
 				if	(lNotify->mAnchor->GetDefaultCharacter ())
 				{
 #ifdef	_DEBUG_DEFAULT_CHAR
-					LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] CEventNotify::_DefaultCharacterChanged [%s] [%s]"), lNotify, CGuidStr::GuidName(lFile->GetGuid()), (BSTR)lFile->GetFileName());
+					LogMessage (_DEBUG_DEFAULT_CHAR, _T("[%p] CEventNotify::_DefaultCharacterChanged [%s] [%s]"), lNotify, CGuidStr::GuidName(lFile->Header.Guid), (BSTR)lFile->FileName);
 #endif
-					lNotify->_DefaultCharacterChanged (lFile->GetGuid(), lDefCharPath);
+					lNotify->_DefaultCharacterChanged (lFile->Header.Guid, lDefCharPath);
 				}
 #ifdef	_DEBUG_DEFAULT_CHAR
 				else

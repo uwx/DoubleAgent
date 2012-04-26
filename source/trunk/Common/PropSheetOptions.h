@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,16 +26,16 @@
 class CPropSheetOptions : public CAtlPropertySheet
 {
 public:
-	CPropSheetOptions (class CListeningGlobal & pListeningGlobal, HWND pParentWnd = NULL);
+	CPropSheetOptions (class CListeningGlobal& pListeningGlobal, HWND pParentWnd = NULL);
 	virtual ~CPropSheetOptions();
 
 // Attributes
 
 // Operations
 public:
-	bool LoadLayout (CRect & pWinRect);
+	bool LoadLayout (CRect& pWinRect);
 	int LoadStartPage ();
-	void SaveLayout (const CRect & pWinRect);
+	void SaveLayout (const CRect& pWinRect);
 	void SaveStartPage (int pStartPageNdx);
 
 // Overrides
@@ -51,7 +51,7 @@ protected:
 
 // Implementation
 protected:
-	CListeningGlobal & mListeningGlobal;
+	CListeningGlobal& mListeningGlobal;
 };
 
 /////////////////////////////////////////////////////////////////////////////

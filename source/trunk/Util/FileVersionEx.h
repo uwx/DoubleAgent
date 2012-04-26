@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -34,10 +34,10 @@
 class CFileVersionEx : public CFileVersion
 {
 public:
-	CFileVersionEx (void * pVersionInfo, LPCTSTR pFileName = NULL);
+	CFileVersionEx (void* pVersionInfo, LPCTSTR pFileName = NULL);
 	CFileVersionEx (LPCTSTR pFileName);
 	CFileVersionEx (HMODULE pModule, LPCTSTR pFileName = NULL);
-	CFileVersionEx (const CFileVersionEx & pSource);
+	CFileVersionEx (const CFileVersionEx& pSource);
 	virtual ~CFileVersionEx ();
 
 //----------------------------------------------------------------------
@@ -64,13 +64,13 @@ public:
 
 //----------------------------------------------------------------------
 
-	bool FileFlagsValid (DWORD & pFileFlags, DWORD & pFileFlagsMask) const;
+	bool FileFlagsValid (DWORD& pFileFlags, DWORD& pFileFlagsMask) const;
 	bool OneCodePageValid () const;
 	bool AllCodePagesValid () const;
 
-	static CString MassageName (const CString & pName, bool pSingleLine = false);
-	static CString MassageProductName (const CString & pProductName, UINT pStrength = 0);
-	static CString MassageCompanyName (const CString & pCompanyName, UINT pStrength = 0);
+	static CString MassageName (const CString& pName, bool pSingleLine = false);
+	static CString MassageProductName (const CString& pProductName, UINT pStrength = 0);
+	static CString MassageCompanyName (const CString& pCompanyName, UINT pStrength = 0);
 
 //----------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ public:
 		CVersionString () {}
 		~CVersionString () {}
 
-		CVersionString (const CVersionString & pSource)
+		CVersionString (const CVersionString& pSource)
 		:	mName (pSource.mName),
 			mValue (pSource.mValue)
 		{
@@ -88,21 +88,21 @@ public:
 			mValue.TrimRight ();
 		}
 
-		CVersionString (const CString & pSource)
+		CVersionString (const CString& pSource)
 		:	mName (pSource)
 		{
 		}
 
-		operator const CString &() const {return mName;}
+		operator const CString&() const {return mName;}
 
-		CVersionString & operator= (const CVersionString & pSource)
+		CVersionString& operator= (const CVersionString& pSource)
 		{
 			mName = pSource.mName;
 			mValue = pSource.mValue;
 			return *this;
 		}
 
-		CVersionString & operator= (const CString & pSource)
+		CVersionString& operator= (const CString& pSource)
 		{
 			mName = pSource;
 			mValue.Empty ();
@@ -119,10 +119,10 @@ public:
 	{
 	public:
 		CVersionStrings (LPCTSTR pKey);
-		CVersionStrings (const CVersionStrings & pSource);
+		CVersionStrings (const CVersionStrings& pSource);
 		~CVersionStrings () {}
 
-		CVersionString * Find (const CString & pName) const;
+		CVersionString* Find (const CString& pName) const;
 
 		WORD GetLANGID () const {return MAKELANGID (mLanguage, SUBLANG_NEUTRAL);}
 		DWORD GetLCID () const {return MAKELCID (MAKELANGID (mLanguage, SUBLANG_NEUTRAL), SORT_DEFAULT);}
@@ -159,7 +159,7 @@ public:
 		~CVersionStringsList () {}
 
 		CVersionStrings * FindLang (WORD pLanguage)	const;
-		CVersionString * Find (const CString & pName) const;
+		CVersionString* Find (const CString& pName) const;
 	};
 
 //----------------------------------------------------------------------
@@ -224,9 +224,9 @@ public:
 	static const CString	mFileTypeNameOcx;
 //----------------------------------------------------------------------
 private:
-	virtual void GetVersionInfo (void * pVersionInfo);
-	void GetVersionInfoW (void * pVersionInfo);
-	void GetVersionInfoA (void * pVersionInfo);
+	virtual void GetVersionInfo (void* pVersionInfo);
+	void GetVersionInfoW (void* pVersionInfo);
+	void GetVersionInfoA (void* pVersionInfo);
 
 private:
 	CString mFileName;

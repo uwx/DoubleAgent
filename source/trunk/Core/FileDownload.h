@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -50,7 +50,7 @@ protected:
 	CFileDownload ();
 public:
 	_DACORE_IMPEXP virtual ~CFileDownload ();
-	_DACORE_IMPEXP static CFileDownload * CreateInstance (LPCTSTR pURL);
+	_DACORE_IMPEXP static CFileDownload* CreateInstance (LPCTSTR pURL);
 
 // Attributes
 public:
@@ -75,7 +75,7 @@ public:
 	_DACORE_IMPEXP DWORD SetResynchronizeMode (bool pResynchronize);
 	_DACORE_IMPEXP DWORD SetSecurityMode (bool pEnforeSecurity);
 
-	_DACORE_IMPEXP HRESULT Download (LPUNKNOWN pActiveXContext = NULL, class CEventNotify * pNotify = NULL);
+	_DACORE_IMPEXP HRESULT Download (LPUNKNOWN pActiveXContext = NULL, class CEventNotify* pNotify = NULL);
 	_DACORE_IMPEXP bool CancelDownload ();
 
 // Overrides
@@ -106,7 +106,7 @@ protected:
 	bool							mDownloadStarted;
 	bool							mDownloadCancelling;
 	HRESULT							mDownloadComplete;
-	class CEventNotify *			mNotify;
+	class CEventNotify*			mNotify;
 	DWORD							mNotifyThreadId;
 	IBindStatusCallbackPtr			mBindStatusCallback;
 	IStreamPtr						mBindStatusMarshall;

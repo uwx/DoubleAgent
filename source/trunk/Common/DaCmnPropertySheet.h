@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,7 +26,7 @@
 class CDaCmnPropertySheet : public CPropSheetOptions
 {
 public:
-	CDaCmnPropertySheet (_AtlPropSheetOwner * pOwner, class CListeningGlobal & pListeningGlobal);
+	CDaCmnPropertySheet (_AtlPropSheetOwner* pOwner, class CListeningGlobal& pListeningGlobal);
 	virtual ~CDaCmnPropertySheet ();
 
 // Interfaces
@@ -51,7 +51,7 @@ protected:
 	HWND GetPropSheetWnd (bool pCreate);
 
 protected:
-	_AtlPropSheetOwner *	mOwner;
+	_AtlPropSheetOwner*	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -66,9 +66,9 @@ DaSvrSettings::~DaSvrSettings ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSettings * DaSvrSettings::CreateInstance (LPCTSTR pClientMutexName)
+DaSvrSettings* DaSvrSettings::CreateInstance (LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrSettings> *	lInstance = NULL;
+	CComObject<DaSvrSettings>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrSettings>::CreateInstance (&lInstance))))
 	{

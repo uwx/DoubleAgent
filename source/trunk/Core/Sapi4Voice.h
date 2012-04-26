@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -44,7 +44,7 @@ protected:
 	CSapi4Voice ();
 public:
 	_DACORE_IMPEXP virtual ~CSapi4Voice ();
-	_DACORE_IMPEXP static CSapi4Voice * CreateInstance ();
+	_DACORE_IMPEXP static CSapi4Voice* CreateInstance ();
 
 // Attributes
 	_DACORE_IMPEXP ULONG GetDefaultRate () const;
@@ -58,9 +58,9 @@ public:
 	_DACORE_IMPEXP HRESULT Pause ();
 	_DACORE_IMPEXP HRESULT Resume ();
 
-	_DACORE_IMPEXP HRESULT GetEngineId (GUID & pEngineId);
-	_DACORE_IMPEXP HRESULT GetModeId (GUID & pModeId);
-	_DACORE_IMPEXP HRESULT SetModeId (const GUID & pModeId);
+	_DACORE_IMPEXP HRESULT GetEngineId (GUID& pEngineId);
+	_DACORE_IMPEXP HRESULT GetModeId (GUID& pModeId);
+	_DACORE_IMPEXP HRESULT SetModeId (const GUID& pModeId);
 
 	_DACORE_IMPEXP friend int VoiceMouthOverlay (LPVOID pMouth);
 	_DACORE_IMPEXP friend CAtlString VoiceMouthStr (LPVOID pMouth);
@@ -73,17 +73,17 @@ protected:
 	_DACORE_IMPEXP virtual bool _IsPaused () const;
 public:
 	_DACORE_IMPEXP virtual tBstrPtr GetUniqueId ();
-	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr& pUniqueId);
 	_DACORE_IMPEXP virtual tBstrPtr GetDisplayName ();
-	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr& pDisplayName);
 	_DACORE_IMPEXP virtual ULONG GetRate ();
-	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG& pRate);
 	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
 	_DACORE_IMPEXP virtual USHORT GetVolume ();
-	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT& pVolume);
 	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
 	_DACORE_IMPEXP virtual USHORT GetPitch ();
-	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT & pPitch);
+	_DACORE_IMPEXP virtual HRESULT GetPitch (USHORT& pPitch);
 	_DACORE_IMPEXP virtual HRESULT SetPitch (USHORT pPitch);
 
 // Implementation
@@ -104,7 +104,7 @@ private:
 	class CTTSNotifySink : public CComObjectNoLock<CTTSNotifyBase>
 	{
 	public:
-		CTTSNotifySink (CSapi4Voice & pOwner);
+		CTTSNotifySink (CSapi4Voice& pOwner);
 		~CTTSNotifySink ();
 
 	public:
@@ -128,7 +128,7 @@ private:
 		HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
 
 	public:
-		CSapi4Voice &	mOwner;
+		CSapi4Voice&	mOwner;
 	protected:
 		DWORD			mRegisteredKey;
 	};

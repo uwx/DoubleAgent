@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -47,13 +47,13 @@ CAtlPropertyPage::~CAtlPropertyPage()
 
 /////////////////////////////////////////////////////////////////////////////
 
-UINT CALLBACK CAtlPropertyPage::PropPageCallback (HWND hwnd, UINT message, PROPSHEETPAGE * pPropPage)
+UINT CALLBACK CAtlPropertyPage::PropPageCallback (HWND hwnd, UINT message, PROPSHEETPAGE* pPropPage)
 {
 	switch (message)
 	{
 		case PSPCB_CREATE:
 		{
-			CAtlPropertyPage *	lThis = (CAtlPropertyPage *) pPropPage->lParam;
+			CAtlPropertyPage*	lThis = (CAtlPropertyPage*) pPropPage->lParam;
 
 			lThis->m_thunk.Init (NULL, NULL);
 			_AtlWinModule.AddCreateWndData (&lThis->m_thunk.cd, lThis);
@@ -65,7 +65,7 @@ UINT CALLBACK CAtlPropertyPage::PropPageCallback (HWND hwnd, UINT message, PROPS
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAtlPropertyPage::HandleInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAtlPropertyPage::HandleInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = DefWindowProc ();
 

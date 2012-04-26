@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -39,7 +39,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCommands2Ptr														mServerObject;
+#endif
 	tPtr <CDaCmnCommands>													mLocalObject;
 	CAtlMap <CAtlString, IDispatchPtr, CStringElementTraitsI <CAtlString> >	mCommands;
 
@@ -91,7 +93,7 @@ public:
 	// IDaCtlCommands2
 	HRESULT STDMETHODCALLTYPE get_Item (BSTR Name, IDaCtlCommand2 ** Item);
 	HRESULT STDMETHODCALLTYPE Command (BSTR Name, IDaCtlCommand2 ** Command);
-	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
+	HRESULT STDMETHODCALLTYPE get_Count (long* Count);
 	HRESULT STDMETHODCALLTYPE get_Caption (BSTR * Caption);
 	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);
 	HRESULT STDMETHODCALLTYPE get_Voice (BSTR * Voice);
@@ -105,11 +107,11 @@ public:
 	HRESULT STDMETHODCALLTYPE RemoveAll ();
 	HRESULT STDMETHODCALLTYPE get_DefaultCommand (BSTR * Name);
 	HRESULT STDMETHODCALLTYPE put_DefaultCommand (BSTR Name);
-	HRESULT STDMETHODCALLTYPE get_HelpContextID (long * ID);
+	HRESULT STDMETHODCALLTYPE get_HelpContextID (long* ID);
 	HRESULT STDMETHODCALLTYPE put_HelpContextID (long ID);
 	HRESULT STDMETHODCALLTYPE get_FontName (BSTR * FontName);
 	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
-	HRESULT STDMETHODCALLTYPE get_FontSize (long * FontSize);
+	HRESULT STDMETHODCALLTYPE get_FontSize (long* FontSize);
 	HRESULT STDMETHODCALLTYPE put_FontSize (long FontSize);
 	HRESULT STDMETHODCALLTYPE get_VoiceCaption (BSTR * VoiceCaption);
 	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR VoiceCaption);

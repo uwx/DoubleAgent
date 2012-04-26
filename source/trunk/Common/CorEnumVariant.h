@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -97,7 +97,7 @@ public:
 
 	// ICollection
 	HRESULT STDMETHODCALLTYPE cor_CopyTo (struct mscorlib::_Array * Array, long index);
-	HRESULT STDMETHODCALLTYPE corget_Count (long * pRetVal);
+	HRESULT STDMETHODCALLTYPE corget_Count (long* pRetVal);
 	HRESULT STDMETHODCALLTYPE corget_SyncRoot (VARIANT * pRetVal);
 	HRESULT STDMETHODCALLTYPE corget_IsSynchronized (VARIANT_BOOL * pRetVal);
 };
@@ -325,7 +325,7 @@ HRESULT STDMETHODCALLTYPE CCorEnumVariant<Owner>::cor_CopyTo (struct mscorlib::_
 }
 
 template <class Owner>
-HRESULT STDMETHODCALLTYPE CCorEnumVariant<Owner>::corget_Count (long * pRetVal)
+HRESULT STDMETHODCALLTYPE CCorEnumVariant<Owner>::corget_Count (long* pRetVal)
 {
 #ifdef	_DEBUG_ENUMVARIANT
 	LogMessage (_DEBUG_ENUMVARIANT, _T("[%p(%d)] [%p] %s::corget_Count [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, ObjTypeName(this), (long)(m_end-m_begin));

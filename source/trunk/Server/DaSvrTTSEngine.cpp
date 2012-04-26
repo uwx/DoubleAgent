@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -64,7 +64,7 @@ DaSvrTTSEngine::~DaSvrTTSEngine()
 
 DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrTTSEngine> *	lInstance = NULL;
+	CComObject<DaSvrTTSEngine>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrTTSEngine>::CreateInstance (&lInstance))))
 	{
@@ -75,9 +75,9 @@ DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi5VoiceInfo * pVoiceInfo, LP
 }
 
 #ifndef	_WIN64
-DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
+DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi4VoiceInfo* pVoiceInfo, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrTTSEngine> *	lInstance = NULL;
+	CComObject<DaSvrTTSEngine>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrTTSEngine>::CreateInstance (&lInstance))))
 	{

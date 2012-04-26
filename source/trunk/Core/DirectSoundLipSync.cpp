@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -52,7 +52,7 @@ CDirectSoundLipSync::CDirectSoundLipSync ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -62,7 +62,7 @@ CDirectSoundLipSync::~CDirectSoundLipSync ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Disconnect ();
@@ -73,7 +73,7 @@ void CDirectSoundLipSync::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Disconnect ();
@@ -83,7 +83,7 @@ void CDirectSoundLipSync::FinalRelease ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWaveFileName, CAgentStreamInfo * pStreamInfo)
+HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWaveFileName, CAgentStreamInfo* pStreamInfo)
 {
 	HRESULT		lResult = S_FALSE;
 	CLockMutex	lLock (mStateLock);
@@ -109,7 +109,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Lip Sync"), mFilterName);
-				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mGrabberFilter));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(SampleGrabber), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mGrabberFilter));
 
 				if	(
 						(SUCCEEDED (lResult))
@@ -126,7 +126,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Wave Parser"), mFilterName);
-				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(WaveParser), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mWaveParser));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(WaveParser), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mWaveParser));
 
 				if	(
 						(SUCCEEDED (lResult))
@@ -143,7 +143,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 				)
 			{
 				lFilterName.Format (_T("%s Audio Render"), mFilterName);
-				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender));
+				lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mAudioRender));
 
 				if	(
 						(SUCCEEDED (lResult))
@@ -158,11 +158,11 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 			{
 				if	(PathIsURL (pWaveFileName))
 				{
-					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_URLReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
+					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_URLReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mFileSource));
 				}
 				else
 				{
-					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_AsyncReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mFileSource));
+					lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_AsyncReader, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &mFileSource));
 				}
 
 				if	(SUCCEEDED (lResult))
@@ -417,12 +417,12 @@ HRESULT CDirectSoundLipSync::Stop ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::SampleCB (double SampleTime, IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::SampleCB (double SampleTime, IMediaSample*pSample)
 {
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
+HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::BufferCB (double SampleTime, BYTE*pBuffer, long BufferLen)
 {
 	if	(BufferLen >= 2)
 	{
@@ -430,7 +430,7 @@ HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::BufferCB (double SampleTime, BYTE
 		{
 			long				lBufferVal = 0;
 			long				lNdx;
-			CAgentStreamInfo *	lStreamInfo;
+			CAgentStreamInfo*	lStreamInfo;
 
 			for	(lNdx = 0; lNdx <= min (BufferLen/2, 7); lNdx++)
 			{

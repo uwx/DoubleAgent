@@ -600,7 +600,8 @@ public:
 			{
 				if	(mCharacters)
 				{
-					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> (mCharacters);
+					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> ((Generic::IEnumerable<DoubleAgent::Control::Character^>^)mCharacters);
+					//mBindingSource->DataSource = mCharacters;
 				}
 				else
 				{
@@ -620,7 +621,8 @@ public:
 			)
 		{
 			mBindingSource->SuspendBinding ();
-			mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> (mCharacters);
+			mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> ((Generic::IEnumerable<DoubleAgent::Control::Character^>^)mCharacters);
+			//mBindingSource->DataSource = mCharacters;
 			mBindingSource->ResumeBinding ();
 		}
 	}
@@ -633,7 +635,8 @@ public:
 			)
 		{
 			mBindingSource->SuspendBinding ();
-			mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> (mCharacters);
+			mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> ((Generic::IEnumerable<DoubleAgent::Control::Character^>^)mCharacters);
+			//mBindingSource->DataSource = mCharacters;
 			mBindingSource->ResumeBinding ();
 		}
 	}
@@ -967,7 +970,8 @@ public:
 			{
 				if	(mTTSEngines)
 				{
-					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::TTSEngine^> (mTTSEngines);
+					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::TTSEngine^> ((Generic::IEnumerable<DoubleAgent::Control::TTSEngine^>^)mTTSEngines);
+					//mBindingSource->DataSource = mTTSEngines;
 				}
 				else
 				{
@@ -1010,7 +1014,8 @@ public:
 			{
 				if	(mSREngines)
 				{
-					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::SREngine^> (mSREngines);
+					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::SREngine^> ((Generic::IEnumerable<DoubleAgent::Control::SREngine^>^)mSREngines);
+					//mBindingSource->DataSource = mSREngines;
 				}
 				else
 				{

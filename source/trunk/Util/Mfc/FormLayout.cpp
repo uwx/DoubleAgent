@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -71,7 +71,7 @@ HDWP CFormLayout::IsFormLayoutStarted () const
 
 //////////////////////////////////////////////////////////////////////
 
-inline void CFormLayout::MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect & pRect)
+inline void CFormLayout::MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect& pRect)
 {
 	if	(mRects)
 	{
@@ -116,7 +116,7 @@ inline void CFormLayout::MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect & pR
 
 //////////////////////////////////////////////////////////////////////
 
-void CFormLayout::GetAlignWndRect (CWnd * pAlign, CRect & pRect)
+void CFormLayout::GetAlignWndRect (CWnd * pAlign, CRect& pRect)
 {
 	if	(
 			(!mRects)
@@ -127,7 +127,7 @@ void CFormLayout::GetAlignWndRect (CWnd * pAlign, CRect & pRect)
 	}
 }
 
-void CFormLayout::GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect & pRect)
+void CFormLayout::GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect& pRect)
 {
 	GetAlignWndRect (pAlign, pRect);
 	if	(pParent->GetSafeHwnd())
@@ -136,7 +136,7 @@ void CFormLayout::GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect & pRect)
 	}
 }
 
-void CFormLayout::GetAlignWndClient (CWnd * pAlign, CRect & pRect)
+void CFormLayout::GetAlignWndClient (CWnd * pAlign, CRect& pRect)
 {
 	pAlign->GetClientRect (&pRect);
 	pAlign->ClientToScreen (&pRect);
@@ -146,7 +146,7 @@ void CFormLayout::GetAlignWndClient (CWnd * pAlign, CRect & pRect)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CFormLayout::AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin)
+bool CFormLayout::AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect* pMargin)
 {
 	if	(
 			(pAlign->GetSafeHwnd ())
@@ -214,7 +214,7 @@ bool CFormLayout::AlignPos (CWnd * pAlign, CWnd * pAlignTo)
 	return false;
 }
 
-bool CFormLayout::AlignSize (CWnd * pAlign, CWnd * pAlignTo, CSize * pMult)
+bool CFormLayout::AlignSize (CWnd * pAlign, CWnd * pAlignTo, CSize* pMult)
 {
 	if	(
 			(pAlign->GetSafeHwnd ())
@@ -414,7 +414,7 @@ bool CFormLayout::AlignBottom (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, in
 
 //////////////////////////////////////////////////////////////////////
 
-bool CFormLayout::AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin)
+bool CFormLayout::AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect* pMargin)
 {
 	if	(
 			(pAlign->GetSafeHwnd ())
@@ -452,7 +452,7 @@ bool CFormLayout::AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMa
 	return false;
 }
 
-bool CFormLayout::AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin)
+bool CFormLayout::AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect* pMargin)
 {
 	if	(
 			(pAlign->GetSafeHwnd ())
@@ -708,7 +708,7 @@ bool CFormLayout::AlignAbove (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 
 //////////////////////////////////////////////////////////////////////
 
-bool CFormLayout::UpdateSize (CWnd * pWnd, const CSize & pSize)
+bool CFormLayout::UpdateSize (CWnd * pWnd, const CSize& pSize)
 {
 	if	(pWnd->GetSafeHwnd ())
 	{
@@ -765,7 +765,7 @@ bool CFormLayout::UpdateHeight (CWnd * pWnd, int pHeight)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CFormLayout::AdjustRect (CWnd * pWnd, const CPoint & pOffset)
+bool CFormLayout::AdjustRect (CWnd * pWnd, const CPoint& pOffset)
 {
 	if	(pWnd->GetSafeHwnd ())
 	{
@@ -780,7 +780,7 @@ bool CFormLayout::AdjustRect (CWnd * pWnd, const CPoint & pOffset)
 	return false;
 }
 
-bool CFormLayout::AdjustRect (CWnd * pWnd, const CRect & pMargin)
+bool CFormLayout::AdjustRect (CWnd * pWnd, const CRect& pMargin)
 {
 	if	(pWnd->GetSafeHwnd ())
 	{
@@ -797,7 +797,7 @@ bool CFormLayout::AdjustRect (CWnd * pWnd, const CRect & pMargin)
 
 //////////////////////////////////////////////////////////////////////
 
-CRect CFormLayout::ChildWndRect (CWnd & pWnd, CWnd * pParentWnd)
+CRect CFormLayout::ChildWndRect (CWnd& pWnd, CWnd * pParentWnd)
 {
 	CRect	lRect;
 	CWnd *	lParentWnd = pParentWnd ? pParentWnd : pWnd.GetParent ();
@@ -806,7 +806,7 @@ CRect CFormLayout::ChildWndRect (CWnd & pWnd, CWnd * pParentWnd)
 	return lRect;
 }
 
-CPoint CFormLayout::ChildWndPos (CWnd & pWnd, CWnd * pParentWnd)
+CPoint CFormLayout::ChildWndPos (CWnd& pWnd, CWnd * pParentWnd)
 {
 	CRect	lRect;
 	CWnd *	lParentWnd = pParentWnd ? pParentWnd : pWnd.GetParent ();
@@ -815,7 +815,7 @@ CPoint CFormLayout::ChildWndPos (CWnd & pWnd, CWnd * pParentWnd)
 	return lRect.TopLeft ();
 }
 
-CSize CFormLayout::ChildWndSize (CWnd & pWnd)
+CSize CFormLayout::ChildWndSize (CWnd& pWnd)
 {
 	CRect	lRect;
 
@@ -823,7 +823,7 @@ CSize CFormLayout::ChildWndSize (CWnd & pWnd)
 	return lRect.Size ();
 }
 
-CSize CFormLayout::ChildWndGap (CWnd & pWnd1, CWnd & pWnd2)
+CSize CFormLayout::ChildWndGap (CWnd& pWnd1, CWnd& pWnd2)
 {
 	CRect	lRect1;
 	CRect	lRect2;
@@ -834,7 +834,7 @@ CSize CFormLayout::ChildWndGap (CWnd & pWnd1, CWnd & pWnd2)
 	return CSize (max (lRect1.left-lRect2.right, lRect2.left-lRect1.right), max (lRect1.top-lRect2.bottom, lRect2.top-lRect1.bottom));
 }
 
-CPoint CFormLayout::ChildWndMid (CWnd & pWnd1, CWnd & pWnd2, CWnd * pParentWnd)
+CPoint CFormLayout::ChildWndMid (CWnd& pWnd1, CWnd& pWnd2, CWnd * pParentWnd)
 {
 	CPoint	lMidPoint;
 	CRect	lRect1;
@@ -851,7 +851,7 @@ CPoint CFormLayout::ChildWndMid (CWnd & pWnd1, CWnd & pWnd2, CWnd * pParentWnd)
 
 //////////////////////////////////////////////////////////////////////
 
-CRect CFormLayout::ChildUsedRect (CWnd & pWnd, bool pCheckVisible)
+CRect CFormLayout::ChildUsedRect (CWnd& pWnd, bool pCheckVisible)
 {
 	CRect	lRect (-1,-1,-1,-1);
 	CRect	lChildRect;

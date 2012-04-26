@@ -4,9 +4,9 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Feb 16 01:17:57 2011
+/* at Thu Apr 26 11:28:28 2012
  */
-/* Compiler settings for .\Server\DaServer.odl:
+/* Compiler settings for Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 

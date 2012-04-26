@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "AgentFile.h"
-#include "AtlCollEx.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -50,15 +49,15 @@ public:
 
 // Operations
 public:
-	virtual bool CacheFile (CAgentFile * pFile, CAgentFileClient * pClient);
-	virtual bool UncacheFile (CAgentFile * pFile);
-	virtual bool AddFileClient (CAgentFile * pFile, CAgentFileClient * pClient);
-	virtual bool RemoveFileClient (CAgentFile * pFile, CAgentFileClient * pClient, bool pDeleteUnusedFile = true);
+	virtual bool CacheFile (CAgentFile* pFile, CAgentFileClient* pClient);
+	virtual bool UncacheFile (CAgentFile* pFile);
+	virtual bool AddFileClient (CAgentFile* pFile, CAgentFileClient* pClient);
+	virtual bool RemoveFileClient (CAgentFile* pFile, CAgentFileClient* pClient, bool pDeleteUnusedFile = true);
 
-	virtual CAgentFile * GetCachedFile (INT_PTR pFileNdx);
-	virtual CAgentFile * FindCachedFile (LPCTSTR pFileName);
-	virtual CAgentFile * FindCachedFile (const GUID & pFileGuid);
-	virtual bool GetFileClients (CAgentFile * pFile, CAtlPtrTypeArray <CAgentFileClient> & pClients);
+	virtual CAgentFile* GetCachedFile (INT_PTR pFileNdx);
+	virtual CAgentFile* FindCachedFile (LPCTSTR pFileName);
+	virtual CAgentFile* FindCachedFile (const GUID& pFileGuid);
+	virtual bool GetFileClients (CAgentFile* pFile, CAtlPtrTypeArray <CAgentFileClient>& pClients);
 
 // Implementation
 public:
@@ -66,7 +65,7 @@ public:
 protected:
 	mutable CComAutoCriticalSection										mCritSec;
 	CAtlOwnPtrArray <CAgentFile>										mCachedFiles;
-	CAtlOwnPtrMap <CAgentFile *, CAtlPtrTypeArray <CAgentFileClient> >	mFileClients;
+	CAtlOwnPtrMap <CAgentFile*, CAtlPtrTypeArray <CAgentFileClient> >	mFileClients;
 };
 
 //////////////////////////////////////////////////////////////////////

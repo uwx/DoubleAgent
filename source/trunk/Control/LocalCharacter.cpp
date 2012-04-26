@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -40,7 +40,7 @@ static const DWORD	ActiveStateEx_CommandsVisible = 0x00040000;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLocalCharacter::CLocalCharacter (DaCtlCharacter & pOwner)
+CLocalCharacter::CLocalCharacter (DaCtlCharacter& pOwner)
 :	mOwner (pOwner)
 {
 	mActiveState = _AtlModule.IsAppActive() ? ActiveState_Inactive : ActiveState_Suspended;
@@ -116,10 +116,10 @@ short CLocalCharacter::GetActiveState () const
 HRESULT CLocalCharacter::SetActiveState (short pActiveState)
 {
 	HRESULT					lResult = S_FALSE;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentPopupWnd *		lPopupWnd;
-	CAgentBalloonWnd *		lBalloonWnd;
-	CVoiceCommandsWnd *		lCommandsWnd;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentPopupWnd*		lPopupWnd;
+	CAgentBalloonWnd*		lBalloonWnd;
+	CVoiceCommandsWnd*		lCommandsWnd;
 
 #ifdef	_DEBUG_SUSPEND
 	if	(
@@ -294,9 +294,9 @@ void CLocalCharacter::_OnAppActivated (bool pActive)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCommands * CLocalCharacter::GetCommands (bool pCreateObject)
+CDaCmnCommands* CLocalCharacter::GetCommands (bool pCreateObject)
 {
-	CDaCmnCommands *	lRet = NULL;
+	CDaCmnCommands*	lRet = NULL;
 	DaCtlCommands *		lCommands;
 
 	if	(lCommands = mOwner.GetCommands ())
@@ -306,9 +306,9 @@ CDaCmnCommands * CLocalCharacter::GetCommands (bool pCreateObject)
 	return lRet;
 }
 
-CDaCmnBalloon * CLocalCharacter::GetBalloon (bool pCreateObject)
+CDaCmnBalloon* CLocalCharacter::GetBalloon (bool pCreateObject)
 {
-	CDaCmnBalloon *	lRet = NULL;
+	CDaCmnBalloon*	lRet = NULL;
 	DaCtlBalloon *	lBalloon;
 
 	if	(lBalloon = mOwner.GetBalloon ())

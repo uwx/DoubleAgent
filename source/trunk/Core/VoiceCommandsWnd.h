@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -40,7 +40,7 @@ protected:
 	CVoiceCommandsWnd ();
 public:
 	_DACORE_IMPEXP virtual ~CVoiceCommandsWnd ();
-	_DACORE_IMPEXP static CVoiceCommandsWnd * CreateInstance ();
+	_DACORE_IMPEXP static CVoiceCommandsWnd* CreateInstance ();
 
 // Attributes
 public:
@@ -49,11 +49,11 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd);
+	_DACORE_IMPEXP bool Create (CWindow* pOwnerWnd);
 	_DACORE_IMPEXP bool Show (bool pActivate);
 	_DACORE_IMPEXP bool Hide ();
 
-	_DACORE_IMPEXP bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions);
+	_DACORE_IMPEXP bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long>& pIds, const CAtlStringArray& pCaptions);
 	_DACORE_IMPEXP void ShowOtherClients (long pCharID);
 	_DACORE_IMPEXP bool ShowGlobalCommands (USHORT pHideWndCmdId = ID_COMMANDS_WINDOW_OPEN, USHORT pHideCharCmdId = ID_COMMANDS_WINDOW_CLOSE);
 	_DACORE_IMPEXP bool HideGlobalCommands ();
@@ -68,9 +68,9 @@ public:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	_DACORE_IMPEXP LRESULT OnItemExpanding(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CVoiceCommandsWnd)

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -63,17 +63,17 @@ protected:
 // Implementation
 protected:
 	LRESULT OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	LRESULT OnLogComponent(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogTraceActions(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogCrashDump(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogFileChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogFileBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogFileReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogPathBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogPathChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogPathReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnLogRegistry(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnLogComponent(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogLevel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogTraceActions(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogCrashDump(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogFileChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogFileBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogFileReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogPathBrowse(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogPathChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogPathReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnLogRegistry(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CPropPageLogging)
 		NOTIFY_CODE_HANDLER(PSN_APPLY, OnApply)
@@ -101,14 +101,14 @@ protected:
 protected:
 	void ShowLogging ();
 	void ShowLogging (INT_PTR pKeyNdx);
-	void ShowLogLevel (const CRegDWord & pLogLevel, INT_PTR pKeyNdx);
-	void ShowLogPath (const CRegString & pLogPath, INT_PTR pKeyNdx);
+	void ShowLogLevel (const CRegDWord& pLogLevel, INT_PTR pKeyNdx);
+	void ShowLogPath (const CRegString& pLogPath, INT_PTR pKeyNdx);
 
 	CRegKeyEx * PrepUpdate (INT_PTR pKeyNdx);
 	void UpdateLogPath (INT_PTR pKeyNdx);
 	void UpdateLogging ();
 
-	void SplitLogPath (LPCTSTR pLogPath, CAtlString & pFilePath, CAtlString & pFileName);
+	void SplitLogPath (LPCTSTR pLogPath, CAtlString& pFilePath, CAtlString& pFileName);
 	CAtlString MakeLogPath (LPCTSTR pFilePath, LPCTSTR pFileName, bool pDefaultBlank);
 	CAtlString MakeLogPath (LPCTSTR pLogPath, bool pDefaultBlank);
 	CAtlString MakeLogPath (bool pDefaultBlank);
@@ -119,17 +119,17 @@ protected:
 	static bool LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pGlobalRootKey, HKEY pUserRootKey, HKEY pClassesRootKey, LPCTSTR pGlobalRootName, LPCTSTR pUserRootName, LPCTSTR pClassesRootName);
 	static bool LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pGlobalRootKey, HKEY pUserRootKey, HKEY pClassesRootKey, LPCTSTR pGlobalRootName, LPCTSTR pUserRootName, LPCTSTR pClassesRootName);
 
-	static bool LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pClassTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
-	static bool LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
-	static bool LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProgIdTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
-	static bool LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
-	static bool LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
+	static bool LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pClassTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged = NULL);
+	static bool LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged = NULL);
+	static bool LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProgIdTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged = NULL);
+	static bool LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged = NULL);
+	static bool LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool* pTitleLogged = NULL);
 
-	static void LogRegKey (UINT pLogLevel, CRegKeyEx & pRegKey, LPCTSTR pTitle, UINT pIndent);
+	static void LogRegKey (UINT pLogLevel, CRegKeyEx& pRegKey, LPCTSTR pTitle, UINT pIndent);
 
 protected:
-	bool BrowseForFile (CAtlString & pFileName, DWORD pFlags = 0);
-	bool BrowseForFolder (CAtlString & pFolderPath);
+	bool BrowseForFile (CAtlString& pFileName, DWORD pFlags = 0);
+	bool BrowseForFolder (CAtlString& pFolderPath);
 	static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
 
 protected:

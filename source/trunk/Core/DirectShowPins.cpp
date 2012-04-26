@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -64,7 +64,7 @@ CDirectShowPin::CDirectShowPin (PIN_DIRECTION pDirection)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -74,7 +74,7 @@ CDirectShowPin::~CDirectShowPin ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	SafeFreeSafePtr (mAllocator);
@@ -83,7 +83,7 @@ CDirectShowPin::~CDirectShowPin ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDirectShowPin & CDirectShowPin::Initialize (CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName, LPCTSTR pUniqueId)
+CDirectShowPin& CDirectShowPin::Initialize (CDirectShowFilter& pFilter, PIN_DIRECTION pDirection, LPCTSTR pName, LPCTSTR pUniqueId)
 {
 	mFilter = &pFilter;
 	mUniqueId = pUniqueId;
@@ -93,7 +93,7 @@ CDirectShowPin & CDirectShowPin::Initialize (CDirectShowFilter & pFilter, PIN_DI
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	LogVfwErr (LogIfActive|LogTime, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
@@ -129,7 +129,7 @@ void CDirectShowPin::FinalRelease ()
 HRESULT WINAPI CDirectShowPin::DelegateIMediaSeeking (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw)
 {
 	HRESULT				lResult = S_FALSE;
-	CDirectShowPin *	lThis = (CDirectShowPin *) pv;
+	CDirectShowPin*	lThis = (CDirectShowPin*) pv;
 
 	(*ppv) = NULL;
 
@@ -147,9 +147,9 @@ HRESULT WINAPI CDirectShowPin::DelegateIMediaSeeking (void* pv, REFIID riid, LPV
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IPin * CDirectShowPin::SafeGetConnection () const
+IPin* CDirectShowPin::SafeGetConnection () const
 {
-	IPin *	lRet = NULL;
+	IPin*	lRet = NULL;
 
 	if	(this)
 	{
@@ -159,9 +159,9 @@ IPin * CDirectShowPin::SafeGetConnection () const
 	return lRet;
 }
 
-IMemAllocator * CDirectShowPin::SafeGetAllocator () const
+IMemAllocator* CDirectShowPin::SafeGetAllocator () const
 {
-	IMemAllocator *	lRet = NULL;
+	IMemAllocator*	lRet = NULL;
 
 	if	(this)
 	{
@@ -240,7 +240,7 @@ HRESULT CDirectShowPin::CanConnect (IPin *pReceivePin)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT		lResult = VFW_E_NO_ACCEPTABLE_TYPES;
 	CLockMutex	lLock (mStateLock);
@@ -268,7 +268,7 @@ HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE 
 		else
 		{
 			INT_PTR					lMediaTypeNdx;
-			const AM_MEDIA_TYPE *	lMediaType;
+			const AM_MEDIA_TYPE*	lMediaType;
 
 			for	(lMediaTypeNdx = 0; lMediaTypeNdx < (INT_PTR)mMediaTypes.GetCount(); lMediaTypeNdx++)
 			{
@@ -288,7 +288,7 @@ HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE 
 	return lResult;
 }
 
-HRESULT CDirectShowPin::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPin::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT		lResult = S_OK;
 	CLockMutex	lLock (mStateLock);
@@ -364,12 +364,12 @@ HRESULT CDirectShowPin::EndOutput ()
 	return (mDirection == PINDIR_OUTPUT) ? S_FALSE : E_UNEXPECTED;
 }
 
-HRESULT CDirectShowPin::GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime, const REFERENCE_TIME * pEndTime, DWORD pFlags)
+HRESULT CDirectShowPin::GetOutputSample (IMediaSample** pSample, const REFERENCE_TIME* pStartTime, const REFERENCE_TIME* pEndTime, DWORD pFlags)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT CDirectShowPin::PutOutputSample (IMediaSample * pSample, ULONG pSampleSize)
+HRESULT CDirectShowPin::PutOutputSample (IMediaSample* pSample, ULONG pSampleSize)
 {
 	return E_NOTIMPL;
 }
@@ -460,13 +460,13 @@ HRESULT CDirectShowPin::EndInput ()
 	return (mDirection == PINDIR_INPUT) ? S_FALSE : E_UNEXPECTED;
 }
 
-HRESULT CDirectShowPin::PeekInputSample (IMediaSample ** pSample, DWORD pLockTime)
+HRESULT CDirectShowPin::PeekInputSample (IMediaSample** pSample, DWORD pLockTime)
 {
 	(*pSample) = NULL;
 	return (mDirection == PINDIR_INPUT) ? S_FALSE : E_UNEXPECTED;
 }
 
-HRESULT CDirectShowPin::GetInputSample (IMediaSample ** pSample, DWORD pLockTime)
+HRESULT CDirectShowPin::GetInputSample (IMediaSample** pSample, DWORD pLockTime)
 {
 	(*pSample) = NULL;
 	return (mDirection == PINDIR_INPUT) ? S_FALSE : E_UNEXPECTED;
@@ -631,7 +631,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::Disconnect (void)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin **pPin)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin**pPin)
 {
 #ifdef	_DEBUG_QUERIES
 	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectedTo"), this, max(m_dwRef,-1), mName);
@@ -812,7 +812,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 		try
 		{
 			INT_PTR			lMediaTypeNdx;
-			AM_MEDIA_TYPE *	lMediaType;
+			AM_MEDIA_TYPE*	lMediaType;
 
 #ifdef	_DEBUG_CONNECTION
 			LogMediaType (_DEBUG_CONNECTION, *pmt, _T("[%s] [%p] QueryAccept to [%s]"), mName, this, PinIdStr(this));
@@ -867,7 +867,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEn
 
 		try
 		{
-			CComObject <CEnumMediaTypes> *	lEnum = NULL;
+			CComObject <CEnumMediaTypes>*	lEnum = NULL;
 			IEnumMediaTypesPtr				lInterface;
 
 			if	(SUCCEEDED (lResult = CComObject <CEnumMediaTypes>::CreateInstance (&lEnum)))
@@ -886,7 +886,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEn
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryInternalConnections (IPin**apPin, ULONG *nPin)
 {
 #ifdef	_DEBUG_CONNECTION_NOT
 	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryInternalConnections"), this, max(m_dwRef,-1), mName);
@@ -1003,7 +1003,7 @@ CDirectShowPinIn::CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1013,24 +1013,24 @@ CDirectShowPinIn::~CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	mSamples.RemoveAll ();
 	SafeFreeSafePtr (mCacheAllocator);
 }
 
-CDirectShowPinIn & CDirectShowPinIn::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount, UINT pMaxSampleCount)
+CDirectShowPinIn& CDirectShowPinIn::Initialize (CDirectShowFilter& pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount, UINT pMaxSampleCount)
 {
 	CDirectShowPin::Initialize (pFilter, PINDIR_INPUT, pName, pUniqueId);
 
-	const_cast <UINT &> (mDesiredSampleCount) = max (pDesiredSampleCount, 1);
-	const_cast <UINT &> (mMaxSampleCount) = max (pDesiredSampleCount, pMaxSampleCount);
+	const_cast <UINT&> (mDesiredSampleCount) = max (pDesiredSampleCount, 1);
+	const_cast <UINT&> (mMaxSampleCount) = max (pDesiredSampleCount, pMaxSampleCount);
 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -1115,7 +1115,7 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 	return lResult;
 }
 
-HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator * pAllocator, bool pReadOnly)
+HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator* pAllocator, bool pReadOnly)
 {
 	CLockMutex	lLock (mStateLock);
 
@@ -1162,7 +1162,7 @@ HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator * pAllocator, bool pRe
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinIn::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinIn::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT		lResult = S_OK;
 	CLockMutex	lLock (mStateLock);
@@ -1206,7 +1206,7 @@ INT_PTR CDirectShowPinIn::GetCachedSampleCount () const
 	return (INT_PTR)mSamples.GetCount();
 }
 
-HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockTime)
+HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample** pSample, DWORD pLockTime)
 {
 	HRESULT	lResult = VFW_E_TIMEOUT;
 
@@ -1244,7 +1244,7 @@ HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockT
 	return lResult;
 }
 
-HRESULT CDirectShowPinIn::GetInputSample (IMediaSample ** pSample, DWORD pLockTime)
+HRESULT CDirectShowPinIn::GetInputSample (IMediaSample** pSample, DWORD pLockTime)
 {
 	HRESULT	lResult = VFW_E_TIMEOUT;
 
@@ -1283,7 +1283,7 @@ HRESULT CDirectShowPinIn::GetInputSample (IMediaSample ** pSample, DWORD pLockTi
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTime)
+HRESULT CDirectShowPinIn::PutInputSample (IMediaSample* pSample, DWORD pLockTime)
 {
 	HRESULT	lResult = VFW_E_TIMEOUT;
 
@@ -1552,7 +1552,7 @@ void CDirectShowPinIn::EmptyCache ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllocator)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator**ppAllocator)
 {
 #ifdef	_DEBUG_ALLOCATOR
 	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::GetAllocator [%p]"), this, max(m_dwRef,-1), mName, ppAllocator);
@@ -1595,7 +1595,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllo
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyAllocator (IMemAllocator*pAllocator, BOOL bReadOnly)
 {
 #ifdef	_DEBUG_ALLOCATOR
 	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::NotifyAllocator"), this, max(m_dwRef,-1), mName);
@@ -1656,7 +1656,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocatorRequirements (ALLOCATOR_
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample*pSample)
 {
 #ifdef	_DEBUG_STREAM_EX
 	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::Receive"), this, max(m_dwRef,-1), mName);
@@ -1681,7 +1681,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample *pSample)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveMultiple (IMediaSample**pSamples, long nSamples, long *nSamplesProcessed)
 {
 #ifdef	_DEBUG_STREAM_EX
 	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::ReceiveMultiple [%d]"), this, max(m_dwRef,-1), mName, nSamples);
@@ -1813,7 +1813,7 @@ CDirectShowPinOut::CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1823,21 +1823,21 @@ CDirectShowPinOut::~CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
 
-CDirectShowPinOut & CDirectShowPinOut::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount)
+CDirectShowPinOut& CDirectShowPinOut::Initialize (CDirectShowFilter& pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount)
 {
 	CDirectShowPin::Initialize (pFilter, PINDIR_OUTPUT, pName, pUniqueId);
 
-	const_cast <UINT &> (mDesiredSampleCount) = pDesiredSampleCount;
+	const_cast <UINT&> (mDesiredSampleCount) = pDesiredSampleCount;
 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -1884,7 +1884,7 @@ HRESULT CDirectShowPinOut::CanConnect (IPin *pReceivePin)
 	return lResult;
 }
 
-HRESULT CDirectShowPinOut::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinOut::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT		lResult;
 	CLockMutex	lLock (mStateLock);
@@ -1926,7 +1926,7 @@ HRESULT CDirectShowPinOut::InternalDisconnect ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT		lResult = VFW_E_NOT_SAMPLE_CONNECTION;
 	CLockMutex	lLock (mStateLock);
@@ -2097,7 +2097,7 @@ HRESULT CDirectShowPinOut::EndOutput ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinOut::GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime, const REFERENCE_TIME * pEndTime, DWORD pFlags)
+HRESULT CDirectShowPinOut::GetOutputSample (IMediaSample** pSample, const REFERENCE_TIME* pStartTime, const REFERENCE_TIME* pEndTime, DWORD pFlags)
 {
 	HRESULT				lResult = VFW_E_NO_ALLOCATOR;
 	IMemAllocatorPtr	lAllocator = SafeGetAllocator ();
@@ -2107,7 +2107,7 @@ HRESULT CDirectShowPinOut::GetOutputSample (IMediaSample ** pSample, const REFER
 		pFlags &= AM_GBF_NOWAIT;
 		if	(lAllocator != NULL)
 		{
-			LogVfwErr (LogVerbose|LogTime, lResult = lAllocator->GetBuffer (pSample, const_cast <REFERENCE_TIME *> (pStartTime), const_cast <REFERENCE_TIME *> (pEndTime), pFlags));
+			LogVfwErr (LogVerbose|LogTime, lResult = lAllocator->GetBuffer (pSample, const_cast <REFERENCE_TIME*> (pStartTime), const_cast <REFERENCE_TIME*> (pEndTime), pFlags));
 		}
 	}
 	catch AnyExceptionDebug
@@ -2115,7 +2115,7 @@ HRESULT CDirectShowPinOut::GetOutputSample (IMediaSample ** pSample, const REFER
 	return lResult;
 }
 
-HRESULT CDirectShowPinOut::PutOutputSample (IMediaSample * pSample, ULONG pSampleSize)
+HRESULT CDirectShowPinOut::PutOutputSample (IMediaSample* pSample, ULONG pSampleSize)
 {
 	HRESULT				lResult = VFW_E_NO_ALLOCATOR;
 	IMemInputPinPtr		lTransport = SafeGetConnection ();
@@ -2233,7 +2233,7 @@ CDirectShowPinPull::CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -2243,19 +2243,19 @@ CDirectShowPinPull::~CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
 
-CDirectShowPinPull & CDirectShowPinPull::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId)
+CDirectShowPinPull& CDirectShowPinPull::Initialize (CDirectShowFilter& pFilter, LPCTSTR pName, LPCTSTR pUniqueId)
 {
 	CDirectShowPin::Initialize (pFilter, PINDIR_OUTPUT, pName, pUniqueId);
 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -2285,7 +2285,7 @@ HRESULT CDirectShowPinPull::CanConnect (IPin *pReceivePin)
 	return lResult;
 }
 
-HRESULT CDirectShowPinPull::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinPull::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT		lResult;
 	CLockMutex	lLock (mStateLock);
@@ -2318,7 +2318,7 @@ HRESULT CDirectShowPinPull::InternalDisconnect ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinPull::UseAllocator (IMemAllocator * pAllocator)
+HRESULT CDirectShowPinPull::UseAllocator (IMemAllocator* pAllocator)
 {
 	HRESULT		lResult = S_FALSE;
 	CLockMutex	lLock (mStateLock);
@@ -2437,7 +2437,7 @@ HRESULT CDirectShowPinPull::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize, 
 	return lResult;
 }
 
-HRESULT CDirectShowPinPull::FillSample (IMediaSample * pSample)
+HRESULT CDirectShowPinPull::FillSample (IMediaSample* pSample)
 {
 	HRESULT			lResult;
 	REFERENCE_TIME	lStartTime;
@@ -2476,7 +2476,7 @@ HRESULT CDirectShowPinPull::FillSample (IMediaSample * pSample)
 	return lResult;
 }
 
-HRESULT CDirectShowPinPull::FillBuffer (LPBYTE pBuffer, LONGLONG pStart, long & pLength)
+HRESULT CDirectShowPinPull::FillBuffer (LPBYTE pBuffer, LONGLONG pStart, long& pLength)
 {
 	HRESULT		lResult = S_OK;
 	CLockMutex	lLock (mDataLock);
@@ -2516,7 +2516,7 @@ HRESULT CDirectShowPinPull::FillBuffer (LPBYTE pBuffer, LONGLONG pStart, long & 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinPull::ValidateSampleAlign (IMediaSample *pSample)
+HRESULT CDirectShowPinPull::ValidateSampleAlign (IMediaSample*pSample)
 {
 	HRESULT			lResult;
 	REFERENCE_TIME	lStartTime;
@@ -2778,7 +2778,7 @@ HRESULT CDirectShowPinPull::EndPullFlush ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator*pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator**ppActual)
 {
 #ifdef	_DEBUG_PULL
 	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::RequestAllocator"), this, max(m_dwRef,-1), mName);
@@ -2827,7 +2827,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *p
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DWORD_PTR dwUser)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample*pSample, DWORD_PTR dwUser)
 {
 #ifdef	_DEBUG_PULL
 	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Request"), this, max(m_dwRef,-1), mName);
@@ -2880,7 +2880,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DW
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMediaSample**ppSample,DWORD_PTR *pdwUser)
 {
 #ifdef	_DEBUG_PULL
 	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::WaitForNext [%d]"), this, max(m_dwRef,-1), mName, dwTimeout);
@@ -3095,7 +3095,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMed
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample*pSample)
 {
 #ifdef	_DEBUG_PULL
 	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncReadAligned"), this, max(m_dwRef,-1), mName);
@@ -3121,7 +3121,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample *pSa
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncRead (LONGLONG llPosition, LONG lLength, BYTE*pBuffer)
 {
 #ifdef	_DEBUG_PULL
 	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncRead [%I64d] [%d] [%p]"), this, max(m_dwRef,-1), mName, llPosition, lLength, pBuffer);

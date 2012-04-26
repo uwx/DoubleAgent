@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -131,7 +131,7 @@ CTimerNotifies::~CTimerNotifies ()
 INT_PTR CTimerNotifies::FindTimer (UINT_PTR pTimerId) const
 {
 	INT_PTR					lNdx;
-	const CTimerNotify *	lTimer;
+	const CTimerNotify*	lTimer;
 
 	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
@@ -146,7 +146,7 @@ INT_PTR CTimerNotifies::FindTimer (UINT_PTR pTimerId) const
 	return -1;
 }
 
-CTimerNotify * CTimerNotifies::GetTimer (UINT_PTR pTimerId)
+CTimerNotify* CTimerNotifies::GetTimer (UINT_PTR pTimerId)
 {
 	INT_PTR	lNdx = FindTimer (pTimerId);
 
@@ -174,7 +174,7 @@ bool CTimerNotifies::RemoveTimer (UINT_PTR pTimerId)
 bool CTimerNotifies::OnTimer (UINT_PTR pTimerId)
 {
 	INT_PTR			lNdx;
-	CTimerNotify *	lTimer;
+	CTimerNotify*	lTimer;
 
 	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{

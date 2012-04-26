@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -75,8 +75,8 @@ public:
 
 	_DACORE_IMPEXP CSize GetVideoSize ();
 	_DACORE_IMPEXP CRect GetVideoRect ();
-	_DACORE_IMPEXP HRESULT SetVideoRect (const CRect & pVideoRect);
-	_DACORE_IMPEXP HRESULT CenterVideo (const CSize * pVideoSize = NULL);
+	_DACORE_IMPEXP HRESULT SetVideoRect (const CRect& pVideoRect);
+	_DACORE_IMPEXP HRESULT CenterVideo (const CSize* pVideoSize = NULL);
 	_DACORE_IMPEXP HRESULT AutoSizeWindow ();
 	_DACORE_IMPEXP HRESULT AutoSizeVideo (bool pKeepAspectRatio = false);
 
@@ -84,12 +84,12 @@ public:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CDirectShowWnd)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -123,7 +123,7 @@ protected:
 
 public:
 	_DACORE_IMPEXP IGraphBuilder * GetGraphBuilder () const {return mGraphBuilder;}
-	_DACORE_IMPEXP FILTER_STATE GetState (CAtlString * pStateStr);
+	_DACORE_IMPEXP FILTER_STATE GetState (CAtlString* pStateStr);
 
 	_DACORE_IMPEXP void LogState (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	_DACORE_IMPEXP void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);

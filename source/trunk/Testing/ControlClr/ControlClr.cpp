@@ -20,7 +20,7 @@ using namespace DoubleAgent;
 using namespace DoubleAgent::Control;
 
 [STAThreadAttribute]
-int main(array<System::String ^> ^args)
+int main(array<System::String^>^ args)
 {
 	LogStart (true);
 	Application::EnableVisualStyles();

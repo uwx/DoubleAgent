@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -71,7 +71,7 @@ public:
 	CSapi5InputMatchRanks() {}
 	virtual ~CSapi5InputMatchRanks() {}
 
-	static int __cdecl SortDescending (const void * pElem1, const void * pElem2)
+	static int __cdecl SortDescending (const void* pElem1, const void* pElem2)
 	{
 		return -ATL::CElementTraits<int>::CompareElementsOrdered (*(int *)pElem1, *(int*)pElem2);
 	}
@@ -95,29 +95,29 @@ public:
 	_DACORE_IMPEXP void Enumerate ();
 
 	_DACORE_IMPEXP INT_PTR FindEngineId (LPCTSTR pEngineId);
-	_DACORE_IMPEXP CSapi5InputInfo * GetEngineId (LPCTSTR pEngineId);
+	_DACORE_IMPEXP CSapi5InputInfo* GetEngineId (LPCTSTR pEngineId);
 
 	_DACORE_IMPEXP INT_PTR FindEngineName (LPCTSTR pEngineName);
-	_DACORE_IMPEXP CSapi5InputInfo * GetEngineName (LPCTSTR pEngineName);
+	_DACORE_IMPEXP CSapi5InputInfo* GetEngineName (LPCTSTR pEngineName);
 
 	_DACORE_IMPEXP INT_PTR FindInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
-	_DACORE_IMPEXP CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
+	_DACORE_IMPEXP CSapi5InputInfo* GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank = NULL);
 
 	_DACORE_IMPEXP CSapi5InputIndexArray const * FindInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
 	_DACORE_IMPEXP CSapi5InputInfoArray const * GetInputs (LANGID pLangId, bool pUseDefaults, CSapi5InputMatchRanks const ** pMatchRanks = NULL);
 
 	_DACORE_IMPEXP bool RemoveInput (INT_PTR pInputNdx);
-	_DACORE_IMPEXP bool RemoveInput (const CSapi5InputInfo * pInputInfo);
+	_DACORE_IMPEXP bool RemoveInput (const CSapi5InputInfo* pInputInfo);
 
 	_DACORE_IMPEXP INT_PTR DefaultInputNdx ();
-	_DACORE_IMPEXP bool InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID pLangId, bool pUseDefaults);
+	_DACORE_IMPEXP bool InputSupportsLanguage (CSapi5InputInfo* pInputInfo, LANGID pLangId, bool pUseDefaults);
 
 	_DACORE_IMPEXP void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
-	_DACORE_IMPEXP static void LogInputInfo (UINT pLogLevel, CSapi5InputInfo & pInputInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP static void LogInputInfo (UINT pLogLevel, CSapi5InputInfo& pInputInfo, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
 
 // Implementation
 protected:
-	_DACORE_IMPEXP static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
+	_DACORE_IMPEXP static void LogInputToken (UINT pLogLevel, void* pInputToken, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning (pop)

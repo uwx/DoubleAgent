@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -35,7 +35,7 @@ public:
 
 // Attributes
 public:
-	const GUID & ClassId () const {return m_clsid;}
+	const GUID& ClassId () const {return m_clsid;}
 	LPCTSTR ProgId () const {return m_lpszProgID;}
 	BOOL WasRegistered () const {return m_bRegistered;}
 
@@ -51,36 +51,36 @@ protected:
 public:
 	void RegisterDefCategory ();
 	void UnregisterDefCategory ();
-	void RegisterCategory (const GUID & pCatId);
-	void UnregisterCategory (const GUID & pCatId);
+	void RegisterCategory (const GUID& pCatId);
+	void UnregisterCategory (const GUID& pCatId);
 
-	static void RegisterDefCategory (const GUID & pClsid);
-	static void UnregisterDefCategory (const GUID & pClsid);
-	static void RegisterCategory (const GUID & pClsid, const GUID & pCatId);
-	static void UnregisterCategory (const GUID & pClsid, const GUID & pCatId);
+	static void RegisterDefCategory (const GUID& pClsid);
+	static void UnregisterDefCategory (const GUID& pClsid);
+	static void RegisterCategory (const GUID& pClsid, const GUID& pCatId);
+	static void UnregisterCategory (const GUID& pClsid, const GUID& pCatId);
 
 	bool RegisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor, LPCTSTR pProgIdName = NULL);
 	bool RegisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName = NULL);
-	static bool RegisterProgIdVer (const GUID & pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName);
+	static bool RegisterProgIdVer (const GUID& pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName);
 	void UnregisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor);
 	static void UnregisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdVersionned);
 
-	void RegisterAppId (const GUID & pAppId, UINT pAppNameId, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL);
-	void RegisterAppId (const GUID & pAppId, LPCTSTR pAppName = NULL, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL);
+	void RegisterAppId (const GUID& pAppId, UINT pAppNameId, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL);
+	void RegisterAppId (const GUID& pAppId, LPCTSTR pAppName = NULL, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL);
 	void RegisterAppIdSelf (UINT pAppNameId, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL) {RegisterAppId (m_clsid, pAppNameId, pRunAs, pLocalService);}
 	void RegisterAppIdSelf (LPCTSTR pAppName = NULL, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL) {RegisterAppId (m_clsid, pAppName, pRunAs, pLocalService);}
-	void UnregisterAppId (const GUID & pAppId);
+	void UnregisterAppId (const GUID& pAppId);
 	void UnregisterAppIdSelf () {UnregisterAppId (m_clsid);}
 
-	void RegisterExeAppId (const GUID & pAppId, UINT pAppNameId, LPCTSTR pExeName = NULL);
-	void RegisterExeAppId (const GUID & pAppId, LPCTSTR pAppName = NULL, LPCTSTR pExeName = NULL);
+	void RegisterExeAppId (const GUID& pAppId, UINT pAppNameId, LPCTSTR pExeName = NULL);
+	void RegisterExeAppId (const GUID& pAppId, LPCTSTR pAppName = NULL, LPCTSTR pExeName = NULL);
 	void RegisterExeAppIdSelf (UINT pAppNameId, LPCTSTR pExeName = NULL) {RegisterExeAppId (m_clsid, pAppNameId, pExeName);}
 	void RegisterExeAppIdSelf (LPCTSTR pAppName = NULL, LPCTSTR pExeName = NULL) {RegisterExeAppId (m_clsid, pAppName, pExeName);}
 	void UnregisterExeAppId (LPCTSTR pExeName = NULL);
 
-	void RegisterDllSurrogate (const GUID & pAppId, LPCTSTR pSurrogatePath = NULL);
+	void RegisterDllSurrogate (const GUID& pAppId, LPCTSTR pSurrogatePath = NULL);
 	void RegisterDllSurrogateSelf (LPCTSTR pSurrogatePath = NULL) {RegisterDllSurrogate (m_clsid, pSurrogatePath);}
-	void UnegisterDllSurrogate (const GUID & pAppId);
+	void UnegisterDllSurrogate (const GUID& pAppId);
 	void UnregisterDllSurrogateSelf () {UnegisterDllSurrogate (m_clsid);}
 
 	void RegisterServer (bool pInproc = true, LPCTSTR pInprocHandler = NULL);
@@ -89,7 +89,7 @@ public:
 
 	void RegisterElevated (UINT pClassNameId, LPCTSTR pClassNamePath = NULL);
 	void RegisterElevated (LPCTSTR pClassNamePath = NULL);
-	void RegisterTypeLib (const GUID & pTypeLib);
+	void RegisterTypeLib (const GUID& pTypeLib);
 
 	void RegisterThreadingModel (LPCTSTR pThreadingModel, bool pInproc = true, LPCTSTR pInprocHandler = NULL);
 	void RegisterApartmentThreaded (bool pInproc = true, LPCTSTR pInprocHandler = NULL) {RegisterThreadingModel (_T("Apartment"), pInproc, pInprocHandler);}
@@ -98,47 +98,47 @@ public:
 
 	void RegisterLocalizedString (UINT pClassNameId, LPCTSTR pClassNamePath = NULL);
 	void RegisterLocalizedString (LPCTSTR pClassNamePath);
-	void RegisterDefaultIcon (int pIconId, int pOpenIconId = 0, LPCTSTR pProgId = NULL, const GUID * pClassId = NULL);
-	void RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId = 0, LPCTSTR pProgId = NULL, const GUID * pClassId = NULL);
+	void RegisterDefaultIcon (int pIconId, int pOpenIconId = 0, LPCTSTR pProgId = NULL, const GUID* pClassId = NULL);
+	void RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId = 0, LPCTSTR pProgId = NULL, const GUID* pClassId = NULL);
 	void RegisterInfoTip (LPCTSTR pInfoTip);
 
-	void RegisterPropSheetHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
+	void RegisterPropSheetHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL);
 	void RegisterPropSheetHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 	void UnregisterPropSheetHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 
-	void RegisterContextMenuHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
-	void UnregisterContextMenuHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
+	void RegisterContextMenuHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL);
+	void UnregisterContextMenuHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL);
 	void RegisterContextMenuHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 	void UnregisterContextMenuHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
-	void RegisterContextMenuHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
-	void UnregisterContextMenuHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
+	void RegisterContextMenuHandler (LPCTSTR pProgId, const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL);
+	void UnregisterContextMenuHandler (LPCTSTR pProgId, const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL);
 
-	void RegisterDragDropHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
+	void RegisterDragDropHandler (const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL);
 	void RegisterDragDropHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 	void UnregisterDragDropHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 
-	void RegisterIconHandler (const GUID & pHandlerClsid);
+	void RegisterIconHandler (const GUID& pHandlerClsid);
 	void RegisterIconHandler (LPCTSTR pProgId);
 	void UnregisterIconHandler (LPCTSTR pProgId);
 
-	void RegisterInfoTipHandler (const GUID & pHandlerClsid);
+	void RegisterInfoTipHandler (const GUID& pHandlerClsid);
 	void RegisterInfoTipHandler (LPCTSTR pProgId);
 	void UnregisterInfoTipHandler (LPCTSTR pProgId);
 
-	void RegisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, const GUID & pHandlerId, LPCTSTR pHandlerTypeName = NULL);
-	void UnregisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerId, LPCTSTR pHandlerTypeName = NULL);
+	void RegisterGenericHandler (LPCTSTR pProgId, const GUID& pHandlerClsid, const GUID& pHandlerId, LPCTSTR pHandlerTypeName = NULL);
+	void UnregisterGenericHandler (LPCTSTR pProgId, const GUID& pHandlerId, LPCTSTR pHandlerTypeName = NULL);
 
-	static void RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, UINT pHandlerNameId, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	static void RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	static void RegisterNamespaceOption (const GUID & pHandlerClsid, LPCTSTR pOption, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	static void RegisterNamespaceAttrs (const GUID & pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	static void UnregisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespace (LPCTSTR pNamespace, const GUID& pHandlerClsid, UINT pHandlerNameId, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespace (LPCTSTR pNamespace, const GUID& pHandlerClsid, LPCTSTR pHandlerName = NULL, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespaceOption (const GUID& pHandlerClsid, LPCTSTR pOption, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespaceAttrs (const GUID& pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void UnregisterNamespace (LPCTSTR pNamespace, const GUID& pHandlerClsid, HKEY pRootKey = HKEY_LOCAL_MACHINE);
 
-	static void RegisterBrowserHelperObject (const GUID & pClassId, LPCTSTR pClassName = NULL);
-	static void UnegisterBrowserHelperObject (const GUID & pClassId);
+	static void RegisterBrowserHelperObject (const GUID& pClassId, LPCTSTR pClassName = NULL);
+	static void UnegisterBrowserHelperObject (const GUID& pClassId);
 
-	static void CreateDefCategory (GUID & pCatId);
-	static bool FindExtProgId (LPCTSTR pExt, CString & pProgId, CString * pProgIdName = NULL);
+	static void CreateDefCategory (GUID& pCatId);
+	static bool FindExtProgId (LPCTSTR pExt, CString& pProgId, CString * pProgIdName = NULL);
 	static CString MakeRelatedPath (LPCTSTR pFileName);
 	static bool RegisterComProxy (LPCTSTR pProxyFileName, bool pRegister);
 };
@@ -161,7 +161,7 @@ public:
 #define	_DEF_CATEGORY_NAME	"Cinnamon"
 #endif
 
-inline void COleObjectFactoryExEx::CreateDefCategory (GUID & pCatId)
+inline void COleObjectFactoryExEx::CreateDefCategory (GUID& pCatId)
 {
 	::CRegKeyEx	lRootKey (HKEY_CLASSES_ROOT, _T("Component Categories"));
 	::CRegKeyEx	lCatKey;

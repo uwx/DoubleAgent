@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -42,18 +42,18 @@ public:
 public:
 	virtual long NextCharID ();
 	virtual long NextReqID ();
-	virtual class CAgentWnd * GetRequestOwner (long pReqID);
-	virtual class CAgentWnd * GetAgentWnd (HWND pWindow);
+	virtual class CAgentWnd* GetRequestOwner (long pReqID);
+	virtual class CAgentWnd* GetAgentWnd (HWND pWindow);
 
-	virtual class CDaCmnCharacter * GetGlobalCharacter (long pCharID);
+	virtual class CDaCmnCharacter* GetGlobalCharacter (long pCharID);
 	virtual long GetActiveCharacter ();
 	virtual long GetListenCharacter ();
 
 // Implementation
 public:
-	static class CDaCmnCharacter * _GetCharacter (long pCharID, CAgentFileCache & pFileCache);
-	static long _GetActiveCharacter (CAgentFileCache & pFileCache);
-	static long _GetListenCharacter (CAgentFileCache & pFileCache);
+	static class CDaCmnCharacter* _GetCharacter (long pCharID, CAgentFileCache& pFileCache);
+	static long _GetActiveCharacter (CAgentFileCache& pFileCache);
+	static long _GetListenCharacter (CAgentFileCache& pFileCache);
 
 protected:
 	long	mNextCharID;
@@ -65,17 +65,17 @@ protected:
 class CInstanceAnchor : public CAgentFileCache
 {
 public:
-	CInstanceAnchor (CGlobalAnchor & pAnchor);
+	CInstanceAnchor (CGlobalAnchor& pAnchor);
 	virtual ~CInstanceAnchor ();
 
 // Attributes
-	CGlobalAnchor &	mAnchor;
-	CWindow *		mOwnerWnd;
+	CGlobalAnchor&	mAnchor;
+	CWindow*		mOwnerWnd;
 
 // Operations
 public:
-	virtual class CDaCmnCharacter * GetInstanceCharacter (long pCharID);
-	virtual class CDaCmnCharacter * GetDefaultCharacter ();
+	virtual class CDaCmnCharacter* GetInstanceCharacter (long pCharID);
+	virtual class CDaCmnCharacter* GetDefaultCharacter ();
 	virtual long GetActiveClient (long pCharID);
 	virtual long GetNotifyClient (long pCharID);
 };

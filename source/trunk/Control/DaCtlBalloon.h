@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrBalloon2Ptr		mServerObject;
+#endif
 	tPtr <CDaCmnBalloon>	mLocalObject;
 
 // Operations
@@ -78,15 +80,15 @@ public:
 
 	// IDaCtlBalloon2 Methods
 	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL * Enabled);
-	HRESULT STDMETHODCALLTYPE get_NumberOfLines (long * NumberOfLines);
-	HRESULT STDMETHODCALLTYPE get_CharsPerLine (long * CharsPerLine);
+	HRESULT STDMETHODCALLTYPE get_NumberOfLines (long* NumberOfLines);
+	HRESULT STDMETHODCALLTYPE get_CharsPerLine (long* CharsPerLine);
 	HRESULT STDMETHODCALLTYPE get_FontName (BSTR * FontName);
-	HRESULT STDMETHODCALLTYPE get_FontSize (long * FontSize);
+	HRESULT STDMETHODCALLTYPE get_FontSize (long* FontSize);
 	HRESULT STDMETHODCALLTYPE get_FontBold (VARIANT_BOOL * FontBold);
 	HRESULT STDMETHODCALLTYPE get_FontItalic (VARIANT_BOOL * FontItalic);
 	HRESULT STDMETHODCALLTYPE get_FontStrikethru (VARIANT_BOOL * FontStrikethru);
 	HRESULT STDMETHODCALLTYPE get_FontUnderline (VARIANT_BOOL * FontUnderline);
-	HRESULT STDMETHODCALLTYPE get_ForeColor (long * ForeColor);
+	HRESULT STDMETHODCALLTYPE get_ForeColor (long* ForeColor);
 	HRESULT STDMETHODCALLTYPE get_BackColor (OLE_COLOR * BackColor);
 	HRESULT STDMETHODCALLTYPE get_BorderColor (OLE_COLOR * BorderColor);
 	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
@@ -96,10 +98,10 @@ public:
 	HRESULT STDMETHODCALLTYPE put_FontCharSet (short FontCharSet);
 	HRESULT STDMETHODCALLTYPE get_FontCharSet (short * FontCharSet);
 	HRESULT STDMETHODCALLTYPE put_Style (long Style);
-	HRESULT STDMETHODCALLTYPE get_Style (long * Style);
+	HRESULT STDMETHODCALLTYPE get_Style (long* Style);
 
-	HRESULT STDMETHODCALLTYPE get__NumberOfLines (long * NumberOfLines);
-	HRESULT STDMETHODCALLTYPE get__CharsPerLine (long * CharsPerLine);
+	HRESULT STDMETHODCALLTYPE get__NumberOfLines (long* NumberOfLines);
+	HRESULT STDMETHODCALLTYPE get__CharsPerLine (long* CharsPerLine);
 	HRESULT STDMETHODCALLTYPE get__BackColor (long *BackColor);
 	HRESULT STDMETHODCALLTYPE get__BorderColor (long *BorderColor);
 	HRESULT STDMETHODCALLTYPE get__FontBold (VARIANT_BOOL *FontBold);

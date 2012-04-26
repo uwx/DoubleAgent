@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -61,7 +61,7 @@ CDaBalloonConfig::~CDaBalloonConfig ()
 
 //////////////////////////////////////////////////////////////////////
 
-CDaBalloonConfig & CDaBalloonConfig::LoadConfig ()
+CDaBalloonConfig& CDaBalloonConfig::LoadConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 	CRegBinary	lRegFont (lRegKey, sProfileUserFont);
@@ -99,7 +99,7 @@ CDaBalloonConfig & CDaBalloonConfig::LoadConfig ()
 	return *this;
 }
 
-CDaBalloonConfig & CDaBalloonConfig::SaveConfig ()
+CDaBalloonConfig& CDaBalloonConfig::SaveConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 	CRegBinary	lRegFont (lRegKey, sProfileUserFont, true);
@@ -164,7 +164,7 @@ CDaSettingsConfig::~CDaSettingsConfig ()
 
 //////////////////////////////////////////////////////////////////////
 
-CDaSettingsConfig & CDaSettingsConfig::LoadConfig ()
+CDaSettingsConfig& CDaSettingsConfig::LoadConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
@@ -181,7 +181,7 @@ CDaSettingsConfig & CDaSettingsConfig::LoadConfig ()
 	return *this;
 }
 
-CDaSettingsConfig & CDaSettingsConfig::SaveConfig ()
+CDaSettingsConfig& CDaSettingsConfig::SaveConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 

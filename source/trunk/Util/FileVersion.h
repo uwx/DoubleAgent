@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -31,11 +31,11 @@
 class CFileVersion
 {
 public:
-	CFileVersion (void * pVersionInfo);
-	CFileVersion (VS_FIXEDFILEINFO & pVersionInfo);
+	CFileVersion (void* pVersionInfo);
+	CFileVersion (VS_FIXEDFILEINFO& pVersionInfo);
 	CFileVersion (LPCTSTR pFileName);
 	CFileVersion (HMODULE pModule);
-	CFileVersion (const CFileVersion & pSource);
+	CFileVersion (const CFileVersion& pSource);
 	virtual ~CFileVersion ();
 
 	bool IsValid () const;
@@ -47,19 +47,19 @@ public:
 	CString ProductVersionString () const;
 
 	static CString FormatVersion (ULONGLONG pVersion, LPCTSTR pVersionString = NULL, LPCTSTR pFormatString = NULL);
-	static bool ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion);
-	static bool MakeValidVersion (CString & pVersion, bool pSkipTrailingZero = false);
-	static bool ExtractVersion (LPCTSTR pString, CString & pVersion, bool pLabeledOnly = true, bool pIncludeFirstWord = false);
+	static bool ParseVersion (LPCTSTR pVersionString, ULONGLONG& pVersion);
+	static bool MakeValidVersion (CString& pVersion, bool pSkipTrailingZero = false);
+	static bool ExtractVersion (LPCTSTR pString, CString& pVersion, bool pLabeledOnly = true, bool pIncludeFirstWord = false);
 
-	static bool GetModuleVersion (LPCTSTR pModuleName, ULONGLONG & pVersion, ULONGLONG & pFileVersion, bool pLoad = true);
-	static bool GetShellVersion (ULONGLONG & pVersion, ULONGLONG & pFileVersion, bool pLoad = true);
-	static bool GetComCtlVersion (ULONGLONG & pVersion, ULONGLONG & pFileVersion, bool pLoad = true);
+	static bool GetModuleVersion (LPCTSTR pModuleName, ULONGLONG& pVersion, ULONGLONG& pFileVersion, bool pLoad = true);
+	static bool GetShellVersion (ULONGLONG& pVersion, ULONGLONG& pFileVersion, bool pLoad = true);
+	static bool GetComCtlVersion (ULONGLONG& pVersion, ULONGLONG& pFileVersion, bool pLoad = true);
 	static void LogShellVersion (UINT pLogLevel, bool pLoad = true);
 	static void LogComCtlVersion (UINT pLogLevel, bool pLoad = true);
 
 protected:
 #include "FileVersionStructs.h"
-	virtual void GetVersionInfo (void * pVersionInfo);
+	virtual void GetVersionInfo (void* pVersionInfo);
 	virtual void GetFileInfo (LPCTSTR pFileName);
 	virtual void GetModuleInfo (HMODULE pModule);
 

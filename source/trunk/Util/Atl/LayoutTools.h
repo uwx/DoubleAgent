@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -35,17 +35,17 @@ public:
 	bool EndFormLayout ();
 	HDWP IsFormLayoutStarted () const;
 
-	bool AlignTo (HWND pAlign, HWND pAlignTo, const CRect * pMargin = NULL);
+	bool AlignTo (HWND pAlign, HWND pAlignTo, const CRect* pMargin = NULL);
 	bool AlignPos (HWND pAlign, HWND pAlignTo);
-	bool AlignSize (HWND pAlign, HWND pAlignTo, CSize * pMult = NULL);
+	bool AlignSize (HWND pAlign, HWND pAlignTo, CSize* pMult = NULL);
 
 	bool AlignLeft (HWND pAlign, HWND pAlignTo, bool pStretch = false, int pOffset = 0);
 	bool AlignRight (HWND pAlign, HWND pAlignTo, bool pStretch = false, int pOffset = 0);
 	bool AlignTop (HWND pAlign, HWND pAlignTo, bool pStretch = false, int pOffset = 0);
 	bool AlignBottom (HWND pAlign, HWND pAlignTo, bool pStretch = false, int pOffset = 0);
 
-	bool AlignCenter (HWND pAlign, HWND pAlignTo, const CRect * pMargin = NULL);
-	bool AlignVCenter (HWND pAlign, HWND pAlignTo, const CRect * pMargin = NULL);
+	bool AlignCenter (HWND pAlign, HWND pAlignTo, const CRect* pMargin = NULL);
+	bool AlignVCenter (HWND pAlign, HWND pAlignTo, const CRect* pMargin = NULL);
 	bool AlignWidth (HWND pAlign, HWND pAlignTo, float pMult = 0.0f);
 	bool AlignHeight (HWND pAlign, HWND pAlignTo, float pMult = 0.0f);
 
@@ -54,12 +54,12 @@ public:
 	bool AlignBelow (HWND pAlign, HWND pAlignTo, bool pStretch = false, int pGap = 0);
 	bool AlignAbove (HWND pAlign, HWND pAlignTo, bool pStretch = false, int pGap = 0);
 
-	bool UpdateSize (HWND pWnd, const CSize & pSize);
+	bool UpdateSize (HWND pWnd, const CSize& pSize);
 	bool UpdateWidth (HWND pWnd, int pWidth);
 	bool UpdateHeight (HWND pWnd, int pHeight);
 
-	bool AdjustRect (HWND pWnd, const CPoint & pOffset);
-	bool AdjustRect (HWND pWnd, const CRect & pMargin);
+	bool AdjustRect (HWND pWnd, const CPoint& pOffset);
+	bool AdjustRect (HWND pWnd, const CRect& pMargin);
 
 	CRect ChildWndRect (HWND pWnd, HWND pParentWnd = NULL);
 	CPoint ChildWndPos (HWND pWnd, HWND pParentWnd = NULL);
@@ -76,10 +76,10 @@ public:
 	CLayoutTools () : mDwp (NULL) {}
 
 private:
-	void MoveAlignWnd (HWND pParent, HWND pAlign, CRect & pRect);
-	void GetAlignWndRect (HWND pAlign, CRect & pRect);
-	void GetAlignWndRect (HWND pParent, HWND pAlign, CRect & pRect);
-	void GetAlignWndClient (HWND pAlign, CRect & pRect);
+	void MoveAlignWnd (HWND pParent, HWND pAlign, CRect& pRect);
+	void GetAlignWndRect (HWND pAlign, CRect& pRect);
+	void GetAlignWndRect (HWND pParent, HWND pAlign, CRect& pRect);
+	void GetAlignWndClient (HWND pAlign, CRect& pRect);
 
 	HDWP							mDwp;
 	tPtr <CAtlMap <HWND, CRect> >	mRects;

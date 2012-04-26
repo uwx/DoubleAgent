@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -21,20 +21,18 @@
 #pragma once
 #include "DaCoreRes.h"
 #include "DaCoreExp.h"
+#include "DaCoreAnchor.h"
 #include "DaGuid.h"
 #include "DaVersion.h"
-#include "AgentFileCache.h"
-#include "SapiVoiceCache.h"
-#include "SapiInputCache.h"
 #include "AgtErr.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class CDaCoreModule :
-	public CAtlDllModuleT <CDaCoreModule>,
-	public CAgentFileCache,
-	public CSapiVoiceCache,
-	public CSapiInputCache
+	public CAtlDllModuleT <CDaCoreModule>
+#ifndef	_DACORE_LOCAL
+	, public CDaCoreAnchor
+#endif
 {
 	DECLARE_DLL_OBJECT(CDaCoreModule)
 public:
@@ -44,5 +42,6 @@ public:
 };
 
 extern CDaCoreModule _AtlModule;
+extern CDaCoreAnchor& _CoreAnchor;
 
 /////////////////////////////////////////////////////////////////////////////

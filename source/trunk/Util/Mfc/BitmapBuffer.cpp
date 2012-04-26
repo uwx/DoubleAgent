@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -48,12 +48,12 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-static inline DWORD BitmapBytes (const CBitmap & pBitmap)
+static inline DWORD BitmapBytes (const CBitmap& pBitmap)
 {
 	tS <BITMAP>	lBitmap;
 	if	(
 			(pBitmap.GetSafeHandle ())
-		&&	(const_cast <CBitmap &> (pBitmap).GetBitmap (&lBitmap))
+		&&	(const_cast <CBitmap&> (pBitmap).GetBitmap (&lBitmap))
 		)
 	{
 		return lBitmap.bmWidthBytes * lBitmap.bmHeight;
@@ -118,7 +118,7 @@ CBitmapBuffer::~CBitmapBuffer ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapBuffer::StartBuffer (CDC * pCompatibleDC)
+bool CBitmapBuffer::StartBuffer (CDC* pCompatibleDC)
 {
 #ifdef	_DEBUG_BITMAP_BUFFERS
 	DebugTimeStart
@@ -253,7 +253,7 @@ bool CBitmapBuffer::ResumeBuffer ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapBuffer::CreateScaledBuffer (const CSize & pSize, bool pForBlending, UINT pScale)
+bool CBitmapBuffer::CreateScaledBuffer (const CSize& pSize, bool pForBlending, UINT pScale)
 {
 	CSize	lSize (pSize);
 
@@ -368,7 +368,7 @@ bool CBitmapBuffer::UnscaleBuffer (UINT pScale, UINT pBlend)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapBuffer::NewBufferRequired (CBitmap & pBitmap, const CSize & pSize, bool pForBlending, int pSizeFactor)
+bool CBitmapBuffer::NewBufferRequired (CBitmap& pBitmap, const CSize& pSize, bool pForBlending, int pSizeFactor)
 {
 	tS <BITMAP>	lBitmap;
 
@@ -403,7 +403,7 @@ bool CBitmapBuffer::NewBufferRequired (CBitmap & pBitmap, const CSize & pSize, b
 	return true;
 }
 
-bool CBitmapBuffer::CreateBuffer (const CSize & pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
+bool CBitmapBuffer::CreateBuffer (const CSize& pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
 {
 	bool	lRet = false;
 
@@ -460,7 +460,7 @@ bool CBitmapBuffer::CreateBuffer (const CSize & pBufferSize, bool pForBlending, 
 	return lRet;
 }
 
-bool CBitmapBuffer::DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer, bool pReleaseDC)
+bool CBitmapBuffer::DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer, bool pReleaseDC)
 {
 	bool	lRet = false;
 
@@ -502,7 +502,7 @@ CBitmapBufferScaled::~CBitmapBufferScaled ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CBitmapBufferScaled::CreateBuffer (const CSize & pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
+bool CBitmapBufferScaled::CreateBuffer (const CSize& pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
 {
 	bool	lRet = false;
 	CSize	lBufferSize (((pBufferSize.cx + 3) / 4) * 4, ((pBufferSize.cy + 3) / 4) * 4);
@@ -668,7 +668,7 @@ bool CBitmapBufferScaled::CreateBuffer (const CSize & pBufferSize, bool pForBlen
 	return lRet;
 }
 
-bool CBitmapBufferScaled::DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer, bool pReleaseDC)
+bool CBitmapBufferScaled::DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer, bool pReleaseDC)
 {
 	bool	lRet = false;
 
@@ -972,7 +972,7 @@ UINT CBitmapBuffer::IsDcInUse () const
 	return (mDC.GetSafeHdc ()) ? 1 : 0;
 }
 
-UINT CBitmapBuffer::IsBitmapUnUse (DWORD & pBitmapBytes) const
+UINT CBitmapBuffer::IsBitmapUnUse (DWORD& pBitmapBytes) const
 {
 	if	(mBitmap.GetSafeHandle ())
 	{
@@ -1004,7 +1004,7 @@ void CBitmapBuffer::LogBitmapUnUse (UINT pLogLevel) const
 
 //////////////////////////////////////////////////////////////////////
 
-UINT CBitmapBufferScaled::IsBitmapUnUse (DWORD & pBitmapBytes) const
+UINT CBitmapBufferScaled::IsBitmapUnUse (DWORD& pBitmapBytes) const
 {
 	return CBitmapBuffer::IsBitmapUnUse (pBitmapBytes);
 }

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -29,26 +29,26 @@
 class CBitmapAlpha
 {
 public:
-	static bool AlphaBlend (HDC pDst, const CRect & pDstRect, HDC pSrc, const CRect & pSrcRect, BYTE pAlpha = 255, bool pAllowInternal = true);
+	static bool AlphaBlend (HDC pDst, const CRect& pDstRect, HDC pSrc, const CRect& pSrcRect, BYTE pAlpha = 255, bool pAllowInternal = true);
 	static bool AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha = 255, bool pAllowInternal = true);
 
 	static CBrush * GetAlphaBrush (HDC pDC, COLORREF pColor, BYTE pAlpha, bool pAlphaPrecalc = true);
-	static bool AlphaScaleBitmap (CBitmap & pBitmap, BYTE pAlpha, LPBYTE * pBitmapBits = NULL);
+	static bool AlphaScaleBitmap (CBitmap& pBitmap, BYTE pAlpha, LPBYTE* pBitmapBits = NULL);
 
-	static bool AlphaClearBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pClearColor, BYTE pAlpha = 255);
-	static bool AlphaFillBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pAlpha = 255, bool pClearBlack = false, bool pClearWhite = false);
-	static bool AlphaSaturateBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha = 0, BYTE pMaxAlpha = 255);
-	static bool AlphaInvertBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, bool pClearBlack = true, bool pSkipBlack = false, bool pSkipWhite = false);
-	static bool AlphaFixBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha = 0);
-	static bool AlphaClampBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha, BYTE pMaxAlpha, BYTE pNewAlpha);
-	static bool AlphaFeatherBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, const CRect & pCenter, BYTE pAlpha = 255, bool pRectangular = true, bool pPrecalc = true);
-	static bool AlphaCalcBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pOpaqueColor = 0xFFFFFFFF, COLORREF pSaturateColor = 0);
-	static bool AlphaHitTestBitmap (CBitmap & pBitmap, LPBYTE pBitmapBits, const CPoint & pPoint, const CRect & pBounds, const CRect * pAperture = NULL, BYTE pMinAlpha = 1, BYTE pMaxAlpha = 255);
+	static bool AlphaClearBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pClearColor, BYTE pAlpha = 255);
+	static bool AlphaFillBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pAlpha = 255, bool pClearBlack = false, bool pClearWhite = false);
+	static bool AlphaSaturateBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha = 0, BYTE pMaxAlpha = 255);
+	static bool AlphaInvertBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, bool pClearBlack = true, bool pSkipBlack = false, bool pSkipWhite = false);
+	static bool AlphaFixBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha = 0);
+	static bool AlphaClampBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, BYTE pMinAlpha, BYTE pMaxAlpha, BYTE pNewAlpha);
+	static bool AlphaFeatherBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, const CRect& pCenter, BYTE pAlpha = 255, bool pRectangular = true, bool pPrecalc = true);
+	static bool AlphaCalcBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pOpaqueColor = 0xFFFFFFFF, COLORREF pSaturateColor = 0);
+	static bool AlphaHitTestBitmap (CBitmap& pBitmap, LPBYTE pBitmapBits, const CPoint& pPoint, const CRect& pBounds, const CRect* pAperture = NULL, BYTE pMinAlpha = 1, BYTE pMaxAlpha = 255);
 
-	static bool AlphaPreDrawBuffer (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pFillColor = RGB (0xFF,0xFF,0xFF));
-	static bool AlphaPostDrawBuffer (CBitmap & pBitmap, LPBYTE pBitmapBits, COLORREF pMaskColor = RGB (0x00,0x00,0x00), bool pAlphaPreCalc = false);
+	static bool AlphaPreDrawBuffer (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pFillColor = RGB (0xFF,0xFF,0xFF));
+	static bool AlphaPostDrawBuffer (CBitmap& pBitmap, LPBYTE pBitmapBits, COLORREF pMaskColor = RGB (0x00,0x00,0x00), bool pAlphaPreCalc = false);
 private:
-	static bool InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool & pLogSizeMismatch, bool & pDevSizeMismatch);
+	static bool InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool& pLogSizeMismatch, bool& pDevSizeMismatch);
 };
 
 //////////////////////////////////////////////////////////////////////

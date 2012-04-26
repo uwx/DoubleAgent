@@ -677,7 +677,7 @@ bool CStressTestDlg::Stop (bool pRandom)
 				lDone = true;
 			}
 		}
-		
+
 		CheckServerOk (lResult);
 	}
 
@@ -1658,7 +1658,7 @@ bool CStressTestDlg::CommandLineConfig ()
 
 static BOOL CALLBACK GetUsedRects (HWND pWindow, LPARAM pLparam)
 {
-	CAtlTypeArray<CRect> *	lUsedRects = (CAtlTypeArray<CRect> *) pLparam;
+	CAtlTypeArray<CRect>*	lUsedRects = (CAtlTypeArray<CRect>*) pLparam;
 	CRect					lUsedRect;
 
 	if	(
@@ -1675,7 +1675,7 @@ static BOOL CALLBACK GetUsedRects (HWND pWindow, LPARAM pLparam)
 	return TRUE;
 }
 
-CPoint CStressTestDlg::GetInitialPos (const CSize & pInitialSize)
+CPoint CStressTestDlg::GetInitialPos (const CSize& pInitialSize)
 {
 	CPoint					lInitialPos;
 	CRect					lBounds (100, 100, GetSystemMetrics(SM_CXSCREEN)-pInitialSize.cx, GetSystemMetrics(SM_CYSCREEN)-pInitialSize.cy);

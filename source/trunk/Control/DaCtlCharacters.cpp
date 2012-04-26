@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -257,7 +257,7 @@ STDMETHODIMP DaCtlCharacters::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Count (long * Count)
+HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Count (long* Count)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -514,17 +514,19 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		lResult = AGENTERR_CHARACTERALREADYLOADED;
 	}
 	else
+#ifndef	_DACORE_LOCAL
 	if	(
 			(!mOwner->mAutoConnect)
 		&&	(mOwner->mServer == NULL)
 		)
+#endif
 	{
 		try
 		{
 			CAtlString			lFilePath;
 			bool				lFilePathIsDefault;
 			tPtr <CAgentFile>	lLoadFile;
-			CAgentFile *		lAgentFile = NULL;
+			CAgentFile*		lAgentFile = NULL;
 
 			if	(
 					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, mOwner->GetSearchPath(), &lFilePathIsDefault)))
@@ -545,7 +547,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 				&&	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (lFilePath, lLoadFile)))
 				)
 			{
-				lAgentFile = mOwner->mAnchor.FindCachedFile (lLoadFile->GetGuid());
+				lAgentFile = mOwner->mAnchor.FindCachedFile (lLoadFile->Header.Guid);
 				if	(!lAgentFile)
 				{
 					lAgentFile = lLoadFile;
@@ -570,6 +572,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mOwner->mServer)))
 	{
@@ -599,14 +602,14 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mOwner->mServer);
 	}
-
-	if	(
-			(lReqID)
-		&&	(ppidRequest)
-		)
+#endif
+	if	(lReqID)
 	{
-		lRequest.Attach (mOwner->PutRequest (DaRequestLoad, lReqID, lResult));
-		(*ppidRequest) = lRequest.Detach();
+		lRequest.Attach (mOwner->PutRequest (DaRequestLoad, lReqID, lResult)); // Create request even if not returned - load requests are handled specially.
+		if	(ppidRequest)
+		{
+			(*ppidRequest) = lRequest.Detach();
+		}
 	}
 	if	(
 			(SUCCEEDED (lResult))

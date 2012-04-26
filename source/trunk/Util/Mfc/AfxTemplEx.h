@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -50,12 +50,12 @@ public:
 		}
 	}
 
-	CTypeArray (const CArray <TYPE, ARG_TYPE> & pSource)
+	CTypeArray (const CArray <TYPE, ARG_TYPE>& pSource)
 	{
 		Copy (pSource);
 	}
 
-	CTypeArray <TYPE, ARG_TYPE> & operator= (const CArray <TYPE, ARG_TYPE> & pSource)
+	CTypeArray <TYPE, ARG_TYPE>& operator= (const CArray <TYPE, ARG_TYPE>& pSource)
 	{
 		Copy (pSource);
 		return (*this);
@@ -82,7 +82,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR AppendUnique (const CArray <TYPE, ARG_TYPE> & pSource)
+	INT_PTR AppendUnique (const CArray <TYPE, ARG_TYPE>& pSource)
 	{
 		INT_PTR	lRet = 0;
 		INT_PTR	lNdx;
@@ -121,36 +121,36 @@ public:
 
 //----------------------------------------------------------------------
 
-	TYPE & ElementAt (INT_PTR nIndex)
+	TYPE& ElementAt (INT_PTR nIndex)
 	{
 		ASSERT (nIndex >= 0 && nIndex < m_nSize);
 		return m_pData [nIndex];
 	}
 
-	const TYPE & ElementAt (INT_PTR nIndex) const
+	const TYPE& ElementAt (INT_PTR nIndex) const
 	{
 		ASSERT (nIndex >= 0 && nIndex < m_nSize);
 		return m_pData [nIndex];
 	}
 
-	TYPE & operator [] (INT_PTR nIndex)
+	TYPE& operator [] (INT_PTR nIndex)
 	{
 		return ElementAt (nIndex);
 	}
 
-	const TYPE & operator [] (INT_PTR nIndex) const
+	const TYPE& operator [] (INT_PTR nIndex) const
 	{
 		return ElementAt (nIndex);
 	}
 
 //----------------------------------------------------------------------
 
-	static int __cdecl DefaultCompare (const void * pElem1, const void * pElem2)
+	static int __cdecl DefaultCompare (const void* pElem1, const void* pElem2)
 	{
 		return (* (TYPE *) pElem1) > (* (TYPE *) pElem2) ? 1 : (* (TYPE *) pElem1) < (* (TYPE *) pElem2) ? -1 : 0;
 	}
 
-	INT_PTR AddSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
+	INT_PTR AddSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void*, const void*) = NULL, bool pUnique = true)
 	{
 		TYPE	lElement = (TYPE) pElement;
 		TYPE *	lArray = (TYPE *) GetData();
@@ -224,7 +224,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR RemoveSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL)
+	INT_PTR RemoveSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void*, const void*) = NULL)
 	{
 		INT_PTR lNdx = FindSortedQS (pElement, pCompare);
 		if	(lNdx >= 0)
@@ -234,7 +234,7 @@ public:
 		return lNdx;
 	}
 
-	INT_PTR FindSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
+	INT_PTR FindSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void*, const void*) = NULL) const
 	{
 		TYPE *	lArray = (TYPE *) GetData();
 		TYPE *	lFound = (TYPE *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
@@ -246,7 +246,7 @@ public:
 		return -1;
 	}
 
-	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
+	void SortQS (int (__cdecl * pCompare) (const void*, const void*) = NULL)
 	{
 		qsort (GetData(), GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 	}
@@ -258,16 +258,16 @@ template <typename TYPE> class CStructArray : public CTypeArray <TYPE, const TYP
 {
 public:
 	CStructArray (INT_PTR pSize = 0, INT_PTR pGrowBy = -1) : CTypeArray <TYPE, const TYPE &> (pSize, pGrowBy) {}
-	CStructArray (const CArray <TYPE, const TYPE &> & pSource) : CTypeArray <TYPE, const TYPE &> (pSource) {}
-	CStructArray <TYPE> & operator= (const CArray <TYPE, const TYPE &> & pSource) {CTypeArray <TYPE, const TYPE &>::operator= (pSource); return *this;}
+	CStructArray (const CArray <TYPE, const TYPE &>& pSource) : CTypeArray <TYPE, const TYPE &> (pSource) {}
+	CStructArray <TYPE>& operator= (const CArray <TYPE, const TYPE &>& pSource) {CTypeArray <TYPE, const TYPE &>::operator= (pSource); return *this;}
 };
 
 template <class TYPE> class CClassArray : public CTypeArray <TYPE, const TYPE &>
 {
 public:
 	CClassArray (INT_PTR pSize = 0, INT_PTR pGrowBy = -1) : CTypeArray <TYPE, const TYPE &> (pSize, pGrowBy) {}
-	CClassArray (const CArray <TYPE, const TYPE &> & pSource) : CTypeArray <TYPE, const TYPE &> (pSource) {}
-	CClassArray <TYPE> & operator= (const CArray <TYPE, const TYPE &> & pSource) {CTypeArray <TYPE, const TYPE &>::operator= (pSource); return *this;}
+	CClassArray (const CArray <TYPE, const TYPE &>& pSource) : CTypeArray <TYPE, const TYPE &> (pSource) {}
+	CClassArray <TYPE>& operator= (const CArray <TYPE, const TYPE &>& pSource) {CTypeArray <TYPE, const TYPE &>::operator= (pSource); return *this;}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -278,17 +278,17 @@ template <typename TYPE> class CPtrTypeArray : public CTypedPtrArray <CPtrArray,
 {
 public:
 	CPtrTypeArray () {}
-	CPtrTypeArray (const CPtrTypeArray <TYPE> & pSource)
+	CPtrTypeArray (const CPtrTypeArray <TYPE>& pSource)
 	{
 		Append (pSource);
 	}
 
-	TYPE * operator() (INT_PTR pNdx) const
+	TYPE* operator() (INT_PTR pNdx) const
 	{
 		return (pNdx >= 0 && pNdx < GetCount()) ? GetAt (pNdx) : NULL;
 	}
 
-	TYPE * operator% (INT_PTR pNdx) const
+	TYPE* operator% (INT_PTR pNdx) const
 	{
 		if	(GetSize () > 0)
 		{
@@ -298,7 +298,7 @@ public:
 		return NULL;
 	}
 
-	INT_PTR Find (const TYPE * pElement) const
+	INT_PTR Find (const TYPE* pElement) const
 	{
 		for (INT_PTR lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
@@ -310,7 +310,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR Remove (const TYPE * pElement)
+	INT_PTR Remove (const TYPE* pElement)
 	{
 		INT_PTR lNdx = Find (pElement);
 		if	(lNdx >= 0)
@@ -320,7 +320,7 @@ public:
 		return lNdx;
 	}
 
-	INT_PTR AddUnique (TYPE * pElement)
+	INT_PTR AddUnique (TYPE* pElement)
 	{
 		if	(Find (pElement) < 0)
 		{
@@ -334,34 +334,34 @@ public:
 	struct _CSortPredicate : public std::binary_function <TYPE *, TYPE *, bool>
 	{
 		_CSortPredicate (bool pStable = true) : mFound (NULL), mStable (pStable) {}
-		TYPE * const ** mFound;
+		TYPE*const** mFound;
 		bool mStable;
 
-		bool operator () (TYPE * const x, TYPE * const y) const
+		bool operator () (TYPE* const x, TYPE* const y) const
 		{
 			return (x < y);
 		}
 
-		bool operator () (TYPE * const x, TYPE * const * const y) const
+		bool operator () (TYPE* const x, TYPE*const* const y) const
 		{
 			return (x < *y);
 		}
 
-		bool operator () (TYPE * const * const x, TYPE * const & y)
+		bool operator () (TYPE*const* const x, TYPE*const& y)
 		{
 			if (mFound) (*mFound) = &y;
 			return (*x < y);
 		}
 	};
 
-	template <class aSort> INT_PTR AddSorted (TYPE * pElement, aSort & pSort, bool pUnique = true)
+	template <class aSort> INT_PTR AddSorted (TYPE* pElement, aSort& pSort, bool pUnique = true)
 	{
 		if	(GetSize () > 0)
 		{
 			INT_PTR			lRet = -1;
-			TYPE * const *	lArray = (TYPE * const *) GetData();
-			TYPE * const *	lArrayEnd = lArray + GetSize ();
-			TYPE * const *	lInsert;
+			TYPE*const*	lArray = (TYPE*const*) GetData();
+			TYPE*const*	lArrayEnd = lArray + GetSize ();
+			TYPE*const*	lInsert;
 
 			pSort.mFound = NULL;
 			lInsert = std::upper_bound (lArray, lArrayEnd, pElement, pSort);
@@ -390,31 +390,31 @@ public:
 		}
 	}
 
-	inline INT_PTR AddSorted (TYPE * pElement, bool pUnique = true)
+	inline INT_PTR AddSorted (TYPE* pElement, bool pUnique = true)
 	{
 		return AddSorted (pElement, _CSortPredicate (), pUnique);
 	}
 
-	template <class aSort> INT_PTR RemoveSorted (const TYPE * pElement, aSort & pSort)
+	template <class aSort> INT_PTR RemoveSorted (const TYPE* pElement, aSort& pSort)
 	{
 		if	(GetSize () > 0)
 		{
 			INT_PTR			lRet = -1;
-			TYPE * const *	lArray = (TYPE * const *) GetData();
-			TYPE * const *	lArrayEnd = lArray + GetSize ();
-			TYPE * const *	lFound = NULL;
+			TYPE*const*	lArray = (TYPE*const*) GetData();
+			TYPE*const*	lArrayEnd = lArray + GetSize ();
+			TYPE*const*	lFound = NULL;
 
 			pSort.mFound = &lFound;
 
 			if	(
-					(std::binary_search (lArray, lArrayEnd, (TYPE * const * const) &pElement, pSort))
+					(std::binary_search (lArray, lArrayEnd, (TYPE*const* const) &pElement, pSort))
 				&&	(lFound)
 				)
 			{
 				while	(
 							(*lFound != pElement)
 						&&	(++lFound < lArrayEnd)
-						&&	(!pSort ((TYPE * const) pElement, *lFound))
+						&&	(!pSort ((TYPE* const) pElement, *lFound))
 						)
 				{}
 
@@ -429,23 +429,23 @@ public:
 		return -1;
 	}
 
-	inline INT_PTR RemoveSorted (const TYPE * pElement)
+	inline INT_PTR RemoveSorted (const TYPE* pElement)
 	{
 		return RemoveSorted (pElement, _CSortPredicate ());
 	}
 
-	template <class aSort> INT_PTR FindSorted (const TYPE * pElement, aSort & pSort) const
+	template <class aSort> INT_PTR FindSorted (const TYPE* pElement, aSort& pSort) const
 	{
 		if	(GetSize () > 0)
 		{
-			TYPE * const *	lArray = (TYPE * const *) GetData();
-			TYPE * const *	lArrayEnd = lArray + GetSize ();
-			TYPE * const *	lFound = NULL;
+			TYPE*const*	lArray = (TYPE*const*) GetData();
+			TYPE*const*	lArrayEnd = lArray + GetSize ();
+			TYPE*const*	lFound = NULL;
 
 			pSort.mFound = &lFound;
 
 			if	(
-					(std::binary_search (lArray, lArrayEnd, (TYPE * const * const) &pElement, pSort))
+					(std::binary_search (lArray, lArrayEnd, (TYPE*const* const) &pElement, pSort))
 				&&	(lFound)
 				)
 			{
@@ -455,17 +455,17 @@ public:
 		return -1;
 	}
 
-	inline INT_PTR FindSorted (const TYPE * pElement) const
+	inline INT_PTR FindSorted (const TYPE* pElement) const
 	{
 		return FindSorted (pElement, _CSortPredicate ());
 	}
 
-	template <class aSort> void Sort (aSort & pSort)
+	template <class aSort> void Sort (aSort& pSort)
 	{
 		if	(GetSize () > 0)
 		{
-			TYPE * *	lArray = (TYPE * *) GetData();
-			TYPE * *	lArrayEnd = lArray + GetSize ();
+			TYPE* *	lArray = (TYPE* *) GetData();
+			TYPE* *	lArrayEnd = lArray + GetSize ();
 
 			pSort.mFound = NULL;
 			if	(pSort.mStable)
@@ -486,14 +486,14 @@ public:
 
 //----------------------------------------------------------------------
 
-	static int __cdecl DefaultCompare (const void * pElem1, const void * pElem2)
+	static int __cdecl DefaultCompare (const void* pElem1, const void* pElem2)
 	{
-		return (* (long *) pElem1) - (* (long *) pElem2);
+		return (*(long*) pElem1) - (*(long*) pElem2);
 	}
 
-	INT_PTR AddSortedQS (TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
+	INT_PTR AddSortedQS (TYPE* pElement, int (__cdecl * pCompare) (const void*, const void*) = NULL, bool pUnique = true)
 	{
-		TYPE * *	lArray = (TYPE * *) GetData();
+		TYPE* *	lArray = (TYPE* *) GetData();
 		INT_PTR		lCount = GetSize ();
 
 		if	(
@@ -564,7 +564,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR RemoveSortedQS (const TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL)
+	INT_PTR RemoveSortedQS (const TYPE* pElement, int (__cdecl * pCompare) (const void*, const void*) = NULL)
 	{
 		INT_PTR lNdx = FindSortedQS (pElement, pCompare);
 		if	(lNdx >= 0)
@@ -574,10 +574,10 @@ public:
 		return lNdx;
 	}
 
-	INT_PTR FindSortedQS (const TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
+	INT_PTR FindSortedQS (const TYPE* pElement, int (__cdecl * pCompare) (const void*, const void*) = NULL) const
 	{
-		TYPE * *	lArray = (TYPE * *) GetData();
-		TYPE ** lFound = (TYPE * *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
+		TYPE* *	lArray = (TYPE* *) GetData();
+		TYPE ** lFound = (TYPE* *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
 		{
@@ -586,7 +586,7 @@ public:
 		return -1;
 	}
 
-	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
+	void SortQS (int (__cdecl * pCompare) (const void*, const void*) = NULL)
 	{
 		qsort (GetData(), GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 	}
@@ -600,17 +600,17 @@ template <typename TYPE> class CObTypeArray : public CTypedPtrArray <CObArray, T
 {
 public:
 	CObTypeArray () {}
-	CObTypeArray (const CObTypeArray <TYPE> & pSource)
+	CObTypeArray (const CObTypeArray <TYPE>& pSource)
 	{
 		Append (pSource);
 	}
 
-	TYPE * operator() (INT_PTR pNdx) const
+	TYPE* operator() (INT_PTR pNdx) const
 	{
 		return (pNdx >= 0 && pNdx < GetCount()) ? GetAt (pNdx) : NULL;
 	}
 
-	TYPE * operator% (INT_PTR pNdx) const
+	TYPE* operator% (INT_PTR pNdx) const
 	{
 		if	(GetSize () > 0)
 		{
@@ -620,7 +620,7 @@ public:
 		return NULL;
 	}
 
-	INT_PTR Find (const TYPE * pElement) const
+	INT_PTR Find (const TYPE* pElement) const
 	{
 		for (INT_PTR lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
@@ -632,7 +632,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR Remove (TYPE * pElement)
+	INT_PTR Remove (TYPE* pElement)
 	{
 		INT_PTR lNdx = Find (pElement);
 		if	(lNdx >= 0)
@@ -649,7 +649,7 @@ template <typename TYPE> class CPtrTypeList : public CTypedPtrList <CPtrList, TY
 {
 public:
 	CPtrTypeList (INT_PTR nBlockSize = 10) : CTypedPtrList <CPtrList, TYPE *> (nBlockSize) {}
-	CPtrTypeList (const CPtrTypeList <TYPE> & pSource)
+	CPtrTypeList (const CPtrTypeList <TYPE>& pSource)
 	{
 		POSITION lPos = pSource.GetHeadPosition ();
 		while (lPos)
@@ -658,7 +658,7 @@ public:
 		}
 	}
 
-	POSITION AddHeadUnique (TYPE * newElement)
+	POSITION AddHeadUnique (TYPE* newElement)
 	{
 		if	(Find (newElement) == 0)
 		{
@@ -667,7 +667,7 @@ public:
 		return 0;
 	}
 
-	POSITION AddTailUnique (TYPE * newElement)
+	POSITION AddTailUnique (TYPE* newElement)
 	{
 		if	(Find (newElement) == 0)
 		{
@@ -676,7 +676,7 @@ public:
 		return 0;
 	}
 
-	bool Remove (TYPE * pElement)
+	bool Remove (TYPE* pElement)
 	{
 		POSITION lPos;
 		if	(lPos = Find (pElement))
@@ -694,7 +694,7 @@ template <typename TYPE> class CObTypeList : public CTypedPtrList <CObList, TYPE
 {
 public:
 	CObTypeList (INT_PTR nBlockSize = 10) : CTypedPtrList <CObList, TYPE *> (nBlockSize) {}
-	CObTypeList (const CObTypeList <TYPE *> & pSource)
+	CObTypeList (const CObTypeList <TYPE*>& pSource)
 	{
 		POSITION lPos = pSource.GetHeadPosition ();
 		while (lPos)
@@ -703,7 +703,7 @@ public:
 		}
 	}
 
-	POSITION AddHeadUnique (TYPE * newElement)
+	POSITION AddHeadUnique (TYPE* newElement)
 	{
 		if	(Find (newElement) == 0)
 		{
@@ -712,7 +712,7 @@ public:
 		return 0;
 	}
 
-	POSITION AddTailUnique (TYPE * newElement)
+	POSITION AddTailUnique (TYPE* newElement)
 	{
 		if	(Find (newElement) == 0)
 		{
@@ -721,7 +721,7 @@ public:
 		return 0;
 	}
 
-	bool Remove (TYPE * pElement)
+	bool Remove (TYPE* pElement)
 	{
 		POSITION lPos;
 		if	(lPos = Find (pElement))
@@ -741,14 +741,14 @@ template <typename BASE_CLASS, typename TYPE> class COwnArray : public BASE_CLAS
 {
 public:
 	COwnArray () {}
-	COwnArray (const COwnArray <BASE_CLASS, TYPE> & pSource) : BASE_CLASS (pSource) {}
+	COwnArray (const COwnArray <BASE_CLASS, TYPE>& pSource) : BASE_CLASS (pSource) {}
 	virtual ~COwnArray () {DeleteAll ();}
 
 	void DeleteAll ()
 	{
 		for	(INT_PTR lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
-			TYPE * lElement = GetAt (lNdx);
+			TYPE* lElement = GetAt (lNdx);
 			BASE_CLASS::SetAt (lNdx, NULL);
 			if	(lElement)
 			{
@@ -762,7 +762,7 @@ public:
 	{
 		for	(INT_PTR lNdx = nIndex + nCount - 1; lNdx >= nIndex; lNdx--)
 		{
-			TYPE * lElement = GetAt (lNdx);
+			TYPE* lElement = GetAt (lNdx);
 			BASE_CLASS::SetAt (lNdx, NULL);
 			if	(lElement)
 			{
@@ -772,11 +772,11 @@ public:
 		RemoveAt (nIndex, nCount);
 	}
 
-	void SetAt (INT_PTR nIndex, TYPE * ptr)
+	void SetAt (INT_PTR nIndex, TYPE* ptr)
 	{
 		if	(ptr != ElementAt (nIndex))
 		{
-			TYPE * lElement = GetAt (nIndex);
+			TYPE* lElement = GetAt (nIndex);
 			BASE_CLASS::SetAt (nIndex, NULL);
 			if	(lElement)
 			{
@@ -786,14 +786,14 @@ public:
 		}
 	}
 
-	void SetAtGrow (INT_PTR nIndex, TYPE * ptr)
+	void SetAtGrow (INT_PTR nIndex, TYPE* ptr)
 	{
 		if	(
 				(nIndex < GetCount())
 			&&	(ptr != ElementAt (nIndex))
 			)
 		{
-			TYPE * lElement = GetAt (nIndex);
+			TYPE* lElement = GetAt (nIndex);
 			BASE_CLASS::SetAt (nIndex, NULL);
 			if	(lElement)
 			{
@@ -808,14 +808,14 @@ template <typename TYPE> class COwnPtrArray : public COwnArray <CPtrTypeArray <T
 {
 public:
 	COwnPtrArray () {}
-	COwnPtrArray (const COwnPtrArray <TYPE> & pSource) : COwnArray <CPtrTypeArray <TYPE>, TYPE> (pSource) {}
+	COwnPtrArray (const COwnPtrArray <TYPE>& pSource) : COwnArray <CPtrTypeArray <TYPE>, TYPE> (pSource) {}
 };
 
 template <typename TYPE> class COwnObArray : public COwnArray <CObTypeArray <TYPE>, TYPE>
 {
 public:
 	COwnObArray () {}
-	COwnObArray (const COwnObArray <TYPE> & pSource) : COwnArray <CObTypeArray <TYPE>, TYPE> (pSource) {}
+	COwnObArray (const COwnObArray <TYPE>& pSource) : COwnArray <CObTypeArray <TYPE>, TYPE> (pSource) {}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -824,7 +824,7 @@ template <typename BASE_CLASS, typename TYPE> class COwnList : public BASE_CLASS
 {
 public:
 	COwnList () {}
-	COwnList (const COwnList <BASE_CLASS, TYPE> & pSource) : BASE_CLASS (pSource) {}
+	COwnList (const COwnList <BASE_CLASS, TYPE>& pSource) : BASE_CLASS (pSource) {}
 	virtual ~COwnList () {DeleteAll ();}
 
 	void DeleteAll ()
@@ -841,28 +841,28 @@ public:
 		RemoveAll ();
 	}
 
-	TYPE * DeleteHead ()
+	TYPE* DeleteHead ()
 	{
-		TYPE * lObject = RemoveHead ();
+		TYPE* lObject = RemoveHead ();
 		delete lObject;
 		return lObject;
 	}
 
-	TYPE * DeleteTail ()
+	TYPE* DeleteTail ()
 	{
-		TYPE * lObject = RemoveTail ();
+		TYPE* lObject = RemoveTail ();
 		delete lObject;
 		return lObject;
 	}
 
 	void DeleteAt (POSITION position)
 	{
-		TYPE * lObject = GetAt (position);
+		TYPE* lObject = GetAt (position);
 		RemoveAt (position);
 		delete lObject;
 	}
 
-	bool Delete (TYPE * pElement)
+	bool Delete (TYPE* pElement)
 	{
 		POSITION lPos;
 		if	(lPos = Find (pElement))
@@ -878,14 +878,14 @@ template <typename TYPE> class COwnPtrList : public COwnList <CPtrTypeList <TYPE
 {
 public:
 	COwnPtrList () {}
-	COwnPtrList (const COwnPtrList <TYPE> & pSource) : COwnList <CPtrTypeList <TYPE>, TYPE> (pSource) {}
+	COwnPtrList (const COwnPtrList <TYPE>& pSource) : COwnList <CPtrTypeList <TYPE>, TYPE> (pSource) {}
 };
 
 template <typename TYPE> class COwnObList : public COwnList <CObTypeList <TYPE>, TYPE>
 {
 public:
 	COwnObList () {}
-	COwnObList (const COwnObList <TYPE> & pSource) : COwnList <CObTypeList <TYPE>, TYPE> (pSource) {}
+	COwnObList (const COwnObList <TYPE>& pSource) : COwnList <CObTypeList <TYPE>, TYPE> (pSource) {}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -932,7 +932,7 @@ public:
 		return Lookup (key, Value) ? true : false;
 	}
 
-	bool FindValue (VALUE* value, KEY & key) const
+	bool FindValue (VALUE* value, KEY& key) const
 	{
 		KEY					Key;
 		VALUE*	Value;
@@ -1107,7 +1107,7 @@ template <typename aType> inline CString FormatArray (const aType * pArray, INT_
 	return CString (lRet);
 }
 
-template <typename aType> inline CString FormatArray (const CArray <aType, aType> & pArray, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
+template <typename aType> inline CString FormatArray (const CArray <aType, aType>& pArray, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
 {
 	return FormatArray (pArray.GetData(), pArray.GetSize (), pFormat);
 }

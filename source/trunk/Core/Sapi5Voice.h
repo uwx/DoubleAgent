@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -35,7 +35,7 @@ protected:
 	CSapi5Voice ();
 public:
 	_DACORE_IMPEXP virtual ~CSapi5Voice ();
-	_DACORE_IMPEXP static CSapi5Voice * CreateInstance ();
+	_DACORE_IMPEXP static CSapi5Voice* CreateInstance ();
 
 // Attributes
 	_DACORE_IMPEXP static tBstrPtr ShortVoiceId (LPCTSTR pLongVoiceId);
@@ -52,16 +52,16 @@ public:
 	_DACORE_IMPEXP HRESULT Resume ();
 
 	_DACORE_IMPEXP tBstrPtr GetVoiceId ();
-	_DACORE_IMPEXP HRESULT GetVoiceId (tBstrPtr & pVoiceId);
+	_DACORE_IMPEXP HRESULT GetVoiceId (tBstrPtr& pVoiceId);
 	_DACORE_IMPEXP HRESULT SetVoiceId (LPCTSTR pVoiceId);
 
 	_DACORE_IMPEXP tBstrPtr GetOutputId ();
-	_DACORE_IMPEXP HRESULT GetOutputId (tBstrPtr & pOutputId);
+	_DACORE_IMPEXP HRESULT GetOutputId (tBstrPtr& pOutputId);
 	_DACORE_IMPEXP HRESULT SetOutputId (LPCTSTR pOutputId);
 
 	_DACORE_IMPEXP tBstrPtr GetVoiceName ();
-	_DACORE_IMPEXP HRESULT GetVoiceName (tBstrPtr & pVoiceName);
-	_DACORE_IMPEXP HRESULT GetVoiceLanguages (CAtlTypeArray <LANGID> & pLanguages);
+	_DACORE_IMPEXP HRESULT GetVoiceName (tBstrPtr& pVoiceName);
+	_DACORE_IMPEXP HRESULT GetVoiceLanguages (CAtlTypeArray <LANGID>& pLanguages);
 
 	_DACORE_IMPEXP friend int VoiceVisemeOverlay (int pViseme);
 	_DACORE_IMPEXP friend CAtlString VoiceVisemeStr (int pViseme);
@@ -74,14 +74,14 @@ protected:
 	_DACORE_IMPEXP virtual bool _IsPaused () const;
 public:
 	_DACORE_IMPEXP virtual tBstrPtr GetUniqueId ();
-	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
+	_DACORE_IMPEXP virtual HRESULT GetUniqueId (tBstrPtr& pUniqueId);
 	_DACORE_IMPEXP virtual tBstrPtr GetDisplayName ();
-	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr & pDisplayName);
+	_DACORE_IMPEXP virtual HRESULT GetDisplayName (tBstrPtr& pDisplayName);
 	_DACORE_IMPEXP virtual ULONG GetRate ();
-	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG & pRate);
+	_DACORE_IMPEXP virtual HRESULT GetRate (ULONG& pRate);
 	_DACORE_IMPEXP virtual HRESULT SetRate (ULONG pRate);
 	_DACORE_IMPEXP virtual USHORT GetVolume ();
-	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT & pVolume);
+	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT& pVolume);
 	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
 
 // Implementation

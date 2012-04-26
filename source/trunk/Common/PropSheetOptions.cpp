@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -37,7 +37,7 @@ static LPCTSTR	sProfilePropertySheetPage	= _T("PropertySheetPage");
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPropSheetOptions::CPropSheetOptions (CListeningGlobal & pListeningGlobal, HWND pParentWnd)
+CPropSheetOptions::CPropSheetOptions (CListeningGlobal& pListeningGlobal, HWND pParentWnd)
 :	mListeningGlobal (pListeningGlobal)
 {
 	Construct (IDS_PROPSHEET_OPTIONS, pParentWnd);
@@ -75,7 +75,7 @@ INT_PTR CPropSheetOptions::DoModal ()
 
 bool CPropSheetOptions::PreCreateSheet (bool pModal)
 {
-	CAtlPropertyPage *	lPage;
+	CAtlPropertyPage*	lPage;
 
 	mPages.DeleteAll ();
 
@@ -132,7 +132,7 @@ void CPropSheetOptions::LoadConfig ()
 	CAtlPropertySheet::LoadConfig ();
 }
 
-bool CPropSheetOptions::LoadLayout (CRect & pWinRect)
+bool CPropSheetOptions::LoadLayout (CRect& pWinRect)
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 	CPoint		lWinPos;
@@ -174,7 +174,7 @@ void CPropSheetOptions::SaveConfig (int pSheetResult)
 	CAtlPropertySheet::SaveConfig (pSheetResult);
 }
 
-void CPropSheetOptions::SaveLayout (const CRect & pWinRect)
+void CPropSheetOptions::SaveLayout (const CRect& pWinRect)
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 

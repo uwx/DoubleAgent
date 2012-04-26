@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -38,8 +38,10 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCharacter2Ptr		mServerObject;
 	long					mServerCharID;
+#endif
 	tPtr <CDaCmnCharacter>	mLocalObject;
 
 	long GetCharID () const;
@@ -101,8 +103,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Height (short * Height);
 	HRESULT STDMETHODCALLTYPE put_Width (short Width);
 	HRESULT STDMETHODCALLTYPE get_Width (short * Width);
-	HRESULT STDMETHODCALLTYPE get_Speed (long * Speed);
-	HRESULT STDMETHODCALLTYPE get_Pitch (long * Pitch);
+	HRESULT STDMETHODCALLTYPE get_Speed (long* Speed);
+	HRESULT STDMETHODCALLTYPE get_Pitch (long* Pitch);
 	HRESULT STDMETHODCALLTYPE put_IdleOn (VARIANT_BOOL On);
 	HRESULT STDMETHODCALLTYPE get_IdleOn (VARIANT_BOOL * On);
 	HRESULT STDMETHODCALLTYPE Activate (VARIANT State,  VARIANT_BOOL * Success);
@@ -131,11 +133,11 @@ public:
 	HRESULT STDMETHODCALLTYPE put_HelpModeOn (VARIANT_BOOL On);
 	HRESULT STDMETHODCALLTYPE get_HelpModeOn (VARIANT_BOOL * On);
 	HRESULT STDMETHODCALLTYPE put_HelpContextID (long ID);
-	HRESULT STDMETHODCALLTYPE get_HelpContextID (long * ID);
+	HRESULT STDMETHODCALLTYPE get_HelpContextID (long* ID);
 	HRESULT STDMETHODCALLTYPE get_Active (short * State);
 	HRESULT STDMETHODCALLTYPE Listen (VARIANT_BOOL Listen,  VARIANT_BOOL * StartedListening);
 	HRESULT STDMETHODCALLTYPE put_LanguageID (long LanguageID);
-	HRESULT STDMETHODCALLTYPE get_LanguageID (long * LanguageID);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long* LanguageID);
 	HRESULT STDMETHODCALLTYPE get_SRModeID (BSTR * EngineModeId);
 	HRESULT STDMETHODCALLTYPE put_SRModeID (BSTR EngineModeId);
 	HRESULT STDMETHODCALLTYPE get_TTSModeID (BSTR * EngineModeId);
@@ -148,10 +150,10 @@ public:
 	HRESULT STDMETHODCALLTYPE Think (BSTR Text, IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE get_Version (BSTR * Version);
 	HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaCtlAnimationNames ** Names);
-	HRESULT STDMETHODCALLTYPE get_SRStatus (long * Status);
+	HRESULT STDMETHODCALLTYPE get_SRStatus (long* Status);
 
 	// IDaCtlCharacter2
-	HRESULT STDMETHODCALLTYPE get_Style (long * Style);
+	HRESULT STDMETHODCALLTYPE get_Style (long* Style);
 	HRESULT STDMETHODCALLTYPE put_Style (long Style);
 	HRESULT STDMETHODCALLTYPE get_HasIcon (VARIANT_BOOL * HasIcon);
 	HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft,  long ClipTop,  long ClipWidth,  long ClipHeight);
@@ -187,14 +189,15 @@ public:
 	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
 	HRESULT STDMETHODCALLTYPE get_Smoothed (VARIANT_BOOL *Smoothed);
 	HRESULT STDMETHODCALLTYPE get_SmoothEdges (VARIANT_BOOL *SmoothEdges);
-	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY **Animations);
-	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY **States);
+	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY**Animations);
+	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY**States);
 	HRESULT STDMETHODCALLTYPE put_SuspendPause (VARIANT_BOOL SuspendPause);
 	HRESULT STDMETHODCALLTYPE get_SuspendPause (VARIANT_BOOL *SuspendPause);
 	HRESULT STDMETHODCALLTYPE put_SuspendStop (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get_SuspendStop (VARIANT_BOOL *Enabled);
 	HRESULT STDMETHODCALLTYPE put_SuspendHide (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get_SuspendHide (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE SetSize (short Width, short Height);
 
 // Implementation
 public:

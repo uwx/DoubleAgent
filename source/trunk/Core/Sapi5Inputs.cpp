@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -112,7 +112,7 @@ void CSapi5Inputs::Enumerate ()
 			ISpDataKeyPtr		lAttributes;
 			tMallocPtr <WCHAR>	lSapiStr;
 			DWORD				lSapiValue;
-			CSapi5InputInfo *	lInputInfo;
+			CSapi5InputInfo*	lInputInfo;
 
 			if	(LogIsActive (mLogLevelDebug))
 			{
@@ -222,7 +222,7 @@ void CSapi5Inputs::Enumerate ()
 INT_PTR CSapi5Inputs::FindEngineId (LPCTSTR pEngineId)
 {
 	INT_PTR				lNdx;
-	CSapi5InputInfo *	lInputInfo;
+	CSapi5InputInfo*	lInputInfo;
 
 	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
@@ -241,7 +241,7 @@ INT_PTR CSapi5Inputs::FindEngineId (LPCTSTR pEngineId)
 	return -1;
 }
 
-CSapi5InputInfo * CSapi5Inputs::GetEngineId (LPCTSTR pEngineId)
+CSapi5InputInfo* CSapi5Inputs::GetEngineId (LPCTSTR pEngineId)
 {
 	return operator () (FindEngineId (pEngineId));
 }
@@ -251,7 +251,7 @@ CSapi5InputInfo * CSapi5Inputs::GetEngineId (LPCTSTR pEngineId)
 INT_PTR CSapi5Inputs::FindEngineName (LPCTSTR pEngineName)
 {
 	INT_PTR				lNdx;
-	CSapi5InputInfo *	lInputInfo;
+	CSapi5InputInfo*	lInputInfo;
 
 	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
@@ -267,7 +267,7 @@ INT_PTR CSapi5Inputs::FindEngineName (LPCTSTR pEngineName)
 	return -1;
 }
 
-CSapi5InputInfo * CSapi5Inputs::GetEngineName (LPCTSTR pEngineName)
+CSapi5InputInfo* CSapi5Inputs::GetEngineName (LPCTSTR pEngineName)
 {
 	return operator () (FindEngineName (pEngineName));
 }
@@ -299,7 +299,7 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, int * pMatch
 	return -1;
 }
 
-CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank)
+CSapi5InputInfo* CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults, int * pMatchRank)
 {
 	return operator () (FindInput (pLangId, pUseDefaults, pMatchRank));
 }
@@ -329,7 +329,7 @@ CSapi5InputIndexArray const * CSapi5Inputs::FindInputs (LANGID pLangId, bool pUs
 
 		for	(lInputNdx = 0; lInputNdx < (INT_PTR)GetCount(); lInputNdx++)
 		{
-			CSapi5InputInfo *	lInputInfo = GetAt (lInputNdx);
+			CSapi5InputInfo*	lInputInfo = GetAt (lInputNdx);
 
 #ifdef	_DEBUG_INPUT_MATCH
 			CAtlString	lMatchLog;
@@ -427,7 +427,7 @@ bool CSapi5Inputs::RemoveInput (INT_PTR pInputNdx)
 	return false;
 }
 
-bool CSapi5Inputs::RemoveInput (const CSapi5InputInfo * pInputInfo)
+bool CSapi5Inputs::RemoveInput (const CSapi5InputInfo* pInputInfo)
 {
 	if	(pInputInfo)
 	{
@@ -456,7 +456,7 @@ INT_PTR CSapi5Inputs::DefaultInputNdx ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID pLangId, bool pUseDefaults)
+bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo* pInputInfo, LANGID pLangId, bool pUseDefaults)
 {
 	bool					lRet = false;
 	CAtlTypeArray <LANGID>	lLanguageIds;
@@ -517,7 +517,7 @@ void CSapi5Inputs::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 	}
 }
 
-void CSapi5Inputs::LogInputInfo (UINT pLogLevel, CSapi5InputInfo & pInputInfo, LPCTSTR pTitle, LPCTSTR pIndent)
+void CSapi5Inputs::LogInputInfo (UINT pLogLevel, CSapi5InputInfo& pInputInfo, LPCTSTR pTitle, LPCTSTR pIndent)
 {
 	if	(LogIsActive (pLogLevel))
 	{
@@ -556,7 +556,7 @@ void CSapi5Inputs::LogInputInfo (UINT pLogLevel, CSapi5InputInfo & pInputInfo, L
 
 //////////////////////////////////////////////////////////////////////
 
-void CSapi5Inputs::LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle)
+void CSapi5Inputs::LogInputToken (UINT pLogLevel, void* pInputToken, LPCTSTR pTitle)
 {
 	if	(LogIsActive (pLogLevel))
 	{

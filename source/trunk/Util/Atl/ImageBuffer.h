@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -49,11 +49,11 @@ public:
 	bool PauseBuffer ();
 	bool ResumeBuffer ();
 
-	bool CreateScaledBuffer (const CSize & pSize, bool pForBlending = false, UINT pScale = 3);
+	bool CreateScaledBuffer (const CSize& pSize, bool pForBlending = false, UINT pScale = 3);
 	bool UnscaleBuffer (UINT pScale = 3, UINT pBlend = 1);
 
-	virtual bool CreateBuffer (const CSize & pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
-	virtual bool DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
+	virtual bool CreateBuffer (const CSize& pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
+	virtual bool DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
 
 	HDC GetDC () const;
 	HBITMAP GetImage () const;
@@ -61,7 +61,7 @@ public:
 
 // Implementation
 protected:
-	bool NewBufferRequired (ATL::CImage * pImage, const CSize & pSize, bool pForBlending, int pSizeFactor = 3);
+	bool NewBufferRequired (ATL::CImage* pImage, const CSize& pSize, bool pForBlending, int pSizeFactor = 3);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -81,8 +81,8 @@ public:
 
 //	Operations
 public:
-	virtual bool CreateBuffer (const CSize & pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
-	virtual bool DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
+	virtual bool CreateBuffer (const CSize& pBufferSize, bool pForBlending = false, bool pForceNewBuffer = false, bool pTopDown = false);
+	virtual bool DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer = false, bool pReleaseDC = true);
 	virtual void EraseBuffer (COLORREF pColor);
 	virtual bool UnscaleBuffer ();
 

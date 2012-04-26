@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -50,17 +50,17 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP CSapi5Input * GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached = true);
-	_DACORE_IMPEXP CSapi5Input * GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	_DACORE_IMPEXP CSapi5Input* GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	_DACORE_IMPEXP CSapi5Input* GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 
-	_DACORE_IMPEXP bool CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient);
-	_DACORE_IMPEXP bool UncacheInput (CSapi5Input * pInput);
-	_DACORE_IMPEXP bool AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient);
-	_DACORE_IMPEXP bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = false);
+	_DACORE_IMPEXP bool CacheInput (CSapi5Input* pInput, CSapiInputClient * pClient);
+	_DACORE_IMPEXP bool UncacheInput (CSapi5Input* pInput);
+	_DACORE_IMPEXP bool AddInputClient (CSapi5Input* pInput, CSapiInputClient * pClient);
+	_DACORE_IMPEXP bool RemoveInputClient (CSapi5Input* pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = false);
 
-	_DACORE_IMPEXP CSapi5Input * GetCachedInput (INT_PTR pInputNdx);
-	_DACORE_IMPEXP CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
-	_DACORE_IMPEXP bool GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients);
+	_DACORE_IMPEXP CSapi5Input* GetCachedInput (INT_PTR pInputNdx);
+	_DACORE_IMPEXP CSapi5Input* FindCachedInput (LPCTSTR pEngineId);
+	_DACORE_IMPEXP bool GetInputClients (CSapi5Input* pInput, CAtlPtrTypeArray <CSapiInputClient>& pClients);
 
 	_DACORE_IMPEXP void Terminate ();
 	_DACORE_IMPEXP static void TerminateStaticInstance ();
@@ -70,7 +70,7 @@ protected:
 	CComAutoCriticalSection												mCritSec;
 	tPtr <CSapi5Inputs>													mSapi5Inputs;
 	CAtlOwnPtrArray <CSapi5Input>										mCachedInputs;
-	CAtlOwnPtrMap <CSapi5Input *, CAtlPtrTypeArray <CSapiInputClient> >	mInputClients;
+	CAtlOwnPtrMap <CSapi5Input*, CAtlPtrTypeArray <CSapiInputClient> >	mInputClients;
 };
 
 //////////////////////////////////////////////////////////////////////

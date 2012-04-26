@@ -130,7 +130,7 @@ protected:
 
 	bool IsAnimating ();
 	bool Stop (bool pRandom = false);
-	CPoint GetInitialPos (const CSize & pInitialSize);
+	CPoint GetInitialPos (const CSize& pInitialSize);
 	bool CheckServerOk (HRESULT pResult);
 
 	HRESULT GetAgentServers (int pServerCount = 0);

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -51,7 +51,7 @@ CAgentPreviewWnd::CAgentPreviewWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::CAgentPreviewWnd (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::CAgentPreviewWnd (%d)"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 	mAlphaSmoothing = 0;
@@ -63,7 +63,7 @@ CAgentPreviewWnd::~CAgentPreviewWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::~CAgentPreviewWnd (%d) [%p] [%d]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::~CAgentPreviewWnd (%d) [%p] [%d]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
 }
@@ -78,9 +78,9 @@ void CAgentPreviewWnd::FinalRelease ()
 #endif
 }
 
-CAgentPreviewWnd * CAgentPreviewWnd::CreateInstance ()
+CAgentPreviewWnd* CAgentPreviewWnd::CreateInstance ()
 {
-	CComObject<CAgentPreviewWnd> *	lInstance = NULL;
+	CComObject<CAgentPreviewWnd>*	lInstance = NULL;
 	LogComErr (LogIfActive|LogTime, CComObject<CAgentPreviewWnd>::CreateInstance (&lInstance));
 	return lInstance;
 }
@@ -110,7 +110,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::ContextSensitiveHelp (BOOL fEnterMod
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPreviewWnd::Create (HWND pParentWnd, CRect * pInitialRect)
+bool CAgentPreviewWnd::Create (HWND pParentWnd, CRect* pInitialRect)
 {
 	bool	lRet = false;
 	CRect	lInitialRect (0,0,0,0);
@@ -150,7 +150,7 @@ DWORD CAgentPreviewWnd::GetAlphaSmoothing () const
 
 void CAgentPreviewWnd::Opened ()
 {
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	CAgentWnd::Opened ();
 
@@ -159,7 +159,7 @@ void CAgentPreviewWnd::Opened ()
 		&&	(lAgentFile = GetAgentFile ())
 		)
 	{
-		CSize	lImageSize = lAgentFile->GetImageSize();
+		CSize	lImageSize = lAgentFile->Header.ImageSize;
 		CRect	lClientRect;
 
 		GetClientRect (&lClientRect);
@@ -179,7 +179,7 @@ void CAgentPreviewWnd::Opened ()
 	}
 }
 
-bool CAgentPreviewWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)
+bool CAgentPreviewWnd::DoAnimationQueue (bool& pNextActivateImmediate, DWORD& pNextQueueTime)
 {
 	bool	lRet = CAgentWnd::DoAnimationQueue (pNextActivateImmediate, pNextQueueTime);
 
@@ -205,12 +205,12 @@ bool CAgentPreviewWnd::DoIdle ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentPreviewWnd::OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentPreviewWnd::OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	return MA_ACTIVATEANDEAT;
 }
 
-LRESULT CAgentPreviewWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentPreviewWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	return HTTRANSPARENT;
 }
@@ -219,7 +219,7 @@ LRESULT CAgentPreviewWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentPreviewWnd::InternalRenderFrame (HDC pDC, const POINT * pPosition)
+HRESULT CAgentPreviewWnd::InternalRenderFrame (HDC pDC, const POINT* pPosition)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -256,7 +256,7 @@ HRESULT CAgentPreviewWnd::InternalRenderFrame (HDC pDC, const POINT * pPosition)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition)
+HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile* pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT* pPosition)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -264,17 +264,17 @@ HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile * pAgentFile,
 	{
 		if	(pAgentFile)
 		{
-			const CAgentFileAnimation *	lAnimation;
+			const CAgentFileAnimation*	lAnimation;
 
 			if	(
 					(lAnimation = pAgentFile->GetAnimation (pAnimationName))
 				&&	(pFrameNum >= 0)
-				&&	(pFrameNum < (long)(short)lAnimation->mFrameCount)
-				&&	(lAnimation->mFrames)
+				&&	(pFrameNum < (long)(short)lAnimation->FrameCount)
+				&&	(lAnimation->Frames)
 				)
 			{
 				CPoint					lRenderPos (0,0);
-				const CAgentFileFrame &	lFrame = lAnimation->mFrames [pFrameNum];
+				const CAgentFileFrame&	lFrame = lAnimation->Frames [pFrameNum];
 				UINT					lImageFormatSize;
 				tArrayPtr <BYTE>		lImageFormat;
 				LPBITMAPINFO			lBitmapInfo;
@@ -285,10 +285,6 @@ HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile * pAgentFile,
 					lRenderPos.x = pPosition->x;
 					lRenderPos.y = pPosition->y;
 				}
-				if	(pAgentFile->GetImageCount () <= 0)
-				{
-					pAgentFile->ReadImageIndex ();
-				}
 				if	(
 						(lImageFormatSize = pAgentFile->GetImageFormat (NULL, NULL, false))
 					&&	(lImageFormat = new BYTE [lImageFormatSize])
@@ -298,7 +294,7 @@ HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile * pAgentFile,
 				{
 					if	(mBkColor)
 					{
-						SetPaletteBkColor (lBitmapInfo, pAgentFile->GetTransparency(), *mBkColor);
+						SetPaletteBkColor (lBitmapInfo, pAgentFile->Header.Transparency, *mBkColor);
 					}
 					if	(lImageBuffer.mImage = new ATL::CImage)
 					{
@@ -309,7 +305,7 @@ HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile * pAgentFile,
 						&&	(lImageBuffer.mImage->IsDIBSection ())
 						)
 					{
-						pAgentFile->GetFrameBits (GetImageBits (*lImageBuffer.mImage), lFrame);
+						pAgentFile->GetFrameBits (GetImageBits (*lImageBuffer.mImage), &lFrame);
 						GdiFlush ();
 
 						if	(lImageBuffer.StartBuffer ())
@@ -593,13 +589,13 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::SetBkColor (COLORREF pBkColor)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameSize (SIZE * pFrameSize)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameSize (SIZE* pFrameSize)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetFrameSize"), this, max(m_dwRef,-1));
 #endif
 	HRESULT			lResult = S_OK;
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(!pFrameSize)
 	{
@@ -608,7 +604,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameSize (SIZE * pFrameSize)
 	else
 	if	(lAgentFile = GetAgentFile ())
 	{
-		(*pFrameSize) = lAgentFile->GetImageSize();
+		(*pFrameSize) = lAgentFile->Header.ImageSize;
 	}
 	else
 	{
@@ -624,7 +620,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameSize (SIZE * pFrameSize)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameSize (BSTR pCharacterPath, SIZE* pFrameSize)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterFrameSize"), this, max(m_dwRef,-1));
@@ -643,19 +639,19 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameSize (BSTR pCharact
 		try
 		{
 			CAtlString			lCharacterPath (pCharacterPath);
-			CAgentFile *		lAgentFile;
+			CAgentFile*		lAgentFile;
 			tPtr <CAgentFile>	lLocalFile;
 
 			if	(
-					(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
+					(lAgentFile = _CoreAnchor.FindCachedFile (lCharacterPath))
 				||	(
-						(lLocalFile = CAgentFile::CreateInstance())
+						(lLocalFile = CAgentFile::CreateInstance (pCharacterPath))
 					&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
 					&&	(lAgentFile = lLocalFile)
 					)
 				)
 			{
-				(*pFrameSize) = lAgentFile->GetImageSize();
+				(*pFrameSize) = lAgentFile->Header.ImageSize;
 			}
 
 			SafeFreeSafePtr (lLocalFile);
@@ -674,13 +670,13 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameSize (BSTR pCharact
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameFormat (BYTE **pFrameFormat)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameFormat (BYTE**pFrameFormat)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetFrameFormat"), this, max(m_dwRef,-1));
 #endif
 	HRESULT			lResult = S_OK;
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(!pFrameFormat)
 	{
@@ -721,7 +717,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameFormat (BYTE **pFrameFormat)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameFormat (BSTR pCharacterPath, BYTE**pFrameFormat)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterFrameFormat"), this, max(m_dwRef,-1));
@@ -739,15 +735,15 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameFormat (BSTR pChara
 		try
 		{
 			CAtlString			lCharacterPath (pCharacterPath);
-			CAgentFile *		lAgentFile;
+			CAgentFile*		lAgentFile;
 			tPtr <CAgentFile>	lLocalFile;
 			UINT				lFormatSize;
 			tMallocPtr <BYTE>	lFormat;
 
 			if	(
-					(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
+					(lAgentFile = _CoreAnchor.FindCachedFile (lCharacterPath))
 				||	(
-						(lLocalFile = CAgentFile::CreateInstance())
+						(lLocalFile = CAgentFile::CreateInstance (pCharacterPath))
 					&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
 					&&	(lAgentFile = lLocalFile)
 					)
@@ -838,13 +834,13 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::RenderCharacterFrame (BSTR pCharacte
 	try
 	{
 		CAtlString			lCharacterPath (pCharacterPath);
-		CAgentFile *		lAgentFile;
+		CAgentFile*		lAgentFile;
 		tPtr <CAgentFile>	lLocalFile;
 
 		if	(
-				(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
+				(lAgentFile = _CoreAnchor.FindCachedFile (lCharacterPath))
 			||	(
-					(lLocalFile = CAgentFile::CreateInstance())
+					(lLocalFile = CAgentFile::CreateInstance (pCharacterPath))
 				&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
 				&&	(lAgentFile = lLocalFile)
 				)
@@ -878,9 +874,9 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::OpenFile (BSTR pCharacterPath, HWND 
 	HRESULT				lResult = S_OK;
 	tPtr <CAgentFile>	lAgentFile;
 	CRect				lParentRect;
-	CRect *				lInitialRect = NULL;
+	CRect*				lInitialRect = NULL;
 
-	if	(lAgentFile = CAgentFile::CreateInstance())
+	if	(lAgentFile = CAgentFile::CreateInstance (pCharacterPath))
 	{
 		if	(SUCCEEDED (lResult = lAgentFile->Open (pCharacterPath)))
 		{
@@ -947,7 +943,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterPath (BSTR *pCharacterPa
 	}
 	else
 	{
-		(*pCharacterPath) = GetAgentFile()->GetPath().Detach();
+		(*pCharacterPath) = (BSTR)GetAgentFile()->Path.Detach();
 	}
 
 #ifdef	_LOG_RESULTS
@@ -965,7 +961,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterName (BSTR *pCharacterNa
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterName"), this, max(m_dwRef,-1));
 #endif
 	HRESULT				lResult = S_OK;
-	CAgentFileName *	lFileName;
+	CAgentFileName*	lFileName;
 
 	if	(
 			(!m_hWnd)
@@ -982,7 +978,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterName (BSTR *pCharacterNa
 	else
 	if	(lFileName = GetAgentFile()->FindName (pLangID))
 	{
-		(*pCharacterName) = tBstrPtr (lFileName->mName).Detach();
+		(*pCharacterName) = tBstrPtr (lFileName->Name).Detach();
 	}
 	else
 	{
@@ -1005,7 +1001,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterDescription (BSTR *pChar
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterDescription"), this, max(m_dwRef,-1));
 #endif
 	HRESULT				lResult = S_OK;
-	CAgentFileName *	lFileName;
+	CAgentFileName*	lFileName;
 
 	if	(
 			(!m_hWnd)
@@ -1022,7 +1018,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterDescription (BSTR *pChar
 	else
 	if	(lFileName = GetAgentFile()->FindName (pLangID))
 	{
-		(*pCharacterDescription) = tBstrPtr (lFileName->mDesc1).Detach();
+		(*pCharacterDescription) = tBstrPtr (lFileName->Desc1).Detach();
 	}
 	else
 	{
@@ -1060,7 +1056,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterGuid (GUID *pGuid)
 	}
 	else
 	{
-		(*pGuid) = GetAgentFile()->GetGuid();
+		(*pGuid) = GetAgentFile()->Header.Guid;
 	}
 
 #ifdef	_LOG_RESULTS

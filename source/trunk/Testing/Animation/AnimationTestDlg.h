@@ -1,6 +1,12 @@
 #pragma once
+#pragma warning (disable: 4005)
 #include "DaServerOdl.h"
 #include "AgentPreviewWnd.h"
+#include <AgtSvr.h>
+
+_COM_SMARTPTR_TYPEDEF (IAgentEx, __uuidof(IAgentEx));
+_COM_SMARTPTR_TYPEDEF (IAgentCharacterEx, __uuidof(IAgentCharacterEx));
+_COM_SMARTPTR_TYPEDEF (IAgentPropertySheet, __uuidof(IAgentPropertySheet));
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
@@ -49,6 +55,8 @@ public:
 	CButton	mIconGenerated;
 	CButton	mIconClipped;
 	CButton	mIconIdentified;
+	CButton	mUseMsAgent;
+	CButton	mSizeTest;
 	//}}AFX_DATA
 
 	//{{AFX_VIRTUAL(CAnimationTestDlg)
@@ -89,6 +97,8 @@ protected:
 	afx_msg void OnIconShown();
 	afx_msg void OnIconGenerated();
 	afx_msg void OnIconIdentified();
+	afx_msg void OnUseMsAgent();
+	afx_msg void OnSizeTest();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -138,13 +148,18 @@ protected:
 	bool ShowAllGestures ();
 	bool ShowAllStates ();
 
+	void StartSizeTest ();
+	void StopSizeTest ();
+	void SizeTestCycle ();
+
 	bool IsAnimating ();
 	bool Stop ();
 
-	void GetAgentServer ();
+	void GetAgentServer (bool pMsAgent = false);
+	void FreeAgentServer ();
 	bool ShowAgentCharacter ();
 	bool HideAgentCharacter ();
-	bool ReleaseAgentCharacter ();
+	bool FreeAgentCharacter ();
 	bool LoadedAgentCharacter ();
 	bool IsCharacterVisible ();
 	void CharacterIsVisible (bool pVisible);
@@ -159,9 +174,11 @@ protected:
 	tPtr <CAgentPreviewWnd>	mAgentPreviewWnd;
 	CString					mWinTitle;
 	CString					mCharacterPath;
-	IDaServer2Ptr			mServer;
+	IAgentExPtr				mMsServer;
+	IDaServer2Ptr			mDaServer;
 	long					mNotifySinkId;
-	IDaSvrCharacter2Ptr		mCharacter;
+	IDaSvrCharacter2Ptr		mDaCharacter;
+	IAgentCharacterExPtr	mMsCharacter;
 	long					mCharacterId;
 	UINT_PTR				mRepeatTimer;
 	UINT_PTR				mAllGesturesTimer;
@@ -170,6 +187,8 @@ protected:
 	long					mLoadReqID;
 	long					mHideReqID;
 	long					mLastAnimationReqID;
+	UINT_PTR				mSizeTestTimer;
+	long					mSizeTestCycle;
 };
 
 /////////////////////////////////////////////////////////////////////////////

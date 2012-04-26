@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -50,7 +50,7 @@ CSapi5Voice::CSapi5Voice ()
 	mPaused (false),
 	mLastVoiceEvent (SPEI_UNDEFINED)
 {
-	LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void **) &mVoice));
+	LogComErr (LogIfActive|LogTime, CoCreateInstance (CLSID_SpVoice, NULL, CLSCTX_SERVER, __uuidof (ISpVoice), (void**) &mVoice));
 }
 
 CSapi5Voice::~CSapi5Voice ()
@@ -66,7 +66,7 @@ CSapi5Voice::~CSapi5Voice ()
 	SafeFreeSafePtr (mVoice);
 }
 
-CSapi5Voice * CSapi5Voice::CreateInstance ()
+CSapi5Voice* CSapi5Voice::CreateInstance ()
 {
 	return new CSapi5Voice;
 }
@@ -121,7 +121,7 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 {
 	try
 	{
-		CSapi5Voice *	lThis = (CSapi5Voice *) lParam;
+		CSapi5Voice*	lThis = (CSapi5Voice*) lParam;
 		CSpEvent		lEvent;
 
 #ifdef	_TRACE_EVENTS
@@ -332,7 +332,7 @@ tBstrPtr CSapi5Voice::GetVoiceId ()
 	return lVoiceId.Detach();
 }
 
-HRESULT CSapi5Voice::GetVoiceId (tBstrPtr & pVoiceId)
+HRESULT CSapi5Voice::GetVoiceId (tBstrPtr& pVoiceId)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -407,7 +407,7 @@ tBstrPtr CSapi5Voice::GetOutputId ()
 	return lOutputId.Detach();
 }
 
-HRESULT CSapi5Voice::GetOutputId (tBstrPtr & pOutputId)
+HRESULT CSapi5Voice::GetOutputId (tBstrPtr& pOutputId)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -484,7 +484,7 @@ tBstrPtr CSapi5Voice::GetVoiceName ()
 	return lVoiceName.Detach ();
 }
 
-HRESULT CSapi5Voice::GetVoiceName (tBstrPtr & pVoiceName)
+HRESULT CSapi5Voice::GetVoiceName (tBstrPtr& pVoiceName)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -506,7 +506,7 @@ HRESULT CSapi5Voice::GetVoiceName (tBstrPtr & pVoiceName)
 	return lResult;
 }
 
-HRESULT CSapi5Voice::GetVoiceLanguages (CAtlTypeArray <LANGID> & pLanguages)
+HRESULT CSapi5Voice::GetVoiceLanguages (CAtlTypeArray <LANGID>& pLanguages)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -557,7 +557,7 @@ tBstrPtr CSapi5Voice::GetDisplayName ()
 	return CSapiVoice::GetDisplayName ();
 }
 
-HRESULT CSapi5Voice::GetDisplayName (tBstrPtr & pDisplayName)
+HRESULT CSapi5Voice::GetDisplayName (tBstrPtr& pDisplayName)
 {
 	return GetVoiceName (pDisplayName);
 }
@@ -569,7 +569,7 @@ tBstrPtr CSapi5Voice::GetUniqueId ()
 	return CSapiVoice::GetUniqueId ();
 }
 
-HRESULT CSapi5Voice::GetUniqueId (tBstrPtr & pUniqueId)
+HRESULT CSapi5Voice::GetUniqueId (tBstrPtr& pUniqueId)
 {
 	HRESULT	lResult = GetVoiceId (pUniqueId);
 	if	(!pUniqueId.IsEmpty())
@@ -586,7 +586,7 @@ ULONG CSapi5Voice::GetRate ()
 	return CSapiVoice::GetRate();
 }
 
-HRESULT CSapi5Voice::GetRate (ULONG & pRate)
+HRESULT CSapi5Voice::GetRate (ULONG& pRate)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -617,7 +617,7 @@ HRESULT CSapi5Voice::SetRate (ULONG pRate)
 		if	(
 				(lNewRate <= 0)
 			&&	(SUCCEEDED (SpGetTokenFromId (SPREG_USER_ROOT L"\\Voices", &lToken, FALSE)))
-			&&	(SUCCEEDED (lToken->GetDWORD (SPVOICECATEGORY_TTSRATE, (DWORD *) &lNewRate)))
+			&&	(SUCCEEDED (lToken->GetDWORD (SPVOICECATEGORY_TTSRATE, (DWORD*) &lNewRate)))
 			)
 		{
 			lNewRate = min (max (lNewRate, -10), 10);
@@ -653,7 +653,7 @@ USHORT CSapi5Voice::GetVolume ()
 	return CSapiVoice::GetVolume();
 }
 
-HRESULT CSapi5Voice::GetVolume (USHORT & pVolume)
+HRESULT CSapi5Voice::GetVolume (USHORT& pVolume)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 

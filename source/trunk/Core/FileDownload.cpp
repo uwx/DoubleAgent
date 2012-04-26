@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -62,7 +62,7 @@ CFileDownload::CFileDownload ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::CFileDownload (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::CFileDownload (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	m_dwRef = 1;
@@ -73,16 +73,16 @@ CFileDownload::~CFileDownload ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::~CFileDownload (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::~CFileDownload (%d) [%8.8X %8.8X]"), this, _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	CancelDownload ();
 	m_dwRef = 0;
 }
 
-CFileDownload * CFileDownload::CreateInstance (LPCTSTR pURL)
+CFileDownload* CFileDownload::CreateInstance (LPCTSTR pURL)
 {
-	CFileDownload *	lInstance;
+	CFileDownload*	lInstance;
 
 	if	(lInstance = new CComObjectNoLock <CFileDownload>)
 	{
@@ -260,7 +260,7 @@ DWORD CFileDownload::SetSecurityMode (bool pEnforeSecurity)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, CEventNotify * pNotify)
+HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, CEventNotify* pNotify)
 {
 	HRESULT		lResult;
 	CAtlString	lCacheName;
@@ -409,7 +409,7 @@ bool CFileDownload::CancelDownload ()
 DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 {
 	HRESULT			lResult = E_FAIL;
-	CFileDownload *	lThis = NULL;
+	CFileDownload*	lThis = NULL;
 	CAtlString		lURL;
 	IUnknownPtr		lActiveXContext;
 	CAtlString		lCacheName;
@@ -463,7 +463,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 		{
 			try
 			{
-				lResult = LogComErr (LogNormal|LogTime, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis));
+				lResult = LogComErr (LogNormal|LogTime, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis), lURL);
 				lCacheName.ReleaseBuffer ();
 			}
 			catch AnyExceptionDebug
@@ -534,7 +534,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnProgress (ULONG ulProgress, ULONG ulP
 #endif
 	HRESULT					lResult = S_OK;
 	IBindStatusCallbackPtr	lBindStatusCallback;
-	CEventNotify *			lNotify = NULL;
+	CEventNotify*			lNotify = NULL;
 
 	{
 		CLockCS	lLock (mLock);

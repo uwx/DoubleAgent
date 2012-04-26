@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -30,37 +30,27 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-const USHORT	CAgentBalloonOptions::mMinLines = 1;
-const USHORT	CAgentBalloonOptions::mMaxLines = 128;
-const USHORT	CAgentBalloonOptions::mDefLines = 2;
-
-const USHORT	CAgentBalloonOptions::mMinPerLine = 8;
-const USHORT	CAgentBalloonOptions::mMaxPerLine = 255;
-const USHORT	CAgentBalloonOptions::mDefPerLine = 32;
-
-/////////////////////////////////////////////////////////////////////////////
-
 IMPLEMENT_DLL_OBJECT(CAgentBalloonOptions)
 
 CAgentBalloonOptions::CAgentBalloonOptions ()
 {
 	mStyle = BalloonStyle_AutoPace|BalloonStyle_AutoHide;
-	mLines = mDefLines;
-	mPerLine = mDefPerLine;
+	mLines = CAgentFileBalloon::DefLines;
+	mPerLine = CAgentFileBalloon::DefPerLine;
 	mBkColor = GetSysColor (COLOR_INFOBK);
 	mFgColor = GetSysColor (COLOR_INFOTEXT);
 	mBrColor = GetSysColor (COLOR_INFOTEXT);
 	memset (&mFont, 0, sizeof(LOGFONT));
 }
 
-CAgentBalloonOptions::CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID)
+CAgentBalloonOptions::CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloon& pFileBalloon, LANGID pLangID)
 {
 	mStyle = pStyle;
-	mLines = (USHORT)pFileBalloon.mLines;
-	mPerLine = (USHORT)pFileBalloon.mPerLine;
-	mBkColor = pFileBalloon.mBkColor;
-	mFgColor = pFileBalloon.mFgColor;
-	mBrColor = pFileBalloon.mBrColor;
+	mLines = (USHORT)pFileBalloon.Lines;
+	mPerLine = (USHORT)pFileBalloon.PerLine;
+	mBkColor = pFileBalloon.BkColor;
+	mFgColor = pFileBalloon.FgColor;
+	mBrColor = pFileBalloon.BrColor;
 
 	memset (&mFont, 0, sizeof(LOGFONT));
 	CopyBalloonFont (pFileBalloon, mFont);
@@ -71,14 +61,14 @@ CAgentBalloonOptions::CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloo
 	GetActualFont (mFont, mFont);
 }
 
-CAgentBalloonOptions::CAgentBalloonOptions (const CAgentBalloonOptions & pSource)
+CAgentBalloonOptions::CAgentBalloonOptions (const CAgentBalloonOptions& pSource)
 {
 	operator= (pSource);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentBalloonOptions & CAgentBalloonOptions::operator= (const CAgentBalloonOptions & pSource)
+CAgentBalloonOptions& CAgentBalloonOptions::operator= (const CAgentBalloonOptions& pSource)
 {
 	mStyle = pSource.mStyle;
 	mLines = pSource.mLines;
@@ -91,7 +81,7 @@ CAgentBalloonOptions & CAgentBalloonOptions::operator= (const CAgentBalloonOptio
 	return *this;
 }
 
-bool CAgentBalloonOptions::operator== (const CAgentBalloonOptions & pSource) const
+bool CAgentBalloonOptions::operator== (const CAgentBalloonOptions& pSource) const
 {
 	return	(
 				(mStyle == pSource.mStyle)
@@ -104,7 +94,7 @@ bool CAgentBalloonOptions::operator== (const CAgentBalloonOptions & pSource) con
 			);
 }
 
-bool CAgentBalloonOptions::operator!= (const CAgentBalloonOptions & pSource) const
+bool CAgentBalloonOptions::operator!= (const CAgentBalloonOptions& pSource) const
 {
 	return !operator== (pSource);
 }
@@ -145,34 +135,34 @@ bool CAgentBalloonOptions::ClipPartialLines () const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonOptions::CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont)
+bool CAgentBalloonOptions::CopyBalloonFont (const CAgentFileBalloon& pFileBalloon, LOGFONT& pFont)
 {
 	if	(
-			(pFileBalloon.mFont.lfFaceName[0])
-		&&	(pFileBalloon.mFont.lfHeight != 0)
+			(pFileBalloon.Font.lfFaceName[0])
+		&&	(pFileBalloon.Font.lfHeight != 0)
 		)
 	{
-		_tcscpy (pFont.lfFaceName, pFileBalloon.mFont.lfFaceName);
-		pFont.lfHeight = pFileBalloon.mFont.lfHeight;
-		pFont.lfWeight = pFileBalloon.mFont.lfWeight;
-		pFont.lfItalic = pFileBalloon.mFont.lfItalic;
-		pFont.lfUnderline = pFileBalloon.mFont.lfUnderline;
-		pFont.lfStrikeOut = pFileBalloon.mFont.lfStrikeOut;
-		pFont.lfCharSet = pFileBalloon.mFont.lfCharSet;
+		_tcscpy (pFont.lfFaceName, pFileBalloon.Font.lfFaceName);
+		pFont.lfHeight = pFileBalloon.Font.lfHeight;
+		pFont.lfWeight = pFileBalloon.Font.lfWeight;
+		pFont.lfItalic = pFileBalloon.Font.lfItalic;
+		pFont.lfUnderline = pFileBalloon.Font.lfUnderline;
+		pFont.lfStrikeOut = pFileBalloon.Font.lfStrikeOut;
+		pFont.lfCharSet = pFileBalloon.Font.lfCharSet;
 		pFont.lfQuality = CLEARTYPE_QUALITY;
 		return true;
 	}
 	return false;
 }
 
-bool CAgentBalloonOptions::CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon)
+bool CAgentBalloonOptions::CopyBalloonFont (const LOGFONT& pFont, CAgentFileBalloon& pFileBalloon)
 {
 	if	(
 			(pFont.lfFaceName [0])
 		&&	(pFont.lfHeight != 0)
 		)
 	{
-		pFileBalloon.mFont = pFont;
+		pFileBalloon.put_Font (pFont);
 		return true;
 	}
 	return false;
@@ -180,7 +170,7 @@ bool CAgentBalloonOptions::CopyBalloonFont (const LOGFONT & pFont, CAgentFileBal
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonOptions::SetFontLangID (LOGFONT & pFont, LANGID pLangID)
+bool CAgentBalloonOptions::SetFontLangID (LOGFONT& pFont, LANGID pLangID)
 {
 	tS <CHARSETINFO>	lCharSet;
 
@@ -198,7 +188,7 @@ bool CAgentBalloonOptions::SetFontLangID (LOGFONT & pFont, LANGID pLangID)
 	return false;
 }
 
-bool CAgentBalloonOptions::GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize, bool pUpdateStyle)
+bool CAgentBalloonOptions::GetActualFont (const LOGFONT& pFont, LOGFONT& pActualFont, bool pUpdateSize, bool pUpdateStyle)
 {
 	CMemDCHandle	lDC;
 	CFontHandle		lFont;
@@ -281,7 +271,7 @@ bool CAgentBalloonOptions::FontEqual (HFONT pFont1, HFONT pFont2)
 	return false;
 }
 
-bool CAgentBalloonOptions::FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2)
+bool CAgentBalloonOptions::FontEqual (const LOGFONT& pFont1, const LOGFONT& pFont2)
 {
 	if	(
 			(pFont1.lfWidth == pFont2.lfWidth)
@@ -327,7 +317,7 @@ void CAgentBalloonOptions::LogOptions (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR p
 	}
 }
 
-void CAgentBalloonOptions::LogFont (UINT pLogLevel, const LOGFONT & pFont, LPCTSTR pTitle, LPCTSTR pPrefix)
+void CAgentBalloonOptions::LogFont (UINT pLogLevel, const LOGFONT& pFont, LPCTSTR pTitle, LPCTSTR pPrefix)
 {
 	if	(LogIsActive (pLogLevel))
 	{

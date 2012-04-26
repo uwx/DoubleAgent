@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -31,19 +31,19 @@ public:
 	_DACORE_IMPEXP virtual ~CAgentFiles();
 
 // Attributes
-	_DACORE_IMPEXP const CAtlPtrTypeArray <CAgentFile> & Files () const;
+	_DACORE_IMPEXP const CAtlPtrTypeArray <CAgentFile>& Files () const;
 
 // Operations
 	_DACORE_IMPEXP HRESULT Load (LPCTSTR pPath = NULL, UINT pLogLevel = 15);
 
 	_DACORE_IMPEXP INT_PTR FindDefChar ();
-	_DACORE_IMPEXP CAgentFile * GetDefChar ();
+	_DACORE_IMPEXP CAgentFile* GetDefChar ();
 
-	_DACORE_IMPEXP static tBstrPtr GetDefCharPath (const CAtlStringArray * pSearchPath = NULL);
+	_DACORE_IMPEXP static tBstrPtr GetDefCharPath (const CAtlStringArray* pSearchPath = NULL);
 	_DACORE_IMPEXP static HRESULT SetDefCharPath (LPCTSTR pCharPath);
 
 	_DACORE_IMPEXP static tBstrPtr GetAgentPath (bool pAlternatePlatform = false);
-	_DACORE_IMPEXP static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0, UINT * pPathNumFound = NULL);
+	_DACORE_IMPEXP static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0, UINT* pPathNumFound = NULL);
 	_DACORE_IMPEXP static tBstrPtr GetOfficeCharsPath ();
 
 // Implementation

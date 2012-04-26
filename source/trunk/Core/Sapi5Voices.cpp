@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -385,7 +385,7 @@ CSapi5VoiceInfo * CSapi5Voices::GetVoiceName (LPCTSTR pVoiceName)
 
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi5Voices::FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank)
+INT_PTR CSapi5Voices::FindVoice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, int * pMatchRank)
 {
 	tPtr <CSapi5VoiceIndexArray const>	lIndexArray;
 	tPtr <CSapi5VoiceMatchRanks const>	lMatchRanks;
@@ -410,7 +410,7 @@ INT_PTR CSapi5Voices::FindVoice (const struct CAgentFileTts & pAgentFileTts, boo
 	return -1;
 }
 
-CSapi5VoiceInfo * CSapi5Voices::GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, int * pMatchRank)
+CSapi5VoiceInfo * CSapi5Voices::GetVoice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, int * pMatchRank)
 {
 	return operator () (FindVoice (pAgentFileTts, pUseDefaults, pMatchRank));
 }
@@ -419,7 +419,7 @@ CSapi5VoiceInfo * CSapi5Voices::GetVoice (const struct CAgentFileTts & pAgentFil
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks)
+CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks)
 {
 	tPtr <CSapi5VoiceIndexArray>	lIndexArray = new CSapi5VoiceIndexArray;
 	tPtr <CSapi5VoiceMatchRanks>	lMatchRanks = new CSapi5VoiceMatchRanks;
@@ -435,10 +435,10 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 		static const int			lOrderWeight = 1;
 
 #ifdef	_DEBUG_TTS_MATCH
-		LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi5Voices [%u] Language [%4.4X] Gender [%u] Age [%u]"), pUseDefaults, pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge);
-		LogLanguageMatchList (_DEBUG_TTS_MATCH, pAgentFileTts.mLanguage, pUseDefaults, NULL, _T("  "));
+		LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi5Voices [%u] Language [%4.4X] Gender [%u] Age [%u]"), pUseDefaults, pAgentFileTts.Language, pAgentFileTts.Gender, pAgentFileTts.Age);
+		LogLanguageMatchList (_DEBUG_TTS_MATCH, pAgentFileTts.Language, pUseDefaults, NULL, _T("  "));
 #endif
-		MakeLanguageMatchList (pAgentFileTts.mLanguage, lLanguageIds, pUseDefaults);
+		MakeLanguageMatchList (pAgentFileTts.Language, lLanguageIds, pUseDefaults);
 
 		for	(lVoiceNdx = 0; lVoiceNdx < (INT_PTR)GetCount(); lVoiceNdx++)
 		{
@@ -462,10 +462,10 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 
 			if	(
 					(lCurrMatch > 0)
-				&&	(pAgentFileTts.mGender != GENDER_NEUTRAL)
+				&&	(pAgentFileTts.Gender != GENDER_NEUTRAL)
 				)
 			{
-				if	(lVoiceInfo->mSpeakerGender == pAgentFileTts.mGender)
+				if	(lVoiceInfo->mSpeakerGender == pAgentFileTts.Gender)
 				{
 					lCurrMatch += lPartMatch = lGenderWeight;
 				}
@@ -488,11 +488,11 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 
 			if	(
 					(lCurrMatch > 0)
-				&&	(pAgentFileTts.mAge != 0)
+				&&	(pAgentFileTts.Age != 0)
 				&&	(lVoiceInfo->mSpeakerAge != 0)
 				)
 			{
-				lCurrMatch += lPartMatch = -abs((int)pAgentFileTts.mAge-(int)lVoiceInfo->mSpeakerAge) * lAgeWeight;
+				lCurrMatch += lPartMatch = -abs((int)pAgentFileTts.Age-(int)lVoiceInfo->mSpeakerAge) * lAgeWeight;
 #ifdef	_DEBUG_TTS_MATCH
 				lMatchLog.Format (_T("%s Age [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerAge, lPartMatch);
 #endif
@@ -528,7 +528,7 @@ CSapi5VoiceIndexArray const * CSapi5Voices::FindVoices (const struct CAgentFileT
 
 //////////////////////////////////////////////////////////////////////
 
-CSapi5VoiceInfoArray const * CSapi5Voices::GetVoices (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks)
+CSapi5VoiceInfoArray const * CSapi5Voices::GetVoices (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, CSapi5VoiceMatchRanks const ** pMatchRanks)
 {
 	tPtr <CSapi5VoiceInfoArray>			lInfoArray;
 	tPtr <CSapi5VoiceIndexArray const>	lIndexArray;
@@ -645,7 +645,7 @@ void CSapi5Voices::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 	}
 }
 
-void CSapi5Voices::LogVoiceInfo (UINT pLogLevel, CSapi5VoiceInfo & pVoiceInfo, LPCTSTR pTitle, LPCTSTR pIndent)
+void CSapi5Voices::LogVoiceInfo (UINT pLogLevel, CSapi5VoiceInfo& pVoiceInfo, LPCTSTR pTitle, LPCTSTR pIndent)
 {
 	if	(LogIsActive (pLogLevel))
 	{
@@ -675,7 +675,7 @@ void CSapi5Voices::LogVoiceInfo (UINT pLogLevel, CSapi5VoiceInfo & pVoiceInfo, L
 
 //////////////////////////////////////////////////////////////////////
 
-void CSapi5Voices::LogVoiceToken (UINT pLogLevel, void * pVoiceToken, LPCTSTR pTitle)
+void CSapi5Voices::LogVoiceToken (UINT pLogLevel, void* pVoiceToken, LPCTSTR pTitle)
 {
 	if	(LogIsActive (pLogLevel))
 	{

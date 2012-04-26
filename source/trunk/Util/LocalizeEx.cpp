@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -129,7 +129,7 @@ CString LclDateFormatString (DWORD pFlags, WORD pLangId)
 
 //////////////////////////////////////////////////////////////////////
 
-CString LclFormatDate (const SYSTEMTIME & pDate, DWORD pFlags, WORD pLangId)
+CString LclFormatDate (const SYSTEMTIME& pDate, DWORD pFlags, WORD pLangId)
 {
 	CString	lRet;
 
@@ -161,7 +161,7 @@ CString LclFormatDate (const SYSTEMTIME & pDate, DWORD pFlags, WORD pLangId)
 	return CString (lRet);
 }
 
-CString LclFormatDate (const FILETIME & pDate, DWORD pFlags, bool pDateUTC, WORD pLangId)
+CString LclFormatDate (const FILETIME& pDate, DWORD pFlags, bool pDateUTC, WORD pLangId)
 {
 	tS <SYSTEMTIME>	lSysTime;
 
@@ -179,7 +179,7 @@ CString LclFormatDate (const FILETIME & pDate, DWORD pFlags, bool pDateUTC, WORD
 	return LclFormatDate (lSysTime, pFlags);
 }
 
-CString LclFormatDate (const VARIANT & pDate, DWORD pFlags, WORD pLangId)
+CString LclFormatDate (const VARIANT& pDate, DWORD pFlags, WORD pLangId)
 {
 	SYSTEMTIME	lDate;
 
@@ -198,14 +198,14 @@ CString LclFormatDate (const VARIANT & pDate, DWORD pFlags, WORD pLangId)
 	}
 }
 
-CString LclFormatDate (const COleDateTime & pDate, DWORD pFlags, WORD pLangId)
+CString LclFormatDate (const COleDateTime& pDate, DWORD pFlags, WORD pLangId)
 {
 	SYSTEMTIME lDate;
 	pDate.GetAsSystemTime (lDate);
 	return LclFormatDate (lDate, pFlags);
 }
 
-CString LclFormatDate (const CTime & pDate, DWORD pFlags, WORD pLangId)
+CString LclFormatDate (const CTime& pDate, DWORD pFlags, WORD pLangId)
 {
 	SYSTEMTIME lDate;
 	pDate.GetAsSystemTime (lDate);
@@ -313,7 +313,7 @@ CString LclTimeFormatString (DWORD pFlags, WORD pLangId)
 
 //////////////////////////////////////////////////////////////////////
 
-CString LclFormatTime (const SYSTEMTIME & pTime, DWORD pFlags, WORD pLangId)
+CString LclFormatTime (const SYSTEMTIME& pTime, DWORD pFlags, WORD pLangId)
 {
 	CString	lRet;
 
@@ -331,7 +331,7 @@ CString LclFormatTime (const SYSTEMTIME & pTime, DWORD pFlags, WORD pLangId)
 	return CString (lRet);
 }
 
-CString LclFormatTime (const FILETIME & pTime, DWORD pFlags, bool pTimeUTC, WORD pLangId)
+CString LclFormatTime (const FILETIME& pTime, DWORD pFlags, bool pTimeUTC, WORD pLangId)
 {
 	tS <SYSTEMTIME>	lSysTime;
 
@@ -349,7 +349,7 @@ CString LclFormatTime (const FILETIME & pTime, DWORD pFlags, bool pTimeUTC, WORD
 	return LclFormatTime (lSysTime, pFlags);
 }
 
-CString LclFormatTime (const VARIANT & pTime, DWORD pFlags, WORD pLangId)
+CString LclFormatTime (const VARIANT& pTime, DWORD pFlags, WORD pLangId)
 {
 	SYSTEMTIME	lTime;
 
@@ -368,14 +368,14 @@ CString LclFormatTime (const VARIANT & pTime, DWORD pFlags, WORD pLangId)
 	}
 }
 
-CString LclFormatTime (const COleDateTime & pTime, DWORD pFlags, WORD pLangId)
+CString LclFormatTime (const COleDateTime& pTime, DWORD pFlags, WORD pLangId)
 {
 	SYSTEMTIME lTime;
 	pTime.GetAsSystemTime (lTime);
 	return LclFormatTime (lTime, pFlags);
 }
 
-CString LclFormatTime (const CTime & pTime, DWORD pFlags, WORD pLangId)
+CString LclFormatTime (const CTime& pTime, DWORD pFlags, WORD pLangId)
 {
 	SYSTEMTIME lTime;
 	pTime.GetAsSystemTime (lTime);
@@ -396,7 +396,7 @@ CString LclFormatDuration (LONGLONG pDuration, DWORD pFlags, bool pZeroNull, boo
 	return LclFormatDuration ((double) pDuration / 10000.0, pFlags, pZeroNull, pNoThousands, pMaxDecimals, pMinDecimals);
 }
 
-CString LclFormatDuration (const FILETIME & pDuration, DWORD pFlags, bool pZeroNull, bool pNoThousands, int pMaxDecimals, int pMinDecimals)
+CString LclFormatDuration (const FILETIME& pDuration, DWORD pFlags, bool pZeroNull, bool pNoThousands, int pMaxDecimals, int pMinDecimals)
 {
 	LARGE_INTEGER	lDuration = {pDuration.dwLowDateTime, pDuration.dwHighDateTime};
 
@@ -750,7 +750,7 @@ CString LclFormatDuration (double pDuration, DWORD pFlags, bool pZeroNull, bool 
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
+CString LclFormatCurrency (VARIANT& pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
 {
 	CString	lRet;
 
@@ -794,7 +794,7 @@ CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals
 }
 
 #ifdef	__AFX_H__
-CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
+CString LclFormatCurrency (COleCurrency& pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
 {
 	CString	lRet;
 
@@ -1056,7 +1056,7 @@ CString LclFormatNumber (double pNumber, bool pZeroNull, bool pNoThousands, int 
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-inline int PrepNumberParse (LPCTSTR pNumber, CString & pNumberStr)
+inline int PrepNumberParse (LPCTSTR pNumber, CString& pNumberStr)
 {
 	int		lRet = 0;
 	TCHAR	lDecSep [3];
@@ -1133,7 +1133,7 @@ double LclParseNumber (LPCTSTR pNumber, CString * pRemainder)
 	return lValue;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder)
+bool LclParseNumber (LPCTSTR pNumber, double& pValue, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
@@ -1168,7 +1168,7 @@ bool LclParseNumber (LPCTSTR pNumber, double & pValue, CString * pRemainder)
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase, CString * pRemainder)
+bool LclParseNumber (LPCTSTR pNumber, long& pValue, int pBase, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
@@ -1203,7 +1203,7 @@ bool LclParseNumber (LPCTSTR pNumber, long & pValue, int pBase, CString * pRemai
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase, CString * pRemainder)
+bool LclParseNumber (LPCTSTR pNumber, ULONG& pValue, int pBase, CString * pRemainder)
 {
 	CString	lNumber;
 	LPTSTR	lEndPtr = NULL;
@@ -1238,7 +1238,7 @@ bool LclParseNumber (LPCTSTR pNumber, ULONG & pValue, int pBase, CString * pRema
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase, CString * pRemainder)
+bool LclParseNumber (LPCTSTR pNumber, LONGLONG& pValue, int pBase, CString * pRemainder)
 {
 	CString		lNumber;
 	LPTSTR		lEndPtr = NULL;
@@ -1273,7 +1273,7 @@ bool LclParseNumber (LPCTSTR pNumber, LONGLONG & pValue, int pBase, CString * pR
 	return false;
 }
 
-bool LclParseNumber (LPCTSTR pNumber, ULONGLONG & pValue, int pBase, CString * pRemainder)
+bool LclParseNumber (LPCTSTR pNumber, ULONGLONG& pValue, int pBase, CString * pRemainder)
 {
 	CString		lNumber;
 	LPTSTR		lEndPtr = NULL;
@@ -1333,7 +1333,7 @@ CString LclFormatPercent (double pNumber, int pRoundDigits, WORD pLangId)
 	return lRet + sSuffixPercent;
 }
 
-CString LclFormatPercent (const CString & pNumber, WORD pLangId)
+CString LclFormatPercent (const CString& pNumber, WORD pLangId)
 {
 	return (LclFormatPercent (LclParseNumber (pNumber), 0, pLangId));
 }
@@ -1452,7 +1452,7 @@ CString LclFormatSize (double pSize, UINT pFormat, WORD pLangId)
 
 //////////////////////////////////////////////////////////////////////
 
-bool LclParseSize (LPCTSTR pSizeStr, double & pSize, UINT * pFormat)
+bool LclParseSize (LPCTSTR pSizeStr, double& pSize, UINT* pFormat)
 {
 	bool	lRet = false;
 	CString	lRemainder;

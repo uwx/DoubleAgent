@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -35,8 +35,8 @@
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION _DOUBLEAGENT_VERSION
- PRODUCTVERSION _DOUBLEAGENT_VERSION
+ FILEVERSION 2,1,0,0
+ PRODUCTVERSION 2,1,0,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG
@@ -55,7 +55,7 @@ BEGIN
             VALUE "FileDescription", "MS Agent Control Stub for Double Agent\0"
             VALUE "OriginalFilename", "AgentCtl.dll\0"
             VALUE "ProductName", _DOUBLEAGENT_NAME "\0"
-            VALUE "ProductVersion", _DOUBLEAGENT_VERSION_STR "\0"
+            VALUE "ProductVersion", "2.1" "\0"
         END
     END
     BLOCK "VarFileInfo"

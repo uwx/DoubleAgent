@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include <search.h>
 #include "StringArrayEx.h"
 
@@ -40,7 +41,7 @@ IMPLEMENT_DYNAMIC (CStringArrayEx, CStringArray)
 
 //////////////////////////////////////////////////////////////////////
 
-static int __cdecl CompareStringCase (const void * pElem1, const void * pElem2)
+static int __cdecl CompareStringCase (const void* pElem1, const void* pElem2)
 {
 	const CString *	lElem1 = (const CString *) pElem1;
 	const CString *	lElem2 = (const CString *) pElem2;
@@ -48,7 +49,7 @@ static int __cdecl CompareStringCase (const void * pElem1, const void * pElem2)
 	return _tcscmp (*lElem1, *lElem2);
 }
 
-static int __cdecl CompareStringNoCase (const void * pElem1, const void * pElem2)
+static int __cdecl CompareStringNoCase (const void* pElem1, const void* pElem2)
 {
 	const CString *	lElem1 = (const CString *) pElem1;
 	const CString *	lElem2 = (const CString *) pElem2;
@@ -58,7 +59,7 @@ static int __cdecl CompareStringNoCase (const void * pElem1, const void * pElem2
 
 //////////////////////////////////////////////////////////////////////
 
-static int __cdecl CollateStringCase (const void * pElem1, const void * pElem2)
+static int __cdecl CollateStringCase (const void* pElem1, const void* pElem2)
 {
 	const CString *	lElem1 = (const CString *) pElem1;
 	const CString *	lElem2 = (const CString *) pElem2;
@@ -66,7 +67,7 @@ static int __cdecl CollateStringCase (const void * pElem1, const void * pElem2)
 	return _tcscoll (*lElem1, *lElem2);
 }
 
-static int __cdecl CollateStringNoCase (const void * pElem1, const void * pElem2)
+static int __cdecl CollateStringNoCase (const void* pElem1, const void* pElem2)
 {
 	const CString *	lElem1 = (const CString *) pElem1;
 	const CString *	lElem2 = (const CString *) pElem2;
@@ -78,7 +79,7 @@ static int __cdecl CollateStringNoCase (const void * pElem1, const void * pElem2
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR AddUniqueString (CStringArray & pStrings, const CString & pString, bool pIgnoreCase)
+INT_PTR AddUniqueString (CStringArray& pStrings, const CString& pString, bool pIgnoreCase)
 {
 	if	(FindString (pStrings, pString) < 0)
 	{
@@ -87,7 +88,7 @@ INT_PTR AddUniqueString (CStringArray & pStrings, const CString & pString, bool 
 	return -1;
 }
 
-INT_PTR FindString (const CStringArray & pStrings, const CString & pFind, bool pIgnoreCase)
+INT_PTR FindString (const CStringArray& pStrings, const CString& pFind, bool pIgnoreCase)
 {
 	const CString *	lBase = pStrings.GetData();
 	UINT			lCount = (UINT)pStrings.GetCount();
@@ -97,7 +98,7 @@ INT_PTR FindString (const CStringArray & pStrings, const CString & pFind, bool p
 
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR RemoveString (CStringArray & pStrings, const CString & pFind, bool pAll, bool pIgnoreCase)
+INT_PTR RemoveString (CStringArray& pStrings, const CString& pFind, bool pAll, bool pIgnoreCase)
 {
 	INT_PTR	lRet = FindString (pStrings, pFind, pIgnoreCase);
 	if	(lRet >= 0)
@@ -118,12 +119,12 @@ INT_PTR RemoveString (CStringArray & pStrings, const CString & pFind, bool pAll,
 
 //////////////////////////////////////////////////////////////////////
 
-void SortStrings (CStringArray & pStrings, bool pIgnoreCase)
+void SortStrings (CStringArray& pStrings, bool pIgnoreCase)
 {
 	qsort (pStrings.GetData(), pStrings.GetCount(), sizeof (const CString *), pIgnoreCase ? CollateStringNoCase : CollateStringCase);
 }
 
-INT_PTR AddSortedString (CStringArray & pStrings, const CString & pString, bool pAllowDuplicates, bool pIgnoreCase)
+INT_PTR AddSortedString (CStringArray& pStrings, const CString& pString, bool pAllowDuplicates, bool pIgnoreCase)
 {
 	CString *	lArray = pStrings.GetData();
 	INT_PTR		lCount = pStrings.GetCount();
@@ -198,7 +199,7 @@ INT_PTR AddSortedString (CStringArray & pStrings, const CString & pString, bool 
 	}
 }
 
-INT_PTR AddSortedStringReverse (CStringArray & pStrings, const CString & pString, bool pAllowDuplicates, bool pIgnoreCase)
+INT_PTR AddSortedStringReverse (CStringArray& pStrings, const CString& pString, bool pAllowDuplicates, bool pIgnoreCase)
 {
 	CString	lString (pString);
 	lString.MakeReverse ();
@@ -207,14 +208,14 @@ INT_PTR AddSortedStringReverse (CStringArray & pStrings, const CString & pString
 
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR FindSortedString (const CStringArray & pStrings, const CString & pFind, bool pIgnoreCase)
+INT_PTR FindSortedString (const CStringArray& pStrings, const CString& pFind, bool pIgnoreCase)
 {
 	const CString *	lBase = pStrings.GetData();
 	const CString *	lFound = (const CString *) bsearch (&pFind, lBase, pStrings.GetCount(), sizeof (const CString *), pIgnoreCase ? CollateStringNoCase : CollateStringCase);
 	return (lFound) ? (lFound - lBase) : -1;
 }
 
-INT_PTR FindNextSortedString (const CStringArray & pStrings, const CString & pFind, INT_PTR pStartAfter, bool pIgnoreCase)
+INT_PTR FindNextSortedString (const CStringArray& pStrings, const CString& pFind, INT_PTR pStartAfter, bool pIgnoreCase)
 {
 	INT_PTR	lRet = -1;
 
@@ -267,7 +268,7 @@ INT_PTR FindNextSortedString (const CStringArray & pStrings, const CString & pFi
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR MakeStringArray (LPCTSTR pString, CStringArray & pStrings, LPCTSTR pDelimiters, bool pIncludeEmpty, bool pTrim, int pStringLength)
+INT_PTR MakeStringArray (LPCTSTR pString, CStringArray& pStrings, LPCTSTR pDelimiters, bool pIncludeEmpty, bool pTrim, int pStringLength)
 {
 	if	(
 			(pDelimiters)
@@ -361,7 +362,7 @@ INT_PTR MakeStringArray (LPCTSTR pString, CStringArray & pStrings, LPCTSTR pDeli
 	return lRet;
 }
 
-CString JoinStringArray (const CStringArray & pStrings, LPCTSTR pDelimiter, bool pIncludeEmpty, INT_PTR pFirstNdx, INT_PTR pLastNdx)
+CString JoinStringArray (const CStringArray& pStrings, LPCTSTR pDelimiter, bool pIncludeEmpty, INT_PTR pFirstNdx, INT_PTR pLastNdx)
 {
 	CString	lRet;
 	INT_PTR	lNdx;
@@ -372,7 +373,7 @@ CString JoinStringArray (const CStringArray & pStrings, LPCTSTR pDelimiter, bool
 
 	for	(lNdx = pFirstNdx; lNdx <= pLastNdx; lNdx++)
 	{
-		const CString &	lString = const_cast <CStringArray &> (pStrings).operator[] (lNdx);
+		const CString&	lString = const_cast <CStringArray&> (pStrings).operator[] (lNdx);
 
 		if	(
 				(pIncludeEmpty)
@@ -428,7 +429,7 @@ CString JoinStringArray (const CStringArray & pStrings, LPCTSTR pDelimiter, bool
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR ReplaceAll (CStringArray & pStrings, TCHAR pReplace, TCHAR pReplaceWith)
+INT_PTR ReplaceAll (CStringArray& pStrings, TCHAR pReplace, TCHAR pReplaceWith)
 {
 	INT_PTR	lRet = 0;
 	INT_PTR	lNdx = 0;
@@ -440,7 +441,7 @@ INT_PTR ReplaceAll (CStringArray & pStrings, TCHAR pReplace, TCHAR pReplaceWith)
 	return lRet;
 }
 
-INT_PTR ReplaceAll (CStringArray & pStrings, LPCTSTR pReplace, LPCTSTR pReplaceWith)
+INT_PTR ReplaceAll (CStringArray& pStrings, LPCTSTR pReplace, LPCTSTR pReplaceWith)
 {
 	INT_PTR	lRet = 0;
 	INT_PTR	lNdx = 0;
@@ -454,7 +455,7 @@ INT_PTR ReplaceAll (CStringArray & pStrings, LPCTSTR pReplace, LPCTSTR pReplaceW
 
 //////////////////////////////////////////////////////////////////////
 
-bool CompareStringArrays (const CStringArray & pStrings1, const CStringArray & pStrings2, bool pIgnoreCase)
+bool CompareStringArrays (const CStringArray& pStrings1, const CStringArray& pStrings2, bool pIgnoreCase)
 {
 	if	(pStrings1.GetCount() != pStrings2.GetCount())
 	{

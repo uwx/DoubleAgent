@@ -6,9 +6,9 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Feb 16 01:22:34 2011
+/* at Thu Apr 26 11:29:53 2012
  */
-/* Compiler settings for .\Control\DaControl.odl:
+/* Compiler settings for Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 

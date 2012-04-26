@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -48,17 +48,17 @@ public:
 
 // Operations
 public:
-	void Initialize (long pCharID, CEventNotify * pNotify);
+	void Initialize (long pCharID, CEventNotify* pNotify);
 
 	bool SetLangID (LANGID pLangId);
-	long DoContextMenu (HWND pOwner, const CPoint & pPosition, class CVoiceCommandsWnd * pVoiceCommandsWnd);
+	long DoContextMenu (HWND pOwner, const CPoint& pPosition, class CVoiceCommandsWnd* pVoiceCommandsWnd);
 
-	CDaCmnCommand * GetCommand (USHORT pCommandId);
-	CDaCmnCommand * GetDefaultCommand ();
+	CDaCmnCommand* GetCommand (USHORT pCommandId);
+	CDaCmnCommand* GetDefaultCommand ();
 
 	CAtlString GetVoiceCommandsCaption () const;
-	bool ShowVoiceCommands (class CVoiceCommandsWnd * pVoiceCommandsWnd);
-	bool SetupVoiceContext (class CSapi5InputContext * pInputContext);
+	bool ShowVoiceCommands (class CVoiceCommandsWnd* pVoiceCommandsWnd);
+	bool SetupVoiceContext (class CSapi5InputContext* pInputContext);
 
 // Overrides
 
@@ -94,13 +94,13 @@ public:
 // Implementation
 protected:
 	INT_PTR FindCommand (USHORT pCommandId);
-	virtual CDaCmnCommand * NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true);
+	virtual CDaCmnCommand* NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true);
 	bool RemoveCommand (INT_PTR pCommandNdx);
 
 protected:
 	long							mCharID;
 	LANGID							mLangID;
-	CEventNotify *					mNotify;
+	CEventNotify*					mNotify;
 	CAtlOwnPtrArray <CDaCmnCommand>	mRemoved;
 	USHORT							mNextCommandId;
 };

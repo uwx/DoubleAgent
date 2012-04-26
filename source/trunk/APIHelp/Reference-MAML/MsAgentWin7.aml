@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e08466d0-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerSDKTechnologyOverviewOrientationDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				If you install <token>MA</token> on <token>Windows7</token> using the <token>KB969168</token>, it&#39;s installed using <newTerm>Windows Resource Protection</newTerm>. This means that it&#39;s treated
+				as part of <token>Windows</token>, and no aspect of its installation can be changed (except by Microsoft). Therefore,
+				if you install both the <token>MA</token> hotfix and <token>DA</token>:
+			</para>
+			<list class="bullet">
+				<listItem>
+					<para>
+						The <token>MA</token> hotfix <legacyBold>must</legacyBold> be installed <legacyBold>before</legacyBold>&#160;<token>DA</token>. If you&#39;ve
+						already installed <token>DA</token>, you must remove it <legacyBold>before</legacyBold> installing the
+						<token>MA</token> hotfix. You can reinstall <token>DA</token> after the hotfix is installed.
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						If you install the <token>MA</token> hotfix while <token>DA</token> is installed, you must remove
+						the hotfix <legacyBold>first</legacyBold>, then remove <token>DA</token>, then reinstall them in the correct order.
+					</para>
+				</listItem>
+				<listItem>
+					<para>
+						There will be limitations in <token>DA</token>'s ability to emulate <token>MA</token>. This
+						is because emulation is achieved by redirecting <token>MA</token>&#160;<token>COM</token> classes to <token>DA</token>
+						<token>COM</token> classes using the <legacyBold>TreatAs</legacyBold> registry entry. However, the <token>MA</token> registration
+						in the <codeInline>HKEY_LOCAL_MACHINE</codeInline> registry hive cannot be changed, so the <legacyBold>TreatAs</legacyBold>
+						redirection can only be set in the <codeInline>HKEY_CURRENT_USER</codeInline> registry hive.
+					</para>
+					<para>
+						When you use the <link xlink:href="e08466bf-419c-11e1-9d4f-002421116fb2">
+							<token>DaControlPanel</token>
+						</link> to enable <token>MA</token> emulation, it can only
+						apply to the <legacyBold>current</legacyBold> user. In addition, any application that runs with elevated permissions (i.e.
+						<quoteInline>as administrator</quoteInline>) will <legacyBold>not</legacyBold> recognize the emulation (because elevated processes ignore
+						per-user COM configuration).
+					</para>
+				</listItem>
+			</list>
+		</introduction>
+
+		<relatedTopics>
+		</relatedTopics>
+
+	</developerSDKTechnologyOverviewOrientationDocument>
+</topic>

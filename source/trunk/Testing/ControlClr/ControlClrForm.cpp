@@ -306,7 +306,8 @@ System::Void ControlClrForm::SelectCharacter (DoubleAgent::Control::Character^ p
 	{
 		if	(pCharacter)
 		{
-			CommandBinding->DataSource = gcnew Generic::List<DoubleAgent::Control::Command^> (pCharacter->Commands);
+			CommandBinding->DataSource = gcnew Generic::List<DoubleAgent::Control::Command^> ((Generic::IEnumerable<DoubleAgent::Control::Command^>^)pCharacter->Commands);
+			//CommandBinding->DataSource = pCharacter->Commands;
 			CharCommands->DataSource = CommandBinding;
 		}
 		else
@@ -755,9 +756,80 @@ System::Void ControlClrForm::CharPlay_Click(System::Object^  sender, System::Eve
 	}
 }
 
+System::Void ControlClrForm::CharResizeFast_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterPageData->Character)
+	{
+		CharResizeFast_Stop ();
+
+		try
+		{
+			CharResizeCycle = 30;
+			CharResizeTimer = gcnew System::Windows::Threading::DispatcherTimer ();
+			CharResizeTimer->Interval = TimeSpan::FromMilliseconds (1);
+			CharResizeTimer->Tick += gcnew EventHandler (this, &ControlClrForm::CharResizeFast_Timer);
+			CharResizeTimer->Start ();
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlClrForm::CharResizeFast_Timer(System::Object^  sender, System::EventArgs^  e)
+{
+	if	(CharResizeCycle-- >= -30)
+	{
+		try
+		{
+			DoubleAgent::Control::Character^	lCharacter;
+
+			if	(lCharacter = CharacterPageData->Character)
+			{
+				//lCharacter->Width = lCharacter->OriginalWidth + (30 - Math::Abs(CharResizeCycle)) * 5;
+				//lCharacter->Height = lCharacter->OriginalHeight + (30 - Math::Abs(CharResizeCycle)) * 5;
+				lCharacter->SetSize (lCharacter->OriginalWidth + (30 - Math::Abs(CharResizeCycle)) * 5, lCharacter->OriginalHeight + (30 - Math::Abs(CharResizeCycle)) * 5);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	{
+		CharResizeFast_Stop ();
+	}
+}
+
+System::Void ControlClrForm::CharResizeFast_Stop ()
+{
+	try
+	{
+		if	(CharResizeTimer)
+		{
+			CharResizeTimer->Stop ();
+			CharResizeTimer = nullptr;
+		}
+	}
+	catch AnyExceptionDebug
+
+	try
+	{
+		DoubleAgent::Control::Character^	lCharacter;
+
+		if	(lCharacter = CharacterPageData->Character)
+		{
+			//lCharacter->Width = lCharacter->OriginalWidth;
+			//lCharacter->Height = lCharacter->OriginalHeight;
+			lCharacter->SetSize (lCharacter->OriginalWidth, lCharacter->OriginalHeight);
+		}
+	}
+	catch AnyExceptionDebug
+}
+
 System::Void ControlClrForm::CharStopAll_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	DoubleAgent::Control::Character^	lCharacter;
+
+	CharResizeFast_Stop ();
 
 	if	(lCharacter = CharacterPageData->Character)
 	{

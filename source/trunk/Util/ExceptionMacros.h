@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -93,7 +93,7 @@ catch
 #endif
 
 #define	__CatchCliException(lvl) \
-(Exception^ pException) \
+(System::Exception^ pException) \
 { \
 	__LogCliException (lvl) \
 } \

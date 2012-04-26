@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -37,7 +37,7 @@ public:
 // Attributes
 public:
 	FILTER_STATE GetState () const {return mState;}
-	IFilterGraph * GetFilterGraph () const {return mFilterGraph;}
+	IFilterGraph* GetFilterGraph () const {return mFilterGraph;}
 
 // Operations
 public:
@@ -72,39 +72,39 @@ public:
     HRESULT STDMETHODCALLTYPE SetSyncSource (IReferenceClock *pClock);
     HRESULT STDMETHODCALLTYPE GetSyncSource (IReferenceClock **pClock);
     HRESULT STDMETHODCALLTYPE EnumPins (IEnumPins **ppEnum);
-    HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin **ppPin);
+    HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin**ppPin);
     HRESULT STDMETHODCALLTYPE QueryFilterInfo (FILTER_INFO *pInfo);
-    HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName);
+    HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph*pGraph, LPCWSTR pName);
     HRESULT STDMETHODCALLTYPE QueryVendorInfo (LPWSTR *pVendorInfo);
 
 // Implementation
 protected:
-	virtual const GUID & GetClassID () = 0;
+	virtual const GUID& GetClassID () = 0;
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName) = 0;
 	virtual CAtlString GetFilterName () = 0;
 	virtual void InitializePins () = 0;
 
 	virtual HRESULT StartPins ();
 	virtual HRESULT StopPins ();
-	virtual HRESULT StartInputPin (CDirectShowPin * pPin);
-	virtual HRESULT StopInputPin (CDirectShowPin * pPin);
-	virtual HRESULT StartOutputPin (CDirectShowPin * pPin);
-	virtual HRESULT StopOutputPin (CDirectShowPin * pPin);
+	virtual HRESULT StartInputPin (CDirectShowPin* pPin);
+	virtual HRESULT StopInputPin (CDirectShowPin* pPin);
+	virtual HRESULT StartOutputPin (CDirectShowPin* pPin);
+	virtual HRESULT StopOutputPin (CDirectShowPin* pPin);
 
 	virtual HRESULT StartOutputStreams ();
 	virtual HRESULT StopOutputStreams ();
-	virtual HRESULT StartOutputStream (CDirectShowPin * pPin);
-	virtual HRESULT StopOutputStream (CDirectShowPin * pPin);
+	virtual HRESULT StartOutputStream (CDirectShowPin* pPin);
+	virtual HRESULT StopOutputStream (CDirectShowPin* pPin);
 
-	virtual void GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
+	virtual void GetSeekingTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime);
 	virtual bool GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking);
 
 public:
-	virtual void OnPinConnected (class CDirectShowPin * pPin);
-	virtual void OnPinDisconnected (class CDirectShowPin * pPin);
+	virtual void OnPinConnected (class CDirectShowPin* pPin);
+	virtual void OnPinDisconnected (class CDirectShowPin* pPin);
 	virtual void OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate);
 	virtual void OnEndInputStream (INT_PTR pPendingSamples);
-	virtual void OnGotInputSample (class CDirectShowPin * pPin);
+	virtual void OnGotInputSample (class CDirectShowPin* pPin);
 protected:
 	virtual HRESULT OnStateChanging (FILTER_STATE pOldState, FILTER_STATE pNewState);
 	virtual HRESULT OnStateChanged (FILTER_STATE pOldState, FILTER_STATE pNewState);
@@ -117,7 +117,7 @@ public:
 protected:
 	mutable CAutoMutex	mStateLock;
 	mutable CAutoMutex	mDataLock;
-	IFilterGraph *		mFilterGraph;
+	IFilterGraph*		mFilterGraph;
 	FILTER_STATE		mState;
 };
 

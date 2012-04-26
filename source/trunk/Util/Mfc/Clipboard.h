@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -39,60 +39,60 @@ public:
 
 	bool HasText ();
 	bool PutText (LPCTSTR pText, bool pAppend = false, bool pFlush = true);
-	bool GetText (CString & pText);
+	bool GetText (CString& pText);
 
-	static bool HasText (COleDataObject & pDataObject);
-	static bool GetText (CString & pText, COleDataObject & pDataObject);
+	static bool HasText (COleDataObject& pDataObject);
+	static bool GetText (CString& pText, COleDataObject& pDataObject);
 
-	bool PutFile (const CString & pFile, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
-	bool PutFiles (const CStringArray & pFiles, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
+	bool PutFile (const CString& pFile, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
+	bool PutFiles (const CStringArray& pFiles, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
 
-	static bool PutFile (const CString & pFile, COleDataSource & pDataSource, UINT pFormatId = 0);
-	static bool PutFiles (const CStringArray & pFiles, COleDataSource & pDataSource, UINT pFormatId = 0);
+	static bool PutFile (const CString& pFile, COleDataSource& pDataSource, UINT pFormatId = 0);
+	static bool PutFiles (const CStringArray& pFiles, COleDataSource& pDataSource, UINT pFormatId = 0);
 
 	bool HasFiles (UINT pFormatId = 0);
-	bool GetFiles (CStringArray & pFiles, UINT pFormatId = 0);
-	static bool HasFiles (COleDataObject & pDataObject, UINT pFormatId = 0);
-	static bool GetFiles (CStringArray & pFiles, COleDataObject & pDataObject, UINT pFormatId = 0);
+	bool GetFiles (CStringArray& pFiles, UINT pFormatId = 0);
+	static bool HasFiles (COleDataObject& pDataObject, UINT pFormatId = 0);
+	static bool GetFiles (CStringArray& pFiles, COleDataObject& pDataObject, UINT pFormatId = 0);
 
 	bool PutIdl (LPCITEMIDLIST pIdl, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
 	bool PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
-	bool PutFileIdl (const CString & pFile, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
-	bool PutFileIdls (const CStringArray & pFiles, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
+	bool PutFileIdl (const CString& pFile, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
+	bool PutFileIdls (const CStringArray& pFiles, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0);
 
-	static bool PutIdl (LPCITEMIDLIST pIdl, COleDataSource & pDataSource, UINT pFormatId = 0);
-	static bool PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource & pDataSource, UINT pFormatId = 0);
-	static bool PutFileIdl (const CString & pFile, COleDataSource & pDataSource, UINT pFormatId = 0);
-	static bool PutFileIdls (const CStringArray & pFiles, COleDataSource & pDataSource, UINT pFormatId = 0);
+	static bool PutIdl (LPCITEMIDLIST pIdl, COleDataSource& pDataSource, UINT pFormatId = 0);
+	static bool PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource& pDataSource, UINT pFormatId = 0);
+	static bool PutFileIdl (const CString& pFile, COleDataSource& pDataSource, UINT pFormatId = 0);
+	static bool PutFileIdls (const CStringArray& pFiles, COleDataSource& pDataSource, UINT pFormatId = 0);
 
 	bool HasIdls (UINT pFormatId = 0);
-	bool GetIdls (LPITEMIDLIST *& pIdls, int & pIdlCount, UINT pFormatId = 0);
-	static bool HasIdls (COleDataObject & pDataObject, UINT pFormatId = 0);
-	static bool GetIdls (LPITEMIDLIST *& pIdls, int & pIdlCount, COleDataObject & pDataObject, UINT pFormatId = 0);
+	bool GetIdls (LPITEMIDLIST*& pIdls, int& pIdlCount, UINT pFormatId = 0);
+	static bool HasIdls (COleDataObject& pDataObject, UINT pFormatId = 0);
+	static bool GetIdls (LPITEMIDLIST*& pIdls, int& pIdlCount, COleDataObject& pDataObject, UINT pFormatId = 0);
 	static void ReleaseIdls (LPITEMIDLIST * pIdls, int pIdlCount);
 
 	bool HasData (UINT pFormatId);
-	bool PutData (const CByteArray & pData, UINT pFormatId, bool pAppend = true, bool pFlush = true, int pNdx = -1);
-	bool GetData (CByteArray & pData, UINT pFormatId, int pNdx = -1);
+	bool PutData (const CByteArray& pData, UINT pFormatId, bool pAppend = true, bool pFlush = true, int pNdx = -1);
+	bool GetData (CByteArray& pData, UINT pFormatId, int pNdx = -1);
 
-	static bool HasData (UINT pFormatId, COleDataSource & pDataSource);
-	static bool PutData (const CByteArray & pData, UINT pFormatId, COleDataSource & pDataSource, bool pAppend = true, bool pFlush = true, int pNdx = -1);
-	static bool GetData (CByteArray & pData, UINT pFormatId, COleDataObject & pDataObject, int pNdx = -1);
+	static bool HasData (UINT pFormatId, COleDataSource& pDataSource);
+	static bool PutData (const CByteArray& pData, UINT pFormatId, COleDataSource& pDataSource, bool pAppend = true, bool pFlush = true, int pNdx = -1);
+	static bool GetData (CByteArray& pData, UINT pFormatId, COleDataObject& pDataObject, int pNdx = -1);
 
 	bool PutStream (IStream * pStream, bool pCopy = false, bool pRelease = false, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0, int pNdx = -1);
 	bool GetStream (IStream ** pStream, UINT pFormatId = 0, int pNdx = -1);
 	STGMEDIUM * PeekStream (UINT pFormatId = 0, int pNdx = -1);
-	bool PeekStream (GUID & pStreamClassId, UINT pFormatId = 0, int pNdx = -1);
+	bool PeekStream (GUID& pStreamClassId, UINT pFormatId = 0, int pNdx = -1);
 
-	static bool PutStream (IStream * pStream, COleDataSource & pDataSource, bool pCopy = false, bool pRelease = false, UINT pFormatId = 0, int pNdx = -1);
-	static bool GetStream (IStream ** pStream, COleDataObject & pDataObject, UINT pFormatId = 0, int pNdx = -1);
+	static bool PutStream (IStream * pStream, COleDataSource& pDataSource, bool pCopy = false, bool pRelease = false, UINT pFormatId = 0, int pNdx = -1);
+	static bool GetStream (IStream ** pStream, COleDataObject& pDataObject, UINT pFormatId = 0, int pNdx = -1);
 
 	bool PutStorage (IStorage * pStorage, bool pCopy = false, bool pRelease = false, bool pAppend = false, bool pFlush = true, UINT pFormatId = 0, int pNdx = -1);
 	bool GetStorage (IStorage ** pStorage, UINT pFormatId = 0, int pNdx = -1);
 	STGMEDIUM * PeekStorage (UINT pFormatId = 0, int pNdx = -1);
-	bool PeekStorage (GUID & pStorageClassId, UINT pFormatId = 0, int pNdx = -1);
+	bool PeekStorage (GUID& pStorageClassId, UINT pFormatId = 0, int pNdx = -1);
 
-	static void DumpDataObject (UINT pLogLevel, COleDataObject & pDataObject, LPCTSTR pTitle = NULL, bool pDumpData = false);
+	static void DumpDataObject (UINT pLogLevel, COleDataObject& pDataObject, LPCTSTR pTitle = NULL, bool pDumpData = false);
 	friend CString ClipboardFormatName (CLIPFORMAT pFormatId);
 	friend CString MediaTypeName (DWORD pMediaType);
 };

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -37,7 +37,7 @@ protected:
 	CAgentPopupWnd ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentPopupWnd ();
-	_DACORE_IMPEXP static CAgentPopupWnd * CreateInstance ();
+	_DACORE_IMPEXP static CAgentPopupWnd* CreateInstance ();
 
 // Declarations
 public:
@@ -63,22 +63,22 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP bool Create (CWindow * pParentWnd, CRect * pInitialRect = NULL, DWORD pExStyle = 0);
-	_DACORE_IMPEXP virtual bool Attach (long pCharID, CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
-	_DACORE_IMPEXP virtual bool Detach (long pCharID, CEventNotify * pNotify);
+	_DACORE_IMPEXP bool Create (CWindow* pParentWnd, CRect* pInitialRect = NULL, DWORD pExStyle = 0);
+	_DACORE_IMPEXP virtual bool Attach (long pCharID, CEventNotify* pNotify, const CAgentIconData* pIconData, bool pSetActiveCharID);
+	_DACORE_IMPEXP virtual bool Detach (long pCharID, CEventNotify* pNotify);
 	_DACORE_IMPEXP void FinalRelease ();
 
 	_DACORE_IMPEXP bool ShowPopup (long pForCharID, VisibilityCauseType pVisiblityCause, bool pAlwaysNotify = false);
 	_DACORE_IMPEXP bool HidePopup (long pForCharID, VisibilityCauseType pVisiblityCause, bool pAlwaysNotify = false);
-	_DACORE_IMPEXP bool MovePopup (const CPoint & pPosition, long pForCharID, MoveCauseType pMoveCause, bool pAlwaysNotify = false);
-	_DACORE_IMPEXP bool SizePopup (const CSize & pSize, long pForCharID, bool pAlwaysNotify = false);
+	_DACORE_IMPEXP bool MovePopup (const CPoint& pPosition, long pForCharID, MoveCauseType pMoveCause, bool pAlwaysNotify = false);
+	_DACORE_IMPEXP bool SizePopup (const CSize& pSize, long pForCharID, bool pAlwaysNotify = false);
 
-	_DACORE_IMPEXP long QueueMove (long pCharID, const CPoint & pPosition, DWORD pSpeed);
+	_DACORE_IMPEXP long QueueMove (long pCharID, const CPoint& pPosition, DWORD pSpeed);
 
 	_DACORE_IMPEXP bool IsNotifyIconValid () const;
 	_DACORE_IMPEXP bool IsIconVisible () const;
-	_DACORE_IMPEXP bool UpdateNotifyIcon (const CAgentIconData * pIconData = NULL);
-	_DACORE_IMPEXP bool SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
+	_DACORE_IMPEXP bool UpdateNotifyIcon (const CAgentIconData* pIconData = NULL);
+	_DACORE_IMPEXP bool SetNotifyIconTip (const CAgentIconData* pIconData, CAgentFile* pAgentFile, LANGID pLangID = 0);
 
 // Overrides
 public:
@@ -88,8 +88,8 @@ protected:
 	_DACORE_IMPEXP virtual void Opened ();
 	_DACORE_IMPEXP virtual void Closing ();
 	_DACORE_IMPEXP virtual void IsLastActive (bool pLastActive);
-	_DACORE_IMPEXP virtual bool ShowQueued (CQueuedShow * pQueuedShow);
-	_DACORE_IMPEXP virtual bool HideQueued (CQueuedHide * pQueuedHide);
+	_DACORE_IMPEXP virtual bool ShowQueued (CQueuedShow* pQueuedShow);
+	_DACORE_IMPEXP virtual bool HideQueued (CQueuedHide* pQueuedHide);
 	_DACORE_IMPEXP virtual int _PreDoQueue ();
 	_DACORE_IMPEXP virtual int _PostDoQueue ();
 	_DACORE_IMPEXP virtual bool _PreNotify ();
@@ -98,25 +98,25 @@ protected:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnEnterSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNotifyIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTaskbarCreated (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnEnterSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNotifyIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTaskbarCreated (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentPopupWnd)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -143,7 +143,7 @@ protected:
 
 protected:
 	bool DoQueuedMoveCycle ();
-	void OnIconDblClick (const CPoint & pPoint);
+	void OnIconDblClick (const CPoint& pPoint);
 
 protected:
 	tPtr <CPoint>		mSizeMoveStart;

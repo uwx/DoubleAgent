@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -24,6 +24,7 @@
 #include "AgentBalloonWnd.h"
 #include "AgentBalloonShape.h"
 #include "AgentCharacterWnd.h"
+#include "AgentTextParse.h"
 #include "ImageAlpha.h"
 #include "Sapi5Voice.h"
 #include "StringArrayEx.h"
@@ -63,8 +64,6 @@ const UINT		CAgentBalloonWnd::mVoiceStartMsg = RegisterWindowMessage (_T("7781F0
 const UINT		CAgentBalloonWnd::mVoiceEndMsg = RegisterWindowMessage (_T("0BEA4D03-95C6-4c2f-A5BF-EFFE63D24D8F"));
 const UINT		CAgentBalloonWnd::mVoiceWordMsg = RegisterWindowMessage (_T("82C73827-F1B8-4223-824B-BC0953892D56"));
 
-static const int	sSpeechPacingLookAhead = 2;
-
 /////////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_DLL_OBJECT(CAgentBalloonWnd)
@@ -72,7 +71,7 @@ IMPLEMENT_DLL_OBJECT(CAgentBalloonWnd)
 CAgentBalloonWnd::CAgentBalloonWnd ()
 :	mCharID (0),
 	mAutoPaceDisabled (false),
-	mAutoPaceTime (300),
+	mAutoPaceTime (CAgentTextDraw::mDefaultAutoPaceTime),
 	mAutoPaceTimer (0),
 	mAutoHideTimer (0),
 	mAutoHideTime (0),
@@ -89,7 +88,7 @@ CAgentBalloonWnd::CAgentBalloonWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::CAgentBalloonWnd (%d)"), this, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::CAgentBalloonWnd (%d)"), this, _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 }
@@ -99,7 +98,7 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::~CAgentBalloonWnd (%d)"), this, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd::~CAgentBalloonWnd (%d)"), this, _CoreAnchor.Module.GetLockCount());
 	}
 #endif
 	if	(IsWindow ())
@@ -110,9 +109,9 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 	Detach (-1, NULL);
 }
 
-CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify> & pNotify)
+CAgentBalloonWnd* CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify>& pNotify)
 {
-	CComObject<CAgentBalloonWnd> *	lInstance = NULL;
+	CComObject<CAgentBalloonWnd>*	lInstance = NULL;
 	INT_PTR							lNdx;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<CAgentBalloonWnd>::CreateInstance (&lInstance))))
@@ -234,7 +233,7 @@ CAtlString CAgentBalloonWnd::RecursionIndent () const {return CAtlString();}
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
+bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions* pOptions)
 {
 	bool	lRet = false;
 
@@ -326,7 +325,7 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd, DWORD pExStyle)
+bool CAgentBalloonWnd::Create (CWindow* pOwnerWnd, DWORD pExStyle)
 {
 	bool	lRet = false;
 
@@ -376,7 +375,7 @@ bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd, DWORD pExStyle)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::Attach (long pCharID, CEventNotify * pNotify, bool pSetActiveCharID)
+bool CAgentBalloonWnd::Attach (long pCharID, CEventNotify* pNotify, bool pSetActiveCharID)
 {
 	bool	lRet = false;
 
@@ -400,7 +399,7 @@ bool CAgentBalloonWnd::Attach (long pCharID, CEventNotify * pNotify, bool pSetAc
 	return lRet;
 }
 
-bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify * pNotify)
+bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify* pNotify)
 {
 	bool	lRet = false;
 
@@ -443,7 +442,7 @@ bool CAgentBalloonWnd::IsSpeechShape () const
 {
 	if	(mShape)
 	{
-		return dynamic_cast <const CAgentBalloonSpeak *> (mShape.Ptr()) ? true : false;
+		return dynamic_cast <const CAgentBalloonSpeak*> (mShape.Ptr()) ? true : false;
 	}
 	return false;
 }
@@ -452,7 +451,7 @@ bool CAgentBalloonWnd::IsThoughtShape () const
 {
 	if	(mShape)
 	{
-		return dynamic_cast <const CAgentBalloonThink *> (mShape.Ptr()) ? true : false;
+		return dynamic_cast <const CAgentBalloonThink*> (mShape.Ptr()) ? true : false;
 	}
 	return false;
 }
@@ -537,7 +536,7 @@ bool CAgentBalloonWnd::ShowBalloonSpeech (LPCTSTR pText, UINT pSapiVersion, bool
 	return ShowBalloonSpeech (lText, pNoAutoPace);
 }
 
-bool CAgentBalloonWnd::ShowBalloonSpeech (const CAgentText & pText, bool pNoAutoPace)
+bool CAgentBalloonWnd::ShowBalloonSpeech (const CAgentText& pText, bool pNoAutoPace)
 {
 	bool	lRet = false;
 
@@ -568,7 +567,7 @@ bool CAgentBalloonWnd::ShowBalloonThought (LPCTSTR pText, UINT pSapiVersion, boo
 	return ShowBalloonThought (lText, pNoAutoPace);
 }
 
-bool CAgentBalloonWnd::ShowBalloonThought (const CAgentText & pText, bool pNoAutoPace)
+bool CAgentBalloonWnd::ShowBalloonThought (const CAgentText& pText, bool pNoAutoPace)
 {
 	bool	lRet = false;
 
@@ -652,7 +651,7 @@ bool CAgentBalloonWnd::ShowingBalloon ()
 	return lRet;
 }
 
-bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeech, bool pNoAutoPace)
+bool CAgentBalloonWnd::ShowBalloonText (const CAgentText& pText, UINT pForSpeech, bool pNoAutoPace)
 {
 	bool	lRet = false;
 
@@ -676,7 +675,7 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 #ifdef	_DEBUG_AUTO_PACE
 			if	(
 					(LogIsActive (_DEBUG_AUTO_PACE))
-				&&	(mText.GetWordCount() > 0)
+				&&	(mText.WordCount > 0)
 				)
 			{
 				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] ResetText"), this, mCharID, IsPaused());
@@ -685,10 +684,10 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(
 					(LogIsActive (_DEBUG_AUTO_SCROLL))
-				&&	(mText.GetScrollMax() > 0)
+				&&	(mText.ScrollMax > 0)
 				)
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] ResetScroll [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] ResetScroll [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mText.ScrollPos, mText.ScrollMin, mText.ScrollMax, mText.ScrollInc);
 			}
 #endif
 			mText = pText;
@@ -697,7 +696,7 @@ bool CAgentBalloonWnd::ShowBalloonText (const CAgentText & pText, UINT pForSpeec
 #ifdef	_DEBUG_AUTO_PACE
 				if	(LogIsActive (_DEBUG_AUTO_PACE))
 				{
-					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (start)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (start)"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 				}
 #endif
 			}
@@ -861,7 +860,7 @@ void CAgentBalloonWnd::ShowedBalloon (bool pWasVisible)
 			try
 			{
 				INT_PTR			lNotifyNdx;
-				CEventNotify *	lNotify;
+				CEventNotify*	lNotify;
 
 				for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 				{
@@ -926,7 +925,7 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 			try
 			{
 				INT_PTR			lNotifyNdx;
-				CEventNotify *	lNotify;
+				CEventNotify*	lNotify;
 
 				for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 				{
@@ -1007,11 +1006,11 @@ bool CAgentBalloonWnd::Pause (bool pPause)
 	{
 		if	(mPaused = pPause)
 		{
-			mPausedWord = mText.GetWordDisplayed ();
+			mPausedWord = mText.WordDisplayed;
 #ifdef	_DEBUG_AUTO_PACE
 			if	(LogIsActive (_DEBUG_AUTO_PACE))
 			{
-				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPacePause  word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPacePause  word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 			}
 #endif
 		}
@@ -1019,7 +1018,7 @@ bool CAgentBalloonWnd::Pause (bool pPause)
 		{
 			if	(
 					(mPausedWord > 0)
-				&&	(mPausedWord != mText.GetWordDisplayed ())
+				&&	(mPausedWord != mText.WordDisplayed)
 				)
 			{
 				ShowedVoiceWord (false);
@@ -1038,10 +1037,10 @@ bool CAgentBalloonWnd::Pause (bool pPause)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, CRect & pBounds)
+bool CAgentBalloonWnd::CalcLayoutRects (CRect& pTextRect, CRect& pOwnerRect, CRect& pBounds)
 {
 	bool						lRet = false;
-	CAgentCharacterWnd *		lOwner;
+	CAgentCharacterWnd*			lOwner;
 	HMONITOR					lMonitor;
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
 
@@ -1055,7 +1054,7 @@ bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, C
 
 		if	(
 				(mOwnerWnd->GetStyle () & WS_CHILD)
-			&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+			&&	(lOwner = dynamic_cast <CAgentCharacterWnd*> ((CAgentWnd*)mOwnerWnd))
 			)
 		{
 			CRect	lVideoRect = lOwner->GetVideoRect ();
@@ -1066,14 +1065,14 @@ bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, C
 
 		if	(
 				(IsAutoSize ())
-			||	(mOptions.mLines < mOptions.mMinLines)
+			||	(mOptions.mLines < CAgentFileBalloon::MinLines)
 			)
 		{
-			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (mFont.GetSafeHandle()?mFont.GetSafeHandle():GetFont(), min(max(mOptions.mPerLine,mOptions.mMinPerLine),mOptions.mMaxPerLine)));
+			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (mFont.GetSafeHandle()?mFont.GetSafeHandle():GetFont(), min(max(mOptions.mPerLine,CAgentFileBalloon::MinPerLine),CAgentFileBalloon::MaxPerLine)));
 		}
 		else
 		{
-			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (mFont.GetSafeHandle()?mFont.GetSafeHandle():GetFont(), min(max(mOptions.mPerLine,mOptions.mMinPerLine),mOptions.mMaxPerLine), min(max(mOptions.mLines,mOptions.mMinLines),mOptions.mMaxLines)));
+			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (mFont.GetSafeHandle()?mFont.GetSafeHandle():GetFont(), min(max(mOptions.mPerLine,CAgentFileBalloon::MinPerLine),CAgentFileBalloon::MaxPerLine), min(max(mOptions.mLines,CAgentFileBalloon::MinLines),CAgentFileBalloon::MaxLines)));
 		}
 		pTextRect.OffsetRect (pOwnerRect.CenterPoint().x - pTextRect.CenterPoint().x, pOwnerRect.top - pTextRect.bottom);
 
@@ -1104,7 +1103,7 @@ bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, C
 	return lRet;
 }
 
-bool CAgentBalloonWnd::CalcWinRect (CRect & pWinRect, bool pOnShow)
+bool CAgentBalloonWnd::CalcWinRect (CRect& pWinRect, bool pOnShow)
 {
 	CRect	lTextRect;
 	CRect	lOwnerRect;
@@ -1130,7 +1129,7 @@ bool CAgentBalloonWnd::CalcWinRect (CRect & pWinRect, bool pOnShow)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentBalloonWnd::ApplyLayout (const CRect & pWinRect, bool pOnShow)
+void CAgentBalloonWnd::ApplyLayout (const CRect& pWinRect, bool pOnShow)
 {
 	if	(!pOnShow)
 	{
@@ -1242,7 +1241,7 @@ bool CAgentBalloonWnd::StartAutoPace ()
 	if	(
 			(IsWindow ())
 		&&	(IsAutoPace ())
-		&&	(mText.GetWordCount() > 0)
+		&&	(mText.CanPace)
 		)
 	{
 #ifdef	_TRACE_RESOURCES_EX
@@ -1263,7 +1262,7 @@ bool CAgentBalloonWnd::StartAutoPace ()
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
-			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPace [%u] started for [%u] at [%d] of [%d]"), this, mCharID, IsPaused(), mAutoPaceTimer, mAutoPaceTime, mText.GetWordDisplayed(), mText.GetWordCount());
+			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPace [%u] started for [%u] at [%d] of [%d]"), this, mCharID, IsPaused(), mAutoPaceTimer, mAutoPaceTime, mText.WordDisplayed, mText.WordCount);
 		}
 #endif
 		lRet = true;
@@ -1316,13 +1315,13 @@ bool CAgentBalloonWnd::StopAutoPace ()
 
 bool CAgentBalloonWnd::StartAutoHide ()
 {
-	bool					lRet = false;
-	CAgentCharacterWnd *	lOwner;
+	bool				lRet = false;
+	CAgentCharacterWnd*	lOwner;
 
 	if	(IsWindow ())
 	{
 		if	(
-				(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+				(lOwner = dynamic_cast <CAgentCharacterWnd*> ((CAgentWnd*)mOwnerWnd))
 			&&	(lOwner->KeepBalloonVisible (this))
 			)
 		{
@@ -1436,15 +1435,16 @@ bool CAgentBalloonWnd::StopAutoHide ()
 
 bool CAgentBalloonWnd::StartAutoScroll ()
 {
-	DWORD	lScrollTime;
-
 	if	(
 			(IsWindow ())
 		&&	(mShape)
-		&&	(mText.CanScroll (mShape->mTextRect))
+		&&	(
+				(InitBalloonTextLayout (NULL))
+			||	(mText.CanScroll)
+			)
 		)
 	{
-		if	(lScrollTime = mText.InitScroll (mShape->mTextRect, (mAutoScrollTimer==0), ((!IsAutoPace()) && ClipPartialLines()), mAutoPaceTime))
+		if	(mText.ScrollTime > 0)
 		{
 #ifdef	_TRACE_RESOURCES_EX
 			if	(LogIsActive (_TRACE_RESOURCES_EX))
@@ -1453,7 +1453,7 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 			}
 #endif
 
-			mAutoScrollTimer = SetTimer ((UINT_PTR)&mAutoScrollTimer, lScrollTime, NULL);
+			mAutoScrollTimer = SetTimer ((UINT_PTR)&mAutoScrollTimer, mText.ScrollTime, NULL);
 
 #ifdef	_TRACE_RESOURCES_EX
 			if	(LogIsActive (_TRACE_RESOURCES_EX))
@@ -1464,7 +1464,7 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] AutoScroll [%u] started [%u] at [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mAutoScrollTimer, lScrollTime, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] AutoScroll [%u] started [%u] at [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mAutoScrollTimer, mText.ScrollTime, mText.ScrollPos, mText.ScrollMin, mText.ScrollMax, mText.ScrollInc);
 			}
 #endif
 			return true;
@@ -1475,10 +1475,10 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 #ifdef	_DEBUG_AUTO_SCROLL
 		if	(
 				(LogIsActive (_DEBUG_AUTO_SCROLL))
-			&&	(mText.GetScrollMax() > 0)
+			&&	(mText.ScrollMax > 0)
 			)
 		{
-			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] StopScroll [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] StopScroll [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mText.ScrollPos, mText.ScrollMin, mText.ScrollMax, mText.ScrollInc);
 		}
 #endif
 		StopAutoScroll ();
@@ -1561,12 +1561,12 @@ void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)][(%u)] CAgentBalloonWnd OnVoiceStartMsg [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, mCharID, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize (), mText.GetWordDisplayed(), mText.GetWordCount());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)][(%u)] CAgentBalloonWnd OnVoiceStartMsg [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, mCharID, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize (), mText.WordDisplayed, mText.WordCount);
 	}
 #endif
 	StopAutoHide ();
@@ -1589,7 +1589,7 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_AUTO_PACE
 				if	(LogIsActive (_DEBUG_AUTO_PACE))
 				{
-					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (resume)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (resume)"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 				}
 #endif
 				ShowedVoiceWord (false);
@@ -1600,7 +1600,7 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef	_DEBUG_AUTO_PACE
 				if	(LogIsActive (_DEBUG_AUTO_PACE))
 				{
-					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (first)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+					LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (first)"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 				}
 #endif
 				ShowedVoiceWord (false);
@@ -1615,12 +1615,12 @@ LRESULT CAgentBalloonWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)][(%u)] CAgentBalloonWnd OnVoiceEndMsg [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, mCharID, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize (), mText.GetWordDisplayed(), mText.GetWordCount());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)][(%u)] CAgentBalloonWnd OnVoiceEndMsg [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, mCharID, IsPaused(), DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize (), mText.WordDisplayed, mText.WordCount);
 	}
 #endif
 	if	(!IsPaused ())
@@ -1632,14 +1632,14 @@ LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 			||	(!IsAutoSize ())
 			)
 		{
-			if	(mText.GetWordDisplayed() >= mText.GetWordCount()-2)
+			if	(mText.WordDisplayed >= mText.WordCount-2)
 			{
 				if	(mText.DisplayAllWords (true))
 				{
 #ifdef	_DEBUG_AUTO_PACE
 					if	(LogIsActive (_DEBUG_AUTO_PACE))
 					{
-						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (all)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (all)"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 					}
 #endif
 					ShowedVoiceWord (false);
@@ -1653,7 +1653,7 @@ LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 #ifdef	_DEBUG_AUTO_PACE
 					if	(LogIsActive (_DEBUG_AUTO_PACE))
 					{
-						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (next)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+						LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (next)"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 					}
 #endif
 					ShowedVoiceWord (false);
@@ -1674,14 +1674,14 @@ LRESULT CAgentBalloonWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	UINT	lWordPos = (UINT)LOWORD(lParam);
 	int		lWordLength = (int)HIWORD(lParam);
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)][(%u)] CAgentBalloonWnd   OnVoiceWordMsg [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, mCharID, IsPaused(), lWordPos, lWordLength, DebugStr(mText.GetSpeechText().Mid (lWordPos, lWordLength)), IsAutoPace (), IsAutoSize (), mText.GetWordDisplayed(), mText.GetWordCount());
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)][(%u)] CAgentBalloonWnd   OnVoiceWordMsg [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u] Word [%d] of [%d]"), this, mCharID, IsPaused(), lWordPos, lWordLength, DebugStr(mText.GetSpeechText().Mid (lWordPos, lWordLength)), IsAutoPace (), IsAutoSize (), mText.WordDisplayed, mText.WordCount);
 	}
 #endif
 	if	(
@@ -1695,12 +1695,12 @@ LRESULT CAgentBalloonWnd::OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lPara
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
-			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (this)"), this, mCharID, IsPaused(), mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+			LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPaceSpeech word [%d] of [%d] [%s] (this)"), this, mCharID, IsPaused(), mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 		}
 #endif
 		if	(IsPaused ())
 		{
-			mPausedWord = mText.GetWordDisplayed ();
+			mPausedWord = mText.WordDisplayed;
 		}
 		ShowedVoiceWord (true);
 	}
@@ -1800,7 +1800,7 @@ void CAgentBalloonWnd::ShowedVoiceWord (bool pFastRefresh)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = DefWindowProc (uMsg, wParam, lParam);
 
@@ -1815,7 +1815,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_PACE
 			if	(LogIsActive (_DEBUG_AUTO_PACE))
 			{
-				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPace [%u] word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mAutoPaceTimer, mText.GetWordDisplayed(), mText.GetWordCount(), DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPace [%u] word [%d] of [%d] [%s]"), this, mCharID, IsPaused(), mAutoPaceTimer, mText.WordDisplayed, mText.WordCount, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 			}
 #endif
 			if	(IsWindowVisible ())
@@ -1831,7 +1831,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_PACE
 			if	(LogIsActive (_DEBUG_AUTO_PACE))
 			{
-				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPace [%u] complete [%s]"), this, mCharID, IsPaused(), mAutoPaceTimer, DebugStr(mText.GetDisplayWord(mText.GetWordDisplayed())));
+				LogMessage (_DEBUG_AUTO_PACE, _T("[%p(%d)][(%u)] AutoPace [%u] complete [%s]"), this, mCharID, IsPaused(), mAutoPaceTimer, DebugStr(mText.GetDisplayWord(mText.WordDisplayed)));
 			}
 #endif
 			StopAutoPace ();
@@ -1847,7 +1847,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	{
 		if	(
 				(!mShape)
-			||	(!mText.CanScroll (mShape->mTextRect))
+			||	(!mText.CanScroll)
 			)
 		{
 #ifdef	_DEBUG_AUTO_SCROLL
@@ -1864,7 +1864,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] AutoScroll [%u] at [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mAutoScrollTimer, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax(), mText.GetScrollInc());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] AutoScroll [%u] at [%+d] in [%+d - %+d] by [%d]"), this, mCharID, IsPaused(), mAutoScrollTimer, mText.ScrollPos, mText.ScrollMin, mText.ScrollMax, mText.ScrollInc);
 			}
 #endif
 			if	(IsWindowVisible ())
@@ -1895,14 +1895,14 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		}
 		else
 		if	(
-				(mText.GetScrollPos() >= mText.GetScrollMax())
+				(mText.ScrollPos >= mText.ScrollMax)
 			||	(!IsWindowVisible ())
 			)
 		{
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] StopScroll [%d] at [%+d] of [%+d - %+d]"), this, mCharID, IsPaused(), mAutoScrollTimer, mText.GetScrollPos(), mText.GetScrollMin(), mText.GetScrollMax());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] StopScroll [%d] at [%+d] of [%+d - %+d]"), this, mCharID, IsPaused(), mAutoScrollTimer, mText.ScrollPos, mText.ScrollMin, mText.ScrollMax);
 			}
 #endif
 			StopAutoScroll ();
@@ -1915,7 +1915,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		&&	(!IsPaused ())
 		)
 	{
-		CAgentCharacterWnd *	lOwner;
+		CAgentCharacterWnd*	lOwner;
 
 #ifdef	_DEBUG_AUTO_HIDE
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
@@ -1926,7 +1926,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		StopAutoHide ();
 		if	(
 				(IsAutoHide ())
-			&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+			&&	(lOwner = dynamic_cast <CAgentCharacterWnd*> ((CAgentWnd*)mOwnerWnd))
 			&&	(!lOwner->KeepBalloonVisible (this))
 			)
 		{
@@ -1943,7 +1943,7 @@ LRESULT CAgentBalloonWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	return lResult;
 }
 
-LRESULT CAgentBalloonWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 #ifdef	_DEBUG_SHOW_HIDE
@@ -1974,7 +1974,7 @@ LRESULT CAgentBalloonWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	tS <PAINTSTRUCT>	lPaintStruct;
 	CMemDCHandle		lPaintDC;
@@ -2040,7 +2040,7 @@ LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	if	(IsDrawingLayered ())
@@ -2062,7 +2062,7 @@ LRESULT CAgentBalloonWnd::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam,
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 #ifdef	_DEBUG_DRAW
@@ -2071,7 +2071,7 @@ LRESULT CAgentBalloonWnd::OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	if	(lParam & PRF_CLIENT)
 	{
@@ -2123,7 +2123,7 @@ LRESULT CAgentBalloonWnd::OnCustomDraw(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 	return lResult;
 }
 
-void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
+void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect& pDrawRect)
 {
 	CRect	lTextRect (pDrawRect);
 	CRect	lMargin;
@@ -2183,14 +2183,14 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 #endif
 }
 
-void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
+void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect& pDrawRect)
 {
 	HGDIOBJ	lOldFont = NULL;
 	DWORD	lLayout;
 	CRect	lClipRect;
 	CRect	lTextBounds;
 	int		lTextLength = mText.GetFullText().GetLength();
-	INT_PTR	lPaceLookAhead = min (mText.GetWordCount() - mText.GetWordDisplayed() - 1, sSpeechPacingLookAhead);
+	INT_PTR	lPaceLookAhead = mText.LookAhead;
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
@@ -2202,24 +2202,20 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 	::SetBkMode (pDC, TRANSPARENT);
 	::SetTextColor (pDC, mOptions.mFgColor);
 
-	if	(mText.mBounds.IsRectEmpty ())
-	{
-		mText.mBounds = mShape->mTextRect;
-		mText.MeasureText (mText.GetFullText(), pDC);
-	}
-	lTextBounds = mText.mBounds;
+	InitBalloonTextLayout (pDC);
+	lTextBounds = mText.TextBounds;
 	lClipRect = mShape->mTextRect;
 
 	if	(
 			(!IsAutoSize ())
-		&&	(mText.CanScroll (mShape->mTextRect))
+		&&	(mText.CanScroll)
 		)
 	{
 //
 //		When using BalloonStyle_AutoPace with speech
 //		  Measure for the next word so scrolling gets started early
-//		When NOT using BalloonStyle_AutoPace with speech
-//		  Measure for the current word so scrolling matches the speech
+//		When using BalloonStyle_AutoPace WITHOUT speech
+//		  Measure for the current word so scrolling matches the pacing
 
 		if	(
 				(IsAutoPace ())
@@ -2231,14 +2227,14 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 				&&	(lPaceLookAhead > 0)
 				)
 			{
-				mText.mBounds = mText.GetUsedRect (false, mText.GetDisplayText(lPaceLookAhead));
+				mText.TextBounds = mText.GetUsedRect (false, mText.GetDisplayText(lPaceLookAhead));
 			}
 			else
 			{
-				mText.mBounds = mText.GetUsedRect (false, mText.GetDisplayText());
+				mText.TextBounds = mText.GetUsedRect (false, mText.GetDisplayText());
 			}
-			mText.mBounds.left = lTextBounds.left;
-			mText.mBounds.right = lTextBounds.right;
+			mText.TextBounds = CRect (lTextBounds.left, mText.TextBounds.top, lTextBounds.right, mText.TextBounds.bottom);
+			mText.ScrollBounds = CRect (0,0,0,0);
 		}
 
 		if	(StartAutoScroll ())
@@ -2246,46 +2242,40 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 #ifdef	_DEBUG_AUTO_SCROLL_NOT
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
-				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Lines [%d]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetLineCount());
+				LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Lines [%d]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.TextBounds.Height(), mText.GetLineCount());
 			}
 #endif
 		}
-		if	(ClipPartialLines())
-		{
-			mText.ApplyScroll (mShape->mTextRect, &lClipRect);
-		}
-		else
-		{
-			mText.ApplyScroll (mShape->mTextRect);
-		}
+		mText.ApplyScroll ();
+
 #ifdef	_DEBUG_AUTO_SCROLL_NOT
 		if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 		{
-			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Scroll [%d (%d)]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.mBounds.Height(), mText.GetScrollPos(), mShape->mTextRect.top - mText.mBounds.top);
+			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p(%d)][(%u)] Clip [%d] Text [%d (%d)] Scroll [%d (%d)]"), this, mCharID, IsPaused(), mShape->mTextRect.Height(), mText.GetSize().cy, mText.TextBounds.Height(), mText.ScrollPos, mShape->mTextRect.top - mText.TextBounds.top);
 		}
 #endif
 	}
 
 	lLayout = ApplyFontLayout (pDC);
-	lClipRect.left = mText.mBounds.left;
-	lClipRect.right = mText.mBounds.right;
+	lClipRect.left = mText.TextBounds.left;
+	lClipRect.right = mText.TextBounds.right;
 
 	if	(
 			(IsAutoPace ())
-		&&	(mText.GetWordDisplayed()+lPaceLookAhead < mText.GetWordCount())
+		&&	(mText.WordDisplayed+lPaceLookAhead < mText.WordCount)
 		)
 	{
 		//
 		//	Note - AutoPace AND AutoScroll (i.e. !AutoSize) AND !ClipPartial actually does show partial lines,
 		//	it's just that the partial line at the end is empty.  It looks like a bug, but it's not.
 		//
-		mText.DrawText (pDC, mText.mBounds, mText.GetDisplayText(), NULL, &lClipRect);
+		mText.DrawText (pDC, mText.TextBounds, mText.GetDisplayText(), NULL, &lClipRect);
 	}
 	else
 	{
 		mText.DrawText (pDC, NULL, &lClipRect);
 	}
-	mText.mBounds = lTextBounds;
+	mText.TextBounds = lTextBounds;
 
 	::SetLayout (pDC, lLayout);
 	if	(lOldFont)
@@ -2319,6 +2309,39 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 #endif
 }
 
+bool CAgentBalloonWnd::InitBalloonTextLayout (HDC pDC)
+{
+	bool	lRet = false;
+
+	mText.mClipPartialLines = ClipPartialLines();
+
+	if	(mText.TextBounds.IsRectEmpty ())
+	{
+		mText.TextBounds = mShape->mTextRect;
+		if	(pDC)
+		{
+			mText.CalcTextSize (pDC);
+		}
+		else
+		{
+			mText.CalcTextSize (mFont);
+		}
+		lRet = true;
+	}
+	if	(
+			(!IsAutoSize ())
+		&&	(
+				(lRet)
+			||	(mText.ScrollBounds.IsRectEmpty ())
+			)
+		&&	(mText.InitScroll (mShape->mTextRect, !IsAutoPace(), mAutoPaceTime))
+		)
+	{
+		lRet = true;
+	}
+	return lRet;
+}
+
 DWORD CAgentBalloonWnd::ApplyFontLayout (HDC pDC)
 {
 	DWORD			lLayout;
@@ -2346,10 +2369,9 @@ DWORD CAgentBalloonWnd::ApplyFontLayout (HDC pDC)
 				lClientRect.right = max (lClientRect.right, lClipRect.right);
 
 				::SetLayout (pDC, LAYOUT_RTL);
-				mText.mBounds.left = lClientRect.right - mShape->mTextRect.right;
-				mText.mBounds.right = lClientRect.right - mShape->mTextRect.left;
+				mText.TextBounds = CRect (lClientRect.right - mShape->mTextRect.right, mText.TextBounds.top, lClientRect.right - mShape->mTextRect.left, mText.TextBounds.bottom);
 #ifdef	_DEBUG_RTL
-				LogMessage (_DEBUG_RTL, _T("LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.mBounds), FormatPoint(mText.GetLinePos(0)));
+				LogMessage (_DEBUG_RTL, _T("LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.TextBounds), FormatPoint(mText.GetLinePos(0)));
 #endif
 			}
 		}
@@ -2365,10 +2387,9 @@ DWORD CAgentBalloonWnd::ApplyFontLayout (HDC pDC)
 				lClientRect.right = max (lClientRect.right, lClipRect.right);
 
 				::SetLayout (pDC, 0);
-				mText.mBounds.left = lClientRect.right - mShape->mTextRect.right;
-				mText.mBounds.right = lClientRect.right - mShape->mTextRect.left;
+				mText.TextBounds = CRect (lClientRect.right - mShape->mTextRect.right, mText.TextBounds.top, lClientRect.right - mShape->mTextRect.left, mText.TextBounds.bottom);
 #ifdef	_DEBUG_RTL
-				LogMessage (_DEBUG_RTL, _T("~LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.mBounds), FormatPoint(mText.GetLinePos(0)));
+				LogMessage (_DEBUG_RTL, _T("~LAYOUT_RTL Client [%s] Shape [%s] Text [%s] Line [%s]"), FormatRect(lClientRect), FormatRect(mShape->mTextRect), FormatRect(mText.TextBounds), FormatPoint(mText.GetLinePos(0)));
 #endif
 			}
 		}
@@ -2422,7 +2443,7 @@ LRESULT CAgentBalloonWnd::OnShow(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT		lResult = DefWindowProc (uMsg, wParam, lParam);
 	LPWINDOWPOS	lWindowPos = (LPWINDOWPOS) lParam;
@@ -2474,7 +2495,7 @@ LRESULT CAgentBalloonWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM 
 	return lResult;
 }
 
-LRESULT CAgentBalloonWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 #ifdef	_DEBUG_LAYOUT
@@ -2504,7 +2525,7 @@ LRESULT CAgentBalloonWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM l
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 #ifdef	_DEBUG_LAYOUT
@@ -2519,7 +2540,7 @@ LRESULT CAgentBalloonWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL 
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 #ifdef	_DEBUG_DRAW
@@ -2529,7 +2550,7 @@ LRESULT CAgentBalloonWnd::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam,
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
 #ifdef	_DEBUG_DRAW
@@ -2542,7 +2563,7 @@ LRESULT CAgentBalloonWnd::OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = (mRedrawDisabled || IsDrawingLayered ()) ? TRUE : FALSE;
 #ifdef	_DEBUG_DRAW
@@ -2551,7 +2572,7 @@ LRESULT CAgentBalloonWnd::OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	return 0;
 }
 
-LRESULT CAgentBalloonWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = TRUE;
 	return HTTRANSPARENT;
@@ -2561,7 +2582,7 @@ LRESULT CAgentBalloonWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentBalloonWnd::OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult;
 #ifdef	_DEBUG_LAYOUT
@@ -2588,7 +2609,7 @@ LRESULT CAgentBalloonWnd::OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return lResult;
 }
 
-LRESULT CAgentBalloonWnd::OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult;
 #ifdef	_DEBUG_LAYOUT
@@ -2608,7 +2629,7 @@ LRESULT CAgentBalloonWnd::OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM l
 	return lResult;
 }
 
-LRESULT CAgentBalloonWnd::OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult;
 #ifdef	_DEBUG_LAYOUT
@@ -2646,7 +2667,7 @@ LRESULT CAgentBalloonWnd::OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM l
 	return lResult;
 }
 
-LRESULT CAgentBalloonWnd::OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_LAYOUT
@@ -2671,7 +2692,7 @@ LRESULT CAgentBalloonWnd::OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM l
 	return lResult;
 }
 
-LRESULT CAgentBalloonWnd::OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentBalloonWnd::OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_LAYOUT

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -34,7 +34,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-#define	_DASVRPTR_DECLARE(i) class i##Ptr : public _COM_SMARTPTR<_COM_SMARTPTR_LEVEL2<i##, & __uuidof(i##)> >
+#define	_DASVRPTR_DECLARE(i) class i##Ptr : public _COM_SMARTPTR<_COM_SMARTPTR_LEVEL2<i##, &__uuidof(i##)> >
 
 #define	_DASVRPTR_CONSTRUCT(i) \
 	i##Ptr () {}; \
@@ -98,7 +98,7 @@ __if_not_exists(IDaSvrBalloon2Ptr)
 		OLE_COLOR _get_BorderColor () {OLE_COLOR lBorderColor=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_BorderColor(&lBorderColor); return lBorderColor;}
 		HRESULT _put_BorderColor (OLE_COLOR Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_BorderColor(Value); else return E_POINTER;}
 		_bstr_t _get_FontName () {BSTR lFontName=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FontName(&lFontName); return _bstr_t(lFontName, false);}
-		HRESULT _put_FontName (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_FontName(Value); else return E_POINTER;}
+		HRESULT _put_FontName (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_FontName(Value); else return E_POINTER;}
 		long _get_FontSize () {long lFontSize=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FontSize(&lFontSize); return lFontSize;}
 		HRESULT _put_FontSize (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_FontSize(Value); else return E_POINTER;}
 		bool _get_FontBold () {VARIANT_BOOL lFontBold=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FontBold(&lFontBold); return lFontBold?true:false;}
@@ -134,20 +134,20 @@ __if_not_exists(IDaSvrCommand2Ptr)
 		__declspec(property(get=_get_ConfidenceText, put=_put_ConfidenceText))							_bstr_t					ConfidenceText;
 
 		_bstr_t _get_Caption () {BSTR lCaption=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Caption(&lCaption); return _bstr_t(lCaption, false);}
-		HRESULT _put_Caption (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Caption(Value); else return E_POINTER;}
+		HRESULT _put_Caption (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Caption(Value); else return E_POINTER;}
 		bool _get_Enabled () {VARIANT_BOOL lEnabled=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Enabled(&lEnabled); return lEnabled?true:false;}
 		HRESULT _put_Enabled (bool Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Enabled(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		bool _get_Visible () {VARIANT_BOOL lVisible=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Visible(&lVisible); return lVisible?true:false;}
 		HRESULT _put_Visible (bool Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Visible(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		long _get_CommandID () {long lCommandID=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_CommandID(&lCommandID); return lCommandID;}
 		_bstr_t _get_VoiceCaption () {BSTR lVoiceCaption=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_VoiceCaption(&lVoiceCaption); return _bstr_t(lVoiceCaption, false);}
-		HRESULT _put_VoiceCaption (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceCaption(Value); else return E_POINTER;}
+		HRESULT _put_VoiceCaption (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceCaption(Value); else return E_POINTER;}
 		_bstr_t _get_VoiceGrammar () {BSTR lVoiceGrammar=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_VoiceGrammar(&lVoiceGrammar); return _bstr_t(lVoiceGrammar, false);}
-		HRESULT _put_VoiceGrammar (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceGrammar(Value); else return E_POINTER;}
+		HRESULT _put_VoiceGrammar (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceGrammar(Value); else return E_POINTER;}
 		long _get_ConfidenceThreshold () {long lConfidenceThreshold=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_ConfidenceThreshold(&lConfidenceThreshold); return lConfidenceThreshold;}
 		HRESULT _put_ConfidenceThreshold (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_ConfidenceThreshold(Value); else return E_POINTER;}
 		_bstr_t _get_ConfidenceText () {BSTR lConfidenceText=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_ConfidenceText(&lConfidenceText); return _bstr_t(lConfidenceText, false);}
-		HRESULT _put_ConfidenceText (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_ConfidenceText(Value); else return E_POINTER;}
+		HRESULT _put_ConfidenceText (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_ConfidenceText(Value); else return E_POINTER;}
 	};
 }
 
@@ -177,19 +177,19 @@ __if_not_exists(IDaSvrCommands2Ptr)
 		IDaSvrCommand2Ptr _get_Item (long Index) {IDaSvrCommand2Ptr lItem; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Item(Index, &lItem); return lItem;}
 		IDaSvrCommand2Ptr _get_Command (long CommandID) {IDaSvrCommand2Ptr lCommand; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Command(CommandID, &lCommand); return lCommand;}
 		_bstr_t _get_Caption () {BSTR lCaption=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Caption(&lCaption); return _bstr_t(lCaption, false);}
-		HRESULT _put_Caption (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Caption(Value); else return E_POINTER;}
+		HRESULT _put_Caption (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Caption(Value); else return E_POINTER;}
 		_bstr_t _get_VoiceGrammar () {BSTR lVoiceGrammar=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_VoiceGrammar(&lVoiceGrammar); return _bstr_t(lVoiceGrammar, false);}
-		HRESULT _put_VoiceGrammar (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceGrammar(Value); else return E_POINTER;}
+		HRESULT _put_VoiceGrammar (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceGrammar(Value); else return E_POINTER;}
 		bool _get_Visible () {VARIANT_BOOL lVisible=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Visible(&lVisible); return lVisible?true:false;}
 		HRESULT _put_Visible (bool Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Visible(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		long _get_DefaultCommand () {long lDefaultCommand=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_DefaultCommand(&lDefaultCommand); return lDefaultCommand;}
 		HRESULT _put_DefaultCommand (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_DefaultCommand(Value); else return E_POINTER;}
 		_bstr_t _get_FontName () {BSTR lFontName=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FontName(&lFontName); return _bstr_t(lFontName, false);}
-		HRESULT _put_FontName (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_FontName(Value); else return E_POINTER;}
+		HRESULT _put_FontName (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_FontName(Value); else return E_POINTER;}
 		long _get_FontSize () {long lFontSize=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FontSize(&lFontSize); return lFontSize;}
 		HRESULT _put_FontSize (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_FontSize(Value); else return E_POINTER;}
 		_bstr_t _get_VoiceCaption () {BSTR lVoiceCaption=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_VoiceCaption(&lVoiceCaption); return _bstr_t(lVoiceCaption, false);}
-		HRESULT _put_VoiceCaption (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceCaption(Value); else return E_POINTER;}
+		HRESULT _put_VoiceCaption (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_VoiceCaption(Value); else return E_POINTER;}
 		bool _get_GlobalVoiceCommandsEnabled () {VARIANT_BOOL lGlobalVoiceCommandsEnabled=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_GlobalVoiceCommandsEnabled(&lGlobalVoiceCommandsEnabled); return lGlobalVoiceCommandsEnabled?true:false;}
 		HRESULT _put_GlobalVoiceCommandsEnabled (bool Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_GlobalVoiceCommandsEnabled(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 	};
@@ -262,7 +262,7 @@ __if_not_exists(IDaSvrPropertySheet2Ptr)
 		bool _get_Visible () {VARIANT_BOOL lVisible=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Visible(&lVisible); return lVisible?true:false;}
 		HRESULT _put_Visible (bool Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Visible(Value?VARIANT_TRUE:VARIANT_FALSE); else return E_POINTER;}
 		_bstr_t _get_Page () {BSTR lPage=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Page(&lPage); return _bstr_t(lPage, false);}
-		HRESULT _put_Page (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Page(Value); else return E_POINTER;}
+		HRESULT _put_Page (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Page(Value); else return E_POINTER;}
 		short _get_Left () {short lLeft=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Left(&lLeft); return lLeft;}
 		short _get_Top () {short lTop=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Top(&lTop); return lTop;}
 		short _get_Width () {short lWidth=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Width(&lWidth); return lWidth;}
@@ -320,16 +320,16 @@ __if_not_exists(IDaSvrCharacterFilesPtr)
 		_DASVRPTR_CONSTRUCT(IDaSvrCharacterFiles)
 		_DASVRPTR_ASSIGN(IDaSvrCharacterFiles)
 
-		__declspec(property(get=_get_FilePaths))								SAFEARRAY *				FilePaths;
+		__declspec(property(get=_get_FilePaths))								SAFEARRAY*				FilePaths;
 		__declspec(property(get=_get_SearchPath, put=_put_SearchPath))			_bstr_t					SearchPath;
 		__declspec(property(get=_get_DefaultSearchPath))						_bstr_t					DefaultSearchPath;
 		__declspec(property(get=_get_Filter, put=_put_Filter))					long					Filter;
 		__declspec(property(get=_get_DefaultFilePath))							_bstr_t					DefaultFilePath;
 		__declspec(property(get=_get_DefaultFileName))							_bstr_t					DefaultFileName;
 
-		SAFEARRAY * _get_FilePaths () {SAFEARRAY * lFilePaths=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FilePaths(&lFilePaths); return lFilePaths;}
+		SAFEARRAY* _get_FilePaths () {SAFEARRAY* lFilePaths=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FilePaths(&lFilePaths); return lFilePaths;}
 		_bstr_t _get_SearchPath () {BSTR lSearchPath=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_SearchPath(&lSearchPath); return _bstr_t(lSearchPath, false);}
-		HRESULT _put_SearchPath (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_SearchPath(Value); else return E_POINTER;}
+		HRESULT _put_SearchPath (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_SearchPath(Value); else return E_POINTER;}
 		_bstr_t _get_DefaultSearchPath () {BSTR lDefaultSearchPath=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_DefaultSearchPath(&lDefaultSearchPath); return _bstr_t(lDefaultSearchPath, false);}
 		long _get_Filter () {long lFilter=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Filter(&lFilter); return lFilter;}
 		HRESULT _put_Filter (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Filter(Value); else return E_POINTER;}
@@ -357,7 +357,7 @@ __if_not_exists(IDaSvrFormattedTextPtr)
 		__declspec(property(get=_get_DisplayWord))								_bstr_t					DisplayWord[];
 
 		_bstr_t _get_RawText () {BSTR lRawText=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_RawText(&lRawText); return _bstr_t(lRawText, false);}
-		HRESULT _put_RawText (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_RawText(Value); else return E_POINTER;}
+		HRESULT _put_RawText (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_RawText(Value); else return E_POINTER;}
 		_bstr_t _get_ParsedText () {BSTR lParsedText=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_ParsedText(&lParsedText); return _bstr_t(lParsedText, false);}
 		_bstr_t _get_SpeechText () {BSTR lSpeechText=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_SpeechText(&lSpeechText); return _bstr_t(lSpeechText, false);}
 		long _get_WordCount () {long lWordCount=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_WordCount(&lWordCount); return lWordCount;}
@@ -426,16 +426,16 @@ __if_not_exists(IDaSvrSREnginePtr)
 		__declspec(property(get=_get_Manufacturer))								_bstr_t					Manufacturer;
 		__declspec(property(get=_get_LanguageID))								long					LanguageID;
 		__declspec(property(get=_get_LanguageName))								_bstr_t					LanguageName[];
-		__declspec(property(get=_get_LanguageIDs))								SAFEARRAY *				LanguageIDs;
-		__declspec(property(get=_get_LanguageNames))							SAFEARRAY *				LanguageNames[];
+		__declspec(property(get=_get_LanguageIDs))								SAFEARRAY*				LanguageIDs;
+		__declspec(property(get=_get_LanguageNames))							SAFEARRAY*				LanguageNames[];
 
 		_bstr_t _get_SRModeID () {BSTR lSRModeID=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_SRModeID(&lSRModeID); return _bstr_t(lSRModeID, false);}
 		_bstr_t _get_DisplayName () {BSTR lDisplayName=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_DisplayName(&lDisplayName); return _bstr_t(lDisplayName, false);}
 		_bstr_t _get_Manufacturer () {BSTR lManufacturer=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Manufacturer(&lManufacturer); return _bstr_t(lManufacturer, false);}
 		long _get_LanguageID () {long lLanguageID=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageID(&lLanguageID); return lLanguageID;}
 		_bstr_t _get_LanguageName (bool EnglishName=true) {BSTR lLanguageName=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageName(EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lLanguageName); return _bstr_t(lLanguageName, false);}
-		SAFEARRAY * _get_LanguageIDs () {SAFEARRAY * lLanguageIDs=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageIDs(&lLanguageIDs); return lLanguageIDs;}
-		SAFEARRAY * _get_LanguageNames (bool EnglishName=true) {SAFEARRAY * lLanguageNames=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageNames(EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lLanguageNames); return lLanguageNames;}
+		SAFEARRAY* _get_LanguageIDs () {SAFEARRAY* lLanguageIDs=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageIDs(&lLanguageIDs); return lLanguageIDs;}
+		SAFEARRAY* _get_LanguageNames (bool EnglishName=true) {SAFEARRAY* lLanguageNames=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageNames(EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lLanguageNames); return lLanguageNames;}
 	};
 }
 
@@ -499,8 +499,8 @@ __if_not_exists(IDaSvrCharacter2Ptr)
 		__declspec(property(get=_get_MoveCause))								MoveCauseType			MoveCause;
 		__declspec(property(get=_get_VisibilityCause))							VisibilityCauseType		VisibilityCause;
 		__declspec(property(get=_get_ListeningStatus))							ListeningStatusType		ListeningStatus;
-		__declspec(property(get=_get_Animations))								SAFEARRAY *				Animations;
-		__declspec(property(get=_get_States))									SAFEARRAY *				States;
+		__declspec(property(get=_get_Animations))								SAFEARRAY*				Animations;
+		__declspec(property(get=_get_States))									SAFEARRAY*				States;
 
 		IDaSvrBalloon2Ptr _get_Balloon () {IDaSvrBalloon2Ptr lBalloon; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Balloon(&lBalloon); return lBalloon;}
 		IDaSvrCommands2Ptr _get_Commands () {IDaSvrCommands2Ptr lCommands; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Commands(&lCommands); return lCommands;}
@@ -509,26 +509,26 @@ __if_not_exists(IDaSvrCharacter2Ptr)
 		bool _get_HasIcon () {VARIANT_BOOL lHasIcon=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_HasIcon(&lHasIcon); return lHasIcon?true:false;}
 		bool _get_IconVisible () {VARIANT_BOOL lIconVisible=VARIANT_FALSE; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_IconVisible(&lIconVisible); return lIconVisible?true:false;}
 		_bstr_t _get_IconIdentity () {BSTR lIconIdentity=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_IconIdentity(&lIconIdentity); return _bstr_t(lIconIdentity, false);}
-		HRESULT _put_IconIdentity (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_IconIdentity(Value); else return E_POINTER;}
+		HRESULT _put_IconIdentity (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_IconIdentity(Value); else return E_POINTER;}
 		_bstr_t _get_IconTip () {BSTR lIconTip=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_IconTip(&lIconTip); return _bstr_t(lIconTip, false);}
-		HRESULT _put_IconTip (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_IconTip(Value); else return E_POINTER;}
+		HRESULT _put_IconTip (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_IconTip(Value); else return E_POINTER;}
 		IDaSvrTTSEnginePtr _get_TTSEngine (bool GetDefault=true) {IDaSvrTTSEnginePtr lTTSEngine; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_TTSEngine(GetDefault?VARIANT_TRUE:VARIANT_FALSE, &lTTSEngine); return lTTSEngine;}
 		IDaSvrSREnginePtr _get_SREngine (bool GetDefault=true) {IDaSvrSREnginePtr lSREngine; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_SREngine(GetDefault?VARIANT_TRUE:VARIANT_FALSE, &lSREngine); return lSREngine;}
 		long _get_CharacterID () {long lCharacterID=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_CharacterID(&lCharacterID); return lCharacterID;}
 		_bstr_t _get_UniqueID () {BSTR lUniqueID=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_UniqueID(&lUniqueID); return _bstr_t(lUniqueID, false);}
 		_bstr_t _get_Name () {BSTR lName=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Name(&lName); return _bstr_t(lName, false);}
-		HRESULT _put_Name (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Name(Value); else return E_POINTER;}
+		HRESULT _put_Name (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Name(Value); else return E_POINTER;}
 		_bstr_t _get_Description () {BSTR lDescription=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Description(&lDescription); return _bstr_t(lDescription, false);}
-		HRESULT _put_Description (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Description(Value); else return E_POINTER;}
+		HRESULT _put_Description (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Description(Value); else return E_POINTER;}
 		_bstr_t _get_ExtraData () {BSTR lExtraData=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_ExtraData(&lExtraData); return _bstr_t(lExtraData, false);}
 		_bstr_t _get_FileName () {BSTR lFileName=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FileName(&lFileName); return _bstr_t(lFileName, false);}
 		_bstr_t _get_FilePath () {BSTR lFilePath=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_FilePath(&lFilePath); return _bstr_t(lFilePath, false);}
 		long _get_LanguageID () {long lLanguageID=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_LanguageID(&lLanguageID); return lLanguageID;}
 		HRESULT _put_LanguageID (long Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_LanguageID(Value); else return E_POINTER;}
 		_bstr_t _get_TTSModeID () {BSTR lTTSModeID=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_TTSModeID(&lTTSModeID); return _bstr_t(lTTSModeID, false);}
-		HRESULT _put_TTSModeID (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_TTSModeID(Value); else return E_POINTER;}
+		HRESULT _put_TTSModeID (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_TTSModeID(Value); else return E_POINTER;}
 		_bstr_t _get_SRModeID () {BSTR lSRModeID=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_SRModeID(&lSRModeID); return _bstr_t(lSRModeID, false);}
-		HRESULT _put_SRModeID (const _bstr_t & Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_SRModeID(Value); else return E_POINTER;}
+		HRESULT _put_SRModeID (const _bstr_t& Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_SRModeID(Value); else return E_POINTER;}
 		short _get_Left () {short lLeft=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Left(&lLeft); return lLeft;}
 		HRESULT _put_Left (short Value) {if (_DASVRPTR_CHKNULL) return GetInterfacePtr()->put_Left(Value); else return E_POINTER;}
 		short _get_Top () {short lTop=0; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Top(&lTop); return lTop;}
@@ -547,8 +547,8 @@ __if_not_exists(IDaSvrCharacter2Ptr)
 		MoveCauseType _get_MoveCause () {MoveCauseType lMoveCause=MoveCause_NeverMoved; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_MoveCause(&lMoveCause); return lMoveCause;}
 		VisibilityCauseType _get_VisibilityCause () {VisibilityCauseType lVisibilityCause=VisibilityCause_NeverShown; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_VisibilityCause(&lVisibilityCause); return lVisibilityCause;}
 		ListeningStatusType _get_ListeningStatus () {ListeningStatusType lListeningStatus=ListeningStatus_Error; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_ListeningStatus(&lListeningStatus); return lListeningStatus;}
-		SAFEARRAY * _get_Animations () {SAFEARRAY * lAnimations=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Animations(&lAnimations); return lAnimations;}
-		SAFEARRAY * _get_States () {SAFEARRAY * lStates=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_States(&lStates); return lStates;}
+		SAFEARRAY* _get_Animations () {SAFEARRAY* lAnimations=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_Animations(&lAnimations); return lAnimations;}
+		SAFEARRAY* _get_States () {SAFEARRAY* lStates=NULL; if (_DASVRPTR_CHKNULL) GetInterfacePtr()->get_States(&lStates); return lStates;}
 	};
 }
 

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -61,27 +61,27 @@ long CGlobalAnchor::NextReqID ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentWnd * CGlobalAnchor::GetRequestOwner (long pReqID)
+CAgentWnd* CGlobalAnchor::GetRequestOwner (long pReqID)
 {
-	CAgentWnd *	lRet = NULL;
+	CAgentWnd*	lRet = NULL;
 
 	try
 	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		INT_PTR		lFileNdx;
+		CAgentFile*	lFile;
 
 		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CAgentWnd *							lAgentWnd;
+			CAgentWnd*							lAgentWnd;
 
 			if	(GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
+							(lAgentWnd = dynamic_cast <CAgentWnd*> (lFileClients [lClientNdx]))
 						&&	(lAgentWnd->FindQueuedAction (pReqID))
 						)
 					{
@@ -101,27 +101,27 @@ CAgentWnd * CGlobalAnchor::GetRequestOwner (long pReqID)
 	return lRet;
 }
 
-CAgentWnd * CGlobalAnchor::GetAgentWnd (HWND pWindow)
+CAgentWnd* CGlobalAnchor::GetAgentWnd (HWND pWindow)
 {
-	CAgentWnd *	lRet = NULL;
+	CAgentWnd*	lRet = NULL;
 
 	try
 	{
 		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		CAgentFile*	lFile;
 
 		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CAgentWnd *							lAgentWnd;
+			CAgentWnd*							lAgentWnd;
 
 			if	(GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
+							(lAgentWnd = dynamic_cast <CAgentWnd*> (lFileClients [lClientNdx]))
 						&&	(lAgentWnd->m_hWnd == pWindow)
 						)
 					{
@@ -143,7 +143,7 @@ CAgentWnd * CGlobalAnchor::GetAgentWnd (HWND pWindow)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCharacter * CGlobalAnchor::GetGlobalCharacter (long pCharID)
+CDaCmnCharacter* CGlobalAnchor::GetGlobalCharacter (long pCharID)
 {
 	return _GetCharacter (pCharID, *this);
 }
@@ -162,27 +162,27 @@ long CGlobalAnchor::GetListenCharacter ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCharacter * CGlobalAnchor::_GetCharacter (long pCharID, CAgentFileCache & pFileCache)
+CDaCmnCharacter* CGlobalAnchor::_GetCharacter (long pCharID, CAgentFileCache& pFileCache)
 {
-	CDaCmnCharacter *	lRet = NULL;
+	CDaCmnCharacter*	lRet = NULL;
 
 	try
 	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		INT_PTR		lFileNdx;
+		CAgentFile*	lFile;
 
 		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CDaCmnCharacter *					lCharacter;
+			CDaCmnCharacter*					lCharacter;
 
 			if	(pFileCache.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 						&&	(lCharacter->IsValid (lFile))
 						&&	(
 								(pCharID < 0)
@@ -202,27 +202,27 @@ CDaCmnCharacter * CGlobalAnchor::_GetCharacter (long pCharID, CAgentFileCache & 
 	return lRet;
 }
 
-long CGlobalAnchor::_GetActiveCharacter (CAgentFileCache & pFileCache)
+long CGlobalAnchor::_GetActiveCharacter (CAgentFileCache& pFileCache)
 {
 	long	lRet = 0;
 
 	try
 	{
 		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		CAgentFile*	lFile;
 
 		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CAgentCharacterWnd *				lAgentWnd;
+			CAgentCharacterWnd*					lAgentWnd;
 
 			if	(pFileCache.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lAgentWnd = dynamic_cast <CAgentCharacterWnd *> (lFileClients [lClientNdx]))
+							(lAgentWnd = dynamic_cast <CAgentCharacterWnd*> (lFileClients [lClientNdx]))
 						&&	(lAgentWnd->IsWindow ())
 						&&	(lAgentWnd->GetLastActive() == lAgentWnd->m_hWnd)
 						)
@@ -243,29 +243,29 @@ long CGlobalAnchor::_GetActiveCharacter (CAgentFileCache & pFileCache)
 	return lRet;
 }
 
-long CGlobalAnchor::_GetListenCharacter (CAgentFileCache & pFileCache)
+long CGlobalAnchor::_GetListenCharacter (CAgentFileCache& pFileCache)
 {
 	long	lRet = 0;
 
 	try
 	{
-		CDaCmnCharacter *	lActiveCharacter = NULL;
-		CDaCmnCharacter *	lClientActiveCharacter = NULL;
+		CDaCmnCharacter*	lActiveCharacter = NULL;
+		CDaCmnCharacter*	lClientActiveCharacter = NULL;
 		INT_PTR				lFileNdx;
-		CAgentFile *		lFile;
+		CAgentFile*		lFile;
 
 		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CDaCmnCharacter *					lCharacter;
+			CDaCmnCharacter*					lCharacter;
 
 			if	(pFileCache.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 						&&	(lCharacter->IsValid (lFile))
 						)
 					{
@@ -310,7 +310,7 @@ long CGlobalAnchor::_GetListenCharacter (CAgentFileCache & pFileCache)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CInstanceAnchor::CInstanceAnchor (CGlobalAnchor & pAnchor)
+CInstanceAnchor::CInstanceAnchor (CGlobalAnchor& pAnchor)
 :	mAnchor (pAnchor),
 	mOwnerWnd (NULL)
 {
@@ -324,32 +324,32 @@ CInstanceAnchor::~CInstanceAnchor ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCharacter * CInstanceAnchor::GetInstanceCharacter (long pCharID)
+CDaCmnCharacter* CInstanceAnchor::GetInstanceCharacter (long pCharID)
 {
 	return CGlobalAnchor::_GetCharacter (pCharID, *this);
 }
 
-CDaCmnCharacter * CInstanceAnchor::GetDefaultCharacter ()
+CDaCmnCharacter* CInstanceAnchor::GetDefaultCharacter ()
 {
-	CDaCmnCharacter *	lRet = NULL;
+	CDaCmnCharacter*	lRet = NULL;
 
 	try
 	{
 		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		CAgentFile*	lFile;
 
 		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CDaCmnCharacter *					lCharacter;
+			CDaCmnCharacter*					lCharacter;
 
 			if	(GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 						&&	(lCharacter->IsValid (lFile))
 						&&	(lCharacter->IsDefault ())
 						)
@@ -379,7 +379,7 @@ long CInstanceAnchor::GetActiveClient (long pCharID)
 	try
 	{
 		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		CAgentFile*	lFile;
 
 //
 //	Find the associated file in the global cache
@@ -388,14 +388,14 @@ long CInstanceAnchor::GetActiveClient (long pCharID)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CDaCmnCharacter *					lCharacter;
+			CDaCmnCharacter*					lCharacter;
 
 			if	(mAnchor.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 						&&	(lCharacter->IsValid (lFile))
 						&&	(lCharacter->GetCharID() == pCharID)
 						)
@@ -423,7 +423,7 @@ long CInstanceAnchor::GetNotifyClient (long pCharID)
 	try
 	{
 		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
+		CAgentFile*	lFile;
 
 //
 //	Find the associated file in the global cache
@@ -432,14 +432,14 @@ long CInstanceAnchor::GetNotifyClient (long pCharID)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CDaCmnCharacter *					lCharacter;
+			CDaCmnCharacter*					lCharacter;
 
 			if	(mAnchor.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 						&&	(lCharacter->IsValid (lFile))
 						&&	(lCharacter->GetCharID() == pCharID)
 						)
@@ -458,7 +458,7 @@ long CInstanceAnchor::GetNotifyClient (long pCharID)
 						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 						{
 							if	(
-									(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+									(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 								&&	(lCharacter->IsValid (lFile))
 								)
 							{

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -29,6 +29,12 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr	(void*)NULL
+#else
+#define	LogServerPtr	mServerObject.GetInterfacePtr()
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlTTSEngine::DaCtlTTSEngine ()
@@ -37,7 +43,7 @@ DaCtlTTSEngine::DaCtlTTSEngine ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::DaCtlTTSEngine (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::DaCtlTTSEngine (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,7 +56,7 @@ DaCtlTTSEngine::~DaCtlTTSEngine ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::~DaCtlTTSEngine (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::~DaCtlTTSEngine (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -66,7 +72,7 @@ void DaCtlTTSEngine::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -80,25 +86,30 @@ void DaCtlTTSEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr());
 		}
 #endif
 #endif
 		if	(pFinal)
 		{
 			mOwner = NULL;
+		}
+		SafeFreeSafePtr (mLocalObject);
+#ifndef	_DACORE_LOCAL
+		if	(pFinal)
+		{
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-		SafeFreeSafePtr (mLocalObject);
+#endif
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -111,6 +122,7 @@ HRESULT DaCtlTTSEngine::SetOwner (DaControl * pOwner)
 {
 	HRESULT	lResult = S_OK;
 
+#ifndef	_DACORE_LOCAL
 	if	(
 			(mOwner = pOwner)
 		&&	((mOwner->mServer == NULL) != (mServerObject == NULL))
@@ -118,10 +130,11 @@ HRESULT DaCtlTTSEngine::SetOwner (DaControl * pOwner)
 	{
 		lResult = E_FAIL;
 	}
+#endif
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	return lResult;
@@ -176,6 +189,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -186,6 +200,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
@@ -222,6 +237,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_DisplayName (BSTR *DisplayName)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -232,6 +248,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_DisplayName (BSTR *DisplayName)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
@@ -268,6 +285,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -278,6 +296,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
@@ -315,6 +334,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::GetVersion (short *MajorVersion, short
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -325,6 +345,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::GetVersion (short *MajorVersion, short
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -360,6 +381,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_Gender (SpeechGenderType *Gender)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -370,6 +392,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_Gender (SpeechGenderType *Gender)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
@@ -406,6 +429,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_LanguageID (long *LanguageID)
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -416,6 +440,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_LanguageID (long *LanguageID)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
@@ -452,6 +477,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_LanguageName (VARIANT_BOOL English
 			}
 			catch AnyExceptionDebug
 		}
+#ifndef	_DACORE_LOCAL
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
@@ -462,6 +488,7 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_LanguageName (VARIANT_BOOL English
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+#endif
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));

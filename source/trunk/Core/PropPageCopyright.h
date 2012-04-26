@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -53,7 +53,7 @@ protected:
 
 // Implementation
 protected:
-	LRESULT OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CPropPageCopyright)
@@ -84,9 +84,9 @@ protected:
 			COMMAND_HANDLER(IDOK, BN_CLICKED, OnOk)
 		END_MSG_MAP()
 
-		LRESULT OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-		LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-		LRESULT OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+		LRESULT OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+		LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+		LRESULT OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 		CAxWindow mLicenseText;
 		CAtlString mLicenseURL;

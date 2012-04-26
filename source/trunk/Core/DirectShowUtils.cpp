@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -35,7 +35,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CAtlString & pFilterName)
+HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CAtlString& pFilterName)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -56,12 +56,12 @@ HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter **
 			)
 		{
 			if	(
-					(SUCCEEDED (lMoniker->BindToStorage (NULL, NULL, IID_IPropertyBag, (void **) &lPropBag)))
+					(SUCCEEDED (lMoniker->BindToStorage (NULL, NULL, IID_IPropertyBag, (void**) &lPropBag)))
 				&&	(SUCCEEDED (lPropBag->Read (L"FriendlyName", &lFriendlyName, NULL)))
 				&&	(V_VT (&lFriendlyName) == VT_BSTR)
 				)
 			{
-				lResult = lMoniker->BindToObject (NULL, NULL, IID_IBaseFilter, (void **) pFilter);
+				lResult = lMoniker->BindToObject (NULL, NULL, IID_IBaseFilter, (void**) pFilter);
 
 				if	(lResult == S_OK)
 				{
@@ -75,7 +75,7 @@ HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter **
 	return lResult;
 }
 
-HRESULT CDirectShowUtils::GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CAtlString & pFilterName)
+HRESULT CDirectShowUtils::GetDefaultFilter (const GUID& pCategory, IBaseFilter ** pFilter, CAtlString& pFilterName)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -99,12 +99,12 @@ HRESULT CDirectShowUtils::GetDefaultFilter (const GUID & pCategory, IBaseFilter 
 			)
 		{
 			if	(
-					(SUCCEEDED (lMoniker->BindToStorage (NULL, NULL, IID_IPropertyBag, (void **) &lPropBag)))
+					(SUCCEEDED (lMoniker->BindToStorage (NULL, NULL, IID_IPropertyBag, (void**) &lPropBag)))
 				&&	(SUCCEEDED (lPropBag->Read (L"FriendlyName", &lFriendlyName, NULL)))
 				&&	(V_VT (&lFriendlyName) == VT_BSTR)
 				)
 			{
-				lResult = lMoniker->BindToObject (NULL, NULL, IID_IBaseFilter, (void **) pFilter);
+				lResult = lMoniker->BindToObject (NULL, NULL, IID_IBaseFilter, (void**) pFilter);
 
 				if	(lResult == S_OK)
 				{
@@ -122,7 +122,7 @@ HRESULT CDirectShowUtils::GetDefaultFilter (const GUID & pCategory, IBaseFilter 
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::ConnectFilters (IGraphBuilder * pGraphBuilder, IBaseFilter * pDownstreamFilter, IBaseFilter * pUpstreamFilter, bool pDirect, const AM_MEDIA_TYPE * pDirectMediaType, IPin ** pDownstreamPin, IPin ** pUpstreamPin)
+HRESULT CDirectShowUtils::ConnectFilters (IGraphBuilder * pGraphBuilder, IBaseFilter* pDownstreamFilter, IBaseFilter* pUpstreamFilter, bool pDirect, const AM_MEDIA_TYPE* pDirectMediaType, IPin** pDownstreamPin, IPin** pUpstreamPin)
 {
 	HRESULT			lResult = E_FAIL;
 	IEnumPinsPtr	lUpstreamPins;
@@ -218,7 +218,7 @@ HRESULT CDirectShowUtils::ConnectFilters (IGraphBuilder * pGraphBuilder, IBaseFi
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::GetFilterPins (IBaseFilter * pFilter, IPin ** pInputPin, IPin ** pOutputPin)
+HRESULT CDirectShowUtils::GetFilterPins (IBaseFilter* pFilter, IPin** pInputPin, IPin** pOutputPin)
 {
 	HRESULT			lResult;
 	IEnumPinsPtr	lPins;
@@ -295,7 +295,7 @@ HRESULT CDirectShowUtils::GetFilterPins (IBaseFilter * pFilter, IPin ** pInputPi
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::GetFilterPin (IBaseFilter * pFilter, PIN_DIRECTION pPinDir, REFGUID pMajorMediaType, IPin ** pPin, AM_MEDIA_TYPE** pPinMediaType)
+HRESULT CDirectShowUtils::GetFilterPin (IBaseFilter* pFilter, PIN_DIRECTION pPinDir, REFGUID pMajorMediaType, IPin** pPin, AM_MEDIA_TYPE** pPinMediaType)
 {
 	HRESULT				lResult;
 	IEnumPinsPtr		lPins;
@@ -373,7 +373,7 @@ HRESULT CDirectShowUtils::GetFilterPin (IBaseFilter * pFilter, PIN_DIRECTION pPi
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::GetRenderType (IPin * pPin, GUID & pRenderType)
+HRESULT CDirectShowUtils::GetRenderType (IPin* pPin, GUID& pRenderType)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -400,7 +400,7 @@ HRESULT CDirectShowUtils::GetRenderType (IPin * pPin, GUID & pRenderType)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::EmptyFilterCache (IFilterGraph * pFilterGraph)
+HRESULT CDirectShowUtils::EmptyFilterCache (IFilterGraph* pFilterGraph)
 {
 	IGraphConfigPtr	lGraphConfig (pFilterGraph);
 
@@ -448,7 +448,7 @@ HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::MoveFilterToCache (IBaseFilter * pFilter, IFilterGraph * pFilterGraph)
+HRESULT CDirectShowUtils::MoveFilterToCache (IBaseFilter* pFilter, IFilterGraph* pFilterGraph)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -478,14 +478,14 @@ HRESULT CDirectShowUtils::MoveFilterToCache (IBaseFilter * pFilter, IFilterGraph
 	return lResult;
 }
 
-HRESULT CDirectShowUtils::AddFilterToCache (IBaseFilter * pFilter, IFilterGraph * pFilterGraph)
+HRESULT CDirectShowUtils::AddFilterToCache (IBaseFilter* pFilter, IFilterGraph* pFilterGraph)
 {
 	IGraphConfigPtr	lGraphConfig (pFilterGraph);
 
 	return AddFilterToCache (pFilter, lGraphConfig);
 }
 
-HRESULT CDirectShowUtils::AddFilterToCache (IBaseFilter * pFilter, IGraphConfig * pGraphConfig)
+HRESULT CDirectShowUtils::AddFilterToCache (IBaseFilter* pFilter, IGraphConfig * pGraphConfig)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -506,7 +506,7 @@ HRESULT CDirectShowUtils::AddFilterToCache (IBaseFilter * pFilter, IGraphConfig 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseFilter * pEndFilter, IFilterGraph * pFilterGraph)
+HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter* pStartFilter, IBaseFilter* pEndFilter, IFilterGraph* pFilterGraph)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -531,7 +531,7 @@ HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseF
 	return lResult;
 }
 
-HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseFilter * pEndFilter, IFilterChain * pFilterChain, IBaseFilter * pExcludeFilter, ...)
+HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter* pStartFilter, IBaseFilter* pEndFilter, IFilterChain * pFilterChain, IBaseFilter* pExcludeFilter, ...)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -617,7 +617,7 @@ HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseF
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::FindFilterInCache (REFGUID pFilterClass, IFilterGraph * pFilterGraph, IBaseFilter ** pFilter)
+HRESULT CDirectShowUtils::FindFilterInCache (REFGUID pFilterClass, IFilterGraph* pFilterGraph, IBaseFilter ** pFilter)
 {
 	IGraphConfigPtr	lGraphConfig (pFilterGraph);
 	return FindFilterInCache (pFilterClass, lGraphConfig, pFilter);
@@ -663,7 +663,7 @@ HRESULT CDirectShowUtils::FindFilterInCache (REFGUID pFilterClass, IGraphConfig 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::GetFilterFromCache (REFGUID pFilterClass, IFilterGraph * pFilterGraph, IBaseFilter ** pFilter)
+HRESULT CDirectShowUtils::GetFilterFromCache (REFGUID pFilterClass, IFilterGraph* pFilterGraph, IBaseFilter ** pFilter)
 {
 	IGraphConfigPtr	lGraphConfig (pFilterGraph);
 	return GetFilterFromCache (pFilterClass, lGraphConfig, pFilter);
@@ -691,7 +691,7 @@ HRESULT CDirectShowUtils::GetFilterFromCache (REFGUID pFilterClass, IGraphConfig
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::ConnectNullRenderer (IGraphBuilder * pGraphBuilder, IBaseFilter * pUpstreamFilter, IPin * pUpstreamPin, AM_MEDIA_TYPE* pMediaType)
+HRESULT CDirectShowUtils::ConnectNullRenderer (IGraphBuilder * pGraphBuilder, IBaseFilter* pUpstreamFilter, IPin* pUpstreamPin, AM_MEDIA_TYPE* pMediaType)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -714,7 +714,7 @@ HRESULT CDirectShowUtils::ConnectNullRenderer (IGraphBuilder * pGraphBuilder, IB
 
 		if	(
 				(lUpstreamPin != NULL)
-			&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(NullRenderer), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lNullRenderer))))
+			&&	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (__uuidof(NullRenderer), NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &lNullRenderer))))
 			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal|LogTime, pGraphBuilder->AddFilter (lNullRenderer, L"Null Render"))))
 			)
 		{
@@ -728,7 +728,7 @@ HRESULT CDirectShowUtils::ConnectNullRenderer (IGraphBuilder * pGraphBuilder, IB
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::InitPinAllocator (IPin * pInputPin, AM_MEDIA_TYPE* pPinMediaType)
+HRESULT CDirectShowUtils::InitPinAllocator (IPin* pInputPin, AM_MEDIA_TYPE* pPinMediaType)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -785,7 +785,7 @@ HRESULT CDirectShowUtils::InitPinAllocator (IPin * pInputPin, AM_MEDIA_TYPE* pPi
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::CopySample (IMediaSample * pSource, IMediaSample * pTarget)
+HRESULT CDirectShowUtils::CopySample (IMediaSample* pSource, IMediaSample* pTarget)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -874,7 +874,7 @@ HRESULT CDirectShowUtils::CopySample (IMediaSample * pSource, IMediaSample * pTa
 	return lResult;
 }
 
-HRESULT CDirectShowUtils::DuplicateSample (IMediaSample * pSource, IMemAllocator * pAllocator, IMediaSample ** pDuplicate, DWORD pFlags)
+HRESULT CDirectShowUtils::DuplicateSample (IMediaSample* pSource, IMemAllocator* pAllocator, IMediaSample** pDuplicate, DWORD pFlags)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -906,7 +906,7 @@ HRESULT CDirectShowUtils::DuplicateSample (IMediaSample * pSource, IMemAllocator
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCVOID pSoundData, long pSoundSize, long * pFormatSize, UINT pLogLevel)
+LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCVOID pSoundData, long pSoundSize, long* pFormatSize, UINT pLogLevel)
 {
 	tPtr <WAVEFORMATEX>	lSoundFormat;
 
@@ -944,7 +944,7 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCVOID pSoundData, long pSound
 	return lSoundFormat.Detach ();
 }
 
-LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCTSTR pSoundFileName, long * pFormatSize, UINT pLogLevel)
+LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCTSTR pSoundFileName, long* pFormatSize, UINT pLogLevel)
 {
 	tPtr <WAVEFORMATEX>	lSoundFormat;
 
@@ -979,7 +979,7 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCTSTR pSoundFileName, long * 
 	return lSoundFormat.Detach ();
 }
 
-LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (HMMIO pSound, long * pFormatSize, UINT pLogLevel)
+LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (HMMIO pSound, long* pFormatSize, UINT pLogLevel)
 {
 	tPtr <WAVEFORMATEX>	lSoundFormat;
 
@@ -1031,7 +1031,7 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (HMMIO pSound, long * pFormatSiz
 
 /////////////////////////////////////////////////////////////////////////////
 
-AM_MEDIA_TYPE * CDirectShowUtils::GetSoundMediaType (LPCVOID pSoundData, long pSoundSize, UINT pLogLevel)
+AM_MEDIA_TYPE* CDirectShowUtils::GetSoundMediaType (LPCVOID pSoundData, long pSoundSize, UINT pLogLevel)
 {
 	tMediaTypePtr		lMediaType;
 	long				lSoundFormatSize = 0;
@@ -1054,7 +1054,7 @@ AM_MEDIA_TYPE * CDirectShowUtils::GetSoundMediaType (LPCVOID pSoundData, long pS
 	return lMediaType.Detach ();
 }
 
-AM_MEDIA_TYPE * CDirectShowUtils::GetSoundMediaType (LPCTSTR pSoundFileName, UINT pLogLevel)
+AM_MEDIA_TYPE* CDirectShowUtils::GetSoundMediaType (LPCTSTR pSoundFileName, UINT pLogLevel)
 {
 	tMediaTypePtr		lMediaType;
 	long				lSoundFormatSize = 0;
@@ -1084,7 +1084,7 @@ AM_MEDIA_TYPE * CDirectShowUtils::GetSoundMediaType (LPCTSTR pSoundFileName, UIN
 #include <ks.h>
 #include <ksmedia.h>
 
-CAtlString MediaTypeStr (const AM_MEDIA_TYPE & pMediaType)
+CAtlString MediaTypeStr (const AM_MEDIA_TYPE& pMediaType)
 {
 	CAtlString	lTypeStr;
 
@@ -1675,7 +1675,7 @@ CAtlString SampleFlagsStr (DWORD pSampleFlags)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAtlString PinIdStr (IPin * pPin, bool pIncludeFilter)
+CAtlString PinIdStr (IPin* pPin, bool pIncludeFilter)
 {
 	CAtlString	lRet;
 
@@ -1758,7 +1758,7 @@ else \
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void LogFilters (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPinTypes, LPCTSTR pFormat, ...)
+void LogFilters (UINT pLogLevel, IFilterGraph* pFilterGraph, bool pEnumPinTypes, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -1795,7 +1795,7 @@ void LogFilters (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPinTypes
 #endif
 }
 
-void LogFilter (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPinTypes, LPCTSTR pFormat, ...)
+void LogFilter (UINT pLogLevel, IBaseFilter* pFilter, bool pEnumPinTypes, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -1822,7 +1822,7 @@ void LogFilter (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPinTypes, LPCTS
 #endif
 }
 
-void LogFilterPins (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumTypes, LPCTSTR pFormat, ...)
+void LogFilterPins (UINT pLogLevel, IBaseFilter* pFilter, bool pEnumTypes, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -1855,7 +1855,7 @@ void LogFilterPins (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumTypes, LPCT
 #endif
 }
 
-void LogFilterPin (UINT pLogLevel, IPin * pPin, bool pEnumTypes, LPCTSTR pFormat, ...)
+void LogFilterPin (UINT pLogLevel, IPin* pPin, bool pEnumTypes, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -1912,7 +1912,7 @@ void LogFilterPin (UINT pLogLevel, IPin * pPin, bool pEnumTypes, LPCTSTR pFormat
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void LogFilterStates (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPins, LPCTSTR pFormat, ...)
+void LogFilterStates (UINT pLogLevel, IFilterGraph* pFilterGraph, bool pEnumPins, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -1948,7 +1948,7 @@ void LogFilterStates (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPin
 #endif
 }
 
-void LogFilterState (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPins, LPCTSTR pFormat, ...)
+void LogFilterState (UINT pLogLevel, IBaseFilter* pFilter, bool pEnumPins, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2007,7 +2007,7 @@ void LogFilterState (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPins, LPCT
 #endif
 }
 
-void LogFilterPinState (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat, ...)
+void LogFilterPinState (UINT pLogLevel, IPin* pPin, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2054,7 +2054,7 @@ void LogFilterPinState (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat, ...)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void LogFilterCache (UINT pLogLevel, IFilterGraph * pFilterGraph, LPCTSTR pFormat, ...)
+void LogFilterCache (UINT pLogLevel, IFilterGraph* pFilterGraph, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2175,7 +2175,7 @@ void LogMediaSeekingPos (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR 
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void LogPinAllocator (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat, ...)
+void LogPinAllocator (UINT pLogLevel, IPin* pPin, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2244,7 +2244,7 @@ void LogMemAllocator (UINT pLogLevel, IMemInputPin * pInputPin, LPCTSTR pFormat,
 #endif
 }
 
-void LogMemAllocator (UINT pLogLevel, IMemAllocator * pAllocator, LPCTSTR pFormat, ...)
+void LogMemAllocator (UINT pLogLevel, IMemAllocator* pAllocator, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2274,7 +2274,7 @@ void LogMemAllocator (UINT pLogLevel, IMemAllocator * pAllocator, LPCTSTR pForma
 #endif
 }
 
-void LogAllocatorProps (UINT pLogLevel, const ALLOCATOR_PROPERTIES & pProperties, LPCTSTR pFormat, ...)
+void LogAllocatorProps (UINT pLogLevel, const ALLOCATOR_PROPERTIES& pProperties, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2298,7 +2298,7 @@ void LogAllocatorProps (UINT pLogLevel, const ALLOCATOR_PROPERTIES & pProperties
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void LogMediaSample (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFormat, ...)
+void LogMediaSample (UINT pLogLevel, IMediaSample* pMediaSample, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2348,7 +2348,7 @@ void LogMediaSample (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pForma
 #endif
 }
 
-void LogMediaSampleId (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFormat, ...)
+void LogMediaSampleId (UINT pLogLevel, IMediaSample* pMediaSample, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2383,7 +2383,7 @@ void LogMediaSampleId (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFor
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogMediaType (UINT pLogLevel, const AM_MEDIA_TYPE & pMediaType, LPCTSTR pFormat, ...)
+void LogMediaType (UINT pLogLevel, const AM_MEDIA_TYPE& pMediaType, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2438,7 +2438,7 @@ void LogMediaType (UINT pLogLevel, const AM_MEDIA_TYPE & pMediaType, LPCTSTR pFo
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogWaveFormat (UINT pLogLevel, const WAVEFORMAT & pWaveFormat, LPCTSTR pFormat, ...)
+void LogWaveFormat (UINT pLogLevel, const WAVEFORMAT& pWaveFormat, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2457,7 +2457,7 @@ void LogWaveFormat (UINT pLogLevel, const WAVEFORMAT & pWaveFormat, LPCTSTR pFor
 #endif
 }
 
-void LogWaveFormat (UINT pLogLevel, const WAVEFORMATEX & pWaveFormat, LPCTSTR pFormat, ...)
+void LogWaveFormat (UINT pLogLevel, const WAVEFORMATEX& pWaveFormat, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))
@@ -2478,7 +2478,7 @@ void LogWaveFormat (UINT pLogLevel, const WAVEFORMATEX & pWaveFormat, LPCTSTR pF
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogVideoFormat (UINT pLogLevel, const VIDEOINFOHEADER & pVideoFormat, LPCTSTR pFormat, ...)
+void LogVideoFormat (UINT pLogLevel, const VIDEOINFOHEADER& pVideoFormat, LPCTSTR pFormat, ...)
 {
 #ifdef	_DEBUG
 	if	(LogIsActive (pLogLevel))

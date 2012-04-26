@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -44,14 +44,14 @@ CRegKeyEx::CRegKeyEx ()
 {
 }
 
-CRegKeyEx::CRegKeyEx (const CRegKeyEx & pKey)
+CRegKeyEx::CRegKeyEx (const CRegKeyEx& pKey)
 :	mKey (NULL),
 	mReadOnly (pKey.mReadOnly)
 {
 	Reopen (pKey, mReadOnly);
 }
 
-CRegKeyEx::CRegKeyEx (const CRegKeyEx & pParent, LPCTSTR pName)
+CRegKeyEx::CRegKeyEx (const CRegKeyEx& pParent, LPCTSTR pName)
 :	mKey (NULL),
 	mReadOnly (pParent.mReadOnly)
 {
@@ -141,7 +141,7 @@ long CRegKeyEx::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate,
 	return lRet;
 }
 
-long CRegKeyEx::Reopen (const CRegKeyEx & pKey, bool pReadOnly, bool pDeleteOnly)
+long CRegKeyEx::Reopen (const CRegKeyEx& pKey, bool pReadOnly, bool pDeleteOnly)
 {
 	long		lRet = ERROR_INVALID_PARAMETER;
 	HKEY		lKey = pKey;
@@ -434,7 +434,7 @@ CRegString CRegKeyEx::Value (bool pExpanded) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CRegKeyEx::LoadStrings (CStringArray & pStrings)
+void CRegKeyEx::LoadStrings (CStringArray& pStrings)
 {
 	if	(IsValid ())
 	{
@@ -461,7 +461,7 @@ void CRegKeyEx::LoadStrings (CStringArray & pStrings)
 	}
 }
 
-void CRegKeyEx::SaveStrings (const CStringArray & pStrings)
+void CRegKeyEx::SaveStrings (const CStringArray& pStrings)
 {
 	if	(
 			(!mReadOnly)
@@ -549,7 +549,7 @@ CRegValue::CRegValue (HKEY pKey, LPCTSTR pName, DWORD pValueType)
 	}
 }
 
-CRegValue::CRegValue (const CRegValue & pSource)
+CRegValue::CRegValue (const CRegValue& pSource)
 :	mKey (pSource.mKey),
 	mName (pSource.mName),
 	mValueType (pSource.mValueType)
@@ -560,7 +560,7 @@ CRegValue::~CRegValue ()
 {
 }
 
-CRegValue & CRegValue::ExpandName ()
+CRegValue& CRegValue::ExpandName ()
 {
 	DWORD	lNameSize;
 	CString lName;
@@ -675,7 +675,7 @@ CRegString::CRegString (HKEY pKey, long pIndex)
 	}
 }
 
-CRegString::CRegString (const CRegString & pSource)
+CRegString::CRegString (const CRegString& pSource)
 :	CRegValue (pSource),
 	mValue (pSource.mValue)
 {
@@ -697,7 +697,7 @@ void CRegString::CanExpand (bool pCanExpand)
 	mValueType = pCanExpand ? REG_EXPAND_SZ : REG_SZ;
 }
 
-CRegString & CRegString::Expand (bool pIgnoreValueType)
+CRegString& CRegString::Expand (bool pIgnoreValueType)
 {
 	DWORD	lValueSize;
 	CString lValue;
@@ -816,7 +816,7 @@ CRegStrings::CRegStrings (HKEY pKey, long pIndex)
 	}
 }
 
-CRegStrings::CRegStrings (const CRegStrings & pSource)
+CRegStrings::CRegStrings (const CRegStrings& pSource)
 :	CRegValue (pSource)
 {
 	mValue.Copy (pSource.mValue);
@@ -943,7 +943,7 @@ CRegDWord::CRegDWord (HKEY pKey, long pIndex)
 	}
 }
 
-CRegDWord::CRegDWord (const CRegDWord & pSource)
+CRegDWord::CRegDWord (const CRegDWord& pSource)
 :	CRegValue (pSource),
 	mValue (pSource.mValue)
 {
@@ -955,7 +955,7 @@ CRegDWord::~CRegDWord ()
 
 //////////////////////////////////////////////////////////////////////
 
-long CRegDWord::Update (DWORD * pValue)
+long CRegDWord::Update (DWORD* pValue)
 {
 	if	(mKey)
 	{
@@ -1068,7 +1068,7 @@ CRegQWord::CRegQWord (HKEY pKey, long pIndex)
 	}
 }
 
-CRegQWord::CRegQWord (const CRegQWord & pSource)
+CRegQWord::CRegQWord (const CRegQWord& pSource)
 :	CRegValue (pSource),
 	mValue (pSource.mValue)
 {
@@ -1208,7 +1208,7 @@ CRegBinary::CRegBinary (HKEY pKey, long pIndex)
 	}
 }
 
-CRegBinary::CRegBinary (const CRegBinary & pSource)
+CRegBinary::CRegBinary (const CRegBinary& pSource)
 :	CRegValue (pSource)
 {
 	mValue.Copy (pSource.mValue);

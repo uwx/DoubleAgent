@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -70,7 +70,7 @@ bool CAtlPropertySheet::IsModal () const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAtlPropertySheet::Create (_AtlPropSheetOwner * pOwner)
+bool CAtlPropertySheet::Create (_AtlPropSheetOwner* pOwner)
 {
 	bool	lRet = false;
 
@@ -250,7 +250,7 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModeless (HWND hwnd, UINT messa
 		}	break;
 		case PSCB_INITIALIZED:
 		{
-			CAtlPropertySheet * lThis = (CAtlPropertySheet *) _AtlWinModule.ExtractCreateWndData();
+			CAtlPropertySheet* lThis = (CAtlPropertySheet*) _AtlWinModule.ExtractCreateWndData();
 
 			lThis->SubclassWindow (hwnd);
 #ifdef	_DEBUG_PROPSHEET
@@ -273,7 +273,7 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModal (HWND hwnd, UINT message,
 		}	break;
 		case PSCB_INITIALIZED:
 		{
-			CAtlPropertySheet * lThis = (CAtlPropertySheet *) _AtlWinModule.ExtractCreateWndData();
+			CAtlPropertySheet* lThis = (CAtlPropertySheet*) _AtlWinModule.ExtractCreateWndData();
 
 			lThis->SubclassWindow (hwnd);
 #ifdef	_DEBUG_PROPSHEET
@@ -288,7 +288,7 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModal (HWND hwnd, UINT message,
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAtlPropertySheet::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnShowWindow [%u]"), this, AtlTypeName(this), wParam);
@@ -304,7 +304,7 @@ LRESULT CAtlPropertySheet::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc ();
 }
 
-LRESULT CAtlPropertySheet::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnDestroy"), this, AtlTypeName(this));
@@ -314,7 +314,7 @@ LRESULT CAtlPropertySheet::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, B
 	return DefWindowProc ();
 }
 
-LRESULT CAtlPropertySheet::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnClose [%u]"), this, AtlTypeName(this), mIsModal);
@@ -330,7 +330,7 @@ LRESULT CAtlPropertySheet::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	return 0;
 }
 
-LRESULT CAtlPropertySheet::OnSysCommand (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnSysCommand (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	if	((wParam & 0xFFF0) == SC_CLOSE)
 	{
@@ -344,7 +344,7 @@ LRESULT CAtlPropertySheet::OnSysCommand (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-LRESULT CAtlPropertySheet::OnChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	OnChanged ();
 	return DefWindowProc ();
@@ -354,7 +354,7 @@ LRESULT CAtlPropertySheet::OnChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAtlPropertySheet::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnOk [%u]"), this, AtlTypeName(this), mPageChanged);
@@ -373,7 +373,7 @@ LRESULT CAtlPropertySheet::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL 
 	return 0;
 }
 
-LRESULT CAtlPropertySheet::OnCancel (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnCancel (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnCancel [%u]"), this, AtlTypeName(this), mPageChanged);
@@ -390,7 +390,7 @@ LRESULT CAtlPropertySheet::OnCancel (WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 	return 0;
 }
 
-LRESULT CAtlPropertySheet::OnApply (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CAtlPropertySheet::OnApply (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnApply [%u]"), this, AtlTypeName(this), mPageChanged);

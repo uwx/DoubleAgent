@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -46,13 +46,13 @@ public:
 
 // Operations
 public:
-	void Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef = NULL);
-	CEnumPins & operator= (const CEnumPins & pSource);
+	void Initialize (CDirectShowPins& pInputPins, CDirectShowPins& pOutputPins, LPUNKNOWN pOwnerRef = NULL);
+	CEnumPins& operator= (const CEnumPins& pSource);
 
 // Interfaces
 public:
 	// IEnumPins
-    HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched);
+    HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin**ppPins, ULONG *pcFetched);
     HRESULT STDMETHODCALLTYPE Skip (ULONG cPins);
     HRESULT STDMETHODCALLTYPE Reset ();
     HRESULT STDMETHODCALLTYPE Clone (IEnumPins **ppEnum);
@@ -74,7 +74,7 @@ class ATL_NO_VTABLE CEnumMediaTypes :
 public:
 	CEnumMediaTypes ();
 	~CEnumMediaTypes ();
-	void Initialize (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef = NULL);
+	void Initialize (CMediaTypes& pMediaTypes, LPUNKNOWN pOwnerRef = NULL);
 
 // Declarations
 public:
@@ -90,12 +90,12 @@ public:
 
 // Operations
 public:
-	CEnumMediaTypes & operator= (const CEnumMediaTypes & pSource);
+	CEnumMediaTypes& operator= (const CEnumMediaTypes& pSource);
 
 // Interfaces
 public:
 	// IEnumMediaTypes
-    HRESULT STDMETHODCALLTYPE Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched);
+    HRESULT STDMETHODCALLTYPE Next (ULONG cMediaTypes, AM_MEDIA_TYPE**ppMediaTypes, ULONG *pcFetched);
     HRESULT STDMETHODCALLTYPE Skip (ULONG cMediaTypes);
     HRESULT STDMETHODCALLTYPE Reset ();
     HRESULT STDMETHODCALLTYPE Clone (IEnumMediaTypes **ppEnum);

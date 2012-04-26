@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -41,6 +41,9 @@ static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCritical
 IMPLEMENT_DLL_OBJECT(CDaCoreModule)
 
 CDaCoreModule::CDaCoreModule ()
+#ifndef	_DACORE_LOCAL
+:	CDaCoreAnchor (*(CComModule*)this)
+#endif
 {
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareInit ();
@@ -67,6 +70,9 @@ CDaCoreModule::~CDaCoreModule ()
 CDaCoreModule					_AtlModule;
 LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
 LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
+#ifndef	_DACORE_LOCAL
+CDaCoreAnchor&					_CoreAnchor = _AtlModule;
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()

@@ -305,7 +305,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 	{
 		if	(mCharacter == NULL)
 		{
-			LoadCharacter (mActionFile->GetFileName ());
+			LoadCharacter (mActionFile->GetFileName());
 		}
 
 		if	(mCharacter == NULL)

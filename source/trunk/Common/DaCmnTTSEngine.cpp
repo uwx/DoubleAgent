@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -52,13 +52,13 @@ void CDaCmnTTSEngine::Initialize (CSapi5VoiceInfo * pVoiceInfo)
 }
 
 #ifndef	_WIN64
-void CDaCmnTTSEngine::Initialize (CSapi4VoiceInfo * pVoiceInfo)
+void CDaCmnTTSEngine::Initialize (CSapi4VoiceInfo* pVoiceInfo)
 {
 	mSapi4Voice = pVoiceInfo;
 }
 #endif
 
-bool CDaCmnTTSEngine::Initialize (CSapi5Voice * pVoice)
+bool CDaCmnTTSEngine::Initialize (CSapi5Voice* pVoice)
 {
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
@@ -79,12 +79,12 @@ bool CDaCmnTTSEngine::Initialize (CSapi5Voice * pVoice)
 }
 
 #ifndef	_WIN64
-bool CDaCmnTTSEngine::Initialize (CSapi4Voice * pVoice)
+bool CDaCmnTTSEngine::Initialize (CSapi4Voice* pVoice)
 {
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
 	CSapi4Voices *		lSapi4Voices;
-	CSapi4VoiceInfo *	lSapi4Voice;
+	CSapi4VoiceInfo*	lSapi4Voice;
 
 	if	(
 			(pVoice)
@@ -100,7 +100,7 @@ bool CDaCmnTTSEngine::Initialize (CSapi4Voice * pVoice)
 }
 #endif
 
-bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
+bool CDaCmnTTSEngine::Initialize (CSapiVoice* pVoice)
 {
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
@@ -108,7 +108,7 @@ bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
 	CSapi5VoiceInfo *	lSapi5Voice;
 #ifndef	_WIN64
 	CSapi4Voices *		lSapi4Voices;
-	CSapi4VoiceInfo *	lSapi4Voice;
+	CSapi4VoiceInfo*	lSapi4Voice;
 #endif
 
 	if	(
@@ -139,7 +139,7 @@ bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
 	return lRet;
 }
 
-bool CDaCmnTTSEngine::Initialize (CAgentFile * pFile)
+bool CDaCmnTTSEngine::Initialize (CAgentFile* pFile)
 {
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
@@ -148,7 +148,7 @@ bool CDaCmnTTSEngine::Initialize (CAgentFile * pFile)
 	if	(
 			(pFile)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
-		&&	(lSapiVoice = lVoiceCache->GetAgentVoice (pFile->GetTts(), true, false))
+		&&	(lSapiVoice = lVoiceCache->GetAgentVoice (pFile->Tts, true, false))
 		)
 	{
 		lRet = Initialize (lSapiVoice);

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,7 +27,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnSettings::CDaCmnSettings (CGlobalAnchor * pAnchor)
+CDaCmnSettings::CDaCmnSettings (CGlobalAnchor* pAnchor)
 :	mAnchor (pAnchor)
 {
 }
@@ -47,20 +47,20 @@ AudioStatusType CDaCmnSettings::GetAudioStatus ()
 		try
 		{
 			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
+			CAgentFile*	lFile;
 
 			for	(lFileNdx = 0; lFile = mAnchor->GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				CDaCmnCharacter *						lCharacter;
+				CDaCmnCharacter*						lCharacter;
 
 				if	(mAnchor->GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter*> (lFileClients [lClientNdx]))
 							&&	(lCharacter->IsValid (lFile))
 							)
 						{

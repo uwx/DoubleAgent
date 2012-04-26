@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -39,8 +39,8 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CFileVersionEx::CFileVersionEx (void * pVersionInfo, LPCTSTR pFileName)
-:	CFileVersion ((void *) NULL),
+CFileVersionEx::CFileVersionEx (void* pVersionInfo, LPCTSTR pFileName)
+:	CFileVersion ((void*) NULL),
 	mFileName (pFileName)
 {
 	GetVersionInfo (pVersionInfo);
@@ -60,7 +60,7 @@ CFileVersionEx::CFileVersionEx (HMODULE pModule, LPCTSTR pFileName)
 	GetModuleInfo (pModule);
 }
 
-CFileVersionEx::CFileVersionEx (const CFileVersionEx & pSource)
+CFileVersionEx::CFileVersionEx (const CFileVersionEx& pSource)
 :	CFileVersion (pSource),
 	mFileName (pSource.mFileName)
 {
@@ -89,7 +89,7 @@ CFileVersionEx::~CFileVersionEx ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CFileVersionEx::GetVersionInfo (void * pVersionInfo)
+void CFileVersionEx::GetVersionInfo (void* pVersionInfo)
 {
 	if	(pVersionInfo)
 	{
@@ -98,7 +98,7 @@ void CFileVersionEx::GetVersionInfo (void * pVersionInfo)
 
 		if	(
 				(lVersionInfoW->Value.dwSignature == 0xFEEF04BD)
-			&&	(lVersionInfoW->szKey [sizeof (lVersionInfoW->szKey) / sizeof (WCHAR)] == 0)
+			&&	(lVersionInfoW->szKey [sizeof (lVersionInfoW->szKey) / sizeof(WCHAR)] == 0)
 			&&	(wcscmp (lVersionInfoW->szKey, L"VS_VERSION_INFO") == 0)
 			)
 		{
@@ -116,7 +116,7 @@ void CFileVersionEx::GetVersionInfo (void * pVersionInfo)
 	}
 }
 
-void CFileVersionEx::GetVersionInfoW (void * pVersionInfo)
+void CFileVersionEx::GetVersionInfoW (void* pVersionInfo)
 {
 	VS_VERSION_INFO_W * lVersionInfo = (VS_VERSION_INFO_W *) pVersionInfo;
 	int 				lChildLength;
@@ -171,7 +171,7 @@ void CFileVersionEx::GetVersionInfoW (void * pVersionInfo)
 
 						if	(iswprint (*lStringVal))
 						{
-							CVersionString & lString = (*lStrings) [lStringNdx];
+							CVersionString& lString = (*lStrings) [lStringNdx];
 							lString.mValue = CString ((BSTR) lStringVal);
 							lString.mValue.TrimLeft ();
 							lString.mValue.TrimRight ();
@@ -209,7 +209,7 @@ void CFileVersionEx::GetVersionInfoW (void * pVersionInfo)
 		{
 			VarW *	lVar = (VarW *) &lVarInfo->Children;
 			int 	lCount = lVar->wValueLength / sizeof (DWORD);
-			DWORD * lList = (DWORD *) &lVar->Value;
+			DWORD* lList = (DWORD*) &lVar->Value;
 
 			//OutputDebugString (CString (" <%ls>\n").fSPrintf (0, lVarInfo->szKey));
 
@@ -235,7 +235,7 @@ void CFileVersionEx::GetVersionInfoW (void * pVersionInfo)
 
 //////////////////////////////////////////////////////////////////////
 
-void CFileVersionEx::GetVersionInfoA (void * pVersionInfo)
+void CFileVersionEx::GetVersionInfoA (void* pVersionInfo)
 {
 	VS_VERSION_INFO_A * lVersionInfo = (VS_VERSION_INFO_A *) pVersionInfo;
 	int 				lChildLength;
@@ -290,7 +290,7 @@ void CFileVersionEx::GetVersionInfoA (void * pVersionInfo)
 
 						if	(isprint (*lStringVal))
 						{
-							CVersionString & lString = (*lStrings) [lStringNdx];
+							CVersionString& lString = (*lStrings) [lStringNdx];
 							lString.mValue = lStringVal;
 							lString.mValue.TrimLeft ();
 							lString.mValue.TrimRight ();
@@ -322,7 +322,7 @@ void CFileVersionEx::GetVersionInfoA (void * pVersionInfo)
 		{
 			VarA *	lVar = (VarA *) &lVarInfo->Children;
 			int 	lCount = lVar->wValueLength / sizeof (DWORD);
-			DWORD * lList = (DWORD *) &lVar->Value;
+			DWORD* lList = (DWORD*) &lVar->Value;
 
 			if	(lCount > 0)
 			{
@@ -350,7 +350,7 @@ CString CFileVersionEx::FileVersionName (LPCTSTR pFormatString) const
 {
 	CString				lRet;
 	CVersionStrings *	lStrings;
-	CVersionString *	lString;
+	CVersionString*	lString;
 	ULARGE_INTEGER		lVersion;
 
 	lVersion.HighPart = mFileInfo.dwFileVersionMS;
@@ -376,7 +376,7 @@ CString CFileVersionEx::ProductVersionName (LPCTSTR pFormatString) const
 {
 	CString				lRet;
 	CVersionStrings *	lStrings;
-	CVersionString *	lString;
+	CVersionString*	lString;
 	ULARGE_INTEGER		lVersion;
 
 	lVersion.HighPart = mFileInfo.dwProductVersionMS;
@@ -403,7 +403,7 @@ CString CFileVersionEx::ProductVersionName (LPCTSTR pFormatString) const
 CString CFileVersionEx::AppVersionName () const
 {
 	CString								lVersion;
-	CFileVersionEx::CVersionString *	lVersionString;
+	CFileVersionEx::CVersionString*	lVersionString;
 	CString								lBuild;
 
 	lVersion = ProductVersionName (NULL);
@@ -517,7 +517,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 			&&	(lFileInfo.szTypeName [0])
 			)
 		{
-			const_cast <CString &> (mFileTypeNameExe) = lFileInfo.szTypeName;
+			const_cast <CString&> (mFileTypeNameExe) = lFileInfo.szTypeName;
 		}
 
 		lFileInfo.Clear ();
@@ -526,7 +526,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 			&&	(lFileInfo.szTypeName [0])
 			)
 		{
-			const_cast <CString &> (mFileTypeNameDll) = lFileInfo.szTypeName;
+			const_cast <CString&> (mFileTypeNameDll) = lFileInfo.szTypeName;
 		}
 
 		lFileInfo.Clear ();
@@ -535,7 +535,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 			&&	(lFileInfo.szTypeName [0])
 			)
 		{
-			const_cast <CString &> (mFileTypeNameDrv) = lFileInfo.szTypeName;
+			const_cast <CString&> (mFileTypeNameDrv) = lFileInfo.szTypeName;
 		}
 
 		lFileInfo.Clear ();
@@ -544,7 +544,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 			&&	(lFileInfo.szTypeName [0])
 			)
 		{
-			const_cast <CString &> (mFileTypeNameFon) = lFileInfo.szTypeName;
+			const_cast <CString&> (mFileTypeNameFon) = lFileInfo.szTypeName;
 		}
 
 		lFileInfo.Clear ();
@@ -553,7 +553,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 			&&	(lFileInfo.szTypeName [0])
 			)
 		{
-			const_cast <CString &> (mFileTypeNameVxd) = lFileInfo.szTypeName;
+			const_cast <CString&> (mFileTypeNameVxd) = lFileInfo.szTypeName;
 		}
 
 		lFileInfo.Clear ();
@@ -562,7 +562,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 			&&	(lFileInfo.szTypeName [0])
 			)
 		{
-			const_cast <CString &> (mFileTypeNameLib) = lFileInfo.szTypeName;
+			const_cast <CString&> (mFileTypeNameLib) = lFileInfo.szTypeName;
 		}
 	}
 
@@ -614,7 +614,7 @@ CString CFileVersionEx::FileTypeName (DWORD pFileType)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CFileVersionEx::FileFlagsValid (DWORD & pFileFlags, DWORD & pFileFlagsMask) const
+bool CFileVersionEx::FileFlagsValid (DWORD& pFileFlags, DWORD& pFileFlagsMask) const
 {
 	pFileFlags = mFileInfo.dwFileFlags;
 	pFileFlagsMask = mFileInfo.dwFileFlagsMask;
@@ -653,7 +653,7 @@ CString CFileVersionEx::FileFlagsNames (bool pUseStrings) const
 	}
 	if	(lFlags & VS_FF_PRIVATEBUILD)
 	{
-		CVersionString * lString;
+		CVersionString* lString;
 		if	(
 				(pUseStrings)
 			&&	(lString = mStrings.Find (mPrivateBuildName))
@@ -673,7 +673,7 @@ CString CFileVersionEx::FileFlagsNames (bool pUseStrings) const
 	}
 	if	(lFlags & VS_FF_SPECIALBUILD)
 	{
-		CVersionString * lString;
+		CVersionString* lString;
 		if	(
 				(pUseStrings)
 			&&	(lString = mStrings.Find (mSpecialBuildName))
@@ -866,7 +866,7 @@ CString CFileVersionEx::FontTypeName (DWORD pFontType)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-inline static bool RemoveTrailingParentheses (CString & pString)
+inline static bool RemoveTrailingParentheses (CString& pString)
 {
 	int	lCharPos;
 
@@ -885,7 +885,7 @@ inline static bool RemoveTrailingParentheses (CString & pString)
 	return false;
 }
 
-inline static bool RemoveTrailingBrackets (CString & pString)
+inline static bool RemoveTrailingBrackets (CString& pString)
 {
 	int	lCharPos;
 
@@ -904,7 +904,7 @@ inline static bool RemoveTrailingBrackets (CString & pString)
 	return false;
 }
 
-inline static bool RemoveTrailingPunctuation (CString & pString)
+inline static bool RemoveTrailingPunctuation (CString& pString)
 {
 	bool	lRet = false;
 	int		lCharPos;
@@ -927,7 +927,7 @@ inline static bool RemoveTrailingPunctuation (CString & pString)
 	return lRet;
 }
 
-inline static bool RemoveTrailingVersion (CString & pString, UINT pStrength)
+inline static bool RemoveTrailingVersion (CString& pString, UINT pStrength)
 {
 	bool	lRet = false;
 	int		lCharPos;
@@ -1045,7 +1045,7 @@ inline static bool RemoveTrailingVersion (CString & pString, UINT pStrength)
 	return lRet;
 }
 
-static inline void UnpluralizeWords (CString & pString)
+static inline void UnpluralizeWords (CString& pString)
 {
 	int	lNdx;
 	int	lNdx2;
@@ -1085,7 +1085,7 @@ static inline void UnpluralizeWords (CString & pString)
 
 //////////////////////////////////////////////////////////////////////
 
-CString CFileVersionEx::MassageName (const CString & pName, bool pSingleLine)
+CString CFileVersionEx::MassageName (const CString& pName, bool pSingleLine)
 {
 	CString	lRet (pName);
 
@@ -1127,7 +1127,7 @@ CString CFileVersionEx::MassageName (const CString & pName, bool pSingleLine)
 
 //////////////////////////////////////////////////////////////////////
 
-CString	CFileVersionEx::MassageProductName (const CString & pProductName, UINT pStrength)
+CString	CFileVersionEx::MassageProductName (const CString& pProductName, UINT pStrength)
 {
 	CString	lRet (CFileVersionEx::MassageName (pProductName, true));
 
@@ -1301,7 +1301,7 @@ CString	CFileVersionEx::MassageProductName (const CString & pProductName, UINT p
 
 //////////////////////////////////////////////////////////////////////
 
-CString	CFileVersionEx::MassageCompanyName (const CString & pCompanyName, UINT pStrength)
+CString	CFileVersionEx::MassageCompanyName (const CString& pCompanyName, UINT pStrength)
 {
 	CString	lRet (CFileVersionEx::MassageName (pCompanyName, true));
 
@@ -1502,7 +1502,7 @@ CFileVersionEx::CVersionStrings::CVersionStrings (LPCTSTR pKey)
 	lValue.ReleaseBuffer ();
 }
 
-CFileVersionEx::CVersionStrings::CVersionStrings (const CVersionStrings & pSource)
+CFileVersionEx::CVersionStrings::CVersionStrings (const CVersionStrings& pSource)
 :	mLanguage (pSource.mLanguage),
 	mCodePage (pSource.mCodePage),
 	mLanguageName (pSource.mLanguageName),
@@ -1511,10 +1511,10 @@ CFileVersionEx::CVersionStrings::CVersionStrings (const CVersionStrings & pSourc
 	Append (pSource);
 }
 
-CFileVersionEx::CVersionString * CFileVersionEx::CVersionStrings::Find (const CString & pName) const
+CFileVersionEx::CVersionString* CFileVersionEx::CVersionStrings::Find (const CString& pName) const
 {
 	int					lNdx;
-	CVersionString *	lString;
+	CVersionString*	lString;
 
 	for	(lNdx = 0; lNdx < (int)GetCount(); lNdx++)
 	{
@@ -1580,11 +1580,11 @@ CFileVersionEx::CVersionStrings * CFileVersionEx::CVersionStringsList::FindLang 
 	return NULL;
 }
 
-CFileVersionEx::CVersionString * CFileVersionEx::CVersionStringsList::Find (const CString & pName) const
+CFileVersionEx::CVersionString* CFileVersionEx::CVersionStringsList::Find (const CString& pName) const
 {
 	int 				lNdx;
 	CVersionStrings *	lStrings;
-	CVersionString *	lRet = NULL;
+	CVersionString*	lRet = NULL;
 
 	for (lNdx = 0; lNdx < (int)GetCount(); lNdx++)
 	{

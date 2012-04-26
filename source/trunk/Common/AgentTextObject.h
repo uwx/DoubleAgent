@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -49,7 +49,7 @@ public:
 
 // Operations
 public:
-	virtual void Attach (long pCharID, CEventNotify * pNotify, CSapiVoice * pVoice);
+	virtual void Attach (long pCharID, CEventNotify* pNotify, CSapiVoice* pVoice);
 	virtual void Detach (bool pCancelled = false);
 
 // Overrides
@@ -60,9 +60,9 @@ public:
 
 // Implementation
 protected:
-	LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentTextObject)
 		MESSAGE_HANDLER(mVoiceStartMsg, OnVoiceStartMsg)
@@ -72,7 +72,7 @@ protected:
 
 protected:
 	long										mCharID;
-	CSapiVoice *								mVoice;
+	CSapiVoice*									mVoice;
 	tPtr <CMsgPostingWnd <CAgentTextObject> >	mMsgPostingWnd;
 	bool										mVoiceStartNotified;
 	bool										mVoiceEndNotified;

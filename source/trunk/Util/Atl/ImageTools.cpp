@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -21,13 +21,14 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#pragma unmanaged
 #include "ImageTools.h"
 #include "ImageBuffer.h"
 #include "Log.h"
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::CreateColorImage (const CSize & pSize, ATL::CImage & pImage, bool pForBlending, bool pTopDown)
+bool CImageTools::CreateColorImage (const CSize& pSize, ATL::CImage& pImage, bool pForBlending, bool pTopDown)
 {
 	pImage.Destroy ();
 
@@ -40,7 +41,7 @@ bool CImageTools::CreateColorImage (const CSize & pSize, ATL::CImage & pImage, b
 	return false;
 }
 
-bool CImageTools::RecreateColorImage (const CSize & pSize, ATL::CImage & pImage, bool pForBlending, bool pTopDown)
+bool CImageTools::RecreateColorImage (const CSize& pSize, ATL::CImage& pImage, bool pForBlending, bool pTopDown)
 {
 	if	(
 			((HBITMAP)pImage == NULL)
@@ -56,7 +57,7 @@ bool CImageTools::RecreateColorImage (const CSize & pSize, ATL::CImage & pImage,
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::CreateWindowImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending, bool pTopDown)
+bool CImageTools::CreateWindowImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending, bool pTopDown)
 {
 	if	(IsWindow (pWindow))
 	{
@@ -68,7 +69,7 @@ bool CImageTools::CreateWindowImage (HWND pWindow, ATL::CImage & pImage, bool pF
 	return false;
 }
 
-bool CImageTools::RecreateWindowImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending, bool pTopDown)
+bool CImageTools::RecreateWindowImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending, bool pTopDown)
 {
 	if	(IsWindow (pWindow))
 	{
@@ -90,7 +91,7 @@ bool CImageTools::RecreateWindowImage (HWND pWindow, ATL::CImage & pImage, bool 
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::CreateClientImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending, bool pTopDown)
+bool CImageTools::CreateClientImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending, bool pTopDown)
 {
 	if	(IsWindow (pWindow))
 	{
@@ -102,7 +103,7 @@ bool CImageTools::CreateClientImage (HWND pWindow, ATL::CImage & pImage, bool pF
 	return false;
 }
 
-bool CImageTools::RecreateClientImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending, bool pTopDown, bool pExactFit)
+bool CImageTools::RecreateClientImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending, bool pTopDown, bool pExactFit)
 {
 	if	(IsWindow (pWindow))
 	{
@@ -137,7 +138,7 @@ bool CImageTools::RecreateClientImage (HWND pWindow, ATL::CImage & pImage, bool 
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::ShrinkImage (ATL::CImage & pImage, UINT pFactor, UINT pBlend)
+bool CImageTools::ShrinkImage (ATL::CImage& pImage, UINT pFactor, UINT pBlend)
 {
 	bool			lRet = false;
 	ATL::CImage		lTrgImage;
@@ -256,7 +257,7 @@ bool CImageTools::ShrinkImage (ATL::CImage & pImage, UINT pFactor, UINT pBlend)
 	return lRet;
 }
 
-bool CImageTools::ShrinkImage (ATL::CImage & pSrcImage, ATL::CImage & pTrgImage, UINT pBlend)
+bool CImageTools::ShrinkImage (ATL::CImage& pSrcImage, ATL::CImage& pTrgImage, UINT pBlend)
 {
 	bool			lRet = false;
 	LPBYTE			lSrcBits;
@@ -370,7 +371,7 @@ bool CImageTools::ShrinkImage (ATL::CImage & pSrcImage, ATL::CImage & pTrgImage,
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::SmearImage (ATL::CImage & pImage, UINT pFactor)
+bool CImageTools::SmearImage (ATL::CImage& pImage, UINT pFactor)
 {
 	bool		lRet = false;
 	ATL::CImage	lTrgImage;
@@ -449,7 +450,7 @@ bool CImageTools::SmearImage (ATL::CImage & pImage, UINT pFactor)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::GetImageInfo (HBITMAP pImage, BITMAPINFO & pBitmapInfo, BYTE ** pBitmapBits)
+bool CImageTools::GetImageInfo (HBITMAP pImage, BITMAPINFO& pBitmapInfo, BYTE** pBitmapBits)
 {
 	bool			lRet = false;
 	tS <BITMAP>		lBitmap;
@@ -499,7 +500,7 @@ bool CImageTools::GetImageInfo (HBITMAP pImage, BITMAPINFO & pBitmapInfo, BYTE *
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CImageTools::MapImageColors (HBITMAP pImage, const CColor & pColorFill, const CColor * pColorLight, const CColor * pColorDark, const CColor * pColorWhite, const CColor * pColorBlack, BYTE pVarianceMask)
+bool CImageTools::MapImageColors (HBITMAP pImage, const CColor& pColorFill, const CColor * pColorLight, const CColor * pColorDark, const CColor * pColorWhite, const CColor * pColorBlack, BYTE pVarianceMask)
 {
 	bool			lRet = false;
 //TODO

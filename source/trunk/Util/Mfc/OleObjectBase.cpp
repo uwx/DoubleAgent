@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -41,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-COleWindow::COleWindow (CCmdTarget & pCmdTarget, CWnd * pWnd)
+COleWindow::COleWindow (CCmdTarget& pCmdTarget, CWnd * pWnd)
 :	mCmdTarget (pCmdTarget),
 	mWnd (pWnd)
 {
@@ -61,7 +61,7 @@ STDMETHODIMP_(ULONG) COleWindow::XOleWindow::Release ()
 	return pThis->mCmdTarget.ExternalRelease ();
 }
 
-STDMETHODIMP COleWindow::XOleWindow::QueryInterface (REFIID pRefIId, void ** pPVoid)
+STDMETHODIMP COleWindow::XOleWindow::QueryInterface (REFIID pRefIId, void** pPVoid)
 {
 	METHOD_PROLOGUE_(COleWindow, OleWindow)
 	return pThis->mCmdTarget.ExternalQueryInterface (&pRefIId, pPVoid);
@@ -99,12 +99,12 @@ STDMETHODIMP COleWindow::XOleWindow::ContextSensitiveHelp (BOOL fEnterMode)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CRunnableObject::CRunnableObject (CCmdTarget & pCmdTarget)
+CRunnableObject::CRunnableObject (CCmdTarget& pCmdTarget)
 :	mCmdTarget (pCmdTarget)
 {
 }
 
-HRESULT CRunnableObject::GetRunningClass (CLSID & pClassId)
+HRESULT CRunnableObject::GetRunningClass (CLSID& pClassId)
 {
 	return E_NOTIMPL;
 }
@@ -133,7 +133,7 @@ STDMETHODIMP_(ULONG) CRunnableObject::XRunnableObject::Release ()
 	return pThis->mCmdTarget.ExternalRelease ();
 }
 
-STDMETHODIMP CRunnableObject::XRunnableObject::QueryInterface (REFIID pRefIId, void ** pPVoid)
+STDMETHODIMP CRunnableObject::XRunnableObject::QueryInterface (REFIID pRefIId, void** pPVoid)
 {
 	METHOD_PROLOGUE_(CRunnableObject, RunnableObject)
 	return pThis->mCmdTarget.ExternalQueryInterface (&pRefIId, pPVoid);

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -53,7 +53,7 @@ CAgentListeningWnd::~CAgentListeningWnd ()
 	}
 }
 
-CAgentListeningWnd * CAgentListeningWnd::CreateInstance ()
+CAgentListeningWnd* CAgentListeningWnd::CreateInstance ()
 {
 	return new CAgentListeningWnd;
 }
@@ -62,7 +62,7 @@ CAgentListeningWnd * CAgentListeningWnd::CreateInstance ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentListeningWnd::Create (CWindow * pOwnerWnd, DWORD pExStyle)
+bool CAgentListeningWnd::Create (CWindow* pOwnerWnd, DWORD pExStyle)
 {
 	bool			lRet = false;
 	tS <LOGFONT>	lLogFont;
@@ -217,10 +217,10 @@ void CAgentListeningWnd::RefreshTipWnd ()
 	}
 }
 
-bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
+bool CAgentListeningWnd::CalcWinRect (CRect& pWinRect)
 {
 	CRect						lOldRect (pWinRect);
-	CAgentCharacterWnd *		lOwner;
+	CAgentCharacterWnd*		lOwner;
 	CRect						lOwnerRect;
 	CRect						lBoundsRect (0,0,0,0);
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
@@ -230,7 +230,7 @@ bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 		lBoundsRect.CopyRect (&lMonitorInfo.rcWork);
 	}
 	else
-	if	(!SystemParametersInfo (SPI_GETWORKAREA, 0, (void *) &lBoundsRect, 0))
+	if	(!SystemParametersInfo (SPI_GETWORKAREA, 0, (void*) &lBoundsRect, 0))
 	{
 		lBoundsRect.SetRect (0, 0, GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN));
 	}
@@ -243,7 +243,7 @@ bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 		mOwnerWnd->GetWindowRect (&lOwnerRect);
 		if	(
 				(mOwnerWnd->GetStyle () & WS_CHILD)
-			&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> ((CAgentWnd*)mOwnerWnd))
+			&&	(lOwner = dynamic_cast <CAgentCharacterWnd*> ((CAgentWnd*)mOwnerWnd))
 			)
 		{
 			CRect	lVideoRect = lOwner->GetVideoRect ();
@@ -443,7 +443,7 @@ void CAgentListeningWnd::ShowToolText (LPCTSTR pCaption, LPCTSTR pDetail)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentListeningWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentListeningWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT		lResult = DefWindowProc ();
 	LPWINDOWPOS	lWindowPos = (LPWINDOWPOS) lParam;
@@ -469,7 +469,7 @@ LRESULT CAgentListeningWnd::OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARA
 	return lResult;
 }
 
-LRESULT CAgentListeningWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentListeningWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT		lResult = DefWindowProc ();
 	LPWINDOWPOS	lWindowPos = (LPWINDOWPOS) lParam;
@@ -481,7 +481,7 @@ LRESULT CAgentListeningWnd::OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentListeningWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentListeningWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	return HTTRANSPARENT;
 }

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -44,7 +44,7 @@ public:
 public:
 	long GetCharID () const {return mCharID;}
 	LANGID GetLangID () const {return mLangID;}
-	CAgentFile * GetFile () const {return mFile;}
+	CAgentFile* GetFile () const {return mFile;}
 	BSTR GetName () const;
 
 	bool IsDefault () const {return mIsDefault;}
@@ -65,11 +65,11 @@ public:
 	virtual DWORD GetStyle () const;
 	long GetActiveClient () const;
 	virtual short GetActiveState () const;
-	virtual bool IsValid (const CAgentFile * pFile) const;
+	virtual bool IsValid (const CAgentFile* pFile) const;
 
 // Operations
 public:
-	void Initialize (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor);
+	void Initialize (long pCharID, CEventNotify* pNotify, _IListeningAnchor* pListeningAnchor);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void Unrealize (bool pForce);
 
@@ -79,26 +79,26 @@ public:
 	virtual HRESULT SetActiveState (short pActiveState);
 	INT_PTR GetClientCount (int pSkipCharID = 0) const;
 
-	HRESULT OpenFile (CAgentFile * pFile, bool pIsDefault = false);
-	HRESULT Realize (class CAgentCharacterWnd * pCharacterWnd, DWORD pInitialStyle);
-	HRESULT RealizePopup (CWindow * pParentWnd, DWORD pInitialStyle, DWORD pExStyle = 0);
+	HRESULT OpenFile (CAgentFile* pFile, bool pIsDefault = false);
+	HRESULT Realize (class CAgentCharacterWnd* pCharacterWnd, DWORD pInitialStyle);
+	HRESULT RealizePopup (CWindow* pParentWnd, DWORD pInitialStyle, DWORD pExStyle = 0);
 	HRESULT SetLangID (LANGID pLangID);
 	virtual HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
-	static HRESULT GetLoadPath (VARIANT pProvider, CAtlString & pFilePath, LPCTSTR pSearchPath = NULL, bool * pIsDefault = NULL);
-	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile, LPCTSTR pSearchPath = NULL);
-	static HRESULT GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pAgentFile);
+	static HRESULT GetLoadPath (VARIANT pProvider, CAtlString& pFilePath, LPCTSTR pSearchPath = NULL, bool* pIsDefault = NULL);
+	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile>& pAgentFile, LPCTSTR pSearchPath = NULL);
+	static HRESULT GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile>& pAgentFile);
 
 // Overrides
 public:
 	virtual void _OnCharacterNameChanged (long pCharID);
 	virtual void _OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual bool _OnDownloadComplete (CFileDownload * pDownload);
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
-	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
+	virtual bool _OnDownloadComplete (CFileDownload* pDownload);
+	virtual class CFileDownload* _FindSoundDownload (LPCTSTR pSoundUrl);
+	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint& pPosition);
+	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint& pPosition);
 	virtual void _OnOptionsChanged ();
 	virtual void _OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFilePath);
 
@@ -119,11 +119,11 @@ public:
 	HRESULT Interrupt (long InterruptRequestID, long *RequestID);
 	HRESULT Show (long Fast, long *RequestID);
 	HRESULT Hide (long Fast, long *RequestID);
-	HRESULT Speak (BSTR Text, class CAgentTextObject * pTextObject, BSTR Url, long *RequestID);
+	HRESULT Speak (BSTR Text, class CAgentTextObject* pTextObject, BSTR Url, long *RequestID);
 	HRESULT MoveTo (short X, short Y, long Speed, long *RequestID);
 	HRESULT GestureAt (short X, short Y, long *RequestID);
 	HRESULT Listen (long Listen);
-	HRESULT Think (BSTR Text, class CAgentTextObject * pTextObject, long *RequestID);
+	HRESULT Think (BSTR Text, class CAgentTextObject* pTextObject, long *RequestID);
 	HRESULT ShowPopupMenu (short X, short Y);
 	HRESULT GetTTSSpeed (long *Speed);
 	HRESULT GetTTSPitch (short *Pitch);
@@ -149,8 +149,8 @@ public:
 	HRESULT get_ExtraData (BSTR *ExtraData);
 	HRESULT get_FileName (BSTR *FileName);
 	HRESULT get_FilePath (BSTR *FilePath);
-	HRESULT get_Animations (SAFEARRAY **Animations);
-	HRESULT get_States (SAFEARRAY **States);
+	HRESULT get_Animations (SAFEARRAY**Animations);
+	HRESULT get_States (SAFEARRAY**States);
 	HRESULT get_LanguageID (long *LanguageID);
 	HRESULT put_LanguageID (long LanguageID);
 	HRESULT get_TTSModeID (BSTR *TTSModeID);
@@ -179,21 +179,21 @@ public:
 
 // Implementation
 public:
-	virtual class CDaCmnCommands * GetCommands (bool pCreateObject) = 0;
-	virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject) = 0;
-	virtual class CAgentCharacterWnd * GetCharacterWnd (bool pMustExist = true) const;
-	virtual class CAgentPopupWnd * GetPopupWnd (bool pMustExist = true) const;
-	virtual class CAgentBalloonWnd * GetBalloonWnd (bool pCreateObject);
-	virtual class CAgentListeningWnd * GetListeningWnd (bool pCreateObject);
+	virtual class CDaCmnCommands* GetCommands (bool pCreateObject) = 0;
+	virtual class CDaCmnBalloon* GetBalloon (bool pCreateObject) = 0;
+	virtual class CAgentCharacterWnd* GetCharacterWnd (bool pMustExist = true) const;
+	virtual class CAgentPopupWnd* GetPopupWnd (bool pMustExist = true) const;
+	virtual class CAgentBalloonWnd* GetBalloonWnd (bool pCreateObject);
+	virtual class CAgentListeningWnd* GetListeningWnd (bool pCreateObject);
 
 	virtual bool DoMenuCommand (USHORT pCommandId);
 	virtual bool DoMenuActivate ();
-	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult * pRecoResult, bool pGlobalCommand);
+	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult* pRecoResult, bool pGlobalCommand);
 	HRESULT StopAll (long pStopTypes, HRESULT pReqStatus);
 
-	class CSapiVoice * GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceName = NULL);
+	class CSapiVoice* GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceName = NULL);
 	void ReleaseSapiVoice (bool pAbandonned = false);
-	class CSapi5Input * GetSapiInput (bool pCreateObject, LPCTSTR pEngineName = NULL);
+	class CSapi5Input* GetSapiInput (bool pCreateObject, LPCTSTR pEngineName = NULL);
 	void ReleaseSapiInput (bool pAbandonned = false);
 
 	bool ShowListeningState (bool pShow);
@@ -202,21 +202,21 @@ public:
 
 protected:
 	void PropagateLangID ();
-	HRESULT DoPrepare (long pType, LPCTSTR pName, bool pQueue, long & pReqID);
-	bool DoContextMenu (HWND pOwner, const CPoint & pPosition);
-	bool DoDefaultCommand (HWND pOwner, const CPoint & pPosition);
+	HRESULT DoPrepare (long pType, LPCTSTR pName, bool pQueue, long& pReqID);
+	bool DoContextMenu (HWND pOwner, const CPoint& pPosition);
+	bool DoDefaultCommand (HWND pOwner, const CPoint& pPosition);
 
-	LPVOID FindOtherRequest (long pReqID, CDaCmnCharacter *& pOtherCharacter);
-	void TransferListeningState (CDaCmnCharacter * pOtherCharacter);
+	LPVOID FindOtherRequest (long pReqID, CDaCmnCharacter*& pOtherCharacter);
+	void TransferListeningState (CDaCmnCharacter* pOtherCharacter);
 
 public:
-	_IListeningAnchor *							mListeningAnchor;
+	_IListeningAnchor*							mListeningAnchor;
 protected:
 	long										mCharID;
 	LANGID										mLangID;
-	CAgentFile *								mFile;
-	class CSapiVoice *							mSapiVoice;
-	class CSapi5Input *							mSapiInput;
+	CAgentFile*								mFile;
+	class CSapiVoice*							mSapiVoice;
+	class CSapi5Input*							mSapiInput;
 	tPtr <class CListeningState>				mListeningState;
 	CAtlOwnPtrMap <long, class CQueuedPrepare>	mPrepares;
 	bool										mIdleEnabled;
@@ -225,7 +225,7 @@ protected:
 	CAgentIconData								mIconData;
 private:
 	bool										mIsDefault;
-	class CAgentCharacterWnd *					mWnd;
+	class CAgentCharacterWnd*					mWnd;
 	IUnknownPtr									mWndRefHolder;
 };
 

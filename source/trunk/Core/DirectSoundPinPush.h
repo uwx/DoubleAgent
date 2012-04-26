@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -38,7 +38,7 @@ public:
 
 // Operations
 public:
-	CDirectSoundPinPush & Initialize (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
+	CDirectSoundPinPush& Initialize (class CDirectShowFilter& pFilter, CDirectSoundConvertCache& pConvertCache, long pSoundNdx);
 
 	HRESULT ConvertSound (LPCVOID pSound, long pSoundSize);
 	HRESULT ConnectFilters ();
@@ -69,7 +69,6 @@ protected:
 	CDirectSoundConvertCache *		mConvertCache;
 	CAtlTypeArray <REFERENCE_TIME>	mCueTimes;
 	INT_PTR							mCueAsyncStart;
-	int							mCueAsyncStart;
 };
 
 /////////////////////////////////////////////////////////////////////////////

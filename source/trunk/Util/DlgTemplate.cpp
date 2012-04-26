@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -331,7 +331,7 @@ UINT CDlgTemplate::GetFontSize (bool pInPixels) const
 	return 0;
 }
 
-bool CDlgTemplate::GetFont (LOGFONT & pFont) const
+bool CDlgTemplate::GetFont (LOGFONT& pFont) const
 {
 	bool	lRet = false;
 
@@ -447,7 +447,7 @@ CSize CDlgTemplate::GetSize (bool pInPixels) const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSize CDlgTemplate::DlgSizeToPixels (const CSize & pSize) const
+CSize CDlgTemplate::DlgSizeToPixels (const CSize& pSize) const
 {
 	CMemDCHandle	lDC;
 	CFontHandle		lFont;
@@ -472,7 +472,7 @@ CSize CDlgTemplate::DlgSizeToPixels (const CSize & pSize) const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CDlgControl::CDlgControl (CDlgTemplate * pOwner, LPDLGITEMTEMPLATE pTemplate, WORD pVersion, LPBYTE * pTemplateData)
+CDlgControl::CDlgControl (CDlgTemplate * pOwner, LPDLGITEMTEMPLATE pTemplate, WORD pVersion, LPBYTE* pTemplateData)
 :	mOwner (pOwner),
 	mTemplateSize (0),
 	mTemplate (*(LPDLGITEMTEMPLATE*)(mPointers+0)),
@@ -559,7 +559,7 @@ CDlgControl::CDlgControl (CDlgTemplate * pOwner, LPDLGITEMTEMPLATE pTemplate, WO
 	}
 }
 
-CDlgControl::CDlgControl (const CDlgControl & pSource)
+CDlgControl::CDlgControl (const CDlgControl& pSource)
 :	mTemplate (*(LPDLGITEMTEMPLATE*)(mPointers+0)),
 	mHelpId (*(LPDWORD*)(mPointers+1)),
 	mStyle (*(LPDWORD*)(mPointers+2)),
@@ -574,7 +574,7 @@ CDlgControl::CDlgControl (const CDlgControl & pSource)
 	operator= (pSource);
 }
 
-CDlgControl & CDlgControl::operator= (const CDlgControl & pSource)
+CDlgControl& CDlgControl::operator= (const CDlgControl& pSource)
 {
 	mOwner = pSource.mOwner;
 	mTemplateSize = pSource.mTemplateSize;

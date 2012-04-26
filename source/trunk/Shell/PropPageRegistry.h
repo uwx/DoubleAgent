@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -50,8 +50,8 @@ protected:
 // Implementation
 protected:
 	LRESULT OnCustomDrawTree(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	LRESULT OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnUseMa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnUseMa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 	LRESULT OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CPropPageRegistry)
@@ -73,34 +73,34 @@ protected:
 	bool ShowMsInstallStatus ();
 	void ShowElevated ();
 
-	HTREEITEM ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
-	HTREEITEM ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
-	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
-	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowClassId (CAtlString& pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow& pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowClassId (CAtlString& pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow& pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow& pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow& pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
 	CAtlString GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClassesRoot = HKEY_CLASSES_ROOT);
 
-	UINT ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform = false);
-	void ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, UINT pTreatAsStatus);
+	UINT ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM& pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM& pMaTreatAs, REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform = false);
+	void ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM& pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM& pMaTreatAs, UINT pTreatAsStatus);
 	bool GetTreatAs (REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform = false);
 	bool GetTreatAs (HKEY pClassesRoot, REFGUID pClsId, REFGUID pTreatAsClsId);
 	bool UpdateTreatAs (REFGUID pClsId, REFGUID pTreatAsClsId);
 	bool UpdateTreatAs (LPCTSTR pClsId, LPCTSTR pTreatAsClsId);
 
-	HTREEITEM InsertTreeItem (CWindow & pTree, LPCTSTR pItemText, HTREEITEM pParentItem, bool pExpanded = false);
-	bool IsHighlightedItem (CWindow & pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem);
+	HTREEITEM InsertTreeItem (CWindow& pTree, LPCTSTR pItemText, HTREEITEM pParentItem, bool pExpanded = false);
+	bool IsHighlightedItem (CWindow& pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem);
 
 protected:
 	struct InstalledProduct
 	{
 		HTREEITEM			mItems [8];
-		HTREEITEM &			mServerItem;
-		HTREEITEM &			mServerItemAlt;
-		HTREEITEM &			mControlItem;
-		HTREEITEM &			mCharPropsItem;
-		HTREEITEM &			mServerTreatAs;
-		HTREEITEM &			mServerTreatAsAlt;
-		HTREEITEM &			mControlTreatAs;
-		HTREEITEM &			mCharPropsTreatAs;
+		HTREEITEM&			mServerItem;
+		HTREEITEM&			mServerItemAlt;
+		HTREEITEM&			mControlItem;
+		HTREEITEM&			mCharPropsItem;
+		HTREEITEM&			mServerTreatAs;
+		HTREEITEM&			mServerTreatAsAlt;
+		HTREEITEM&			mControlTreatAs;
+		HTREEITEM&			mCharPropsTreatAs;
 		CAtlString			mServerName;
 		CAtlString			mServerNameAlt;
 		CAtlString			mControlName;
@@ -166,9 +166,9 @@ protected:
 			COMMAND_HANDLER(IDOK, BN_CLICKED, OnOk)
 		END_MSG_MAP()
 
-		LRESULT OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-		LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-		LRESULT OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+		LRESULT OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+		LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+		LRESULT OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 		CAxWindow mDetailsText;
 		CAtlString mDetailsURL;

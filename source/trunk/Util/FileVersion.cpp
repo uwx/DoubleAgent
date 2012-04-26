@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -40,12 +40,12 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CFileVersion::CFileVersion (void * pVersionInfo)
+CFileVersion::CFileVersion (void* pVersionInfo)
 {
 	GetVersionInfo (pVersionInfo);
 }
 
-CFileVersion::CFileVersion (VS_FIXEDFILEINFO & pVersionInfo)
+CFileVersion::CFileVersion (VS_FIXEDFILEINFO& pVersionInfo)
 {
 	memcpy (&mFileInfo, &pVersionInfo, sizeof(VS_FIXEDFILEINFO));
 }
@@ -60,7 +60,7 @@ CFileVersion::CFileVersion (HMODULE pModule)
 	GetModuleInfo (pModule);
 }
 
-CFileVersion::CFileVersion (const CFileVersion & pSource)
+CFileVersion::CFileVersion (const CFileVersion& pSource)
 {
 	mFileInfo = pSource.mFileInfo;
 }
@@ -80,7 +80,7 @@ bool CFileVersion::IsValid () const
 	return false;
 }
 
-void CFileVersion::GetVersionInfo (void * pVersionInfo)
+void CFileVersion::GetVersionInfo (void* pVersionInfo)
 {
 	if	(pVersionInfo)
 	{
@@ -89,7 +89,7 @@ void CFileVersion::GetVersionInfo (void * pVersionInfo)
 
 		if	(
 				(lVersionInfoW->Value.dwSignature == 0xFEEF04BD)
-			&&	(lVersionInfoW->szKey [sizeof (lVersionInfoW->szKey) / sizeof (WCHAR)] == 0)
+			&&	(lVersionInfoW->szKey [sizeof (lVersionInfoW->szKey) / sizeof(WCHAR)] == 0)
 			&&	(wcscmp (lVersionInfoW->szKey, L"VS_VERSION_INFO") == 0)
 			)
 		{
@@ -242,7 +242,7 @@ CString CFileVersion::FormatVersion (ULONGLONG pVersion, LPCTSTR pVersionString,
 
 //////////////////////////////////////////////////////////////////////
 
-static inline bool GetPartVal (LPCTSTR pPart, ULONG & pPartVal)
+static inline bool GetPartVal (LPCTSTR pPart, ULONG& pPartVal)
 {
 	LPTSTR	lPartEnd;
 	pPartVal = _tcstoul (pPart, &lPartEnd, 10);
@@ -250,7 +250,7 @@ static inline bool GetPartVal (LPCTSTR pPart, ULONG & pPartVal)
 	return (lPartEnd [0] == 0);
 }
 
-bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
+bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG& pVersion)
 {
 	bool			lRet = false;
 	CString			lVersionString (pVersionString);
@@ -339,7 +339,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CFileVersion::MakeValidVersion (CString & pVersion, bool pSkipTrailingZero)
+bool CFileVersion::MakeValidVersion (CString& pVersion, bool pSkipTrailingZero)
 {
 	CString			lVersion (pVersion);
 	CStringArray	lParts;
@@ -405,7 +405,7 @@ bool CFileVersion::MakeValidVersion (CString & pVersion, bool pSkipTrailingZero)
 	return false;
 }
 
-bool CFileVersion::ExtractVersion (LPCTSTR pString, CString & pVersion, bool pLabeledOnly, bool pIncludeFirstWord)
+bool CFileVersion::ExtractVersion (LPCTSTR pString, CString& pVersion, bool pLabeledOnly, bool pIncludeFirstWord)
 {
 	bool			lRet = false;
 	CStringArray	lWords;
@@ -416,7 +416,7 @@ bool CFileVersion::ExtractVersion (LPCTSTR pString, CString & pVersion, bool pLa
 
 	for	(lNdx = (pIncludeFirstWord ? 0 : 1); lNdx < (int)lWords.GetCount(); lNdx++)
 	{
-		const CString &	lWord = lWords [lNdx];
+		const CString&	lWord = lWords [lNdx];
 
 		if	(_istdigit (lWord [0]))
 		{
@@ -468,7 +468,7 @@ bool CFileVersion::ExtractVersion (LPCTSTR pString, CString & pVersion, bool pLa
 
 typedef HRESULT (CALLBACK * tDllGetVersion) (DLLVERSIONINFO *pdvi);
 
-bool CFileVersion::GetModuleVersion (LPCTSTR pModuleName, ULONGLONG & pVersion, ULONGLONG & pFileVersion, bool pLoad)
+bool CFileVersion::GetModuleVersion (LPCTSTR pModuleName, ULONGLONG& pVersion, ULONGLONG& pFileVersion, bool pLoad)
 {
 	bool	lRet = false;
 
@@ -529,12 +529,12 @@ bool CFileVersion::GetModuleVersion (LPCTSTR pModuleName, ULONGLONG & pVersion, 
 }
 
 
-bool CFileVersion::GetShellVersion (ULONGLONG & pVersion, ULONGLONG & pFileVersion, bool pLoad)
+bool CFileVersion::GetShellVersion (ULONGLONG& pVersion, ULONGLONG& pFileVersion, bool pLoad)
 {
 	return GetModuleVersion (_T("SHELL32.DLL"), pVersion, pFileVersion, pLoad);
 }
 
-bool CFileVersion::GetComCtlVersion (ULONGLONG & pVersion, ULONGLONG & pFileVersion, bool pLoad)
+bool CFileVersion::GetComCtlVersion (ULONGLONG& pVersion, ULONGLONG& pFileVersion, bool pLoad)
 {
 	return GetModuleVersion (_T("COMCTL32.DLL"), pVersion, pFileVersion, pLoad);
 }

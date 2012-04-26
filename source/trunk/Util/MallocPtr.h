@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -73,7 +73,7 @@ public:
 	~tMallocPtr () {_Free (mPtr); mPtr = NULL;}
 
 	aType * operator= (aType * pPtr) {return tArrayPtr <aType, tMallocPtrFree<aType> >::operator= (pPtr);}
-	aType * operator= (tMallocPtr <aType> & pPtr) {return tArrayPtr <aType, tMallocPtrFree<aType> >::operator= (pPtr);}
+	aType * operator= (tMallocPtr <aType>& pPtr) {return tArrayPtr <aType, tMallocPtrFree<aType> >::operator= (pPtr);}
 
 	aType * Alloc (UINT pCount = 1)
 	{
@@ -96,7 +96,7 @@ public:
 		return mPtr;
 	}
 
-	void * AllocBulk (UINT pSize)
+	void* AllocBulk (UINT pSize)
 	{
 		Free ();
 #ifdef	ASSERT
@@ -114,7 +114,7 @@ public:
 		{
 			memset (mPtr, 0, pSize);
 		}
-		return (void *) mPtr;
+		return (void*) mPtr;
 	}
 
 	aType ** Free ()

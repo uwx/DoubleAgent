@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -186,7 +186,7 @@ public:
 #ifdef	_DEBUG_COM
 #define	IMPLEMENT_IDISPATCH(theClass, localClass) \
 	IMPLEMENT_IUNKNOWN(theClass, localClass) \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT *pctinfo) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT*pctinfo) \
 	{ \
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		HRESULT	lResult = reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->GetTypeInfoCount (pctinfo); \
@@ -207,7 +207,7 @@ public:
 		LogComErrAnon (MinLogLevel(_DEBUG_COM,LogAlways), lResult, _T("[%p(%d)] ") _T(#theClass) _T("::X") _T(#localClass) _T("::GetIDsOfNames [%u] [%8.8X] [%s]"), pThis, pThis->m_dwRef, cNames, lcid, CGuidStr::GuidName(riid)); \
 		return lResult; \
 	} \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT*puArgErr) \
 	{ \
 		METHOD_PROLOGUE_EX(theClass, localClass) \
 		HRESULT	lResult = reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->Invoke (dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr); \
@@ -217,7 +217,7 @@ public:
 #else	// _DEBUG_COM
 #define	IMPLEMENT_IDISPATCH(theClass, localClass) \
 	IMPLEMENT_IUNKNOWN(theClass, localClass) \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT *pctinfo) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT*pctinfo) \
 	{ \
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		return reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->GetTypeInfoCount (pctinfo); \
@@ -232,7 +232,7 @@ public:
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		return reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId); \
 	} \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT*puArgErr) \
 	{ \
 		METHOD_PROLOGUE_EX(theClass, localClass) \
 		return reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->Invoke (dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr); \
@@ -244,7 +244,7 @@ public:
 #ifdef	_DEBUG_COM
 #define	IMPLEMENT_IDISPATCH_NOMAP(theClass, localClass) \
 	IMPLEMENT_IUNKNOWN(theClass, localClass) \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT *pctinfo) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT*pctinfo) \
 	{ \
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		HRESULT	lResult = reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->GetTypeInfoCount (pctinfo); \
@@ -265,7 +265,7 @@ public:
 		LogComErrAnon (MinLogLevel(_DEBUG_COM,LogAlways), lResult, _T("[%p(%d)] ") _T(#theClass) _T("::X") _T(#localClass) _T("::GetIDsOfNames [%u] [%8.8X] [%s]"), pThis, pThis->m_dwRef, cNames, lcid, CGuidStr::GuidName(riid)); \
 		return lResult; \
 	} \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT*puArgErr) \
 	{ \
 		METHOD_PROLOGUE_EX(theClass, localClass) \
 		ITypeInfo * lTypeInfo = NULL; \
@@ -284,7 +284,7 @@ public:
 #else	// _DEBUG_COM
 #define	IMPLEMENT_IDISPATCH_NOMAP(theClass, localClass) \
 	IMPLEMENT_IUNKNOWN(theClass, localClass) \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT *pctinfo) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT*pctinfo) \
 	{ \
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		return reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->GetTypeInfoCount (pctinfo); \
@@ -299,7 +299,7 @@ public:
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		return reinterpret_cast <LPDISPATCH> (&pThis->m_xDispatch)->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId); \
 	} \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT*puArgErr) \
 	{ \
 		METHOD_PROLOGUE_EX(theClass, localClass) \
 		ITypeInfo * lTypeInfo = NULL; \
@@ -321,7 +321,7 @@ public:
 #ifdef	_DEBUG_COM
 #define	IMPLEMENT_IDISPATCH_AGGREGATE(theClass, localClass, aggregate) \
 	IMPLEMENT_IUNKNOWN(theClass, localClass) \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT *pctinfo) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT*pctinfo) \
 	{ \
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		HRESULT	lResult = pThis->aggregate->GetTypeInfoCount (pctinfo); \
@@ -342,7 +342,7 @@ public:
 		LogComErrAnon (MinLogLevel(_DEBUG_COM,LogAlways), lResult, _T("[%p(%d)] ") _T(#theClass) _T("::X") _T(#localClass) _T("::GetIDsOfNames [%u] [%8.8X] [%s]"), pThis, pThis->m_dwRef, cNames, lcid, CGuidStr::GuidName(riid)); \
 		return lResult; \
 	} \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT*puArgErr) \
 	{ \
 		METHOD_PROLOGUE_EX(theClass, localClass) \
 		ITypeInfo * lTypeInfo = NULL; \
@@ -361,7 +361,7 @@ public:
 #else	// _DEBUG_COM
 #define	IMPLEMENT_IDISPATCH_AGGREGATE(theClass, localClass, aggregate) \
 	IMPLEMENT_IUNKNOWN(theClass, localClass) \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT *pctinfo) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::GetTypeInfoCount(UINT*pctinfo) \
 	{ \
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		return pThis->aggregate->GetTypeInfoCount (pctinfo); \
@@ -376,7 +376,7 @@ public:
 		METHOD_PROLOGUE_EX_(theClass, localClass) \
 		return pThis->aggregate->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId); \
 	} \
-	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr) \
+	HRESULT STDMETHODCALLTYPE theClass::X##localClass::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT*puArgErr) \
 	{ \
 		METHOD_PROLOGUE_EX(theClass, localClass) \
 		ITypeInfo * lTypeInfo = NULL; \

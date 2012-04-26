@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -35,7 +35,7 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CRegistrySearch::GetGlobalClassesKey (CRegKeyEx & pGlobalClasses, bool pAltPlatform)
+bool CRegistrySearch::GetGlobalClassesKey (CRegKeyEx& pGlobalClasses, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -55,7 +55,7 @@ bool CRegistrySearch::GetGlobalClassesKey (CRegKeyEx & pGlobalClasses, bool pAlt
 	return pGlobalClasses.IsValid ();
 }
 
-bool CRegistrySearch::GetUserClassesKey (CRegKeyEx & pUserClasses, bool pAltPlatform)
+bool CRegistrySearch::GetUserClassesKey (CRegKeyEx& pUserClasses, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -75,7 +75,7 @@ bool CRegistrySearch::GetUserClassesKey (CRegKeyEx & pUserClasses, bool pAltPlat
 	return pUserClasses.IsValid ();
 }
 
-bool CRegistrySearch::GetClassesRootKey (CRegKeyEx & pClassesRoot, bool pAltPlatform)
+bool CRegistrySearch::GetClassesRootKey (CRegKeyEx& pClassesRoot, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)
@@ -97,7 +97,7 @@ bool CRegistrySearch::GetClassesRootKey (CRegKeyEx & pClassesRoot, bool pAltPlat
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CRegistrySearch::GetRootKeys (CRegKeyEx & pGlobalClasses, CRegKeyEx & pUserClasses, CRegKeyEx & pClassesRoot, bool pAltPlatform)
+void CRegistrySearch::GetRootKeys (CRegKeyEx& pGlobalClasses, CRegKeyEx& pUserClasses, CRegKeyEx& pClassesRoot, bool pAltPlatform)
 {
 #ifdef	_WIN64
 	if	(pAltPlatform)

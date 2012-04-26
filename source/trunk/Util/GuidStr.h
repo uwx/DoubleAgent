@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -32,8 +32,8 @@ public:
 	CGuidStr (REFGUID pGuid);
 	~CGuidStr () {}
 
-	operator CString &() {return mValue;}
-	operator const CString &() const {return mValue;}
+	operator CString&() {return mValue;}
+	operator const CString&() const {return mValue;}
 	operator LPCTSTR () const {return mValue;}
 
 	static GUID Parse (LPCTSTR pGuidStr);

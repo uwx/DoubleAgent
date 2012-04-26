@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -26,7 +26,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-CServerError::CServerError (HRESULT pResult, const GUID & pGuid)
+CServerError::CServerError (HRESULT pResult, const GUID& pGuid)
 {
 	mGuid = pGuid;
 	mDescription = DaErrorDescription (pResult);
@@ -35,7 +35,7 @@ CServerError::CServerError (HRESULT pResult, const GUID & pGuid)
 	{
 		mSource = _T(_SERVER_PROGID_NAME);
 	}
-#else		
+#else
 	mSource = _T(_SERVER_PROGID_NAME);
 	if	(mDescription.IsEmpty ())
 	{
@@ -46,7 +46,7 @@ CServerError::CServerError (HRESULT pResult, const GUID & pGuid)
 
 //////////////////////////////////////////////////////////////////////
 
-CControlError::CControlError (HRESULT pResult, const GUID & pGuid)
+CControlError::CControlError (HRESULT pResult, const GUID& pGuid)
 {
 	mSource = _T(_CONTROL_PROGID_NAME);
 	mGuid = pGuid;

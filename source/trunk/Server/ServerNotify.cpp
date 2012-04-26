@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -73,7 +73,7 @@ CServerNotify::~CServerNotify ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-static INT_PTR CountUnk (CComDynamicUnkArray & pUnkArray)
+static INT_PTR CountUnk (CComDynamicUnkArray& pUnkArray)
 {
 	int	lRet = 0;
 	int	lNdx;
@@ -90,7 +90,7 @@ static INT_PTR CountUnk (CComDynamicUnkArray & pUnkArray)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long * pdwSinkID)
+HRESULT CServerNotify::Register (IUnknown * punkNotifySink, long* pdwSinkID)
 {
 	HRESULT					lResult = S_FALSE;
 	IDaSvrNotifySink2Ptr	lDaSink2 (punkNotifySink);

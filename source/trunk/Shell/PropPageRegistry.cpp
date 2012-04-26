@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -394,7 +394,7 @@ bool CPropPageRegistry::ShowMsRegistry ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HTREEITEM CPropPageRegistry::ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowClassId (CAtlString& pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow& pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lGlobalClasses;
 	CRegKeyEx	lUserClasses;
@@ -404,7 +404,7 @@ HTREEITEM CPropPageRegistry::ShowClassId (CAtlString & pProgName, LPCTSTR pNameF
 	return ShowClassId (pProgName, pNameFormat, pClassId, pTree, lGlobalClasses, lUserClasses, lClassesRoot, pShowMissing, pParentItem);
 }
 
-HTREEITEM CPropPageRegistry::ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowClassId (CAtlString& pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow& pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lClassIdKey (pClassesRoot, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
 	HTREEITEM	lProgItem;
@@ -525,7 +525,7 @@ HTREEITEM CPropPageRegistry::ShowClassId (CAtlString & pProgName, LPCTSTR pNameF
 	return NULL;
 }
 
-HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow& pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lGlobalClasses;
 	CRegKeyEx	lUserClasses;
@@ -535,7 +535,7 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 	return ShowProgId (pProgName, pNameFormat, pProgId, pTree, lGlobalClasses, lUserClasses, lClassesRoot, pShowMissing, pParentItem);
 }
 
-HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow& pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lProgIdKey (pClassesRoot, pProgId, true);
 	HTREEITEM	lProgItem;
@@ -957,7 +957,7 @@ bool CPropPageRegistry::ShowMsInstallStatus ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-UINT CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform)
+UINT CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM& pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM& pMaTreatAs, REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform)
 {
 	UINT		lTreatAsStatus = 0;
 	CRegKeyEx	lGlobalClasses;
@@ -984,7 +984,7 @@ UINT CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTR
 	return lTreatAsStatus;
 }
 
-void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, UINT pTreatAsStatus)
+void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM& pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM& pMaTreatAs, UINT pTreatAsStatus)
 {
 	CAtlString	lTreatAsText;
 
@@ -1250,7 +1250,7 @@ bool CPropPageRegistry::UpdateTreatAs (LPCTSTR pClsId, LPCTSTR pTreatAsClsId)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HTREEITEM CPropPageRegistry::InsertTreeItem (CWindow & pTree, LPCTSTR pItemText, HTREEITEM pParentItem, bool pExpanded)
+HTREEITEM CPropPageRegistry::InsertTreeItem (CWindow& pTree, LPCTSTR pItemText, HTREEITEM pParentItem, bool pExpanded)
 {
 	HTREEITEM				lRet;
 	tS <TV_INSERTSTRUCT>	lTreeInsert;
@@ -1268,7 +1268,7 @@ HTREEITEM CPropPageRegistry::InsertTreeItem (CWindow & pTree, LPCTSTR pItemText,
 	return lRet;
 }
 
-bool CPropPageRegistry::IsHighlightedItem (CWindow & pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem)
+bool CPropPageRegistry::IsHighlightedItem (CWindow& pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem)
 {
 	if	(
 			(pTreeItem)
@@ -1356,7 +1356,7 @@ LRESULT CPropPageRegistry::OnCustomDrawTree(int idCtrl, LPNMHDR pnmh, BOOL& bHan
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageRegistry::OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageRegistry::OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	bool	lChanged = false;
 
@@ -1396,7 +1396,7 @@ LRESULT CPropPageRegistry::OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOO
 	return 0;
 }
 
-LRESULT CPropPageRegistry::OnUseMa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageRegistry::OnUseMa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	bool	lChanged = false;
 
@@ -1459,7 +1459,7 @@ LRESULT CPropPageRegistry::OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageRegistry::CDetailsDlg::OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageRegistry::CDetailsDlg::OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	HWND		lTextWnd;
 	CRect		lTextRect;
@@ -1482,13 +1482,13 @@ LRESULT CPropPageRegistry::CDetailsDlg::OnInitDialog (UINT uMsg, WPARAM wParam, 
 	return TRUE;
 }
 
-LRESULT CPropPageRegistry::CDetailsDlg::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageRegistry::CDetailsDlg::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	EndDialog (IDCANCEL);
 	return 0;
 }
 
-LRESULT CPropPageRegistry::CDetailsDlg::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageRegistry::CDetailsDlg::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	EndDialog (IDOK);
 	return 0;

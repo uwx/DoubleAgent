@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -32,34 +32,34 @@
 class CImageTools
 {
 public:
-	static bool CreateColorImage (const CSize & pSize, ATL::CImage & pImage, bool pForBlending = true, bool pTopDown = false);
-	static bool RecreateColorImage (const CSize & pSize, ATL::CImage & pImage, bool pForBlending = true, bool pTopDown = false);
+	static bool CreateColorImage (const CSize& pSize, ATL::CImage& pImage, bool pForBlending = true, bool pTopDown = false);
+	static bool RecreateColorImage (const CSize& pSize, ATL::CImage& pImage, bool pForBlending = true, bool pTopDown = false);
 
-	static bool CreateWindowImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending = true, bool pTopDown = false);
-	static bool RecreateWindowImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending = true, bool pTopDown = false);
+	static bool CreateWindowImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending = true, bool pTopDown = false);
+	static bool RecreateWindowImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending = true, bool pTopDown = false);
 
-	static bool CreateClientImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending = true, bool pTopDown = false);
-	static bool RecreateClientImage (HWND pWindow, ATL::CImage & pImage, bool pForBlending = true, bool pTopDown = false, bool pExactFit = true);
+	static bool CreateClientImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending = true, bool pTopDown = false);
+	static bool RecreateClientImage (HWND pWindow, ATL::CImage& pImage, bool pForBlending = true, bool pTopDown = false, bool pExactFit = true);
 
-	static bool ShrinkImage (ATL::CImage & pImage, UINT pFactor, UINT pBlend = 1);
-	static bool ShrinkImage (ATL::CImage & pSrcImage, ATL::CImage & pTrgImage, UINT pBlend = 1);
-	static bool SmearImage (ATL::CImage & pImage, UINT pFactor = 1);
+	static bool ShrinkImage (ATL::CImage& pImage, UINT pFactor, UINT pBlend = 1);
+	static bool ShrinkImage (ATL::CImage& pSrcImage, ATL::CImage& pTrgImage, UINT pBlend = 1);
+	static bool SmearImage (ATL::CImage& pImage, UINT pFactor = 1);
 
-	static bool GetImageInfo (HBITMAP pImage, BITMAPINFO & pBitmapInfo, BYTE ** pBitmapBits = NULL);
-	static bool GetImageInfo (ATL::CImage & pImage, BITMAPINFO & pBitmapInfo, BYTE ** pBitmapBits = NULL) {return GetImageInfo ((HBITMAP)pImage, pBitmapInfo, pBitmapBits);}
+	static bool GetImageInfo (HBITMAP pImage, BITMAPINFO& pBitmapInfo, BYTE** pBitmapBits = NULL);
+	static bool GetImageInfo (ATL::CImage& pImage, BITMAPINFO& pBitmapInfo, BYTE** pBitmapBits = NULL) {return GetImageInfo ((HBITMAP)pImage, pBitmapInfo, pBitmapBits);}
 
-	static bool MapImageColors (HBITMAP pImage, const CColor & pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07);
-	static bool MapImageColors (ATL::CImage & pImage, const CColor & pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07) {return MapImageColors ((HBITMAP)pImage, pColorFill, pColorLight, pColorDark, pColorWhite, pColorBlack, pVarianceMask);}
+	static bool MapImageColors (HBITMAP pImage, const CColor& pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07);
+	static bool MapImageColors (ATL::CImage& pImage, const CColor& pColorFill, const CColor * pColorLight = NULL, const CColor * pColorDark = NULL, const CColor * pColorWhite = NULL, const CColor * pColorBlack = NULL, BYTE pVarianceMask = 0x07) {return MapImageColors ((HBITMAP)pImage, pColorFill, pColorLight, pColorDark, pColorWhite, pColorBlack, pVarianceMask);}
 };
 
 //////////////////////////////////////////////////////////////////////
 
-static inline CSize GetImageSize (const ATL::CImage & pImage)
+static inline CSize GetImageSize (const ATL::CImage& pImage)
 {
 	return CSize (pImage.GetWidth(), pImage.GetHeight());
 }
 
-static inline LPBYTE GetImageBits (const ATL::CImage & pImage)
+static inline LPBYTE GetImageBits (const ATL::CImage& pImage)
 {
 	if	(pImage.GetPitch() < 0)
 	{
@@ -71,12 +71,12 @@ static inline LPBYTE GetImageBits (const ATL::CImage & pImage)
 	}
 }
 
-static inline int GetImageBytes (const ATL::CImage & pImage)
+static inline int GetImageBytes (const ATL::CImage& pImage)
 {
 	return pImage.GetHeight() * abs (pImage.GetPitch());
 }
 
-static inline bool IsImageTopDown (const ATL::CImage & pImage)
+static inline bool IsImageTopDown (const ATL::CImage& pImage)
 {
 	return (pImage.GetPitch() < 0);
 }

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -103,7 +103,7 @@ tBstrPtr CSapiVoice::GetDisplayName ()
 	return lDisplayName.Detach();
 }
 
-HRESULT CSapiVoice::GetDisplayName (tBstrPtr & pDisplayName)
+HRESULT CSapiVoice::GetDisplayName (tBstrPtr& pDisplayName)
 {
 	return E_NOTIMPL;
 }
@@ -117,7 +117,7 @@ tBstrPtr CSapiVoice::GetUniqueId ()
 	return lUniqueId.Detach();
 }
 
-HRESULT CSapiVoice::GetUniqueId (tBstrPtr & pUniqueId)
+HRESULT CSapiVoice::GetUniqueId (tBstrPtr& pUniqueId)
 {
 	return E_NOTIMPL;
 }
@@ -131,7 +131,7 @@ ULONG CSapiVoice::GetRate ()
 	return lRate;
 }
 
-HRESULT CSapiVoice::GetRate (ULONG & pRate)
+HRESULT CSapiVoice::GetRate (ULONG& pRate)
 {
 	return E_NOTIMPL;
 }
@@ -150,7 +150,7 @@ USHORT CSapiVoice::GetVolume ()
 	return lVolume;
 }
 
-HRESULT CSapiVoice::GetVolume (USHORT & pVolume)
+HRESULT CSapiVoice::GetVolume (USHORT& pVolume)
 {
 	return E_NOTIMPL;
 }
@@ -169,7 +169,7 @@ USHORT CSapiVoice::GetPitch ()
 	return lPitch;
 }
 
-HRESULT CSapiVoice::GetPitch (USHORT & pPitch)
+HRESULT CSapiVoice::GetPitch (USHORT& pPitch)
 {
 	return E_NOTIMPL;
 }

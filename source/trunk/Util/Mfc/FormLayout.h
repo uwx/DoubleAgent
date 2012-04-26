@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -33,17 +33,17 @@ public:
 	bool EndFormLayout ();
 	HDWP IsFormLayoutStarted () const;
 
-	bool AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin = NULL);
+	bool AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect* pMargin = NULL);
 	bool AlignPos (CWnd * pAlign, CWnd * pAlignTo);
-	bool AlignSize (CWnd * pAlign, CWnd * pAlignTo, CSize * pMult = NULL);
+	bool AlignSize (CWnd * pAlign, CWnd * pAlignTo, CSize* pMult = NULL);
 
 	bool AlignLeft (CWnd * pAlign, CWnd * pAlignTo, bool pStretch = false, int pOffset = 0);
 	bool AlignRight (CWnd * pAlign, CWnd * pAlignTo, bool pStretch = false, int pOffset = 0);
 	bool AlignTop (CWnd * pAlign, CWnd * pAlignTo, bool pStretch = false, int pOffset = 0);
 	bool AlignBottom (CWnd * pAlign, CWnd * pAlignTo, bool pStretch = false, int pOffset = 0);
 
-	bool AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin = NULL);
-	bool AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin = NULL);
+	bool AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect* pMargin = NULL);
+	bool AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect* pMargin = NULL);
 	bool AlignWidth (CWnd * pAlign, CWnd * pAlignTo, float pMult = 0.0f);
 	bool AlignHeight (CWnd * pAlign, CWnd * pAlignTo, float pMult = 0.0f);
 
@@ -52,20 +52,20 @@ public:
 	bool AlignBelow (CWnd * pAlign, CWnd * pAlignTo, bool pStretch = false, int pGap = 0);
 	bool AlignAbove (CWnd * pAlign, CWnd * pAlignTo, bool pStretch = false, int pGap = 0);
 
-	bool UpdateSize (CWnd * pWnd, const CSize & pSize);
+	bool UpdateSize (CWnd * pWnd, const CSize& pSize);
 	bool UpdateWidth (CWnd * pWnd, int pWidth);
 	bool UpdateHeight (CWnd * pWnd, int pHeight);
 
-	bool AdjustRect (CWnd * pWnd, const CPoint & pOffset);
-	bool AdjustRect (CWnd * pWnd, const CRect & pMargin);
+	bool AdjustRect (CWnd * pWnd, const CPoint& pOffset);
+	bool AdjustRect (CWnd * pWnd, const CRect& pMargin);
 
-	CRect ChildWndRect (CWnd & pWnd, CWnd * pParentWnd = NULL);
-	CPoint ChildWndPos (CWnd & pWnd, CWnd * pParentWnd = NULL);
-	CSize ChildWndSize (CWnd & pWnd);
-	CSize ChildWndGap (CWnd & pWnd1, CWnd & pWnd2);
-	CPoint ChildWndMid (CWnd & pWnd1, CWnd & pWnd2, CWnd * pParentWnd = NULL);
+	CRect ChildWndRect (CWnd& pWnd, CWnd * pParentWnd = NULL);
+	CPoint ChildWndPos (CWnd& pWnd, CWnd * pParentWnd = NULL);
+	CSize ChildWndSize (CWnd& pWnd);
+	CSize ChildWndGap (CWnd& pWnd1, CWnd& pWnd2);
+	CPoint ChildWndMid (CWnd& pWnd1, CWnd& pWnd2, CWnd * pParentWnd = NULL);
 
-	CRect ChildUsedRect (CWnd & pWnd, bool pCheckVisible = true);
+	CRect ChildUsedRect (CWnd& pWnd, bool pCheckVisible = true);
 
 	bool OrderAfter (CWnd * pOrder, const CWnd * pOrderAfter);
 	bool OrderBefore (CWnd * pOrder, const CWnd * pOrderBefore);
@@ -74,10 +74,10 @@ public:
 	CFormLayout () : mDwp (NULL) {}
 
 public:
-	void MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect & pRect);
-	void GetAlignWndRect (CWnd * pAlign, CRect & pRect);
-	void GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect & pRect);
-	void GetAlignWndClient (CWnd * pAlign, CRect & pRect);
+	void MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect& pRect);
+	void GetAlignWndRect (CWnd * pAlign, CRect& pRect);
+	void GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect& pRect);
+	void GetAlignWndClient (CWnd * pAlign, CRect& pRect);
 
 private:
 	HDWP											mDwp;

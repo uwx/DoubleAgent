@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -31,7 +31,7 @@
 class COleWindow
 {
 protected:
-	COleWindow (CCmdTarget & pCmdTarget, CWnd * pWnd);
+	COleWindow (CCmdTarget& pCmdTarget, CWnd * pWnd);
 
 	BEGIN_INTERFACE_PART (OleWindow, IOleWindow)
         STDMETHOD (GetWindow) (HWND *phwnd);
@@ -48,7 +48,7 @@ protected:
 class CRunnableObject
 {
 protected:
-	CRunnableObject (CCmdTarget & pCmdTarget);
+	CRunnableObject (CCmdTarget& pCmdTarget);
 
 	BEGIN_INTERFACE_PART (RunnableObject, IRunnableObject)
         STDMETHOD (GetRunningClass) (LPCLSID lpClsid);
@@ -59,7 +59,7 @@ protected:
 	END_INTERFACE_PART (RunnableObject)
 
 protected:
-	virtual HRESULT GetRunningClass (CLSID & pClassId);
+	virtual HRESULT GetRunningClass (CLSID& pClassId);
 	virtual HRESULT Run ();
 	virtual bool IsRunning ();
 
@@ -72,14 +72,14 @@ protected:
 class CRunnableSingleton : public CRunnableObject
 {
 protected:
-	CRunnableSingleton (CCmdTarget & pCmdTarget, class CRotSingleton & pSingleton);
+	CRunnableSingleton (CCmdTarget& pCmdTarget, class CRotSingleton& pSingleton);
 
 protected:
-	virtual HRESULT GetRunningClass (CLSID & pClassId);
+	virtual HRESULT GetRunningClass (CLSID& pClassId);
 	virtual HRESULT Run ();
 
 protected:
-	class CRotSingleton &	mSingleton;
+	class CRotSingleton&	mSingleton;
 };
 
 //////////////////////////////////////////////////////////////////////

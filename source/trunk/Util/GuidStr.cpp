@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -127,7 +127,7 @@ interface __declspec(uuid("{B7D14566-0509-4CCE-A71F-0A554233BD9B}")) IInitialize
 #pragma comment(lib, "strmiids.lib")
 
 #ifdef	__AFXCOLL_H__
-inline UINT AFXAPI HashKey<> (const GUID & key)
+inline UINT AFXAPI HashKey<> (const GUID& key)
 {
 	return ((UINT)key.Data1) >> 4;
 }
@@ -142,7 +142,7 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 
 #ifdef	_DEBUG
 #ifdef	__AFXCOLL_H__
-	static CMap <GUID, const GUID &, CString, LPCTSTR>	lGuidMap;
+	static CMap <GUID, const GUID&, CString, LPCTSTR>	lGuidMap;
 #else
 #ifdef	__ATLCOLL_H__
 	static CAtlMap <GUID, CString> lGuidMap;
@@ -885,7 +885,7 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 	if	(!lGuidMap.Lookup (pGuid, lRet))
 #endif
 	{
-		lRet = (CString &) CGuidStr (pGuid);
+		lRet = (CString&) CGuidStr (pGuid);
 	}
 	return lRet;
 }

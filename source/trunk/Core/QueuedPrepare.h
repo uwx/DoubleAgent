@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "QueuedAction.h"
+#include "FileDownload.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -43,31 +44,31 @@ public:
 public:
 	_DACORE_IMPEXP static CQueuedPrepare * CreateInstance (long pCharID, long pReqID = -1);
 
-	_DACORE_IMPEXP HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	_DACORE_IMPEXP HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	_DACORE_IMPEXP HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	_DACORE_IMPEXP HRESULT PutAnimationNames (CAgentFile* pAgentFile, LPCTSTR pAnimationNames, class CEventNotify* pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	_DACORE_IMPEXP HRESULT PutStateNames (CAgentFile* pAgentFile, LPCTSTR pStateNames, class CEventNotify* pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	_DACORE_IMPEXP HRESULT PutSoundUrl (CAgentFile* pAgentFile, LPCTSTR pSoundUrl, class CEventNotify* pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
 
 	_DACORE_IMPEXP HRESULT StartDownloads ();
 	_DACORE_IMPEXP HRESULT FinishDownloads ();
 	_DACORE_IMPEXP HRESULT CancelDownloads ();
-	_DACORE_IMPEXP bool FindDownload (CFileDownload * pDownload);
-	_DACORE_IMPEXP CFileDownload * GetDownload ();
+	_DACORE_IMPEXP bool FindDownload (CFileDownload* pDownload);
+	_DACORE_IMPEXP CFileDownload* GetDownload ();
 
-	_DACORE_IMPEXP bool PutAnimations (CAgentFile * pAgentFile);
-	_DACORE_IMPEXP HRESULT PutAnimation (CAgentFile * pAgentFile, CFileDownload * pDownload);
+	_DACORE_IMPEXP bool PutAnimations (CAgentFile* pAgentFile);
+	_DACORE_IMPEXP HRESULT PutAnimation (CAgentFile* pAgentFile, CFileDownload* pDownload);
 	_DACORE_IMPEXP tBstrPtr GetAnimationNames (LPCTSTR pDelimiter = _T(","));
 
 // Overrides
-	_DACORE_IMPEXP virtual bool Advance (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd);
-	_DACORE_IMPEXP virtual bool Pause (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, bool pPause);
-	_DACORE_IMPEXP virtual bool Abort (class CQueuedActions & pQueue, class CAgentWnd * pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
+	_DACORE_IMPEXP virtual bool Advance (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd);
+	_DACORE_IMPEXP virtual bool Pause (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, bool pPause);
+	_DACORE_IMPEXP virtual bool Abort (class CQueuedActions& pQueue, class CAgentWnd* pAgentWnd, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);
 
 // Implementation
 protected:
 	CAtlOwnPtrMap <CAtlString, CFileDownload, CStringElementTraitsI<CAtlString> >	mDownloads;
 	CAtlPtrTypeArray <CFileDownload>												mDownloadsRunning;
 	CAtlPtrTypeArray <CFileDownload>												mDownloadsDone;
-	class CEventNotify *															mDownloadNotify;
+	class CEventNotify*															mDownloadNotify;
 	bool																			mDownloadIsSound;
 	LPUNKNOWN																		mDownloadActiveXContext;
 };

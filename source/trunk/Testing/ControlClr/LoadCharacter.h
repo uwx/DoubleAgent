@@ -52,7 +52,7 @@ private:
 	/// <summary>
 	/// Required designer variable.
 	/// </summary>
-	System::ComponentModel::Container ^components;
+	System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -155,47 +155,51 @@ private:
 	private:
 		DoubleAgent::AxControl::AxControl^	mDaControl;
 
-	private: System::Void LoadCharacter_Load(System::Object^  sender, System::EventArgs^  e)
+	private: System::Void LoadCharacter_Load(System::Object^ sender, System::EventArgs^ e)
 	{
-		DoubleAgent::Control::CharacterFiles^		lFiles = mDaControl->CharacterFiles;
-		String^										lFilePath;
-		String^										lPathName;
-		String^										lFileName;
-		TreeNode^									lRootNode;
-		Generic::Dictionary <String^, TreeNode^>^	lRootNodes = gcnew Generic::Dictionary <String^, TreeNode^>;
-
-		lFiles->DoubleAgentFiles = true;
-		lFiles->MsAgentFiles = true;
-		lFiles->MsOfficeFiles = true;
-		lFiles->CompliantCharacters = true;
-		lFiles->NonCompliantCharacters = true;
-		lFiles->SpeakingCharacters = true;
-		lFiles->NonSpeakingCharacters = true;
-		lFiles->VerifyVersion = true;
-
-		CharacterTree->BeginUpdate();
-
-		lRootNode = CharacterTree->Nodes->Add ("<default>");
-
-		for each (lFilePath in lFiles->FilePaths)
+		try
 		{
-			lPathName = Path::GetDirectoryName (lFilePath);
-			lFileName = Path::GetFileName (lFilePath);
+			DoubleAgent::Control::CharacterFiles^		lFiles = mDaControl->CharacterFiles;
+			String^										lFilePath;
+			String^										lPathName;
+			String^										lFileName;
+			TreeNode^									lRootNode;
+			Generic::Dictionary <String^, TreeNode^>^	lRootNodes = gcnew Generic::Dictionary <String^, TreeNode^>;
 
-			if	(lRootNodes->ContainsKey (lPathName))
+			lFiles->DoubleAgentFiles = true;
+			lFiles->MsAgentFiles = true;
+			lFiles->MsOfficeFiles = true;
+			lFiles->CompliantCharacters = true;
+			lFiles->NonCompliantCharacters = true;
+			lFiles->SpeakingCharacters = true;
+			lFiles->NonSpeakingCharacters = true;
+			lFiles->VerifyVersion = true;
+
+			CharacterTree->BeginUpdate();
+
+			lRootNode = CharacterTree->Nodes->Add ("<default>");
+
+			for each (lFilePath in lFiles->FilePaths)
 			{
-				lRootNode = lRootNodes [lPathName];
+				lPathName = Path::GetDirectoryName (lFilePath);
+				lFileName = Path::GetFileName (lFilePath);
+
+				if	(lRootNodes->ContainsKey (lPathName))
+				{
+					lRootNode = lRootNodes [lPathName];
+				}
+				else
+				{
+					lRootNode = CharacterTree->Nodes->Add (lPathName);
+					lRootNodes [lPathName] = lRootNode;
+				}
+				lRootNode->Nodes->Add (lFileName);
+				lRootNode->Expand ();
 			}
-			else
-			{
-				lRootNode = CharacterTree->Nodes->Add (lPathName);
-				lRootNodes [lPathName] = lRootNode;
-			}
-			lRootNode->Nodes->Add (lFileName);
-			lRootNode->Expand ();
+
+			CharacterTree->EndUpdate();
 		}
-
-		CharacterTree->EndUpdate();
+		catch AnyExceptionDebug
 	}
 
 	private: System::Void CharacterTree_NodeMouseDoubleClick(System::Object^  sender, System::Windows::Forms::TreeNodeMouseClickEventArgs^  e)

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,7 +27,7 @@ class CDirectShowSeekingImpl : public IMediaSeeking
 {
 protected:
 	CDirectShowSeekingImpl ();
-	CDirectShowSeekingImpl & Initialize (CComObjectRootBase & pBase, CDirectShowClock & pClock, LPCTSTR pBaseClassName = NULL);
+	CDirectShowSeekingImpl& Initialize (CComObjectRootBase& pBase, CDirectShowClock& pClock, LPCTSTR pBaseClassName = NULL);
 public:
 	virtual ~CDirectShowSeekingImpl ();
 
@@ -39,8 +39,8 @@ public:
 // Operations
 public:
 	HRESULT SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TIME pStopTime, REFERENCE_TIME pDuration = 0);
-	void GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
-	void GetStreamTimes (REFERENCE_TIME & pStreamTime, REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime, FILTER_STATE pStreamState = State_Stopped);
+	void GetTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime);
+	void GetStreamTimes (REFERENCE_TIME& pStreamTime, REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime, FILTER_STATE pStreamState = State_Stopped);
 
 	REFERENCE_TIME GetCurrTime (FILTER_STATE pStreamState = State_Stopped);
 	REFERENCE_TIME GetStopTime (FILTER_STATE pStreamState = State_Stopped);
@@ -69,7 +69,7 @@ public:
 // Implementation
 protected:
 	virtual bool GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking);
-	virtual void OnTimesChanging (REFERENCE_TIME & pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME & pStopTime, DWORD pStopFlags);
+	virtual void OnTimesChanging (REFERENCE_TIME& pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME& pStopTime, DWORD pStopFlags);
 	virtual void OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags);
 
 protected:
@@ -92,7 +92,7 @@ public:
 	~CDirectShowSeeking () {}
 
 protected:
-	void InitMediaSeeking (BASE & pBase, CDirectShowClock & pClock, DWORD pRemoveSeekingCaps = 0, DWORD pAddSeekingCaps = 0)
+	void InitMediaSeeking (BASE& pBase, CDirectShowClock& pClock, DWORD pRemoveSeekingCaps = 0, DWORD pAddSeekingCaps = 0)
 	{
 		CDirectShowSeekingImpl::Initialize (pBase, pClock, CAtlString(typeid(BASE).name()).Mid(6));
 		mSeekingCaps &= ~pRemoveSeekingCaps;

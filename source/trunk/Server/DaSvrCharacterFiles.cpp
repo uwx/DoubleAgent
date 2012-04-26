@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -65,9 +65,9 @@ DaSvrCharacterFiles::~DaSvrCharacterFiles ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCharacterFiles * DaSvrCharacterFiles::CreateInstance (LPCTSTR pClientMutexName)
+DaSvrCharacterFiles* DaSvrCharacterFiles::CreateInstance (LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrCharacterFiles> *	lInstance = NULL;
+	CComObject<DaSvrCharacterFiles>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrCharacterFiles>::CreateInstance (&lInstance))))
 	{
@@ -148,7 +148,7 @@ STDMETHODIMP DaSvrCharacterFiles::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY**FilePaths)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, max(m_dwRef,-1));

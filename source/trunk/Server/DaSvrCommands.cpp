@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -62,9 +62,9 @@ DaSvrCommands::~DaSvrCommands ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, CEventNotify * pNotify, LPCTSTR pClientMutexName)
+DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, CEventNotify* pNotify, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrCommands> *	lInstance = NULL;
+	CComObject<DaSvrCommands>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrCommands>::CreateInstance (&lInstance))))
 	{
@@ -279,7 +279,7 @@ LANGID DaSvrCommands::GetLangID () const
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCommand * DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCTSTR pVoiceCaption, bool pEnabled, bool pVisible)
+CDaCmnCommand* DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCTSTR pVoiceCaption, bool pEnabled, bool pVisible)
 {
 	DaSvrCommand *	lCommand;
 

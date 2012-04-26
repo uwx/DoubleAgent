@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -106,7 +106,7 @@ bool CClipboard::HasText ()
 	return lRet;
 }
 
-bool CClipboard::HasText (COleDataObject & pDataObject)
+bool CClipboard::HasText (COleDataObject& pDataObject)
 {
 	bool	lRet = false;
 
@@ -190,7 +190,7 @@ bool CClipboard::PutText (LPCTSTR pText, bool pAppend, bool pFlush)
 	return lRet;
 }
 
-bool CClipboard::GetText (CString & pText)
+bool CClipboard::GetText (CString& pText)
 {
 	bool			lRet = false;
 	COleDataObject	lDataObject;
@@ -209,7 +209,7 @@ bool CClipboard::GetText (CString & pText)
 	return lRet;
 }
 
-bool CClipboard::GetText (CString & pText, COleDataObject & pDataObject)
+bool CClipboard::GetText (CString& pText, COleDataObject& pDataObject)
 {
 	bool	lRet = false;
 
@@ -286,7 +286,7 @@ bool CClipboard::GetText (CString & pText, COleDataObject & pDataObject)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CClipboard::PutFile (const CString & pFile, bool pAppend, bool pFlush, UINT pFormatId)
+bool CClipboard::PutFile (const CString& pFile, bool pAppend, bool pFlush, UINT pFormatId)
 {
 	CStringArray	lFiles;
 
@@ -294,7 +294,7 @@ bool CClipboard::PutFile (const CString & pFile, bool pAppend, bool pFlush, UINT
 	return PutFiles (lFiles, pAppend, pFlush, pFormatId);
 }
 
-bool CClipboard::PutFiles (const CStringArray & pFiles, bool pAppend, bool pFlush, UINT pFormatId)
+bool CClipboard::PutFiles (const CStringArray& pFiles, bool pAppend, bool pFlush, UINT pFormatId)
 {
 	bool					lRet = false;
 	bool					lAppended = false;
@@ -339,7 +339,7 @@ bool CClipboard::PutFiles (const CStringArray & pFiles, bool pAppend, bool pFlus
 
 //////////////////////////////////////////////////////////////////////
 
-bool CClipboard::PutFile (const CString & pFile, COleDataSource & pDataSource, UINT pFormatId)
+bool CClipboard::PutFile (const CString& pFile, COleDataSource& pDataSource, UINT pFormatId)
 {
 	CStringArray	lFiles;
 
@@ -347,7 +347,7 @@ bool CClipboard::PutFile (const CString & pFile, COleDataSource & pDataSource, U
 	return PutFiles (lFiles, pDataSource, pFormatId);
 }
 
-bool CClipboard::PutFiles (const CStringArray & pFiles, COleDataSource & pDataSource, UINT pFormatId)
+bool CClipboard::PutFiles (const CStringArray& pFiles, COleDataSource& pDataSource, UINT pFormatId)
 {
 	bool				lRet = false;
 	int					lNdx;
@@ -442,7 +442,7 @@ bool CClipboard::HasFiles (UINT pFormatId)
 	return lRet;
 }
 
-bool CClipboard::GetFiles (CStringArray & pFiles, UINT pFormatId)
+bool CClipboard::GetFiles (CStringArray& pFiles, UINT pFormatId)
 {
 	bool			lRet = false;
 	COleDataObject	lDataObject;
@@ -461,7 +461,7 @@ bool CClipboard::GetFiles (CStringArray & pFiles, UINT pFormatId)
 	return lRet;
 }
 
-bool CClipboard::HasFiles (COleDataObject & pDataObject, UINT pFormatId)
+bool CClipboard::HasFiles (COleDataObject& pDataObject, UINT pFormatId)
 {
 	bool	lRet = false;
 
@@ -482,7 +482,7 @@ bool CClipboard::HasFiles (COleDataObject & pDataObject, UINT pFormatId)
 	return lRet;
 }
 
-bool CClipboard::GetFiles (CStringArray & pFiles, COleDataObject & pDataObject, UINT pFormatId)
+bool CClipboard::GetFiles (CStringArray& pFiles, COleDataObject& pDataObject, UINT pFormatId)
 {
 	bool	lRet = false;
 	HGLOBAL	lDataHandle;
@@ -671,7 +671,7 @@ bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, bool pAppend, b
 	return lRet;
 }
 
-bool CClipboard::PutFileIdl (const CString & pFile, bool pAppend, bool pFlush, UINT pFormatId)
+bool CClipboard::PutFileIdl (const CString& pFile, bool pAppend, bool pFlush, UINT pFormatId)
 {
 	bool					lRet = false;
 	bool					lAppended = false;
@@ -714,7 +714,7 @@ bool CClipboard::PutFileIdl (const CString & pFile, bool pAppend, bool pFlush, U
 	return lRet;
 }
 
-bool CClipboard::PutFileIdls (const CStringArray & pFiles, bool pAppend, bool pFlush, UINT pFormatId)
+bool CClipboard::PutFileIdls (const CStringArray& pFiles, bool pAppend, bool pFlush, UINT pFormatId)
 {
 	bool					lRet = false;
 	bool					lAppended = false;
@@ -759,7 +759,7 @@ bool CClipboard::PutFileIdls (const CStringArray & pFiles, bool pAppend, bool pF
 
 //////////////////////////////////////////////////////////////////////
 
-bool CClipboard::PutIdl (LPCITEMIDLIST pIdl, COleDataSource & pDataSource, UINT pFormatId)
+bool CClipboard::PutIdl (LPCITEMIDLIST pIdl, COleDataSource& pDataSource, UINT pFormatId)
 {
 	bool		lRet = false;
 	IMallocPtr	lMalloc;
@@ -862,7 +862,7 @@ bool CClipboard::PutIdl (LPCITEMIDLIST pIdl, COleDataSource & pDataSource, UINT 
 	return lRet;
 }
 
-bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource & pDataSource, UINT pFormatId)
+bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource& pDataSource, UINT pFormatId)
 {
 	if	(pIdlCount == 1)
 	{
@@ -1024,7 +1024,7 @@ bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource 
 
 //////////////////////////////////////////////////////////////////////
 
-bool CClipboard::PutFileIdl (const CString & pFile, COleDataSource & pDataSource, UINT pFormatId)
+bool CClipboard::PutFileIdl (const CString& pFile, COleDataSource& pDataSource, UINT pFormatId)
 {
 	bool			lRet = false;
 	UINT			lDataSize = 0;
@@ -1154,7 +1154,7 @@ bool CClipboard::PutFileIdl (const CString & pFile, COleDataSource & pDataSource
 	return lRet;
 }
 
-bool CClipboard::PutFileIdls (const CStringArray & pFiles, COleDataSource & pDataSource, UINT pFormatId)
+bool CClipboard::PutFileIdls (const CStringArray& pFiles, COleDataSource& pDataSource, UINT pFormatId)
 {
 	if	(pFiles.GetSize () == 1)
 	{
@@ -1365,7 +1365,7 @@ bool CClipboard::HasIdls (UINT pFormatId)
 	return lRet;
 }
 
-bool CClipboard::GetIdls (LPITEMIDLIST *& pIdls, int & pIdlCount, UINT pFormatId)
+bool CClipboard::GetIdls (LPITEMIDLIST*& pIdls, int& pIdlCount, UINT pFormatId)
 {
 	bool			lRet = false;
 	COleDataObject	lDataObject;
@@ -1384,7 +1384,7 @@ bool CClipboard::GetIdls (LPITEMIDLIST *& pIdls, int & pIdlCount, UINT pFormatId
 	return lRet;
 }
 
-bool CClipboard::HasIdls (COleDataObject & pDataObject, UINT pFormatId)
+bool CClipboard::HasIdls (COleDataObject& pDataObject, UINT pFormatId)
 {
 	bool	lRet = false;
 
@@ -1405,7 +1405,7 @@ bool CClipboard::HasIdls (COleDataObject & pDataObject, UINT pFormatId)
 	return lRet;
 }
 
-bool CClipboard::GetIdls (LPITEMIDLIST *& pIdls, int & pIdlCount, COleDataObject & pDataObject, UINT pFormatId)
+bool CClipboard::GetIdls (LPITEMIDLIST*& pIdls, int& pIdlCount, COleDataObject& pDataObject, UINT pFormatId)
 {
 	bool	lRet = false;
 	HGLOBAL	lDataHandle;
@@ -1555,7 +1555,7 @@ bool CClipboard::PutStream (IStream * pStream, bool pCopy, bool pRelease, bool p
 	return lRet;
 }
 
-bool CClipboard::PutStream (IStream * pStream, COleDataSource & pDataSource, bool pCopy, bool pRelease, UINT pFormatId, int pNdx)
+bool CClipboard::PutStream (IStream * pStream, COleDataSource& pDataSource, bool pCopy, bool pRelease, UINT pFormatId, int pNdx)
 {
 	bool				lRet = false;
 	tS <STGMEDIUM>		lStgMedium;
@@ -1660,7 +1660,7 @@ bool CClipboard::GetStream (IStream ** pStream, UINT pFormatId, int pNdx)
 	return lRet;
 }
 
-bool CClipboard::GetStream (IStream ** pStream, COleDataObject & pDataObject, UINT pFormatId, int pNdx)
+bool CClipboard::GetStream (IStream ** pStream, COleDataObject& pDataObject, UINT pFormatId, int pNdx)
 {
 	bool			lRet = false;
 	tS <STGMEDIUM>	lStgMedium;
@@ -1791,7 +1791,7 @@ STGMEDIUM * CClipboard::PeekStream (UINT pFormatId, int pNdx)
 	return NULL;
 }
 
-bool CClipboard::PeekStream (GUID & pStreamClassId, UINT pFormatId, int pNdx)
+bool CClipboard::PeekStream (GUID& pStreamClassId, UINT pFormatId, int pNdx)
 {
 	bool	lRet = false;
 
@@ -2047,7 +2047,7 @@ STGMEDIUM * CClipboard::PeekStorage (UINT pFormatId, int pNdx)
 	return NULL;
 }
 
-bool CClipboard::PeekStorage (GUID & pStorageClassId, UINT pFormatId, int pNdx)
+bool CClipboard::PeekStorage (GUID& pStorageClassId, UINT pFormatId, int pNdx)
 {
 	bool	lRet = false;
 
@@ -2073,7 +2073,7 @@ bool CClipboard::PeekStorage (GUID & pStorageClassId, UINT pFormatId, int pNdx)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-void CClipboard::DumpDataObject (UINT pLogLevel, COleDataObject & pDataObject, LPCTSTR pTitle, bool pDumpData)
+void CClipboard::DumpDataObject (UINT pLogLevel, COleDataObject& pDataObject, LPCTSTR pTitle, bool pDumpData)
 {
 	if	(LogIsActive (pLogLevel))
 	{

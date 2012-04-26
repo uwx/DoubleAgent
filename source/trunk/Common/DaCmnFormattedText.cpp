@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCmnFormattedText.h"
+#include "AgentTextParse.h"
 #include "SapiVoice.h"
 #include "DebugStr.h"
 
@@ -36,7 +37,7 @@ CDaCmnFormattedText::~CDaCmnFormattedText ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnFormattedText::Initialize (LPUNKNOWN pObject, CSapiVoice * pSapiVoice)
+HRESULT CDaCmnFormattedText::Initialize (LPUNKNOWN pObject, CSapiVoice* pSapiVoice)
 {
 	return Initialize (pObject, pSapiVoice->SafeIsValid ());
 }
@@ -46,7 +47,7 @@ HRESULT CDaCmnFormattedText::Initialize (LPUNKNOWN pObject, UINT pSapiVersion)
 	mText.m_pOuterUnknown = pObject;
 	mRawText.Empty ();
 	mText.mText.SetSapiVersion (pSapiVersion);
-	mText.mText.ResetState (true);
+	mText.mText.DisplayNoWords ();
 	return (pObject) ? S_OK : E_FAIL;
 }
 
@@ -68,7 +69,7 @@ HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::put_RawText (BSTR RawText)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
-	if	(mText.mText.GetWordDisplayed () < 0)
+	if	(mText.mText.WordDisplayed < 0)
 	{
 		CAgentTextParse	lTextParse;
 		CAtlStringArray	lTextWords;
@@ -77,7 +78,7 @@ HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::put_RawText (BSTR RawText)
 		lTextParse.SetSapiVersion (mText.mText.GetSapiVersion());
 		lTextParse.SplitText (mRawText, lTextWords);
 		mText.mText = lTextWords;
-		mText.mText.ResetState (true);
+		mText.mText.DisplayNoWords ();
 		lResult = S_OK;
 	}
 	return lResult;
@@ -117,7 +118,7 @@ HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::get_WordCount (long *WordCount)
 
 	if	(WordCount)
 	{
-		*WordCount = (long)mText.mText.GetWordCount();
+		*WordCount = (long)mText.mText.WordCount;
 		lResult = S_OK;
 	}
 	return lResult;
@@ -141,7 +142,7 @@ HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::get_WordIndex (long *WordIndex)
 
 	if	(WordIndex)
 	{
-		*WordIndex = (long)mText.mText.GetWordDisplayed ();
+		*WordIndex = (long)mText.mText.WordDisplayed;
 		lResult = S_OK;
 	}
 	return lResult;
@@ -165,7 +166,7 @@ HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::Parse (BSTR RawText)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
-	if	(mText.mText.GetWordDisplayed () < 0)
+	if	(mText.mText.WordDisplayed < 0)
 	{
 		CAgentTextParse	lTextParse;
 
@@ -173,27 +174,27 @@ HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::Parse (BSTR RawText)
 		lTextParse.SetSapiVersion (mText.mText.GetSapiVersion());
 		lTextParse = mRawText;
 		mText.mText = lTextParse;
-		mText.mText.ResetState (true);
+		mText.mText.DisplayNoWords ();
 
 		lResult = S_OK;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::Append (CDaCmnFormattedText * FormattedText)
+HRESULT STDMETHODCALLTYPE CDaCmnFormattedText::Append (CDaCmnFormattedText* FormattedText)
 {
 	HRESULT	lResult = E_INVALIDARG;
 
 	if	(FormattedText)
 	{
-		if	(mText.mText.GetWordDisplayed () >= 0)
+		if	(mText.mText.WordDisplayed >= 0)
 		{
 			lResult = E_UNEXPECTED;
 		}
 		else
 		{
 			mText.mText.Append (FormattedText->mText.mText, true);
-			mText.mText.ResetState (true);
+			mText.mText.DisplayNoWords ();
 			mRawText = mText.mText.GetSpeechText ();
 			if	(mRawText.IsEmpty ())
 			{

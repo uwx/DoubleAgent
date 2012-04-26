@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -29,9 +29,9 @@ template <typename TYPE, ULONG_PTR EMPTYVALUE = 0> class tHandleType
 public:
 	inline TYPE _EmptyValue () const {return (TYPE) EMPTYVALUE;}
 protected:
-	inline bool _IsValid (const TYPE & pHandle) const {return (pHandle!=_EmptyValue());}
-	inline void _Empty (TYPE & pHandle) {pHandle=_EmptyValue();}
-	inline bool _Close (TYPE & pHandle)
+	inline bool _IsValid (const TYPE& pHandle) const {return (pHandle!=_EmptyValue());}
+	inline void _Empty (TYPE& pHandle) {pHandle=_EmptyValue();}
+	inline bool _Close (TYPE& pHandle)
 	{
 		bool	lRet = false;
 		TYPE	lHandle = pHandle;
@@ -43,11 +43,12 @@ protected:
 				lRet = __Close (lHandle);
 			}
 		}
-		catch AnyExceptionSilent
+		catch (...)
+		{}
 		return lRet;
 	}
 private:
-	virtual bool __Close (TYPE & pHandle) {return ::CloseHandle (pHandle) ? true : false;}
+	virtual bool __Close (TYPE& pHandle) {return ::CloseHandle (pHandle) ? true : false;}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -55,70 +56,70 @@ private:
 class tHandleTypeGlobal : public tHandleType <HGLOBAL>
 {
 private:
-	virtual bool __Close (HGLOBAL & pHandle) {return ::GlobalFree (pHandle) ? false : true;}
+	virtual bool __Close (HGLOBAL& pHandle) {return ::GlobalFree (pHandle) ? false : true;}
 };
 
 class tHandleTypeFind : public tHandleType <HANDLE, -1>
 {
 private:
-	virtual bool __Close (HANDLE & pHandle) {return ::FindClose (pHandle) ? true : false;}
+	virtual bool __Close (HANDLE& pHandle) {return ::FindClose (pHandle) ? true : false;}
 };
 
 class tHandleTypeMapped : public tHandleType <LPVOID, NULL>
 {
 private:
-	virtual bool __Close (LPVOID & pHandle) {return ::UnmapViewOfFile (pHandle) ? true : false;}
+	virtual bool __Close (LPVOID& pHandle) {return ::UnmapViewOfFile (pHandle) ? true : false;}
 };
 
 class tHandleTypeModule : public tHandleType <HMODULE>
 {
 private:
-	virtual bool __Close (HMODULE & pHandle) {return ::FreeLibrary (pHandle) ? true : false;}
+	virtual bool __Close (HMODULE& pHandle) {return ::FreeLibrary (pHandle) ? true : false;}
 };
 
 #ifdef	STDMETHOD
 class tHandleTypeComModule : public tHandleType <HINSTANCE>
 {
 private:
-	virtual bool __Close (HINSTANCE & pHandle) {::CoFreeLibrary (pHandle); return true;}
+	virtual bool __Close (HINSTANCE& pHandle) {::CoFreeLibrary (pHandle); return true;}
 };
 #endif
 
 class tHandleTypeMenu : public tHandleType <HMENU>
 {
 private:
-	virtual bool __Close (HMENU & pHandle) {return ::DestroyMenu (pHandle) ? true : false;}
+	virtual bool __Close (HMENU& pHandle) {return ::DestroyMenu (pHandle) ? true : false;}
 };
 
 class tHandleTypeMemDC : public tHandleType <HDC>
 {
 private:
-	virtual bool __Close (HDC & pHandle) {return ::DeleteDC (pHandle) ? true : false;}
+	virtual bool __Close (HDC& pHandle) {return ::DeleteDC (pHandle) ? true : false;}
 };
 
 template <typename TYPE> class tHandleTypeGdiObj : public tHandleType <TYPE>
 {
 private:
-	virtual bool __Close (TYPE & pHandle) {return ::DeleteObject ((HGDIOBJ)pHandle) ? true : false;}
+	virtual bool __Close (TYPE& pHandle) {return ::DeleteObject ((HGDIOBJ)pHandle) ? true : false;}
 };
 
 class tHandleTypeIcon : public tHandleType <HICON>
 {
 private:
-	virtual bool __Close (HICON & pHandle) {return ::DestroyIcon (pHandle) ? true : false;}
+	virtual bool __Close (HICON& pHandle) {return ::DestroyIcon (pHandle) ? true : false;}
 };
 
 class tHandleTypeCursor : public tHandleType <HCURSOR>
 {
 private:
-	virtual bool __Close (HCURSOR & pHandle) {return ::DestroyCursor (pHandle) ? true : false;}
+	virtual bool __Close (HCURSOR& pHandle) {return ::DestroyCursor (pHandle) ? true : false;}
 };
 
 #ifdef	_INC_COMMCTRL
 class tHandleTypeImageList : public tHandleType <HIMAGELIST>
 {
 private:
-	virtual bool __Close (HIMAGELIST & pHandle) {return ::ImageList_Destroy (pHandle) ? true : false;}
+	virtual bool __Close (HIMAGELIST& pHandle) {return ::ImageList_Destroy (pHandle) ? true : false;}
 };
 #endif
 
@@ -146,7 +147,7 @@ public:
 		return false;
 	}
 
-	tHandle<TYPE,aHandleType> & operator= (TYPE pHandle)
+	tHandle<TYPE,aHandleType>& operator= (TYPE pHandle)
 	{
 		if	(mHandle != pHandle)
 		{
@@ -176,7 +177,7 @@ public:
 		return (!_IsValid (mHandle));
 	}
 
-	TYPE * operator& ()
+	TYPE* operator& ()
 	{
 #ifdef	ASSERT
 		ASSERT (!_IsValid (mHandle));
@@ -184,7 +185,7 @@ public:
 		return &mHandle;
 	}
 
-	tHandle<TYPE,aHandleType> & Attach (TYPE pHandle)
+	tHandle<TYPE,aHandleType>& Attach (TYPE pHandle)
 	{
 #ifdef	ASSERT
 		ASSERT (!_IsValid (mHandle));
@@ -210,10 +211,10 @@ template <typename TYPE = HANDLE, typename aHandleType = tHandleType<TYPE> > cla
 {
 public:
 	tHandleEx (TYPE pHandle = (TYPE)-1) : tHandle <TYPE,aHandleType> (pHandle) {}
-	tHandleEx<TYPE,aHandleType> & operator= (TYPE pHandle) {tHandle <TYPE,aHandleType>::operator= (pHandle); return *this;}
-	tHandleEx<TYPE,aHandleType> * operator & () {return this;}
-	const tHandleEx<TYPE,aHandleType> * operator & () const {return this;}
-	TYPE * Free () {_Close (mHandle); _Empty (mHandle); return &mHandle;}
+	tHandleEx<TYPE,aHandleType>& operator= (TYPE pHandle) {tHandle <TYPE,aHandleType>::operator= (pHandle); return *this;}
+	tHandleEx<TYPE,aHandleType>* operator & () {return this;}
+	const tHandleEx<TYPE,aHandleType>* operator & () const {return this;}
+	TYPE* Free () {_Close (mHandle); _Empty (mHandle); return &mHandle;}
 };
 
 ////////////////////////////////////////////////////////////////////////

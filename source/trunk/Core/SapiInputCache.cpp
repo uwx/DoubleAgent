@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -68,12 +68,12 @@ void CSapiInputCache::Terminate ()
 
 CSapiInputCache * CSapiInputCache::GetStaticInstance ()
 {
-	return &_AtlModule;
+	return &_CoreAnchor;
 }
 
 void CSapiInputCache::TerminateStaticInstance ()
 {
-	return _AtlModule.CSapiInputCache::Terminate ();
+	return _CoreAnchor.CSapiInputCache::Terminate ();
 }
 
 CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()
@@ -89,9 +89,9 @@ CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached)
+CSapi5Input* CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached)
 {
-	CSapi5Input *		lRet = NULL;
+	CSapi5Input*		lRet = NULL;
 
 	if	(GetSapi5Inputs())
 	{
@@ -102,7 +102,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults,
 		{
 			for	(lInfoNdx = 0; lInfoNdx < (INT_PTR)lInfoArray->GetCount(); lInfoNdx++)
 			{
-				CSapi5InputInfo *	lInputInfo = (*lInfoArray) [lInfoNdx];
+				CSapi5InputInfo*	lInputInfo = (*lInfoArray) [lInfoNdx];
 				tPtr <CSapi5Input>	lInput;
 
 				if	(pCached)
@@ -135,7 +135,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults,
 			}
 			if	(
 					(!lRet)
-				&&	(lInput = (CSapi5Input *)CSapi5Input::CreateObject())
+				&&	(lInput = (CSapi5Input*)CSapi5Input::CreateObject())
 				)
 			{
 				lInput->SetEngineId (lInputInfo->mEngineIdShort);
@@ -152,10 +152,10 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults,
 
 //////////////////////////////////////////////////////////////////////
 
-CSapi5Input * CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached)
+CSapi5Input* CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached)
 {
-	CSapi5Input *		lRet = NULL;
-	CSapi5InputInfo *	lInputInfo;
+	CSapi5Input*		lRet = NULL;
+	CSapi5InputInfo*	lInputInfo;
 	tPtr <CSapi5Input>	lInput;
 
 	if	(GetSapi5Inputs())
@@ -189,7 +189,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangI
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient)
+bool CSapiInputCache::CacheInput (CSapi5Input* pInput, CSapiInputClient * pClient)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -202,7 +202,7 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClie
 			)
 		{
 			INT_PTR											lInputNdx;
-			tPtr <CAtlPtrTypeArray <CSapiInputClient> > &	lClients = mInputClients [pInput];
+			tPtr <CAtlPtrTypeArray <CSapiInputClient> >&	lClients = mInputClients [pInput];
 
 			lInputNdx = mCachedInputs.Find (pInput);
 			if	(lInputNdx < 0)
@@ -253,7 +253,7 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClie
 	return lRet;
 }
 
-bool CSapiInputCache::UncacheInput (CSapi5Input * pInput)
+bool CSapiInputCache::UncacheInput (CSapi5Input* pInput)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -284,9 +284,9 @@ bool CSapiInputCache::UncacheInput (CSapi5Input * pInput)
 
 //////////////////////////////////////////////////////////////////////
 
-CSapi5Input * CSapiInputCache::GetCachedInput (INT_PTR pInputNdx)
+CSapi5Input* CSapiInputCache::GetCachedInput (INT_PTR pInputNdx)
 {
-	CSapi5Input *	lRet = NULL;
+	CSapi5Input*	lRet = NULL;
 	CLockCS			lLock (mCritSec);
 
 	try
@@ -298,14 +298,14 @@ CSapi5Input * CSapiInputCache::GetCachedInput (INT_PTR pInputNdx)
 	return lRet;
 }
 
-CSapi5Input * CSapiInputCache::FindCachedInput (LPCTSTR pEngineId)
+CSapi5Input* CSapiInputCache::FindCachedInput (LPCTSTR pEngineId)
 {
-	CSapi5Input *	lRet = NULL;
+	CSapi5Input*	lRet = NULL;
 	CLockCS			lLock (mCritSec);
 
 	try
 	{
-		CSapi5Input *	lInput;
+		CSapi5Input*	lInput;
 		CAtlString		lInputName (pEngineId);
 		INT_PTR			lNdx;
 
@@ -327,7 +327,7 @@ CSapi5Input * CSapiInputCache::FindCachedInput (LPCTSTR pEngineId)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient)
+bool CSapiInputCache::AddInputClient (CSapi5Input* pInput, CSapiInputClient * pClient)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -340,7 +340,7 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * p
 			&&	(mCachedInputs.Find (pInput) >= 0)
 			)
 		{
-			tPtr <CAtlPtrTypeArray <CSapiInputClient> > &	lClients = mInputClients [pInput];
+			tPtr <CAtlPtrTypeArray <CSapiInputClient> >&	lClients = mInputClients [pInput];
 
 			if	(
 					(lClients)
@@ -372,7 +372,7 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * p
 	return lRet;
 }
 
-bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput)
+bool CSapiInputCache::RemoveInputClient (CSapi5Input* pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
@@ -387,7 +387,7 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient 
 			&&	((lInputNdx = mCachedInputs.Find (pInput)) >= 0)
 			)
 		{
-			tPtr <CAtlPtrTypeArray <CSapiInputClient> > &	lClients = mInputClients [pInput];
+			tPtr <CAtlPtrTypeArray <CSapiInputClient> >&	lClients = mInputClients [pInput];
 
 			if	(
 					(lClients)
@@ -437,14 +437,14 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient 
 	return lRet;
 }
 
-bool CSapiInputCache::GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients)
+bool CSapiInputCache::GetInputClients (CSapi5Input* pInput, CAtlPtrTypeArray <CSapiInputClient>& pClients)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mCritSec);
 
 	try
 	{
-		CAtlPtrTypeArray <CSapiInputClient> *	lClients = NULL;
+		CAtlPtrTypeArray <CSapiInputClient>*	lClients = NULL;
 
 		if	(
 				(pInput)

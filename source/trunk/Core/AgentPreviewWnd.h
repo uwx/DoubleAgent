@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -42,14 +42,14 @@ protected:
 	_DACORE_IMPEXP CAgentPreviewWnd ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentPreviewWnd ();
-	_DACORE_IMPEXP static CAgentPreviewWnd * CreateInstance ();
+	_DACORE_IMPEXP static CAgentPreviewWnd* CreateInstance ();
 
 // Attributes
 public:
 
 // Operations
 public:
-	_DACORE_IMPEXP bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
+	_DACORE_IMPEXP bool Create (HWND pParentWnd, CRect* pInitialRect = NULL);
 	_DACORE_IMPEXP void FinalRelease();
 
 // Overrides
@@ -57,7 +57,7 @@ public:
 	_DACORE_IMPEXP virtual DWORD GetAlphaSmoothing () const;
 protected:
 	_DACORE_IMPEXP virtual void Opened ();
-	_DACORE_IMPEXP virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
+	_DACORE_IMPEXP virtual bool DoAnimationQueue (bool& pNextActivateImmediate, DWORD& pNextQueueTime);
 	_DACORE_IMPEXP virtual bool DoIdle ();
 
 // Declarations
@@ -92,10 +92,10 @@ public:
     _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetIdleEnabled (boolean *pEnabled);
     _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE EnableIdle (boolean pEnabled);
 	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE SetBkColor (COLORREF pBkColor);
-	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameSize (SIZE * pFrameSize);
-	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize);
-    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE **pFrameFormat);
-    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameSize (SIZE* pFrameSize);
+	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE* pFrameSize);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE**pFrameFormat);
+    _DACORE_IMPEXP HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE**pFrameFormat);
 	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE OnAppActive (boolean pActive);
 	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderFrame (HDC pDC, POINT *pPosition);
 	_DACORE_IMPEXP HRESULT STDMETHODCALLTYPE RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
@@ -108,8 +108,8 @@ public:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentPreviewWnd)
 		MESSAGE_HANDLER(WM_MOUSEACTIVATE, OnMouseActivate)
@@ -118,12 +118,14 @@ protected:
 	END_MSG_MAP()
 
 protected:
-	HRESULT InternalRenderFrame (HDC pDC, const POINT * pPosition);
-	HRESULT InternalRenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition);
+	HRESULT InternalRenderFrame (HDC pDC, const POINT* pPosition);
+	HRESULT InternalRenderAnimationFrame (CAgentFile* pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT* pPosition);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef	_DACORE_EXPORT
 OBJECT_ENTRY_AUTO(__uuidof(CAgentPreviewWnd), CAgentPreviewWnd)
+#endif
 
 /////////////////////////////////////////////////////////////////////////////

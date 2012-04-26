@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -164,7 +164,7 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId)
 	return NULL;
 }
 
-HINSTANCE CLocalize::GetMuiModule (LANGID pLangId, ULONG & pModuleNum)
+HINSTANCE CLocalize::GetMuiModule (LANGID pLangId, ULONG& pModuleNum)
 {
 	HINSTANCE	lModule = NULL;
 
@@ -199,7 +199,7 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId, ULONG & pModuleNum)
 
 //////////////////////////////////////////////////////////////////////
 
-HINSTANCE CLocalize::FindResource (const CResName & pResName, WORD pLangId, HINSTANCE pResModule)
+HINSTANCE CLocalize::FindResource (const CResName& pResName, WORD pLangId, HINSTANCE pResModule)
 {
 	HINSTANCE	lRet = NULL;
 
@@ -285,7 +285,7 @@ HINSTANCE CLocalize::FindResource (const CResName & pResName, WORD pLangId, HINS
 	return lRet;
 }
 
-LPCVOID CLocalize::LoadResource (const CResName & pResName, ULONG & pResSize, WORD pLangId, HINSTANCE pResModule)
+LPCVOID CLocalize::LoadResource (const CResName& pResName, ULONG& pResSize, WORD pLangId, HINSTANCE pResModule)
 {
 	LPCVOID	lRet = NULL;
 
@@ -435,7 +435,7 @@ static LPCWSTR FindResString (UINT pId, WORD & pStrSize, LPCVOID pResData, ULONG
 
 //////////////////////////////////////////////////////////////////////
 
-bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR & pString, ULONG & pStringSize)
+bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR& pString, ULONG& pStringSize)
 {
 	bool	lRet = false;
 #ifdef	_UNICODE
@@ -606,7 +606,7 @@ bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR & pString, ULONG 
 
 //////////////////////////////////////////////////////////////////////
 
-bool CLocalize::LoadMuiMenu (UINT pMenuId, WORD pLangId, LPCVOID & pMenuTemplate, ULONG & pTemplateSize)
+bool CLocalize::LoadMuiMenu (UINT pMenuId, WORD pLangId, LPCVOID& pMenuTemplate, ULONG& pTemplateSize)
 {
 	if	(pMenuTemplate = LoadResource (CResName (pMenuId, RT_MENU), pTemplateSize, pLangId))
 	{
@@ -615,7 +615,7 @@ bool CLocalize::LoadMuiMenu (UINT pMenuId, WORD pLangId, LPCVOID & pMenuTemplate
 	return false;
 }
 
-bool CLocalize::LoadMuiDialog (UINT pDialogId, WORD pLangId, LPCVOID & pDialogTemplate, ULONG & pTemplateSize)
+bool CLocalize::LoadMuiDialog (UINT pDialogId, WORD pLangId, LPCVOID& pDialogTemplate, ULONG& pTemplateSize)
 {
 	if	(pDialogTemplate = LoadResource (CResName (pDialogId, RT_DIALOG), pTemplateSize, pLangId))
 	{

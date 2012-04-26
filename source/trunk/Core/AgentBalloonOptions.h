@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -29,28 +29,21 @@ class CAgentBalloonOptions
 	DECLARE_DLL_OBJECT_EX(CAgentBalloonOptions, _DACORE_IMPEXP)
 public:
 	_DACORE_IMPEXP CAgentBalloonOptions ();
-	_DACORE_IMPEXP CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID = 0);
-	_DACORE_IMPEXP CAgentBalloonOptions (const CAgentBalloonOptions & pSource);
-	_DACORE_IMPEXP CAgentBalloonOptions & operator= (const CAgentBalloonOptions & pSource);
-	_DACORE_IMPEXP bool operator== (const CAgentBalloonOptions & pSource) const;
-	_DACORE_IMPEXP bool operator!= (const CAgentBalloonOptions & pSource) const;
+	_DACORE_IMPEXP CAgentBalloonOptions (DWORD pStyle, const CAgentFileBalloon& pFileBalloon, LANGID pLangID = 0);
+	_DACORE_IMPEXP CAgentBalloonOptions (const CAgentBalloonOptions& pSource);
+	_DACORE_IMPEXP CAgentBalloonOptions& operator= (const CAgentBalloonOptions& pSource);
+	_DACORE_IMPEXP bool operator== (const CAgentBalloonOptions& pSource) const;
+	_DACORE_IMPEXP bool operator!= (const CAgentBalloonOptions& pSource) const;
 
 // Attributes
 public:
-	DWORD				mStyle;
-	USHORT				mLines;
-	USHORT				mPerLine;
-	COLORREF			mBkColor;
-	COLORREF			mFgColor;
-	COLORREF			mBrColor;
-	LOGFONT				mFont;
-
-	_DACORE_IMPEXP static const USHORT	mMinLines;
-	_DACORE_IMPEXP static const USHORT	mMaxLines;
-	_DACORE_IMPEXP static const USHORT	mDefLines;
-	_DACORE_IMPEXP static const USHORT	mMinPerLine;
-	_DACORE_IMPEXP static const USHORT	mMaxPerLine;
-	_DACORE_IMPEXP static const USHORT	mDefPerLine;
+	DWORD		mStyle;
+	USHORT		mLines;
+	USHORT		mPerLine;
+	COLORREF	mBkColor;
+	COLORREF	mFgColor;
+	COLORREF	mBrColor;
+	LOGFONT		mFont;
 
 	_DACORE_IMPEXP bool IsEnabled () const;
 	_DACORE_IMPEXP bool IsAutoSize () const;
@@ -61,15 +54,15 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
-	_DACORE_IMPEXP static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
-	_DACORE_IMPEXP static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
-	_DACORE_IMPEXP static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
+	_DACORE_IMPEXP static bool CopyBalloonFont (const CAgentFileBalloon& pFileBalloon, LOGFONT& pFont);
+	_DACORE_IMPEXP static bool CopyBalloonFont (const LOGFONT& pFont, CAgentFileBalloon& pFileBalloon);
+	_DACORE_IMPEXP static bool SetFontLangID (LOGFONT& pFont, LANGID pLangID);
+	_DACORE_IMPEXP static bool GetActualFont (const LOGFONT& pFont, LOGFONT& pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
 	_DACORE_IMPEXP static bool FontEqual (HFONT pFont1, HFONT pFont2);
-	_DACORE_IMPEXP static bool FontEqual (const LOGFONT & pFont1, const LOGFONT & pFont2);
+	_DACORE_IMPEXP static bool FontEqual (const LOGFONT& pFont1, const LOGFONT& pFont2);
 
 	_DACORE_IMPEXP void LogOptions (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
-	_DACORE_IMPEXP static void LogFont (UINT pLogLevel, const LOGFONT & pFont, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
+	_DACORE_IMPEXP static void LogFont (UINT pLogLevel, const LOGFONT& pFont, LPCTSTR pTitle = NULL, LPCTSTR pPrefix = NULL);
 };
 
 /////////////////////////////////////////////////////////////////////////////

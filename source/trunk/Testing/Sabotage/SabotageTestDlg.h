@@ -142,7 +142,7 @@ protected:
 
 	bool IsAnimating ();
 	bool Stop ();
-	CPoint GetInitialPos (const CSize & pInitialSize);
+	CPoint GetInitialPos (const CSize& pInitialSize);
 	void SabotageEvent ();
 
 	void GetAgentServers (INT_PTR pServerCount = 0);

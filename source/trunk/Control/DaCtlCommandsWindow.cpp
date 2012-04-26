@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -21,6 +21,7 @@
 #include "StdAfx.h"
 #include "DaControlMod.h"
 #include "DaCtlCommandsWindow.h"
+#include "ThemedModule.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -29,6 +30,13 @@
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF|LogTime)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
+
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr	(void*)NULL
+#else
+#define	LogServerPtr	mServerObject.GetInterfacePtr()
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlCommandsWindow::DaCtlCommandsWindow ()
@@ -37,7 +45,7 @@ DaCtlCommandsWindow::DaCtlCommandsWindow ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::DaCtlCommandsWindow (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::DaCtlCommandsWindow (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,7 +58,7 @@ DaCtlCommandsWindow::~DaCtlCommandsWindow ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::~DaCtlCommandsWindow (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::~DaCtlCommandsWindow (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -80,7 +88,7 @@ void DaCtlCommandsWindow::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -94,7 +102,7 @@ void DaCtlCommandsWindow::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -106,7 +114,7 @@ void DaCtlCommandsWindow::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -115,6 +123,7 @@ void DaCtlCommandsWindow::Terminate (bool pFinal)
 
 void DaCtlCommandsWindow::Disconnect (bool pFinal)
 {
+#ifndef	_DACORE_LOCAL
 	if	(pFinal)
 	{
 		mServerObject.Detach ();
@@ -123,6 +132,7 @@ void DaCtlCommandsWindow::Disconnect (bool pFinal)
 	{
 		SafeFreeSafePtr (mServerObject);
 	}
+#endif
 	SafeFreeSafePtr (mLocalObject);
 }
 
@@ -134,6 +144,7 @@ HRESULT DaCtlCommandsWindow::SetOwner (DaControl * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		if	(mOwner->mServer)
 		{
 			mServerObject = mOwner->mServer;
@@ -143,11 +154,19 @@ HRESULT DaCtlCommandsWindow::SetOwner (DaControl * pOwner)
 			}
 		}
 		else
+#endif
 		{
 			if	(mLocalObject = new CDaCmnCommandsWindow ())
 			{
-//TODO
-				mLocalObject->Initialize (NULL);
+				ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
+
+				try
+				{
+					mLocalObject->Initialize (_AtlModule.GetVoiceCommandsWnd (true, mOwner));
+				}
+				catch AnyExceptionDebug
+
+				_AtlModule.DeactivateModuleTheme (lCookie);
 			}
 			else
 			{
@@ -158,7 +177,7 @@ HRESULT DaCtlCommandsWindow::SetOwner (DaControl * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel (_LOG_INSTANCE, LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogComErrAnon (MinLogLevel (_LOG_INSTANCE, LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	return lResult;
@@ -196,8 +215,18 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::get_Visible (VARIANT_BOOL *Visibl
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_FALSE;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+	}
+#ifndef	_DACORE_LOCAL
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -207,6 +236,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::get_Visible (VARIANT_BOOL *Visibl
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommandsWindow));
 #ifdef	_LOG_RESULTS
@@ -224,8 +254,22 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::put_Visible (VARIANT_BOOL Visible
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::put_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_FALSE;
 
+	if	(mLocalObject)
+	{
+		ULONG_PTR	lCookie = _AtlModule.ActivateModuleTheme ();
+
+		try
+		{
+			lResult = mLocalObject->put_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+
+		_AtlModule.DeactivateModuleTheme (lCookie);
+	}
+#ifndef	_DACORE_LOCAL
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -235,6 +279,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::put_Visible (VARIANT_BOOL Visible
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommandsWindow));
 #ifdef	_LOG_RESULTS
@@ -261,17 +306,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::get_Left (short *Left)
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
 	{
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		try
 		{
-			try
-			{
-				lResult = mServerObject->get_Left (Left);
-			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
+			lResult = mLocalObject->get_Left (Left);
 		}
+		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_Left (Left);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommandsWindow));
 #ifdef	_LOG_RESULTS
@@ -289,24 +343,33 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::get_Top (short *Top)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Top)
 	{
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
 	{
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		try
 		{
-			try
-			{
-				lResult = mServerObject->get_Top (Top);
-			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
+			lResult = mLocalObject->get_Top (Top);
 		}
+		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_Top (Top);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommandsWindow));
 #ifdef	_LOG_RESULTS
@@ -324,24 +387,33 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::get_Height (short *Height)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Height)
 	{
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
 	{
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		try
 		{
-			try
-			{
-				lResult = mServerObject->get_Height (Height);
-			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
+			lResult = mLocalObject->get_Height (Height);
 		}
+		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_Height (Height);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommandsWindow));
 #ifdef	_LOG_RESULTS
@@ -359,24 +431,33 @@ HRESULT STDMETHODCALLTYPE DaCtlCommandsWindow::get_Width (short *Width)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCommandsWindow::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = S_FALSE;
 
 	if	(!Width)
 	{
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
 	{
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		try
 		{
-			try
-			{
-				lResult = mServerObject->get_Width (Width);
-			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
+			lResult = mLocalObject->get_Width (Width);
 		}
+		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_Width (Width);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlCommandsWindow));
 #ifdef	_LOG_RESULTS

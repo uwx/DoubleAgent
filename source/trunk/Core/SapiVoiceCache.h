@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -64,17 +64,17 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP CSapiVoice * GetAgentVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
-	_DACORE_IMPEXP CSapiVoice * GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	_DACORE_IMPEXP CSapiVoice* GetAgentVoice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, bool pCached = true);
+	_DACORE_IMPEXP CSapiVoice* GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 
-	_DACORE_IMPEXP bool CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClient);
-	_DACORE_IMPEXP bool UncacheVoice (CSapiVoice * pVoice);
-	_DACORE_IMPEXP bool AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient);
-	_DACORE_IMPEXP bool RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice = true);
+	_DACORE_IMPEXP bool CacheVoice (CSapiVoice* pVoice, CSapiVoiceClient * pClient);
+	_DACORE_IMPEXP bool UncacheVoice (CSapiVoice* pVoice);
+	_DACORE_IMPEXP bool AddVoiceClient (CSapiVoice* pVoice, CSapiVoiceClient * pClient);
+	_DACORE_IMPEXP bool RemoveVoiceClient (CSapiVoice* pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice = true);
 
-	_DACORE_IMPEXP CSapiVoice * GetCachedVoice (INT_PTR pVoiceNdx);
-	_DACORE_IMPEXP CSapiVoice * FindCachedVoice (LPCTSTR pVoiceId);
-	_DACORE_IMPEXP bool GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients);
+	_DACORE_IMPEXP CSapiVoice* GetCachedVoice (INT_PTR pVoiceNdx);
+	_DACORE_IMPEXP CSapiVoice* FindCachedVoice (LPCTSTR pVoiceId);
+	_DACORE_IMPEXP bool GetVoiceClients (CSapiVoice* pVoice, CAtlPtrTypeArray <CSapiVoiceClient>& pClients);
 
 	_DACORE_IMPEXP void Terminate (DWORD pWaitForCompletion = 0);
 	_DACORE_IMPEXP bool DeleteUnusedVoices ();
@@ -84,11 +84,11 @@ public:
 
 // Implementation
 protected:
-	CSapi5Voice * GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
-	CSapi5Voice * GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	CSapi5Voice* GetAgentSapi5Voice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, bool pCached = true);
+	CSapi5Voice* GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 #ifndef	_WIN64
-	CSapi4Voice * GetAgentSapi4Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
-	CSapi4Voice * GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
+	CSapi4Voice* GetAgentSapi4Voice (const class CAgentFileTts& pAgentFileTts, bool pUseDefaults, bool pCached = true);
+	CSapi4Voice* GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 #endif
 
 protected:
@@ -100,7 +100,7 @@ protected:
 #endif
 	tPtr <CSapi5Voices>													mSapi5Voices;
 	CAtlOwnPtrArray <CSapiVoice>										mCachedVoices;
-	CAtlOwnPtrMap <CSapiVoice *, CAtlPtrTypeArray <CSapiVoiceClient> >	mVoiceClients;
+	CAtlOwnPtrMap <CSapiVoice*, CAtlPtrTypeArray <CSapiVoiceClient> >	mVoiceClients;
 	bool																mVoiceDeletePending;
 };
 

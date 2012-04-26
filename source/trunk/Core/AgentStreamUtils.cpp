@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -44,12 +44,12 @@ CAgentStreamUtils::~CAgentStreamUtils()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentFile * CAgentStreamUtils::GetAgentFile () const
+CAgentFile* CAgentStreamUtils::GetAgentFile () const
 {
 	return mAgentFile;
 }
 
-void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient * pClient)
+void CAgentStreamUtils::SetAgentFile (CAgentFile* pAgentFile, CAgentFileClient* pClient)
 {
 	CLockCS	lLock (mUtilCritSec);
 
@@ -62,7 +62,7 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient 
 		{
 			try
 			{
-				_AtlModule.RemoveFileClient (mAgentFile, pClient);
+				_CoreAnchor.RemoveFileClient (mAgentFile, pClient);
 			}
 			catch AnyExceptionSilent
 		}
@@ -74,7 +74,7 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient 
 			&&	(pClient)
 			)
 		{
-			_AtlModule.AddFileClient (mAgentFile, pClient);
+			_CoreAnchor.AddFileClient (mAgentFile, pClient);
 		}
 	}
 	catch AnyExceptionSilent
@@ -82,61 +82,45 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient 
 
 /////////////////////////////////////////////////////////////////////////////
 
-const CAgentFileStates & CAgentStreamUtils::GetFileStates (UINT pLogLevel) const
+const CAgentFileStates& CAgentStreamUtils::GetFileStates () const
 {
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetStates().mGestures.GetCount() <= 0)
-		{
-			lAgentFile->ReadStates (pLogLevel);
-		}
-		return lAgentFile->GetStates ();
+		return lAgentFile->States;
 	}
 	return * (const CAgentFileStates *) NULL;
 }
 
-const CAgentFileGestures & CAgentStreamUtils::GetFileGestures (UINT pLogLevel) const
+const CAgentFileGestures& CAgentStreamUtils::GetFileGestures () const
 {
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetGestures().mAnimations.GetCount() <= 0)
-		{
-			lAgentFile->ReadGestures (pLogLevel);
-		}
-		return lAgentFile->GetGestures ();
+		return lAgentFile->Gestures;
 	}
 	return * (const CAgentFileGestures *) NULL;
 }
 
-bool CAgentStreamUtils::GetFileImages (UINT pLogLevel) const
+bool CAgentStreamUtils::GetFileImages () const
 {
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetImageCount() <= 0)
-		{
-			lAgentFile->ReadImageIndex (pLogLevel);
-		}
 		return (lAgentFile->GetImageCount() > 0);
 	}
 	return false;
 }
 
-bool CAgentStreamUtils::GetFileSounds (UINT pLogLevel) const
+bool CAgentStreamUtils::GetFileSounds () const
 {
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetSoundCount() <= 0)
-		{
-			lAgentFile->ReadSoundIndex (pLogLevel);
-		}
 		return (lAgentFile->GetSoundCount() > 0);
 	}
 	return false;
@@ -144,7 +128,7 @@ bool CAgentStreamUtils::GetFileSounds (UINT pLogLevel) const
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentStreamUtils::SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo)
+void CAgentStreamUtils::SetAgentStreamInfo (_IAgentStreamInfo* pStreamInfo)
 {
 	CLockCS	lLock (mUtilCritSec);
 
@@ -155,7 +139,7 @@ void CAgentStreamUtils::SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo)
 	catch AnyExceptionSilent
 }
 
-void CAgentStreamUtils::SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo)
+void CAgentStreamUtils::SetAgentStreamInfo (CAgentStreamInfo* pStreamInfo)
 {
 	CLockCS	lLock (mUtilCritSec);
 
@@ -166,16 +150,16 @@ void CAgentStreamUtils::SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo)
 	catch AnyExceptionSilent
 }
 
-CAgentStreamInfo * CAgentStreamUtils::GetAgentStreamInfo () const
+CAgentStreamInfo* CAgentStreamUtils::GetAgentStreamInfo () const
 {
-	CAgentStreamInfo *	lRet = NULL;
+	CAgentStreamInfo*	lRet = NULL;
 	CLockCS				lLock (mUtilCritSec);
 
 	try
 	{
 		if	(mStreamInfo != NULL)
 		{
-			lRet = (CAgentStreamInfo *) mStreamInfo.GetInterfacePtr();
+			lRet = (CAgentStreamInfo*) mStreamInfo.GetInterfacePtr();
 		}
 	}
 	catch AnyExceptionSilent
@@ -190,26 +174,26 @@ CAgentStreamInfo * CAgentStreamUtils::GetAgentStreamInfo () const
 long CAgentStreamUtils::CalcFileFrameCount () const
 {
 	long			lRet = 0;
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->IsAcsFile ())
+		if	(lAgentFile->IsAcsFile)
 		{
-			const CAgentFileGestures &	lGestures = GetFileGestures ();
+			const CAgentFileGestures&	lGestures = GetFileGestures ();
 			INT_PTR						lAnimationNdx;
-			const CAgentFileAnimation *	lAnimation;
+			const CAgentFileAnimation*	lAnimation;
 
 			for	(lAnimationNdx = 0; lAnimationNdx < (INT_PTR)lGestures.mAnimations.GetCount(); lAnimationNdx++)
 			{
 				if	(lAnimation = lGestures.mAnimations [lAnimationNdx])
 				{
-					lRet += (long)(short)lAnimation->mFrameCount;
+					lRet += (long)(short)lAnimation->FrameCount;
 				}
 			}
 		}
 		else
-		if	(lAgentFile->IsAcfFile ())
+		if	(lAgentFile->IsAcfFile)
 		{
 			//
 			//	For an ACS file, we don't support playing the entire file, and we'll assume a maximum animation frame count.
@@ -223,37 +207,37 @@ long CAgentStreamUtils::CalcFileFrameCount () const
 long CAgentStreamUtils::CalcFileDuration () const
 {
 	long			lRet = 0;
-	CAgentFile *	lAgentFile;
+	CAgentFile*	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->IsAcsFile ())
+		if	(lAgentFile->IsAcsFile)
 		{
-			const CAgentFileGestures &	lGestures = GetFileGestures ();
+			const CAgentFileGestures&	lGestures = GetFileGestures ();
 			INT_PTR						lAnimationNdx;
-			const CAgentFileAnimation *	lAnimation;
+			const CAgentFileAnimation*	lAnimation;
 			INT_PTR						lFrameNdx;
 
 			for	(lAnimationNdx = 0; lAnimationNdx < (INT_PTR)lGestures.mAnimations.GetCount(); lAnimationNdx++)
 			{
 				if	(lAnimation = lGestures.mAnimations [lAnimationNdx])
 				{
-					for	(lFrameNdx = 0; lFrameNdx < (long)(short)lAnimation->mFrameCount; lFrameNdx++)
+					for	(lFrameNdx = 0; lFrameNdx < (long)(short)lAnimation->FrameCount; lFrameNdx++)
 					{
-						lRet += (long)(short)lAnimation->mFrames [lFrameNdx].mDuration;
+						lRet += (long)(short)lAnimation->Frames [lFrameNdx].Duration;
 					}
 				}
 			}
 		}
 		else
-		if	(lAgentFile->IsAcfFile ())
+		if	(lAgentFile->IsAcfFile)
 		{
 			//
 			//	For an ACS file, we don't support playing the entire file, and we'll assume the maximum animation duration is 1 minute.
 			//
 			lRet = 60000;
 #ifdef	_DEBUG
-			LogMessage (LogDebug, _T("Assumed duration [%u] for [%ls]"), lRet, (BSTR)lAgentFile->GetPath());
+			LogMessage (LogDebug, _T("Assumed duration [%u] for [%ls]"), lRet, (BSTR)lAgentFile->Path);
 #endif
 		}
 	}

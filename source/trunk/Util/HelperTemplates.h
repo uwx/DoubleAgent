@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -27,8 +27,8 @@ template <typename aStruct> struct __declspec(novtable) tS
 :   public aStruct
 {
     tS () {memset (this, 0, sizeof (aStruct));}
-    tS (const aStruct & pSource) {operator= (pSource);}
-	tS <aStruct> & operator= (const aStruct & pSource) {((aStruct &) (*this)) = pSource; return *this;}
+    tS (const aStruct& pSource) {operator= (pSource);}
+	tS <aStruct>& operator= (const aStruct& pSource) {((aStruct&) (*this)) = pSource; return *this;}
     aStruct * Clear () {memset (this, 0, sizeof (aStruct)); return this;}
     ~tS () {}
 };
@@ -37,8 +37,8 @@ template <typename aStruct, typename aSizeType> struct __declspec(novtable) tSS
 :   public tS <aStruct>
 {
     tSS () {(* (aSizeType *) this) = sizeof (aStruct);}
-    tSS (const aStruct & pSource) {operator= (pSource);}
-	tSS <aStruct, aSizeType> & operator= (const aStruct & pSource) {((aStruct &) (*this)) = pSource; return *this;}
+    tSS (const aStruct& pSource) {operator= (pSource);}
+	tSS <aStruct, aSizeType>& operator= (const aStruct& pSource) {((aStruct&) (*this)) = pSource; return *this;}
     aStruct * Clear () {memset (this, 0, sizeof (aStruct)); (* (aSizeType *) this) = sizeof (aStruct); return this;}
     ~tSS () {}
 };
@@ -56,24 +56,24 @@ template <typename aType, typename aFree = tPtrFree<aType> > class tPtr : protec
 public:
     tPtr () : mPtr (NULL) {}
     tPtr (aType * pPtr) {_Init (mPtr = pPtr);}
-    tPtr (tPtr <aType> & pPtr) {_Init (mPtr = pPtr.Detach ());}
+    tPtr (tPtr <aType>& pPtr) {_Init (mPtr = pPtr.Detach ());}
     ~tPtr () {_Free (mPtr); mPtr = NULL;}
 
     aType * Ptr() {return (mPtr);}
     const aType * Ptr() const {return (mPtr);}
     operator aType * () {return (mPtr);}
     operator const aType * () const {return (mPtr);}
-    aType & operator* () {return (*mPtr);}
-    const aType & operator* () const {return (*mPtr);}
+    aType& operator* () {return (*mPtr);}
+    const aType& operator* () const {return (*mPtr);}
     aType * operator-> () {return (mPtr);}
     const aType * operator-> () const {return (mPtr);}
     operator bool () const {return (mPtr != NULL);}
     bool operator! () const {return (mPtr == NULL);}
 
     aType * operator= (aType * pPtr) {if (pPtr != mPtr) _Free (mPtr); _Init (mPtr = pPtr); return (mPtr);}
-    aType * operator= (tPtr <aType> & pPtr) {if (pPtr.mPtr != mPtr) _Free (mPtr); _Init (mPtr = pPtr.Detach ()); return (mPtr);}
+    aType * operator= (tPtr <aType>& pPtr) {if (pPtr.mPtr != mPtr) _Free (mPtr); _Init (mPtr = pPtr.Detach ()); return (mPtr);}
 
-    tPtr <aType, aFree> & Attach (aType * pPtr) {_Free (mPtr); _Init (mPtr = pPtr); return *this;}
+    tPtr <aType, aFree>& Attach (aType * pPtr) {_Free (mPtr); _Init (mPtr = pPtr); return *this;}
     aType * Detach () {aType * lPtr = mPtr; mPtr = NULL; return lPtr;}
     aType ** Free () {_Free (mPtr); mPtr = NULL; return (&mPtr);}
 
@@ -93,9 +93,9 @@ template <> void tArrayPtrFree<short>::_Free (short * pPtr) {if (pPtr) delete pP
 template <> void tArrayPtrFree<unsigned short>::_Free (unsigned short * pPtr) {if (pPtr) delete pPtr;};
 template <> void tArrayPtrFree<int>::_Free (int * pPtr) {if (pPtr) delete pPtr;};
 template <> void tArrayPtrFree<unsigned int>::_Free (unsigned int * pPtr) {if (pPtr) delete pPtr;};
-template <> void tArrayPtrFree<long>::_Free (long * pPtr) {if (pPtr) delete pPtr;};
-template <> void tArrayPtrFree<unsigned long>::_Free (unsigned long * pPtr) {if (pPtr) delete pPtr;};
-template <> void tArrayPtrFree<void *>::_Free (void ** pPtr) {if (pPtr) delete pPtr;};
+template <> void tArrayPtrFree<long>::_Free (long* pPtr) {if (pPtr) delete pPtr;};
+template <> void tArrayPtrFree<unsigned long>::_Free (unsigned long* pPtr) {if (pPtr) delete pPtr;};
+template <> void tArrayPtrFree<void*>::_Free (void** pPtr) {if (pPtr) delete pPtr;};
 #endif
 
 template <typename aType, typename aFree = tArrayPtrFree<aType> > class tArrayPtr : public tPtr <aType, aFree>
@@ -104,19 +104,19 @@ template <typename aType, typename aFree = tArrayPtrFree<aType> > class tArrayPt
 
     tArrayPtr () {}
     tArrayPtr (aType * pPtr) : tPtr <aType, aFree> (pPtr) {}
-    tArrayPtr (tArrayPtr <aType, aFree> & pPtr) : tPtr <aType, aFree> (pPtr) {}
+    tArrayPtr (tArrayPtr <aType, aFree>& pPtr) : tPtr <aType, aFree> (pPtr) {}
     ~tArrayPtr () {_Free (mPtr); mPtr = NULL;}
 
-    aType & operator[] (int pNdx) {return (mPtr [pNdx]);}
-    const aType & operator[] (int pNdx) const {return (mPtr [pNdx]);}
-    aType & operator[] (long pNdx) {return (mPtr [pNdx]);}
-    const aType & operator[] (long pNdx) const {return (mPtr [pNdx]);}
+    aType& operator[] (int pNdx) {return (mPtr [pNdx]);}
+    const aType& operator[] (int pNdx) const {return (mPtr [pNdx]);}
+    aType& operator[] (long pNdx) {return (mPtr [pNdx]);}
+    const aType& operator[] (long pNdx) const {return (mPtr [pNdx]);}
 #ifdef	_WIN64
-    aType & operator[] (__int64 pNdx) {return (mPtr [pNdx]);}
-    const aType & operator[] (__int64 pNdx) const {return (mPtr [pNdx]);}
+    aType& operator[] (__int64 pNdx) {return (mPtr [pNdx]);}
+    const aType& operator[] (__int64 pNdx) const {return (mPtr [pNdx]);}
 #endif
     aType * operator= (aType * pPtr) {if (pPtr != mPtr) _Free (mPtr); _Init (mPtr = pPtr); return (mPtr);}
-    aType * operator= (tArrayPtr <aType, aFree> & pPtr) {if (pPtr.mPtr != mPtr) _Free (mPtr); _Init (mPtr = pPtr.Detach ()); return (mPtr);}
+    aType * operator= (tArrayPtr <aType, aFree>& pPtr) {if (pPtr.mPtr != mPtr) _Free (mPtr); _Init (mPtr = pPtr.Detach ()); return (mPtr);}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -129,11 +129,11 @@ template <typename aType, typename aFree = tApiPtrFree<aType> > class tApiPtr : 
 
     tApiPtr () {}
     tApiPtr (aType * pPtr) : tPtr <aType, aFree> (pPtr) {}
-    tApiPtr (tApiPtr <aType, aFree> & pPtr) : tPtr <aType, aFree> (pPtr) {}
+    tApiPtr (tApiPtr <aType, aFree>& pPtr) : tPtr <aType, aFree> (pPtr) {}
     ~tApiPtr () {_Free (mPtr); mPtr = NULL;}
 
     aType * operator= (aType * pPtr) {return tPtr <aType, aFree>::operator= (pPtr);}
-    aType * operator= (tApiPtr <aType, aFree> & pPtr)  {return tPtr <aType, aFree>::operator= (pPtr);}
+    aType * operator= (tApiPtr <aType, aFree>& pPtr)  {return tPtr <aType, aFree>::operator= (pPtr);}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -147,31 +147,31 @@ class tBstrPtr : public tPtr <OLECHAR, tBstrPtrFree>
 
     tBstrPtr () {}
     tBstrPtr (BSTR pPtr) : tPtr <OLECHAR, tBstrPtrFree> (pPtr) {}
-    tBstrPtr (const tBstrPtr & pPtr) : tPtr <OLECHAR, tBstrPtrFree> (pPtr.Ptr()?::SysAllocStringLen(pPtr.Ptr(),::SysStringLen((BSTR)pPtr.Ptr())):NULL) {}
+    tBstrPtr (const tBstrPtr& pPtr) : tPtr <OLECHAR, tBstrPtrFree> (pPtr.Ptr()?::SysAllocStringLen(pPtr.Ptr(),::SysStringLen((BSTR)pPtr.Ptr())):NULL) {}
     ~tBstrPtr () {_Free (mPtr); mPtr = NULL;}
 
 	operator BSTR () const {return mPtr;}
 	bool IsEmpty () const {return (mPtr == NULL) || (::SysStringLen (mPtr) <= 0);}
 
     BSTR operator= (BSTR pPtr) {return tPtr <OLECHAR, tBstrPtrFree>::operator= (pPtr);}
-    BSTR operator= (const tBstrPtr & pPtr) {return tPtr <OLECHAR, tBstrPtrFree>::operator= (pPtr.Ptr()?::SysAllocStringLen(pPtr.Ptr(),::SysStringLen((BSTR)pPtr.Ptr())):NULL);}
+    BSTR operator= (const tBstrPtr& pPtr) {return tPtr <OLECHAR, tBstrPtrFree>::operator= (pPtr.Ptr()?::SysAllocStringLen(pPtr.Ptr(),::SysStringLen((BSTR)pPtr.Ptr())):NULL);}
 };
 
 ////////////////////////////////////////////////////////////////////////
 
-class tSafeArrayPtrFree {protected: static inline void _Init (SAFEARRAY *& pPtr) {}; static inline void _Free (SAFEARRAY * pPtr) {if (pPtr) SafeArrayDestroy (pPtr);}};
+class tSafeArrayPtrFree {protected: static inline void _Init (SAFEARRAY*& pPtr) {}; static inline void _Free (SAFEARRAY* pPtr) {if (pPtr) SafeArrayDestroy (pPtr);}};
 
 class tSafeArrayPtr : public tPtr <SAFEARRAY, tSafeArrayPtrFree>
 {
     public:
 
     tSafeArrayPtr () {}
-    tSafeArrayPtr (SAFEARRAY * pPtr) : tPtr <SAFEARRAY, tSafeArrayPtrFree> (pPtr) {}
-    tSafeArrayPtr (tSafeArrayPtr & pPtr) : tPtr <SAFEARRAY, tSafeArrayPtrFree> (pPtr) {}
+    tSafeArrayPtr (SAFEARRAY* pPtr) : tPtr <SAFEARRAY, tSafeArrayPtrFree> (pPtr) {}
+    tSafeArrayPtr (tSafeArrayPtr& pPtr) : tPtr <SAFEARRAY, tSafeArrayPtrFree> (pPtr) {}
     ~tSafeArrayPtr () {_Free (mPtr); mPtr = NULL;}
 
-    SAFEARRAY * operator= (SAFEARRAY * pPtr) {return tPtr <SAFEARRAY, tSafeArrayPtrFree>::operator= (pPtr);}
-    SAFEARRAY * operator= (tSafeArrayPtr & pPtr)  {return tPtr <SAFEARRAY, tSafeArrayPtrFree>::operator= (pPtr);}
+    SAFEARRAY* operator= (SAFEARRAY* pPtr) {return tPtr <SAFEARRAY, tSafeArrayPtrFree>::operator= (pPtr);}
+    SAFEARRAY* operator= (tSafeArrayPtr& pPtr)  {return tPtr <SAFEARRAY, tSafeArrayPtrFree>::operator= (pPtr);}
 };
 
 #endif
@@ -179,7 +179,7 @@ class tSafeArrayPtr : public tPtr <SAFEARRAY, tSafeArrayPtrFree>
 #pragma warning (pop)
 ////////////////////////////////////////////////////////////////////////
 
-template <class aClass> inline void SafeFreeSafePtr (aClass & pSafePtr)
+template <class aClass> inline void SafeFreeSafePtr (aClass& pSafePtr)
 {
 	aClass lSafePtr;
 	try
@@ -272,7 +272,7 @@ template <typename aType> static inline int compare
 
 ////////////////////////////////////////////////////////////////////////
 
-template <typename aType1, typename aType2> static inline void Swap (aType1 & pElem1, aType2 & pElem2)
+template <typename aType1, typename aType2> static inline void Swap (aType1& pElem1, aType2& pElem2)
 {
 	aType1 lTemp = pElem1;
 	pElem1 = pElem2;
@@ -286,7 +286,7 @@ template void Swap (unsigned long&, unsigned int&);
 
 ////////////////////////////////////////////////////////////////////////
 
-template <typename aType> static inline void MemAlign (aType & pAlign, UINT pAlignVal = 8)
+template <typename aType> static inline void MemAlign (aType& pAlign, UINT pAlignVal = 8)
 {
 	UINT	lOffset = ((ULONG_PTR) pAlign) % pAlignVal;
 	if	(lOffset)
@@ -299,24 +299,24 @@ template <typename aType> static inline void MemAlign (aType & pAlign, UINT pAli
 #ifdef	__ATLTYPES_H__
 ////////////////////////////////////////////////////////////////////////
 
-template <typename aType> static inline CPoint operator* (const CPoint & pPoint, aType pScalar)
+template <typename aType> static inline CPoint operator* (const CPoint& pPoint, aType pScalar)
 {
 	return CPoint (pPoint.x*pScalar, pPoint.y*pScalar);
 }
 
-template <typename aType> static inline CPoint & operator*= (CPoint & pPoint, aType pScalar)
+template <typename aType> static inline CPoint& operator*= (CPoint& pPoint, aType pScalar)
 {
 	pPoint.x *= pScalar;
 	pPoint.y *= pScalar;
 	return pPoint;
 }
 
-template <typename aType> static inline CPoint operator/ (const CPoint & pPoint, aType pScalar)
+template <typename aType> static inline CPoint operator/ (const CPoint& pPoint, aType pScalar)
 {
 	return CPoint (MulDiv(pPoint.x,1,pScalar), MulDiv(pPoint.y,1,pScalar));
 }
 
-template <typename aType> static inline CPoint & operator/= (CPoint & pPoint, aType pScalar)
+template <typename aType> static inline CPoint& operator/= (CPoint& pPoint, aType pScalar)
 {
 	pPoint.x = MulDiv(pPoint.x,1,pScalar);
 	pPoint.y = MulDiv(pPoint.y,1,pScalar);
@@ -324,24 +324,24 @@ template <typename aType> static inline CPoint & operator/= (CPoint & pPoint, aT
 }
 ////////////////////////////////////////////////////////////////////////
 
-template <typename aType> static inline CSize operator* (const CSize & pSize, aType pScalar)
+template <typename aType> static inline CSize operator* (const CSize& pSize, aType pScalar)
 {
 	return CSize (pSize.cx*pScalar, pSize.cy*pScalar);
 }
 
-template <typename aType> static inline CSize & operator*= (CSize & pSize, aType pScalar)
+template <typename aType> static inline CSize& operator*= (CSize& pSize, aType pScalar)
 {
 	pSize.cx *= pScalar;
 	pSize.cy *= pScalar;
 	return pSize;
 }
 
-template <typename aType> static inline CSize operator/ (const CSize & pSize, aType pScalar)
+template <typename aType> static inline CSize operator/ (const CSize& pSize, aType pScalar)
 {
 	return CSize (MulDiv(pSize.cx,1,pScalar), MulDiv(pSize.cy,1,pScalar));
 }
 
-template <typename aType> static inline CSize & operator/= (CSize & pSize, aType pScalar)
+template <typename aType> static inline CSize& operator/= (CSize& pSize, aType pScalar)
 {
 	pSize.cx = MulDiv(pSize.cx,1,pScalar);
 	pSize.cy = MulDiv(pSize.cy,1,pScalar);
@@ -350,12 +350,12 @@ template <typename aType> static inline CSize & operator/= (CSize & pSize, aType
 
 ////////////////////////////////////////////////////////////////////////
 
-template <typename aType> static inline CRect operator* (const CRect & pRect, aType pScalar)
+template <typename aType> static inline CRect operator* (const CRect& pRect, aType pScalar)
 {
 	return CRect (pRect.left*pScalar, pRect.top*pScalar, pRect.right*pScalar, pRect.bottom*pScalar);
 }
 
-template <typename aType> static inline CRect & operator*= (CRect & pRect, aType pScalar)
+template <typename aType> static inline CRect& operator*= (CRect& pRect, aType pScalar)
 {
 	pRect.left *= pScalar;
 	pRect.top *= pScalar;
@@ -364,12 +364,12 @@ template <typename aType> static inline CRect & operator*= (CRect & pRect, aType
 	return pRect;
 }
 
-template <typename aType> static inline CRect operator/ (const CRect & pRect, aType pScalar)
+template <typename aType> static inline CRect operator/ (const CRect& pRect, aType pScalar)
 {
 	return CRect (MulDiv(pRect.left,1,pScalar), MulDiv(pRect.top,1,pScalar), MulDiv(pRect.right,1,pScalar), MulDiv(pRect.bottom,1,pScalar));
 }
 
-template <typename aType> static inline CRect & operator/= (CRect & pRect, aType pScalar)
+template <typename aType> static inline CRect& operator/= (CRect& pRect, aType pScalar)
 {
 	pRect.left = MulDiv(pRect.left,1,pScalar);
 	pRect.top = MulDiv(pRect.top,1,pScalar);
@@ -478,7 +478,9 @@ double DegreesToRadians<double> (double);
 float DegreesToRadians<float> (float);
 #endif
 
+#ifndef	__cplusplus_cli
 #define PI 3.1415926535f
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 #endif	// _HELPERTEMPLATES_H2

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -45,7 +45,7 @@ COleMessageFilterEx::COleMessageFilterEx (DWORD pNotRespondingTimeout, DWORD pBu
 	SafeEnableBusy (pBusyTimeout);
 }
 
-COleMessageFilterEx::COleMessageFilterEx (const COleMessageFilter & pSource)
+COleMessageFilterEx::COleMessageFilterEx (const COleMessageFilter& pSource)
 :	mLogLevelDlg (LogVerbose|LogTime),
 	mLogLevelMsg (LogVerbose+1)
 {
@@ -65,15 +65,15 @@ COleMessageFilterEx::COleMessageFilterEx (const CWinThread * pThread)
 	}
 }
 
-COleMessageFilterEx & COleMessageFilterEx::operator= (const COleMessageFilter & pSource)
+COleMessageFilterEx& COleMessageFilterEx::operator= (const COleMessageFilter& pSource)
 {
-	m_nBusyCount			= static_cast <const COleMessageFilterEx &> (pSource).m_nBusyCount;
-	m_bEnableBusy			= static_cast <const COleMessageFilterEx &> (pSource).m_bEnableBusy;
-	m_bEnableNotResponding	= static_cast <const COleMessageFilterEx &> (pSource).m_bEnableNotResponding;
-	m_bUnblocking			= static_cast <const COleMessageFilterEx &> (pSource).m_bUnblocking;
-	m_nRetryReply			= static_cast <const COleMessageFilterEx &> (pSource).m_nRetryReply;
-	m_nBusyReply			= static_cast <const COleMessageFilterEx &> (pSource).m_nBusyReply;
-	m_nTimeout				= static_cast <const COleMessageFilterEx &> (pSource).m_nTimeout;
+	m_nBusyCount			= static_cast <const COleMessageFilterEx&> (pSource).m_nBusyCount;
+	m_bEnableBusy			= static_cast <const COleMessageFilterEx&> (pSource).m_bEnableBusy;
+	m_bEnableNotResponding	= static_cast <const COleMessageFilterEx&> (pSource).m_bEnableNotResponding;
+	m_bUnblocking			= static_cast <const COleMessageFilterEx&> (pSource).m_bUnblocking;
+	m_nRetryReply			= static_cast <const COleMessageFilterEx&> (pSource).m_nRetryReply;
+	m_nBusyReply			= static_cast <const COleMessageFilterEx&> (pSource).m_nBusyReply;
+	m_nTimeout				= static_cast <const COleMessageFilterEx&> (pSource).m_nTimeout;
 
 	return *this;
 }

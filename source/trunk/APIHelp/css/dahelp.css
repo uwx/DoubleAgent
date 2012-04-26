@@ -148,6 +148,12 @@ pre.syntax
 	padding: 2pt,4pt;
 }
 
+pre.code
+{
+	padding-left: 4ex;
+	padding-right: 4ex;
+}
+
 code.example
 {
 	padding-left: 4ex;

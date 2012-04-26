@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -41,7 +41,7 @@
 class tHandleTypeAcmStream : public tHandleType <HACMSTREAM>
 {
 private:
-	virtual bool __Close (HACMSTREAM & pHandle) {return (acmStreamClose (pHandle, 0) == MMSYSERR_NOERROR);}
+	virtual bool __Close (HACMSTREAM& pHandle) {return (acmStreamClose (pHandle, 0) == MMSYSERR_NOERROR);}
 };
 typedef tHandle <HACMSTREAM, tHandleTypeAcmStream>	CAcmStreamHandle;
 
@@ -71,7 +71,7 @@ void CDirectSoundConvert::SetInputFormat (const LPWAVEFORMATEX pFormat)
 	catch AnyExceptionSilent
 }
 
-bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX & pFormat)
+bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX& pFormat)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mLock);
@@ -87,7 +87,7 @@ bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX & pFormat)
 	return lRet;
 }
 
-bool CDirectSoundConvert::GetOutputFormat (LPWAVEFORMATEX & pFormat)
+bool CDirectSoundConvert::GetOutputFormat (LPWAVEFORMATEX& pFormat)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mLock);
@@ -116,7 +116,7 @@ void CDirectSoundConvert::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize)
 	catch AnyExceptionSilent
 }
 
-bool CDirectSoundConvert::GetInputBuffer (LPCVOID & pBuffer, ULONG & pBufferSize)
+bool CDirectSoundConvert::GetInputBuffer (LPCVOID& pBuffer, ULONG& pBufferSize)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mLock);
@@ -136,7 +136,7 @@ bool CDirectSoundConvert::GetInputBuffer (LPCVOID & pBuffer, ULONG & pBufferSize
 	return lRet;
 }
 
-bool CDirectSoundConvert::GetOutputBuffer (LPVOID & pBuffer, ULONG & pBufferSize, ULONG & pDataLength)
+bool CDirectSoundConvert::GetOutputBuffer (LPVOID& pBuffer, ULONG& pBufferSize, ULONG& pDataLength)
 {
 	bool	lRet = false;
 	CLockCS	lLock (mLock);
@@ -547,7 +547,7 @@ bool CDirectSoundConvert::SuggestOutputFormat (const LPWAVEFORMATEX pInputFormat
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, CAtlOwnPtrArray <WAVEFORMATEX> & pRankedFormats)
+HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, CAtlOwnPtrArray <WAVEFORMATEX>& pRankedFormats)
 {
 	HRESULT				lResult;
 	IBaseFilterPtr		lACMFilter;
@@ -561,7 +561,7 @@ HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, 
 	INT_PTR				lRankNdx;
 
 	if	(
-			(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_ACMWrapper, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &lACMFilter))))
+			(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, CoCreateInstance (CLSID_ACMWrapper, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void**) &lACMFilter))))
 		&&	(SUCCEEDED (lResult = lACMFilter->EnumPins (&lEnumPins)))
 		)
 	{

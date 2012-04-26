@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -92,7 +92,11 @@ BEGIN
 	"	name=""" _SHELL_PROGID """ \r\n"
 	"	version=""" _DOUBLEAGENT_VERSION_STR """ \r\n"
 	"	type=""win32"" \r\n"
-	"	processorArchitecture="_PROCESSOR_ARCHITECTURE" \r\n"
+#ifdef	_WIN64
+	"	processorArchitecture=""amd64"" \r\n"
+#else
+	"	processorArchitecture=""x86"" \r\n"
+#endif
 	"/> \r\n"
 	"<description>""" _SHELL_PROGID_NAME """</description> \r\n"
 	"<dependency> \r\n"
@@ -101,7 +105,11 @@ BEGIN
 	"		name=""Microsoft.Windows.Common-Controls"" \r\n"
 	"		version=""6.0.0.0"" \r\n"
 	"		type=""win32"" \r\n"
-	"		processorArchitecture="_PROCESSOR_ARCHITECTURE" \r\n"
+#ifdef	_WIN64
+	"		processorArchitecture=""amd64"" \r\n"
+#else
+	"		processorArchitecture=""x86"" \r\n"
+#endif
 	"		publicKeyToken=""6595b64144ccf1df"" \r\n"
 	"		language=""*"" \r\n"
 	"		/> \r\n"
@@ -128,7 +136,11 @@ BEGIN
 	"	name=""" _SHELL_PROGID """ \r\n"
 	"	version=""" _DOUBLEAGENT_VERSION_STR """ \r\n"
 	"	type=""win32"" \r\n"
-	"	processorArchitecture="_PROCESSOR_ARCHITECTURE" \r\n"
+#ifdef	_WIN64
+	"	processorArchitecture=""amd64"" \r\n"
+#else
+	"	processorArchitecture=""x86"" \r\n"
+#endif
 	"/> \r\n"
 	"<description>""" _SHELL_PROGID_NAME """</description> \r\n"
 	"<dependency> \r\n"
@@ -137,7 +149,11 @@ BEGIN
 	"		name=""Microsoft.Windows.Common-Controls"" \r\n"
 	"		version=""6.0.0.0"" \r\n"
 	"		type=""win32"" \r\n"
-	"		processorArchitecture="_PROCESSOR_ARCHITECTURE" \r\n"
+#ifdef	_WIN64
+	"		processorArchitecture=""amd64"" \r\n"
+#else
+	"		processorArchitecture=""x86"" \r\n"
+#endif
 	"		publicKeyToken=""6595b64144ccf1df"" \r\n"
 	"		language=""*"" \r\n"
 	"		/> \r\n"

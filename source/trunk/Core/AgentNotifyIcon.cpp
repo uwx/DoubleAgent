@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -83,14 +83,14 @@ long CAgentNotifyIcon::GetCharID () const
 	return mCharID;
 }
 
-const CAgentIconData & CAgentNotifyIcon::GetSettings () const
+const CAgentIconData& CAgentNotifyIcon::GetSettings () const
 {
 	return mAgentIconData;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentNotifyIcon::Attach (long pCharID, const CAgentIconData * pIconData)
+bool CAgentNotifyIcon::Attach (long pCharID, const CAgentIconData* pIconData)
 {
 	bool	lRet = false;
 
@@ -158,7 +158,7 @@ bool CAgentNotifyIcon::Remove ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile)
+bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile* pAgentFile)
 {
 	bool	lRet = false;
 
@@ -202,7 +202,7 @@ bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile)
 					if	(!mGeneratedIcon)
 					{
 						CAgentIconMaker	lIconMaker;
-						const CRect *	lIconClip = mAgentIconData.mGenerateIconClip.IsRectEmpty() ? NULL : &mAgentIconData.mGenerateIconClip;
+						const CRect*	lIconClip = mAgentIconData.mGenerateIconClip.IsRectEmpty() ? NULL : &mAgentIconData.mGenerateIconClip;
 
 						mGeneratedIcon.Attach (lIconMaker.MakeIcon (pAgentFile, CSize (GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON)), lIconClip));
 					}
@@ -210,7 +210,7 @@ bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile)
 				}
 				if	(!mNotifyIconData.hIcon)
 				{
-					mNotifyIconData.hIcon = pAgentFile->GetIcon();
+					mNotifyIconData.hIcon = pAgentFile->Header.Icon;
 				}
 			}
 
@@ -248,10 +248,10 @@ bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentNotifyIcon::SetIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID)
+bool CAgentNotifyIcon::SetIconTip (const CAgentIconData* pIconData, CAgentFile* pAgentFile, LANGID pLangID)
 {
 	bool				lRet = false;
-	CAgentFileName *	lAgentFileName = NULL;
+	CAgentFileName*	lAgentFileName = NULL;
 
 	if	(
 			(pIconData)
@@ -266,7 +266,7 @@ bool CAgentNotifyIcon::SetIconTip (const CAgentIconData * pIconData, CAgentFile 
 		lAgentFileName = pAgentFile->FindName (pLangID);
 		if	(lAgentFileName)
 		{
-			lRet = SetIconTip (CAtlString ((BSTR)lAgentFileName->mName));
+			lRet = SetIconTip (CAtlString ((BSTR)lAgentFileName->Name));
 		}
 	}
 	return lRet;

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -73,17 +73,17 @@ public:
 	static const UINT	mOptionsChangedMsgId;
 	static const UINT	mDefaultCharacterChangedMsgId;
 
-	class CComMessageFilter * GetMessageFilter ();
+	class CComMessageFilter* GetMessageFilter ();
 
 // Operations
 	bool ShowSettings (LPCTSTR pStartPage = NULL);
 
-	DaSvrPropertySheet * GetSvrPropertySheet (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	DaSvrSettings * GetSvrSettings (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	DaSvrAudioOutput * GetSvrAudioOutput (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	DaSvrSpeechInput * GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	DaSvrCommandsWindow * GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	DaSvrCharacterFiles * GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrPropertySheet* GetSvrPropertySheet (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrSettings* GetSvrSettings (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrAudioOutput* GetSvrAudioOutput (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrSpeechInput* GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrCommandsWindow* GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrCharacterFiles* GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName = NULL);
 
 	bool TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR pFormat = NULL, ...);
 
@@ -106,9 +106,9 @@ public:
 	virtual void _AppActivated (bool pActive);
 	virtual void _OptionsChanged ();
 protected:
-	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId);
-	virtual void OnShowModelessPropertySheet (class CAtlPropertySheet * pPropertySheet);
-	virtual void OnHideModelessPropertySheet (class CAtlPropertySheet * pPropertySheet);
+	virtual void OnTimerNotify (class CTimerNotify* pTimerNotify, UINT_PTR pTimerId);
+	virtual void OnShowModelessPropertySheet (class CAtlPropertySheet* pPropertySheet);
+	virtual void OnHideModelessPropertySheet (class CAtlPropertySheet* pPropertySheet);
 
 // Implementation
 public:
@@ -118,17 +118,17 @@ public:
 		MESSAGE_HANDLER(mDefaultCharacterChangedMsgId, OnBroadcastDefaultCharacterChanged)
 	END_MSG_MAP()
 
-	LRESULT OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 public:
-	void OnDeleteSvrPropertySheet (DaSvrPropertySheet * pSvrPropertySheet);
-	void OnDeleteSvrSettings (DaSvrSettings * pSvrSettings);
-	void OnDeleteSvrAudioOutput (DaSvrAudioOutput * pSvrAudioOutput);
-	void OnDeleteSvrSpeechInput (DaSvrSpeechInput * pSvrSpeechInput);
-	void OnDeleteSvrCommandsWindow (DaSvrCommandsWindow * pSvrCommandsWindow);
-	void OnDeleteSvrCharacterFiles (DaSvrCharacterFiles * pSvrCharacterFiles);
+	void OnDeleteSvrPropertySheet (DaSvrPropertySheet* pSvrPropertySheet);
+	void OnDeleteSvrSettings (DaSvrSettings* pSvrSettings);
+	void OnDeleteSvrAudioOutput (DaSvrAudioOutput* pSvrAudioOutput);
+	void OnDeleteSvrSpeechInput (DaSvrSpeechInput* pSvrSpeechInput);
+	void OnDeleteSvrCommandsWindow (DaSvrCommandsWindow* pSvrCommandsWindow);
+	void OnDeleteSvrCharacterFiles (DaSvrCharacterFiles* pSvrCharacterFiles);
 
 protected:
 	void _PreMessageLoop (bool pForModal);

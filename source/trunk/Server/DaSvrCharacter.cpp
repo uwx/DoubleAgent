@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -93,9 +93,9 @@ DaSvrCharacter::~DaSvrCharacter()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCharacter * DaSvrCharacter::CreateInstance (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor, LPCTSTR pClientMutexName)
+DaSvrCharacter * DaSvrCharacter::CreateInstance (long pCharID, CEventNotify* pNotify, _IListeningAnchor* pListeningAnchor, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrCharacter> *	lInstance = NULL;
+	CComObject<DaSvrCharacter>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrCharacter>::CreateInstance (&lInstance))))
 	{
@@ -120,9 +120,9 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			CAgentPopupWnd *	lPopupWnd;
+			CAgentPopupWnd*	lPopupWnd;
 
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter::Terminate [%u %u] [%ls] IsInNotify [%u]"), this, mCharID, max(m_dwRef,-1), pFinal, pAbandonned, (mFile ? (BSTR)mFile->GetPath() : NULL), IsInNotify());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)(%d)] DaSvrCharacter::Terminate [%u %u] [%ls] IsInNotify [%u]"), this, mCharID, max(m_dwRef,-1), pFinal, pAbandonned, (mFile ? (BSTR)mFile->Path : NULL), IsInNotify());
 			// If this crashes it generally means that the destructor is being called recursively.
 			if	(lPopupWnd = GetPopupWnd ())
 			{
@@ -358,7 +358,7 @@ bool DaSvrCharacter::CanFinalRelease ()
 	return (IsInNotify() == 0);
 }
 
-bool DaSvrCharacter::IsValid (const CAgentFile * pFile) const
+bool DaSvrCharacter::IsValid (const CAgentFile* pFile) const
 {
 	if	(
 			(!HasFinalReleased ())
@@ -489,9 +489,9 @@ HRESULT WINAPI DaSvrCharacter::DelegateIDaSvrCommands (void* pv, REFIID iid, LPV
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCommands * DaSvrCharacter::GetCommands (bool pCreateObject)
+CDaCmnCommands* DaSvrCharacter::GetCommands (bool pCreateObject)
 {
-	CDaCmnCommands *		lRet = NULL;
+	CDaCmnCommands*		lRet = NULL;
 	IDaSvrCommandsPtr	lInterface;
 
 	if	(pCreateObject)
@@ -505,9 +505,9 @@ CDaCmnCommands * DaSvrCharacter::GetCommands (bool pCreateObject)
 	return lRet;
 }
 
-CDaCmnBalloon * DaSvrCharacter::GetBalloon (bool pCreateObject)
+CDaCmnBalloon* DaSvrCharacter::GetBalloon (bool pCreateObject)
 {
-	CDaCmnBalloon *		lRet = NULL;
+	CDaCmnBalloon*		lRet = NULL;
 	IDaSvrBalloon2Ptr	lInterface;
 
 	if	(pCreateObject)
@@ -523,7 +523,7 @@ CDaCmnBalloon * DaSvrCharacter::GetBalloon (bool pCreateObject)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool DaSvrCharacter::NotifyVoiceCommand (USHORT pCommandId, ISpRecoResult * pRecoResult, bool pGlobalCommand)
+bool DaSvrCharacter::NotifyVoiceCommand (USHORT pCommandId, ISpRecoResult* pRecoResult, bool pGlobalCommand)
 {
 	DaSvrUserInput *		lUserInput;
 	IDaSvrUserInput2Ptr		lNotifyUserInput;
@@ -570,7 +570,7 @@ STDMETHODIMP DaSvrCharacter::InterfaceSupportsErrorInfo(REFIID riid)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetClassForHandler (DWORD dwDestContext, void*pvDestContext, CLSID *pClsid)
 {
 	if	(!pClsid)
 	{
@@ -1044,7 +1044,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Animations (SAFEARRAY **Animations)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Animations (SAFEARRAY**Animations)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -1064,7 +1064,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Animations (SAFEARRAY **Animations
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_States (SAFEARRAY **States)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_States (SAFEARRAY**States)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -2797,7 +2797,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SpeakFormatted (IDaSvrFormattedText * 
 
 	try
 	{
-		lFormattedText = dynamic_cast <CComObject <DaSvrFormattedText> *> (FormattedText);
+		lFormattedText = dynamic_cast <CComObject <DaSvrFormattedText>*> (FormattedText);
 	}
 	catch AnyExceptionSilent
 
@@ -2833,7 +2833,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::ThinkFormatted (IDaSvrFormattedText * 
 
 	try
 	{
-		lFormattedText = dynamic_cast <CComObject <DaSvrFormattedText> *> (FormattedText);
+		lFormattedText = dynamic_cast <CComObject <DaSvrFormattedText>*> (FormattedText);
 	}
 	catch AnyExceptionSilent
 

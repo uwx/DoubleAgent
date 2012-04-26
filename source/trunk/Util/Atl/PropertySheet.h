@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -28,8 +28,8 @@
 
 interface _AtlPropSheetOwner
 {
-	virtual void OnShowModelessPropertySheet (class CAtlPropertySheet * pPropertySheet) = 0;
-	virtual void OnHideModelessPropertySheet (class CAtlPropertySheet * pPropertySheet) = 0;
+	virtual void OnShowModelessPropertySheet (class CAtlPropertySheet* pPropertySheet) = 0;
+	virtual void OnHideModelessPropertySheet (class CAtlPropertySheet* pPropertySheet) = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -46,20 +46,20 @@ public:
 
 // Operations
 public:
-	bool Create (_AtlPropSheetOwner * pOwner = NULL);
+	bool Create (_AtlPropSheetOwner* pOwner = NULL);
 	void SetModalParent (HWND pParentWnd);
 	INT_PTR DoModal();
 
 // Implementation
 protected:
-	LRESULT OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	LRESULT OnOk(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnCancel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnApply(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnOk(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnCancel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnApply(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAtlPropertySheet)
 		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
@@ -97,7 +97,7 @@ protected:
 	bool								mPageChanged;
 private:
 	bool								mIsModal;
-	_AtlPropSheetOwner *				mOwner;
+	_AtlPropSheetOwner*				mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

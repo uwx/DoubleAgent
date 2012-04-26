@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -43,7 +43,7 @@ CEnumPins::CEnumPins ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -53,14 +53,14 @@ CEnumPins::~CEnumPins ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::~CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::~CEnumPins (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CEnumPins::Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef)
+void CEnumPins::Initialize (CDirectShowPins& pInputPins, CDirectShowPins& pOutputPins, LPUNKNOWN pOwnerRef)
 {
 	mInputPins = &pInputPins;
 	mOutputPins = &pOutputPins;
@@ -69,12 +69,12 @@ void CEnumPins::Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOut
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
 
-CEnumPins & CEnumPins::operator= (const CEnumPins & pSource)
+CEnumPins& CEnumPins::operator= (const CEnumPins& pSource)
 {
 	mInputPins = pSource.mInputPins;
 	mOutputPins = pSource.mOutputPins;
@@ -84,7 +84,7 @@ CEnumPins & CEnumPins::operator= (const CEnumPins & pSource)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -94,7 +94,7 @@ CEnumPins & CEnumPins::operator= (const CEnumPins & pSource)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CEnumPins::Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched)
+HRESULT STDMETHODCALLTYPE CEnumPins::Next (ULONG cPins, IPin**ppPins, ULONG *pcFetched)
 {
 	HRESULT	lResult = S_FALSE;
 	long	lNdx = 0;
@@ -181,7 +181,7 @@ HRESULT STDMETHODCALLTYPE CEnumPins::Reset ()
 HRESULT STDMETHODCALLTYPE CEnumPins::Clone (IEnumPins **ppEnum)
 {
 	HRESULT						lResult = S_OK;
-	CComObject <CEnumPins> *	lClone = NULL;
+	CComObject <CEnumPins>*	lClone = NULL;
 	IEnumPinsPtr				lInterface;
 
 	if	(!ppEnum)
@@ -213,7 +213,7 @@ CEnumMediaTypes::CEnumMediaTypes ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -223,14 +223,14 @@ CEnumMediaTypes::~CEnumMediaTypes ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::~CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::~CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CEnumMediaTypes::Initialize (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef)
+void CEnumMediaTypes::Initialize (CMediaTypes& pMediaTypes, LPUNKNOWN pOwnerRef)
 {
 	mMediaTypes = &pMediaTypes;
 	mOwnerRef = pOwnerRef;
@@ -238,12 +238,12 @@ void CEnumMediaTypes::Initialize (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
 
-CEnumMediaTypes & CEnumMediaTypes::operator= (const CEnumMediaTypes & pSource)
+CEnumMediaTypes& CEnumMediaTypes::operator= (const CEnumMediaTypes& pSource)
 {
 	mMediaTypes = pSource.mMediaTypes;
 	mCurrNdx = pSource.mCurrNdx;
@@ -252,7 +252,7 @@ CEnumMediaTypes & CEnumMediaTypes::operator= (const CEnumMediaTypes & pSource)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::operator= (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _CoreAnchor.Module.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -262,7 +262,7 @@ CEnumMediaTypes & CEnumMediaTypes::operator= (const CEnumMediaTypes & pSource)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched)
+HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Next (ULONG cMediaTypes, AM_MEDIA_TYPE**ppMediaTypes, ULONG *pcFetched)
 {
 	HRESULT	lResult = S_FALSE;
 	long	lNdx = 0;
@@ -343,7 +343,7 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Reset ()
 HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Clone (IEnumMediaTypes **ppEnum)
 {
 	HRESULT							lResult = S_OK;
-	CComObject <CEnumMediaTypes> *	lClone = NULL;
+	CComObject <CEnumMediaTypes>*	lClone = NULL;
 	IEnumMediaTypesPtr				lInterface;
 
 	if	(!ppEnum)

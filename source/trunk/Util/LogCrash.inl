@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -198,7 +198,7 @@ typedef struct
 #define	_LOG_CRASH_STACK_SKIP_FRAMES	7
 #endif
 ////////////////////////////////////////////////////////////////////////
-static void _LogCrash_DumpStack (_LogCrash_Stack & pStack)
+static void _LogCrash_DumpStack (_LogCrash_Stack& pStack)
 {
 	UINT	lStackFrameNdx;
 

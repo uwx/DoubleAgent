@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -52,11 +52,11 @@ public:
 //---------------------------------------------------------------------------
 
 	static bool DumpBitmapInfo (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pTitle = NULL);
-	static bool DumpBitmapInfo (UINT pLogLevel, BITMAPINFO & pBitmap, LPCTSTR pTitle = NULL);
+	static bool DumpBitmapInfo (UINT pLogLevel, BITMAPINFO& pBitmap, LPCTSTR pTitle = NULL);
 
 	static bool DumpBitmap (UINT pLogLevel, HBITMAP pBitmap, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
-	static bool DumpBitmap (UINT pLogLevel, BITMAP & pBitmap, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
-	static bool DumpBitmap (UINT pLogLevel, BITMAPINFO & pBitmap, LPBYTE pBits, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
+	static bool DumpBitmap (UINT pLogLevel, BITMAP& pBitmap, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
+	static bool DumpBitmap (UINT pLogLevel, BITMAPINFO& pBitmap, LPBYTE pBits, LPCTSTR pTitle = NULL, bool pAlphaOnly = false, UINT pMaxWidth = 100, UINT pMaxHeight = 100);
 
 	static bool DumpPalette (UINT pLogLevel, HPALETTE pPalette, LPCTSTR pTitle = NULL);
 
@@ -77,8 +77,8 @@ public:
 
 //---------------------------------------------------------------------------
 
-	static bool CopyBitmap (CBitmap & pTrg, HBITMAP pSrc);
-	static bool CreateBitmap (CDC & pDC, const CSize & pSize, UINT pBitCount, CBitmap & pBitmap);
+	static bool CopyBitmap (CBitmap& pTrg, HBITMAP pSrc);
+	static bool CreateBitmap (CDC& pDC, const CSize& pSize, UINT pBitCount, CBitmap& pBitmap);
 
 private:
 
@@ -94,12 +94,12 @@ private:
 
 private:
 	bool CreateMyWindow (LPCTSTR pTitle);
-	void SetWindowSize (CSize & pSize);
-	void DrawLabel (CDC & pDC, const CRect & pRect, LPCTSTR pLabel);
+	void SetWindowSize (CSize& pSize);
+	void DrawLabel (CDC& pDC, const CRect& pRect, LPCTSTR pLabel);
 
-	bool AlphaBlend (CDC & pDst, const CRect & pDstRect, CDC & pSrc, const CRect & pSrcRect, BYTE pAlpha = 255);
+	bool AlphaBlend (CDC& pDst, const CRect& pDstRect, CDC& pSrc, const CRect& pSrcRect, BYTE pAlpha = 255);
 
-	UINT SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNdx, int pMaxNdx);
+	UINT SaveSeries (const CSize& pSize, UINT pBitCount, int pMinNdx, int pMaxNdx);
 	static CString GetDefaultPath ();
 	static bool MakePathExist (LPCTSTR pPath);
 	static CString GetNewFileName (const CString pFileName);

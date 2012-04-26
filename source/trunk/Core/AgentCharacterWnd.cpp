@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -25,6 +25,7 @@
 #include "AgentBalloonWnd.h"
 #include "AgentListeningWnd.h"
 #include "AgentStreamInfo.h"
+#include "AgentTextParse.h"
 #include "DirectShowSource.h"
 #include "DirectShowRender.h"
 #include "DirectSoundLipSync.h"
@@ -157,7 +158,7 @@ bool CAgentCharacterWnd::IsCharShown () const
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentCharacterWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID)
+bool CAgentCharacterWnd::Attach (long pCharID, CEventNotify* pNotify, const CAgentIconData* pIconData, bool pSetActiveCharID)
 {
 	bool	lRet = false;
 	long	lPrevCharID = mCharID;
@@ -197,7 +198,7 @@ bool CAgentCharacterWnd::Attach (long pCharID, CEventNotify * pNotify, const CAg
 	return lRet;
 }
 
-bool CAgentCharacterWnd::Detach (long pCharID, CEventNotify * pNotify)
+bool CAgentCharacterWnd::Detach (long pCharID, CEventNotify* pNotify)
 {
 	bool	lRet = false;
 
@@ -245,7 +246,7 @@ bool CAgentCharacterWnd::Detach (long pCharID, CEventNotify * pNotify)
 			)
 		{
 			INT_PTR			lNotifyNdx;
-			CEventNotify *	lNotify;
+			CEventNotify*	lNotify;
 
 			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
@@ -268,14 +269,14 @@ bool CAgentCharacterWnd::Detach (long pCharID, CEventNotify * pNotify)
 
 bool CAgentCharacterWnd::SetLastActive ()
 {
-	CAgentCharacterWnd *	lLastActive = NULL;
+	CAgentCharacterWnd*	lLastActive = NULL;
 	long					lLastActiveCharID = -1;
 	INT_PTR					lNotifyNdx;
-	CEventNotify *			lNotify;
+	CEventNotify*			lNotify;
 
 	if	(mLastActive != m_hWnd)
 	{
-		CAgentWnd *	lAgentWnd;
+		CAgentWnd*	lAgentWnd;
 
 		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -284,7 +285,7 @@ bool CAgentCharacterWnd::SetLastActive ()
 				&&	(lAgentWnd = lNotify->GetAgentWnd (mLastActive))
 				)
 			{
-				if	(lLastActive = dynamic_cast <CAgentCharacterWnd *> (lAgentWnd))
+				if	(lLastActive = dynamic_cast <CAgentCharacterWnd*> (lAgentWnd))
 				{
 					lLastActiveCharID = lLastActive->mCharID;
 				}
@@ -373,7 +374,7 @@ void CAgentCharacterWnd::IsLastActive (bool pLastActive)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentBalloonWnd * CAgentCharacterWnd::GetBalloonWnd (bool pCreate)
+CAgentBalloonWnd* CAgentCharacterWnd::GetBalloonWnd (bool pCreate)
 {
 	if	(
 			(!mBalloonWnd)
@@ -395,7 +396,7 @@ CAgentBalloonWnd * CAgentCharacterWnd::GetBalloonWnd (bool pCreate)
 	return mBalloonWnd;
 }
 
-CAgentListeningWnd * CAgentCharacterWnd::GetListeningWnd (bool pCreate)
+CAgentListeningWnd* CAgentCharacterWnd::GetListeningWnd (bool pCreate)
 {
 	if	(
 			(!mListeningWnd)
@@ -415,7 +416,7 @@ CAgentListeningWnd * CAgentCharacterWnd::GetListeningWnd (bool pCreate)
 long CAgentCharacterWnd::QueueShow (long pCharID, bool pFast, int pVisibilityCause)
 {
 	long			lReqID = 0;
-	CQueuedShow *	lQueuedShow = NULL;
+	CQueuedShow*	lQueuedShow = NULL;
 
 	if	(
 			(IsWindow ())
@@ -451,7 +452,7 @@ long CAgentCharacterWnd::QueueShow (long pCharID, bool pFast, int pVisibilityCau
 
 long CAgentCharacterWnd::IsShowingQueued ()
 {
-	CQueuedAction *	lQueuedShow;
+	CQueuedAction*	lQueuedShow;
 
 	if	(
 			(this)
@@ -465,7 +466,7 @@ long CAgentCharacterWnd::IsShowingQueued ()
 	return 0;
 }
 
-bool CAgentCharacterWnd::ShowQueued (CQueuedShow * pQueuedShow)
+bool CAgentCharacterWnd::ShowQueued (CQueuedShow* pQueuedShow)
 {
 	mCharShown = true;
 	NotifyShown (pQueuedShow->mCharID, (VisibilityCauseType)pQueuedShow->mVisibilityCause);
@@ -489,7 +490,7 @@ bool CAgentCharacterWnd::NotifyShown (long pForCharID, VisibilityCauseType pVisi
 			try
 			{
 				INT_PTR				lNotifyNdx;
-				CEventNotify *		lNotify;
+				CEventNotify*		lNotify;
 				long				lNotifyCharID;
 				VisibilityCauseType	lVisibilityCause;
 
@@ -517,7 +518,7 @@ bool CAgentCharacterWnd::NotifyShown (long pForCharID, VisibilityCauseType pVisi
 long CAgentCharacterWnd::QueueHide (long pCharID, bool pFast, int pVisibilityCause)
 {
 	long			lReqID = 0;
-	CQueuedHide *	lQueuedHide = NULL;
+	CQueuedHide*	lQueuedHide = NULL;
 
 	if	(
 			(IsWindow ())
@@ -546,7 +547,7 @@ long CAgentCharacterWnd::QueueHide (long pCharID, bool pFast, int pVisibilityCau
 
 long CAgentCharacterWnd::IsHidingQueued ()
 {
-	CQueuedAction *	lQueuedHide;
+	CQueuedAction*	lQueuedHide;
 
 	if	(
 			(this)
@@ -560,7 +561,7 @@ long CAgentCharacterWnd::IsHidingQueued ()
 	return 0;
 }
 
-bool CAgentCharacterWnd::HideQueued (CQueuedHide * pQueuedHide)
+bool CAgentCharacterWnd::HideQueued (CQueuedHide* pQueuedHide)
 {
 	mCharShown = false;
 	Invalidate ();
@@ -577,7 +578,7 @@ bool CAgentCharacterWnd::NotifyHidden (long pForCharID, VisibilityCauseType pVis
 			try
 			{
 				INT_PTR				lNotifyNdx;
-				CEventNotify *		lNotify;
+				CEventNotify*		lNotify;
 				long				lNotifyCharID;
 				VisibilityCauseType	lVisibilityCause;
 
@@ -617,7 +618,7 @@ bool CAgentCharacterWnd::NotifyHidden (long pForCharID, VisibilityCauseType pVis
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject * pTextObject, CAgentBalloonOptions * pBalloonOptions, UINT pSapiVersion)
+long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTextObject* pTextObject, CAgentBalloonOptions* pBalloonOptions, UINT pSapiVersion)
 {
 	long			lReqID = 0;
 	CQueuedThink *	lQueuedThink = NULL;
@@ -692,7 +693,7 @@ long CAgentCharacterWnd::QueueThink (long pCharID, LPCTSTR pText, class CAgentTe
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObject * pTextObject, LPCTSTR pSoundUrl, CSapiVoice * pVoice, CAgentBalloonOptions * pBalloonOptions)
+long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObject* pTextObject, LPCTSTR pSoundUrl, CSapiVoice* pVoice, CAgentBalloonOptions* pBalloonOptions)
 {
 	long			lReqID = 0;
 	CQueuedSpeak *	lQueuedSpeak = NULL;
@@ -791,16 +792,16 @@ long CAgentCharacterWnd::QueueSpeak (long pCharID, LPCTSTR pText, CAgentTextObje
 
 /////////////////////////////////////////////////////////////////////////////
 
-CQueuedAction * CAgentCharacterWnd::IsSpeakQueued (long pCharID)
+CQueuedAction* CAgentCharacterWnd::IsSpeakQueued (long pCharID)
 {
 	return mQueue.GetCharAction (QueueActionSpeak, pCharID);
 }
 
-bool CAgentCharacterWnd::UpdateQueuedSpeak (long pCharID, CSapiVoice * pVoice)
+bool CAgentCharacterWnd::UpdateQueuedSpeak (long pCharID, CSapiVoice* pVoice)
 {
 	bool			lRet = false;
 	POSITION		lPos;
-	CQueuedAction *	lQueuedAction;
+	CQueuedAction*	lQueuedAction;
 	CQueuedSpeak *	lQueuedSpeak;
 
 	if	(pVoice)
@@ -827,7 +828,7 @@ bool CAgentCharacterWnd::UpdateQueuedSpeak (long pCharID, CSapiVoice * pVoice)
 	return lRet;
 }
 
-void CAgentCharacterWnd::SetLastSpeech (CAgentText & pSpeech)
+void CAgentCharacterWnd::SetLastSpeech (CAgentText& pSpeech)
 {
 	mLastSpeech = pSpeech;
 }
@@ -839,8 +840,8 @@ void CAgentCharacterWnd::SetLastSpeech (CAgentText & pSpeech)
 bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 {
 	bool				lRet = false;
-	CAgentFile *		lAgentFile;
-	CAgentStreamInfo *	lStreamInfo;
+	CAgentFile*		lAgentFile;
+	CAgentStreamInfo*	lStreamInfo;
 	long				lAnimationNdx = -1;
 	long				lSpeakingFrameNdx = -1;
 #ifdef	DebugTimeStart
@@ -859,7 +860,7 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 			&&	(lAnimationNdx >= 0)
 			)
 		{
-			LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Last Animation [%d] [%ls]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName));
+			LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Last Animation [%d] [%ls]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->Name));
 		}
 #endif
 		if	(
@@ -881,7 +882,7 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 #ifdef	_DEBUG_SPEECH_MOUTH
 				if	(LogIsActive (_DEBUG_SPEECH_MOUTH))
 				{
-					LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] [%ls] Frame [%d] Duration [%d]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
+					LogMessage (_DEBUG_SPEECH_MOUTH, _T("[%p(%d)]   Speech MouthAnimation [%d] [%ls] Frame [%d] Duration [%d]"), this, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->Name), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
 				lRet = true;
@@ -902,7 +903,7 @@ bool CAgentCharacterWnd::StartMouthAnimation (long pSpeakingDuration)
 bool CAgentCharacterWnd::StopMouthAnimation ()
 {
 	bool				lRet;
-	CAgentStreamInfo *	lStreamInfo;
+	CAgentStreamInfo*	lStreamInfo;
 
 	lRet = PlayMouthAnimation (-1, true);
 
@@ -927,7 +928,7 @@ bool CAgentCharacterWnd::StopMouthAnimation ()
 bool CAgentCharacterWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlways)
 {
 	bool				lRet = false;
-	CAgentStreamInfo *	lStreamInfo;
+	CAgentStreamInfo*	lStreamInfo;
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
@@ -975,10 +976,10 @@ bool CAgentCharacterWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayA
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentCharacterWnd::KeepBalloonVisible (CAgentBalloonWnd * pBalloon)
+bool CAgentCharacterWnd::KeepBalloonVisible (CAgentBalloonWnd* pBalloon)
 {
 	bool				lRet = false;
-	CQueuedAction *		lQueuedAction;
+	CQueuedAction*		lQueuedAction;
 	CQueuedThink *		lQueuedThink;
 	CQueuedSpeak *		lQueuedSpeak;
 	POSITION			lPos;
@@ -1082,7 +1083,7 @@ void CAgentCharacterWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentCharacterWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
@@ -1097,7 +1098,7 @@ LRESULT CAgentCharacterWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lP
 	return 0;
 }
 
-LRESULT CAgentCharacterWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
@@ -1109,7 +1110,7 @@ LRESULT CAgentCharacterWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	long	lCharID = (long)wParam;
 	long	lBookMarkId = (long)lParam;
@@ -1123,7 +1124,7 @@ LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM
 	{
 		try
 		{
-			CEventNotify *	lNotify;
+			CEventNotify*	lNotify;
 
 			if	(lNotify = GetNotifyClientNotify (lCharID))
 			{
@@ -1137,7 +1138,7 @@ LRESULT CAgentCharacterWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM
 	return 0;
 }
 
-LRESULT CAgentCharacterWnd::OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	int	lMouthOverlay = (int)lParam;
 #ifdef	_DEBUG_SPEECH_EVENTS
@@ -1208,19 +1209,19 @@ long CAgentCharacterWnd::QueueInterrupt (long pCharID, long pOtherCharID, long p
 
 /////////////////////////////////////////////////////////////////////////////
 
-CQueuedAction * CAgentCharacterWnd::FindOtherRequest (long pReqID, CAgentCharacterWnd *& pRequestOwner)
+CQueuedAction* CAgentCharacterWnd::FindOtherRequest (long pReqID, CAgentCharacterWnd*& pRequestOwner)
 {
-	CQueuedAction *			lRet = NULL;
+	CQueuedAction*			lRet = NULL;
 	INT_PTR					lNotifyNdx;
-	CEventNotify *			lNotify;
-	CAgentCharacterWnd *	lRequestOwner;
+	CEventNotify*			lNotify;
+	CAgentCharacterWnd*	lRequestOwner;
 
 	pRequestOwner = NULL;
 
 	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 	{
 		if	(
-				(lRequestOwner = dynamic_cast <CAgentCharacterWnd *> (lNotify->GetRequestOwner (pReqID)))
+				(lRequestOwner = dynamic_cast <CAgentCharacterWnd*> (lNotify->GetRequestOwner (pReqID)))
 			&&	(lRet = lRequestOwner->FindQueuedAction (pReqID))
 			)
 		{
@@ -1273,7 +1274,7 @@ bool CAgentCharacterWnd::StopIdle (LPCTSTR pReason)
 			try
 			{
 				INT_PTR			lNotifyNdx;
-				CEventNotify *	lNotify;
+				CEventNotify*	lNotify;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -1305,7 +1306,7 @@ bool CAgentCharacterWnd::DoIdle ()
 			try
 			{
 				INT_PTR			lNotifyNdx;
-				CEventNotify *	lNotify;
+				CEventNotify*	lNotify;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -1323,7 +1324,7 @@ bool CAgentCharacterWnd::DoIdle ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentCharacterWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	if	(!mQueue.IsEmpty ())
 	{
@@ -1353,13 +1354,13 @@ short CAgentCharacterWnd::NotifyKeyState () const
 	return lResult;
 }
 
-void CAgentCharacterWnd::NotifyClick (short pButton, const CPoint & pPoint)
+void CAgentCharacterWnd::NotifyClick (short pButton, const CPoint& pPoint)
 {
 	if	(PreNotify ())
 	{
 		try
 		{
-			CEventNotify *	lNotify;
+			CEventNotify*	lNotify;
 
 			if	(lNotify = GetNotifyClientNotify (mCharID))
 			{
@@ -1371,13 +1372,13 @@ void CAgentCharacterWnd::NotifyClick (short pButton, const CPoint & pPoint)
 	PostNotify ();
 }
 
-void CAgentCharacterWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
+void CAgentCharacterWnd::NotifyDblClick (short pButton, const CPoint& pPoint)
 {
 	if	(PreNotify ())
 	{
 		try
 		{
-			CEventNotify *	lNotify;
+			CEventNotify*	lNotify;
 
 			if	(lNotify = GetNotifyClientNotify (mCharID))
 			{
@@ -1391,7 +1392,7 @@ void CAgentCharacterWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentCharacterWnd::OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1407,7 +1408,7 @@ LRESULT CAgentCharacterWnd::OnLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-LRESULT CAgentCharacterWnd::OnLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1427,7 +1428,7 @@ LRESULT CAgentCharacterWnd::OnLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-LRESULT CAgentCharacterWnd::OnLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1445,7 +1446,7 @@ LRESULT CAgentCharacterWnd::OnLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lP
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentCharacterWnd::OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1460,7 +1461,7 @@ LRESULT CAgentCharacterWnd::OnRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lPar
 	return lResult;
 }
 
-LRESULT CAgentCharacterWnd::OnRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1488,7 +1489,7 @@ LRESULT CAgentCharacterWnd::OnRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return lResult;
 }
 
-LRESULT CAgentCharacterWnd::OnRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1507,7 +1508,7 @@ LRESULT CAgentCharacterWnd::OnRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lP
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentCharacterWnd::OnMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1522,7 +1523,7 @@ LRESULT CAgentCharacterWnd::OnMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lPar
 	return lResult;
 }
 
-LRESULT CAgentCharacterWnd::OnMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1541,7 +1542,7 @@ LRESULT CAgentCharacterWnd::OnMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam
 	return lResult;
 }
 
-LRESULT CAgentCharacterWnd::OnMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
@@ -1561,7 +1562,7 @@ LRESULT CAgentCharacterWnd::OnMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lP
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentCharacterWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 #ifdef	_DEBUG_MOUSE
 	LogMessage (_DEBUG_MOUSE, _T("OnContextMenu [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -1572,7 +1573,7 @@ LRESULT CAgentCharacterWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lPar
 		{
 			try
 			{
-				CEventNotify *	lNotify;
+				CEventNotify*	lNotify;
 
 				if	(lNotify = GetNotifyClientNotify (mCharID))
 				{
@@ -1586,7 +1587,7 @@ LRESULT CAgentCharacterWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-LRESULT CAgentCharacterWnd::OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG
@@ -1596,7 +1597,7 @@ LRESULT CAgentCharacterWnd::OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lP
 	return lResult;
 }
 
-LRESULT CAgentCharacterWnd::OnInputLangChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CAgentCharacterWnd::OnInputLangChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 #ifdef	_DEBUG

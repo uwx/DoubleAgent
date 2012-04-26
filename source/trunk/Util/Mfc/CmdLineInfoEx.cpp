@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -197,12 +197,12 @@ bool CCmdLineInfoEx::RequiresOpenDlg () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-int CCmdLineInfoEx::SplitCmdLine (CStringArray & pCmdLineParts)
+int CCmdLineInfoEx::SplitCmdLine (CStringArray& pCmdLineParts)
 {
 	return SplitCmdLine (GetCommandLine(), pCmdLineParts);
 }
 
-int CCmdLineInfoEx::SplitCmdLine (LPCTSTR pCmdLine, CStringArray & pCmdLineParts)
+int CCmdLineInfoEx::SplitCmdLine (LPCTSTR pCmdLine, CStringArray& pCmdLineParts)
 {
 	CString				lCmdLineRaw (pCmdLine);
 	CStringArray		lCmdLine;
@@ -227,7 +227,7 @@ int CCmdLineInfoEx::SplitCmdLine (LPCTSTR pCmdLine, CStringArray & pCmdLineParts
 
 		for	(lCmdNdx = 0; lCmdNdx <= lCmdLine.GetUpperBound(); lCmdNdx++)
 		{
-			CString &	lCmdPart = lCmdLine [lCmdNdx];
+			CString&	lCmdPart = lCmdLine [lCmdNdx];
 
 			lCmdPart.TrimLeft ();
 			lCmdPart.TrimRight ();

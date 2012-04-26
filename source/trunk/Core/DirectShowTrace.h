@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -34,19 +34,19 @@ public:
 
 // Attributes
 public:
-	IBaseFilter * GetFilter () {return mGrabberFilter;}
+	IBaseFilter* GetFilter () {return mGrabberFilter;}
 
 // Operations
 public:
-	CTraceSamples & Initialize (LPCTSTR pFilterName);
+	CTraceSamples& Initialize (LPCTSTR pFilterName);
 	void FinalRelease ();
 
-	CTraceSamples & ConnectBefore (IFilterGraph * pFilterGraph, IBaseFilter * pDownstreamFilter, IPin * pDownstreamPin = NULL, AM_MEDIA_TYPE * pMediaType = NULL);
-	CTraceSamples & ConnectAfter (IFilterGraph * pFilterGraph, IBaseFilter * pUpstreamFilter, IPin * pUpstreamPin = NULL, AM_MEDIA_TYPE * pMediaType = NULL);
-	CTraceSamples & Disconnect ();
+	CTraceSamples& ConnectBefore (IFilterGraph* pFilterGraph, IBaseFilter* pDownstreamFilter, IPin* pDownstreamPin = NULL, AM_MEDIA_TYPE* pMediaType = NULL);
+	CTraceSamples& ConnectAfter (IFilterGraph* pFilterGraph, IBaseFilter* pUpstreamFilter, IPin* pUpstreamPin = NULL, AM_MEDIA_TYPE* pMediaType = NULL);
+	CTraceSamples& Disconnect ();
 
-	CTraceSamples & LogSamples (UINT pLogLevel = LogIfActive|LogTimeMs|LogHighVolume, bool pOneShot = false);
-	CTraceSamples & DumpSamples (UINT pByteCount = 64, UINT pLogLevel = LogIfActive|LogTimeMs|LogHighVolume, bool pOneShot = false);
+	CTraceSamples& LogSamples (UINT pLogLevel = LogIfActive|LogTimeMs|LogHighVolume, bool pOneShot = false);
+	CTraceSamples& DumpSamples (UINT pByteCount = 64, UINT pLogLevel = LogIfActive|LogTimeMs|LogHighVolume, bool pOneShot = false);
 
 // Overrides
 
@@ -59,8 +59,8 @@ public:
 
 public:
 	// ISampleGrabberCB
-	virtual HRESULT STDMETHODCALLTYPE SampleCB (double SampleTime, IMediaSample *pSample);
-	virtual HRESULT STDMETHODCALLTYPE BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen);
+	virtual HRESULT STDMETHODCALLTYPE SampleCB (double SampleTime, IMediaSample*pSample);
+	virtual HRESULT STDMETHODCALLTYPE BufferCB (double SampleTime, BYTE*pBuffer, long BufferLen);
 
 // Implementation
 protected:
@@ -105,7 +105,7 @@ public:
 
 // Operations
 public:
-	CTraceFilter & Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName = NULL, UINT pLogLevelPins = LogVerbose|LogTime);
+	CTraceFilter& Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName = NULL, UINT pLogLevelPins = LogVerbose|LogTime);
 	void FinalRelease ();
 	void Aggregate (LPUNKNOWN pUnknown);
 
@@ -134,9 +134,9 @@ public:
     HRESULT STDMETHODCALLTYPE SetSyncSource (IReferenceClock *pClock);
     HRESULT STDMETHODCALLTYPE GetSyncSource (IReferenceClock **pClock);
     HRESULT STDMETHODCALLTYPE EnumPins (IEnumPins **ppEnum);
-    HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin **ppPin);
+    HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin**ppPin);
     HRESULT STDMETHODCALLTYPE QueryFilterInfo (FILTER_INFO *pInfo);
-    HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName);
+    HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph*pGraph, LPCWSTR pName);
     HRESULT STDMETHODCALLTYPE QueryVendorInfo (LPWSTR *pVendorInfo);
 
 	// IMediaSeeking
@@ -171,7 +171,7 @@ public:
 	HRESULT STDMETHODCALLTYPE GetConnectedMediaType ( AM_MEDIA_TYPE *pType);
 	HRESULT STDMETHODCALLTYPE SetBufferSamples (BOOL BufferThem);
 	HRESULT STDMETHODCALLTYPE GetCurrentBuffer (long *pBufferSize, long *pBuffer);
-	HRESULT STDMETHODCALLTYPE GetCurrentSample (IMediaSample **ppSample);
+	HRESULT STDMETHODCALLTYPE GetCurrentSample (IMediaSample**ppSample);
 	HRESULT STDMETHODCALLTYPE SetCallback (ISampleGrabberCB *pCallback, long WhichMethodToCallback);
 
 // Implementation
@@ -180,7 +180,7 @@ protected:
 
 protected:
 	CAtlString				mFilterName;
-	IFilterGraph *			mFilterGraph;
+	IFilterGraph*			mFilterGraph;
 	LPUNKNOWN				mUnknown;
 	IBaseFilterPtr			mInnerBaseFilter;
 	IMediaSeekingPtr		mInnerMediaSeeking;
@@ -208,7 +208,7 @@ public:
 
 // Operations
 public:
-	CTracePins & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins = LogVerbose|LogTime);
+	CTracePins& Initialize (LPUNKNOWN pUnknown, IBaseFilter* pFilter, UINT pLogLevelPins = LogVerbose|LogTime);
 	void FinalRelease ();
 
 // Overrides
@@ -223,7 +223,7 @@ public:
 
 public:
 	// IEnumPins
-    HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched);
+    HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin**ppPins, ULONG *pcFetched);
     HRESULT STDMETHODCALLTYPE Skip (ULONG cPins);
     HRESULT STDMETHODCALLTYPE Reset ();
     HRESULT STDMETHODCALLTYPE Clone (IEnumPins **ppEnum);
@@ -259,7 +259,7 @@ public:
 
 // Operations
 public:
-	CTracePin & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevel = LogIfActive);
+	CTracePin& Initialize (LPUNKNOWN pUnknown, IBaseFilter* pFilter, UINT pLogLevel = LogIfActive);
 	void FinalRelease ();
 
 // Overrides
@@ -282,33 +282,33 @@ public:
 	HRESULT STDMETHODCALLTYPE Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE Disconnect (void);
-	HRESULT STDMETHODCALLTYPE ConnectedTo (IPin **pPin);
+	HRESULT STDMETHODCALLTYPE ConnectedTo (IPin**pPin);
 	HRESULT STDMETHODCALLTYPE ConnectionMediaType (AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE QueryPinInfo (PIN_INFO *pInfo);
 	HRESULT STDMETHODCALLTYPE QueryDirection (PIN_DIRECTION *pPinDir);
 	HRESULT STDMETHODCALLTYPE QueryId (LPWSTR *Id);
 	HRESULT STDMETHODCALLTYPE QueryAccept (const AM_MEDIA_TYPE *pmt);
 	HRESULT STDMETHODCALLTYPE EnumMediaTypes (IEnumMediaTypes **ppEnum);
-	HRESULT STDMETHODCALLTYPE QueryInternalConnections (IPin **apPin, ULONG *nPin);
+	HRESULT STDMETHODCALLTYPE QueryInternalConnections (IPin**apPin, ULONG *nPin);
 	HRESULT STDMETHODCALLTYPE EndOfStream (void);
 	HRESULT STDMETHODCALLTYPE BeginFlush (void);
 	HRESULT STDMETHODCALLTYPE EndFlush (void);
 	HRESULT STDMETHODCALLTYPE NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
 
 	// IMemInputPin
-	HRESULT STDMETHODCALLTYPE GetAllocator (IMemAllocator **ppAllocator);
-	HRESULT STDMETHODCALLTYPE NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly);
+	HRESULT STDMETHODCALLTYPE GetAllocator (IMemAllocator**ppAllocator);
+	HRESULT STDMETHODCALLTYPE NotifyAllocator (IMemAllocator*pAllocator, BOOL bReadOnly);
 	HRESULT STDMETHODCALLTYPE GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps);
-	HRESULT STDMETHODCALLTYPE Receive (IMediaSample *pSample);
-	HRESULT STDMETHODCALLTYPE ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed);
+	HRESULT STDMETHODCALLTYPE Receive (IMediaSample*pSample);
+	HRESULT STDMETHODCALLTYPE ReceiveMultiple (IMediaSample**pSamples, long nSamples, long *nSamplesProcessed);
 	HRESULT STDMETHODCALLTYPE ReceiveCanBlock (void);
 
 	// IAsyncReader
-	HRESULT STDMETHODCALLTYPE RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual);
-	HRESULT STDMETHODCALLTYPE Request (IMediaSample *pSample, DWORD_PTR dwUser);
-	HRESULT STDMETHODCALLTYPE WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser);
-	HRESULT STDMETHODCALLTYPE SyncReadAligned (IMediaSample *pSample);
-	HRESULT STDMETHODCALLTYPE SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer);
+	HRESULT STDMETHODCALLTYPE RequestAllocator (IMemAllocator*pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator**ppActual);
+	HRESULT STDMETHODCALLTYPE Request (IMediaSample*pSample, DWORD_PTR dwUser);
+	HRESULT STDMETHODCALLTYPE WaitForNext (DWORD dwTimeout, IMediaSample**ppSample,DWORD_PTR *pdwUser);
+	HRESULT STDMETHODCALLTYPE SyncReadAligned (IMediaSample*pSample);
+	HRESULT STDMETHODCALLTYPE SyncRead (LONGLONG llPosition, LONG lLength, BYTE*pBuffer);
 	HRESULT STDMETHODCALLTYPE Length (LONGLONG *pTotal, LONGLONG *pAvailable);
 
 	// IMediaSeeking

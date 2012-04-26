@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -38,7 +38,9 @@ public:
 
 // Attributes
 public:
+#ifndef	_DACORE_LOCAL
 	IDaSvrCommand2Ptr		mServerObject;
+#endif
 	long					mServerId;
 	tPtr <CDaCmnCommand>	mLocalObject;
 
@@ -86,11 +88,11 @@ public:
 	HRESULT STDMETHODCALLTYPE put_Enabled (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
 	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
-	HRESULT STDMETHODCALLTYPE get_Confidence (long * Confidence);
+	HRESULT STDMETHODCALLTYPE get_Confidence (long* Confidence);
 	HRESULT STDMETHODCALLTYPE put_Confidence (long Confidence);
 	HRESULT STDMETHODCALLTYPE get_ConfidenceText (BSTR * Text);
 	HRESULT STDMETHODCALLTYPE put_ConfidenceText (BSTR Text);
-	HRESULT STDMETHODCALLTYPE get_HelpContextID (long * ID);
+	HRESULT STDMETHODCALLTYPE get_HelpContextID (long* ID);
 	HRESULT STDMETHODCALLTYPE put_HelpContextID (long ID);
 	HRESULT STDMETHODCALLTYPE get_VoiceCaption (BSTR * Caption);
 	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR Caption);

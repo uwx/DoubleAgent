@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<script language="javascript" type="text/javascript">
+
+		function window_onload()
+		{
+			DaAgentControl.AutoConnect = 0;
+			DaAgentControl.Connected = 0;
+
+			for (var lIndex = 0; lIndex < DaAgentControl.TTSEngines.Count; lIndex++)
+			{
+				var lTTSEngine = DaAgentControl.TTSEngines.Item(lIndex);
+				var lRow = Voices.insertRow(lIndex + 1);
+				lRow.insertCell(0).innerText = lTTSEngine.TTSModeID;
+				lRow.insertCell(1).innerText = lTTSEngine.DisplayName;
+				lRow.insertCell(2).innerText = lTTSEngine.LanguageName;
+			}
+		}
+		function ShowDaCopyright()
+		{
+			DaAgentControl.PropertySheet.Visible = true;
+			DaAgentControl.PropertySheet.Page = "Copyright";
+		}
+	</script>
+</head>
+<body onload="window_onload()">
+	<table id="Voices" cellpadding="4" cellspacing="0" title="Installed Voices" style="border-width: medium;
+		border-collapse: collapse; border-style: solid" border="1">
+		<caption style="font-size: x-large">
+			Installed Voices</caption>
+		<tr>
+			<th align="left">
+				TTSModeID
+			</th>
+			<th align="left">
+				Display Name
+			</th>
+			<th align="left">
+				Language Name
+			</th>
+		</tr>
+	</table>
+	<object id="DaAgentControl" classid="CLSID:1147E530-A208-11DE-ABF2-002421116FB2"
+		style="display: none;">
+	</object>
+	<p>
+		This page uses <a href="#" onclick="ShowDaCopyright(); return false;">Double Agent</a>
+		under the GNU Public License.</p>
+</body>
+</html>

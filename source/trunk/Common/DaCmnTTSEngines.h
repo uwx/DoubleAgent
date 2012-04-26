@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -36,11 +36,11 @@ public:
 // Operations
 public:
 	HRESULT UseAllVoices ();
-	HRESULT UseTheseVoices (class CAgentFile * pFile, LANGID pLangId, short pGender);
+	HRESULT UseTheseVoices (class CAgentFile* pFile, LANGID pLangId, short pGender);
 
 	class CSapi5VoiceInfo * GetSapi5VoiceAt (INT_PTR pIndex) const;
 #ifndef	_WIN64
-	class CSapi4VoiceInfo * GetSapi4VoiceAt (INT_PTR pIndex) const;
+	class CSapi4VoiceInfo* GetSapi4VoiceAt (INT_PTR pIndex) const;
 #endif
 
 // Implementation

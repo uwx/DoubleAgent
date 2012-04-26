@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -50,7 +50,7 @@ CDirectShowSeekingImpl::~CDirectShowSeekingImpl()
 {
 }
 
-CDirectShowSeekingImpl & CDirectShowSeekingImpl::Initialize (CComObjectRootBase & pBase, CDirectShowClock & pClock, LPCTSTR pBaseClassName)
+CDirectShowSeekingImpl& CDirectShowSeekingImpl::Initialize (CComObjectRootBase& pBase, CDirectShowClock& pClock, LPCTSTR pBaseClassName)
 {
 	mBase = &pBase;
 	mClock = &pClock;
@@ -100,7 +100,7 @@ HRESULT CDirectShowSeekingImpl::SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TI
 	return lResult;
 }
 
-void CDirectShowSeekingImpl::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime)
+void CDirectShowSeekingImpl::GetTimes (REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime)
 {
 	CLockCS	lLock (mLock);
 
@@ -114,7 +114,7 @@ void CDirectShowSeekingImpl::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIM
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowSeekingImpl::GetStreamTimes (REFERENCE_TIME & pStreamTime, REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime, FILTER_STATE pStreamState)
+void CDirectShowSeekingImpl::GetStreamTimes (REFERENCE_TIME& pStreamTime, REFERENCE_TIME& pCurrTime, REFERENCE_TIME& pStopTime, FILTER_STATE pStreamState)
 {
 	CLockCS	lLock (mLock);
 
@@ -223,7 +223,7 @@ bool CDirectShowSeekingImpl::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowSeekingImpl::OnTimesChanging (REFERENCE_TIME & pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME & pStopTime, DWORD pStopFlags)
+void CDirectShowSeekingImpl::OnTimesChanging (REFERENCE_TIME& pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME& pStopTime, DWORD pStopFlags)
 {
 #ifdef	_DEBUG_SEEKING
 	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Curr [%f %I64d] [%s] [%f %I64d]"), mBaseClassName, mBase, RefTimeSec(mCurrTime), mCurrTime, SeekingFlagsStr(pCurrentFlags), RefTimeSec(pCurrTime), pCurrTime);

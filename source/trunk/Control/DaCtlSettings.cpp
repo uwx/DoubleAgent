@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent ActiveX Control.
@@ -30,6 +30,12 @@
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 #endif
 
+#ifdef	_DACORE_LOCAL
+#define	LogServerPtr	(void*)NULL
+#else
+#define	LogServerPtr	mServerObject.GetInterfacePtr()
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlSettings::DaCtlSettings ()
@@ -38,7 +44,7 @@ DaCtlSettings::DaCtlSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -51,7 +57,7 @@ DaCtlSettings::~DaCtlSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::~DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::~DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -81,7 +87,7 @@ void DaCtlSettings::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -95,7 +101,7 @@ void DaCtlSettings::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -107,7 +113,7 @@ void DaCtlSettings::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, LogServerPtr, mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -116,6 +122,7 @@ void DaCtlSettings::Terminate (bool pFinal)
 
 void DaCtlSettings::Disconnect (bool pFinal)
 {
+#ifndef	_DACORE_LOCAL
 	if	(pFinal)
 	{
 		mServerObject.Detach ();
@@ -125,6 +132,7 @@ void DaCtlSettings::Disconnect (bool pFinal)
 		SafeFreeSafePtr (mServerObject);
 	}
 	SafeFreeSafePtr (mLocalObject);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -135,6 +143,7 @@ HRESULT DaCtlSettings::SetOwner (DaControl * pOwner)
 
 	if	(mOwner = pOwner)
 	{
+#ifndef	_DACORE_LOCAL
 		if	(mOwner->mServer)
 		{
 			mServerObject = mOwner->mServer;
@@ -144,6 +153,7 @@ HRESULT DaCtlSettings::SetOwner (DaControl * pOwner)
 			}
 		}
 		else
+#endif
 		{
 			mLocalObject = new CDaCmnSettings (&_AtlModule);
 			if	(!mLocalObject)
@@ -155,7 +165,7 @@ HRESULT DaCtlSettings::SetOwner (DaControl * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), LogServerPtr, mLocalObject.Ptr());
 	}
 #endif
 	return lResult;
@@ -202,6 +212,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -212,6 +223,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -241,6 +253,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -251,6 +264,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -278,6 +292,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonFont (IFontDisp **BalloonFon
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -288,6 +303,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonFont (IFontDisp **BalloonFon
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -317,6 +333,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -327,6 +344,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -354,6 +372,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSSpeed (short *TTSSpeed)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -364,6 +383,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSSpeed (short *TTSSpeed)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -393,6 +413,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -403,6 +424,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -430,6 +452,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKey (BSTR *SRHotKey)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -440,6 +463,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKey (BSTR *SRHotKey)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -467,6 +491,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -477,6 +502,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -504,6 +530,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -514,6 +541,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -541,6 +569,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -551,6 +580,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS
@@ -580,6 +610,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_AudioStatus (AudioStatusType *Audio
 		}
 		catch AnyExceptionDebug
 	}
+#ifndef	_DACORE_LOCAL
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -590,6 +621,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_AudioStatus (AudioStatusType *Audio
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
+#endif
 
 	PutControlError (lResult, __uuidof(IDaCtlSettings));
 #ifdef	_LOG_RESULTS

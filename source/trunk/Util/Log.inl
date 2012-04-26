@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -1270,9 +1270,9 @@ bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPref
 					if  (pDumpOffsets)
 					{
 #ifdef	_WIN32
-						_stprintf (lCodes, _T("[%4.4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
+						_stprintf (lCodes, _T("[%4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
 #else
-						wsprintf (lCodes, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+						wsprintf (lCodes, "[%4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
 #endif
 					}
 					else
@@ -1389,9 +1389,9 @@ bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR 
 					if  (pDumpOffsets)
 					{
 #ifdef	_WIN32
-						_stprintf (lCodes32, _T("[%4.4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
+						_stprintf (lCodes32, _T("[%4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
 #else
-						wsprintf (lCodes32, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+						wsprintf (lCodes32, "[%4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
 #endif
 					}
 					else
@@ -2330,7 +2330,7 @@ DWORD LogStart (bool pNewLogFile, LPCTSTR pLogFileName, UINT pLogLevel)
 								)
 							{
 								TCHAR	Speed [20];
-								_stprintf (Speed, _T("%uMHz"), * (DWORD *) lValue);
+								_stprintf (Speed, _T("%uMHz"), *(DWORD*) lValue);
 								_tcscat (lProcessorStr, _T(" "));
 								_tcscat (lProcessorStr, Speed);
 							}
@@ -2384,8 +2384,9 @@ DWORD LogStart (bool pNewLogFile, LPCTSTR pLogFileName, UINT pLogLevel)
 
 void LogStop (unsigned int pPutLogEnd)
 {
+#ifdef	_CRTDBG_ALLOC_MEM_DF
 	LogDebugRuntime (false);
-
+#endif
 #ifdef __cplusplus
 	if	(gLogLevel & LogToCache)
 	{
@@ -2466,7 +2467,7 @@ void LogStop (unsigned int pPutLogEnd)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void LogControl (LPTSTR pLogFileName, UINT & pLogLevel)
+void LogControl (LPTSTR pLogFileName, UINT& pLogLevel)
 {
 	UINT	lLogLevelSave = pLogLevel;
 	HKEY	lRegKey = 0;
@@ -2527,7 +2528,7 @@ void LogControl (LPTSTR pLogFileName, UINT & pLogLevel)
 					&&	(lValueType == REG_DWORD)
 					)
 				{
-					pLogLevel = (* (DWORD *) lValue) & LogSettingsMask;
+					pLogLevel = (*(DWORD*) lValue) & LogSettingsMask;
 				}
 				RegCloseKey (lRegKey);
 			}
@@ -2575,10 +2576,10 @@ void LogControl (LPTSTR pLogFileName, UINT & pLogLevel)
 				if	(
 						(RegQueryValueEx (lRegKey, _T("LogLevel"), NULL, &(lValueType = 0), lValue, &(lValueSize = sizeof (lValue))) == ERROR_SUCCESS)
 					&&	(lValueType == REG_DWORD)
-					&&	(((* (DWORD *) lValue) & LogLevelMask) > (pLogLevel & LogLevelMask))
+					&&	(((*(DWORD*) lValue) & LogLevelMask) > (pLogLevel & LogLevelMask))
 					)
 				{
-					pLogLevel = (* (DWORD *) lValue) & LogSettingsMask;
+					pLogLevel = (*(DWORD*) lValue) & LogSettingsMask;
 				}
 				RegCloseKey (lRegKey);
 			}
@@ -2916,6 +2917,7 @@ int __cdecl LogCrtDbgReport (int pRptType, char * pMsg, int * pRetVal)
 /////////////////////////////////////////////////////////////////////////////
 void LogDebugRuntime (bool pDebugRuntime, bool pAsserts, bool pErrors, bool pWarnings)
 {
+#ifndef	__cplusplus_cli
 #ifdef	_DEBUG
 	_LOG_TRY
 	{
@@ -2937,11 +2939,13 @@ void LogDebugRuntime (bool pDebugRuntime, bool pAsserts, bool pErrors, bool pWar
 	}
 	_LOG_CATCH
 #endif
+#endif
 }
 
 int LogDebugMemory (int pDbgFlag)
 {
 	int	lDbgFlag = 0;
+#ifndef	__cplusplus_cli
 #ifdef	_DEBUG
 	_LOG_TRY
 	{
@@ -2950,6 +2954,7 @@ int LogDebugMemory (int pDbgFlag)
 		LogMessage (LogIfActive, _T("_CrgDbgFlag from [%4.4X] to [%4.4X]"), lDbgFlag, _CrtSetDbgFlag (_CRTDBG_REPORT_FLAG));
 	}
 	_LOG_CATCH
+#endif
 #endif
 	return lDbgFlag;
 }

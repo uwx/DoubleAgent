@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -22,6 +22,7 @@
 #include "DaCore.h"
 #include "QueuedAction.h"
 #include "QueuedActions.h"
+#include "FileDownload.h"
 #include "AgentCharacterWnd.h"
 #include "AgentBalloonWnd.h"
 #include "AgentStreamInfo.h"
@@ -65,7 +66,7 @@ CAtlMap <const CQueuedSpeak*, DWORD>	sBusyStart;
 
 //////////////////////////////////////////////////////////////////////
 
-CQueuedSpeak::CQueuedSpeak (CAgentBalloonOptions * pBalloonOptions, long pCharID, long pReqID)
+CQueuedSpeak::CQueuedSpeak (CAgentBalloonOptions* pBalloonOptions, long pCharID, long pReqID)
 :	CQueuedAction (QueueActionSpeak, pCharID, pReqID),
 	mVoice (NULL),
 	mAnimated (false)
@@ -111,7 +112,7 @@ CQueuedSpeak::~CQueuedSpeak ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedSpeak::Initialize (CAgentText & pText, CSapiVoice * pVoice)
+void CQueuedSpeak::Initialize (CAgentText& pText, CSapiVoice* pVoice)
 {
 	if	(mText = new CAgentText (pText.GetSapiVersion ()))
 	{
@@ -127,7 +128,7 @@ void CQueuedSpeak::Initialize (CAgentText & pText, CSapiVoice * pVoice)
 	SetVoice (pVoice);
 }
 
-void CQueuedSpeak::Initialize (CAgentTextObject * pTextObject, CSapiVoice * pVoice)
+void CQueuedSpeak::Initialize (CAgentTextObject* pTextObject, CSapiVoice* pVoice)
 {
 	mTextObject = pTextObject;
 	mTextObjectRef = pTextObject;
@@ -140,7 +141,7 @@ void CQueuedSpeak::Initialize (CAgentTextObject * pTextObject, CSapiVoice * pVoi
 	SetVoice (pVoice);
 }
 
-bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
+bool CQueuedSpeak::SetVoice (CSapiVoice* pVoice)
 {
 	bool	lRet = false;
 
@@ -158,7 +159,7 @@ bool CQueuedSpeak::SetVoice (CSapiVoice * pVoice)
 			)
 		{
 			_ISapiVoiceEventSink *				lVoiceNotifySink [2] = {NULL, NULL};
-			CNotifySourcesOwner <CSapiVoice> *	lVoiceNotifySources [2] = {NULL, NULL};
+			CNotifySourcesOwner <CSapiVoice>*	lVoiceNotifySources [2] = {NULL, NULL};
 
 			if	(mVoice)
 			{
@@ -260,11 +261,11 @@ CAtlString CQueuedSpeak::GetSpeechText ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedSpeak::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
-	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	HRESULT					lResult = S_OK;
+	bool				lRet = false;
+	CAgentCharacterWnd*	lCharacterWnd;
+	HRESULT				lResult = S_OK;
 
 	if	(mPaused)
 	{
@@ -379,7 +380,7 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				if	(pQueue.GetNextAction (QueueActionSpeak) == this)
 				{
 					if	(
-							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 						&&	(!lCharacterWnd->IsCharShown ())
 						)
 					{
@@ -393,7 +394,7 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Show QueuedSpeak [%p(%d)] [%s] [%s]"), pAgentWnd, mCharID, this, mReqID, DebugStr(GetFullText()), DebugStr(mSoundUrl));
 						}
 #endif
-						if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+						if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 						{
 							if	(mText)
 							{
@@ -429,7 +430,7 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			)
 		{
 			CDirectSoundLipSync *	lLipSync;
-			CAgentBalloonWnd *		lBalloonWnd;
+			CAgentBalloonWnd*		lBalloonWnd;
 
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
@@ -455,7 +456,7 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			{
 				lLipSync->Disconnect ();
 			}
-			if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			{
 				lCharacterWnd->StopMouthAnimation ();
 
@@ -486,11 +487,11 @@ bool CQueuedSpeak::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedSpeak::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentBalloonWnd*		lBalloonWnd;
 
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
@@ -514,7 +515,7 @@ bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 		if	(
 				(mStarted)
 			&&	(ShowBalloon())
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
@@ -530,7 +531,7 @@ bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 		if	(
 				(mStarted)
 			&&	(ShowBalloon())
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
@@ -549,7 +550,7 @@ bool CQueuedSpeak::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 	return lRet;
 }
 
-bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedSpeak::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool	lRet = false;
 
@@ -561,8 +562,8 @@ bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESUL
 #endif
 	if	(mStarted)
 	{
-		CAgentCharacterWnd *	lCharacterWnd;
-		CAgentBalloonWnd *		lBalloonWnd;
+		CAgentCharacterWnd*	lCharacterWnd;
+		CAgentBalloonWnd*		lBalloonWnd;
 		CDirectSoundLipSync *	lLipSync;
 
 		if	(mVoice->SafeIsValid())
@@ -581,7 +582,7 @@ bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESUL
 			lRet = true;
 		}
 
-		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 		{
 			lCharacterWnd->StopMouthAnimation ();
 
@@ -619,11 +620,11 @@ bool CQueuedSpeak::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESUL
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedSpeak::SpeechIsBusy (CAgentWnd * pAgentWnd)
+bool CQueuedSpeak::SpeechIsBusy (CAgentWnd* pAgentWnd)
 {
 	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd = NULL;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentBalloonWnd*		lBalloonWnd = NULL;
 
 #ifdef	DebugTimeStart
 	DebugTimeStart
@@ -639,7 +640,7 @@ bool CQueuedSpeak::SpeechIsBusy (CAgentWnd * pAgentWnd)
 				)
 			||	(
 					(ShowBalloon())
-				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 				&&	(lBalloonWnd->IsWindow ())
 				&&	(lBalloonWnd->IsBusy (false))
@@ -662,7 +663,7 @@ bool CQueuedSpeak::SpeechIsBusy (CAgentWnd * pAgentWnd)
 				)
 			||	(
 					(ShowBalloon())
-				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 				&&	(lBalloonWnd->IsWindow ())
 #ifdef	_STRICT_COMPATIBILITY
@@ -721,7 +722,7 @@ bool CQueuedSpeak::SpeechIsBusy (CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-HRESULT CQueuedSpeak::SpeechIsReady (CAgentWnd * pAgentWnd)
+HRESULT CQueuedSpeak::SpeechIsReady (CAgentWnd* pAgentWnd)
 {
 	HRESULT	lResult = S_OK;
 #ifdef	DebugTimeStart
@@ -733,8 +734,8 @@ HRESULT CQueuedSpeak::SpeechIsReady (CAgentWnd * pAgentWnd)
 		if	(PathIsURL (mSoundUrl))
 		{
 			INT_PTR				lNotifyNdx;
-			CEventNotify *		lNotify;
-			CFileDownload *		lSoundDownload = NULL;
+			CEventNotify*		lNotify;
+			CFileDownload*		lSoundDownload = NULL;
 
 			for	(lNotifyNdx = 0; lNotifyNdx < (INT_PTR)pAgentWnd->mNotify.GetCount(); lNotifyNdx++)
 			{
@@ -799,7 +800,7 @@ HRESULT CQueuedSpeak::SpeechIsReady (CAgentWnd * pAgentWnd)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedSpeak::PrepareSpeech (CAgentWnd * pAgentWnd)
+HRESULT CQueuedSpeak::PrepareSpeech (CAgentWnd* pAgentWnd)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -831,24 +832,24 @@ HRESULT CQueuedSpeak::PrepareSpeech (CAgentWnd * pAgentWnd)
 	if	(mVoice->SafeIsValid())
 	{
 #ifndef	_WIN64
-		CSapi4Voice *	lSapi4Voice;
-		CAgentFile *	lAgentFile;
+		CSapi4Voice*	lSapi4Voice;
+		CAgentFile*	lAgentFile;
 
-		if	(lSapi4Voice = dynamic_cast <CSapi4Voice *> (mVoice))
+		if	(lSapi4Voice = dynamic_cast <CSapi4Voice*> (mVoice))
 		{
 			if	(
 					(lAgentFile = pAgentWnd->GetAgentFile())
-				&&	(lAgentFile->GetTts().mPitch > 0)
+				&&	(lAgentFile->Tts.Pitch > 0)
 				)
 			{
-				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetPitch (lAgentFile->GetTts().mPitch));
+				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetPitch (lAgentFile->Tts.Pitch));
 			}
 			if	(
 					(lAgentFile)
-				&&	(lAgentFile->GetTts().mSpeed > 0)
+				&&	(lAgentFile->Tts.Speed > 0)
 				)
 			{
-				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lAgentFile->GetTts().mSpeed, 4)));
+				LogSapi4Err (LogNormal|LogTime, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lAgentFile->Tts.Speed, 4)));
 			}
 			else
 			{
@@ -870,12 +871,12 @@ HRESULT CQueuedSpeak::PrepareSpeech (CAgentWnd * pAgentWnd)
 	return lResult;
 }
 
-HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+HRESULT CQueuedSpeak::StartSpeech (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	HRESULT					lResult = S_FALSE;
 	bool					lBalloonShown = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd = NULL;
+	CAgentCharacterWnd*		lCharacterWnd;
+	CAgentBalloonWnd*		lBalloonWnd = NULL;
 	CDirectSoundLipSync *	lLipSync;
 
 #ifdef	DebugTimeStart
@@ -885,7 +886,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 	if	(!mSoundUrl.IsEmpty ())
 	{
 		if	(
-				(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			&&	(lLipSync = static_cast <CDirectSoundLipSync *> (mSoundFilter.GetInterfacePtr()))
 			)
 		{
@@ -894,22 +895,40 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 		if	(
 				(pQueue.GetNextAction (QueueActionSpeak) == this)
-			&&	(ShowBalloon())
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
-			&&	(lBalloonWnd->IsWindow ())
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			)
 		{
-			lBalloonWnd->ApplyOptions (mBalloonOptions);
-			if	(mText)
+			if	(ShowBalloon())
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText, true);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->ApplyOptions (mBalloonOptions);
+					if	(mText)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText, true);
+					}
+					else
+					if	(mTextObject)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText, true);
+					}
+				}
 			}
+#ifdef	_STRICT_COMPATIBILITY
 			else
-			if	(mTextObject)
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText, true);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->HideBalloon (true);
+				}
 			}
+#endif
 		}
 
 		if	(pQueue.GetNextAction (QueueActionSpeak) == this)
@@ -935,7 +954,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 	{
 		mVoice->ClearNotifySinks ();
 
-		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+		if	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 		{
 			mVoiceNotifyId[0] = mVoice->AddNotifySink (lCharacterWnd, lCharacterWnd);
 			mVoice->SetEventCharID (mCharID);
@@ -948,23 +967,41 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 		if	(
 				(pQueue.GetNextAction (QueueActionSpeak) == this)
-			&&	(ShowBalloon())
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
-			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
-			&&	(lBalloonWnd->IsWindow ())
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			)
 		{
-			mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd, lBalloonWnd);
-			lBalloonWnd->ApplyOptions (mBalloonOptions);
-			if	(mText)
+			if	(ShowBalloon())
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					mVoiceNotifyId[1] = mVoice->AddNotifySink (lBalloonWnd, lBalloonWnd);
+					lBalloonWnd->ApplyOptions (mBalloonOptions);
+					if	(mText)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (*mText);
+					}
+					else
+					if	(mTextObject)
+					{
+						lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText);
+					}
+				}
 			}
+#ifdef	_STRICT_COMPATIBILITY
 			else
-			if	(mTextObject)
 			{
-				lBalloonShown = lBalloonWnd->ShowBalloonSpeech (mTextObject->mText);
+				if	(
+						(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
+					&&	(lBalloonWnd->IsWindow ())
+					)
+				{
+					lBalloonWnd->HideBalloon (true);
+				}
 			}
+#endif
 		}
 
 		if	(pQueue.GetNextAction (QueueActionSpeak) == this)
@@ -978,7 +1015,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 				if	(
 						(ShowBalloon())
-					&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+					&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 					&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 					&&	(lBalloonWnd->IsWindow ())
 					)
@@ -998,7 +1035,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 	if	(FAILED (lResult))
 	{
 		if	(
-				(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+				(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			&&	(lBalloonWnd->IsWindow ())
 			)
@@ -1025,7 +1062,7 @@ HRESULT CQueuedSpeak::StartSpeech (CQueuedActions & pQueue, CAgentWnd * pAgentWn
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	bool	lRet = false;
 #ifdef	DebugTimeStart
@@ -1034,10 +1071,10 @@ bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions & pQueue, CAgentWnd * pAg
 
 	if	(!mAnimated)
 	{
-		CAgentStreamInfo *		lStreamInfo;
+		CAgentStreamInfo*		lStreamInfo;
 		long					lAnimationNdx = -1;
 		long					lSpeakingFrameNdx = -1;
-		const CAtlStringArray *	lGestures;
+		const CAtlStringArray*	lGestures;
 		LPCTSTR					lGesture;
 
 		mAnimated = true;
@@ -1053,7 +1090,7 @@ bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions & pQueue, CAgentWnd * pAg
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Speech Animation [%d] [%ls] Frame [%d]"), pAgentWnd, mCharID, lAnimationNdx, (BSTR)(pAgentWnd->GetAgentFile()->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx);
+				LogMessage (_DEBUG_SPEECH, _T("[%p] [%d]   Speech Animation [%d] [%ls] Frame [%d]"), pAgentWnd, mCharID, lAnimationNdx, (BSTR)(pAgentWnd->GetAgentFile()->GetAnimation (lAnimationNdx)->Name), lSpeakingFrameNdx);
 			}
 #endif
 		}
@@ -1105,7 +1142,7 @@ bool CQueuedSpeak::ShowSpeechAnimation (CQueuedActions & pQueue, CAgentWnd * pAg
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CQueuedThink::CQueuedThink (CAgentBalloonOptions * pBalloonOptions, long pCharID, long pReqID)
+CQueuedThink::CQueuedThink (CAgentBalloonOptions* pBalloonOptions, long pCharID, long pReqID)
 :	CQueuedAction (QueueActionThink, pCharID, pReqID)
 {
 	if	(pBalloonOptions)
@@ -1121,7 +1158,7 @@ CQueuedThink::~CQueuedThink ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedThink::Initialize (CAgentText & pText)
+void CQueuedThink::Initialize (CAgentText& pText)
 {
 	if	(mText = new CAgentText (pText.GetSapiVersion()))
 	{
@@ -1131,7 +1168,7 @@ void CQueuedThink::Initialize (CAgentText & pText)
 	mTextObjectRef = NULL;
 }
 
-void CQueuedThink::Initialize (CAgentTextObject * pTextObject)
+void CQueuedThink::Initialize (CAgentTextObject* pTextObject)
 {
 	mTextObject = pTextObject;
 	mTextObjectRef = pTextObject;
@@ -1154,11 +1191,11 @@ CAtlString CQueuedThink::GetFullText ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
+bool CQueuedThink::Advance (CQueuedActions& pQueue, CAgentWnd* pAgentWnd)
 {
 	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentBalloonWnd*		lBalloonWnd;
 
 	if	(mPaused)
 	{
@@ -1175,7 +1212,7 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		if	(!mStarted)
 		{
 			if	(
-					(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+					(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 				&&	(lBalloonWnd->IsWindow ())
 				&&	(lBalloonWnd->IsBusy (true))
@@ -1196,7 +1233,7 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 				if	(pQueue.GetNextAction (QueueActionThink) == this)
 				{
 					if	(
-							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 						&&	(!lCharacterWnd->IsCharShown ())
 						)
 					{
@@ -1205,7 +1242,7 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 					}
 					else
 					if	(
-							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+							(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 						&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
 						&&	(lBalloonWnd->IsWindow ())
 						)
@@ -1248,7 +1285,7 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 		else
 		{
 			if	(
-					(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+					(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 				&&	(lBalloonWnd->IsWindow ())
 				&&	(lBalloonWnd->IsBusy (false))
@@ -1266,7 +1303,7 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 			if	(pQueue.GetNextAction (QueueActionThink) == this)
 			{
 				if	(
-						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+						(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 					&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 					&&	(lBalloonWnd->IsWindow ())
 					)
@@ -1291,11 +1328,11 @@ bool CQueuedThink::Advance (CQueuedActions & pQueue, CAgentWnd * pAgentWnd)
 	return lRet;
 }
 
-bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool pPause)
+bool CQueuedThink::Pause (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, bool pPause)
 {
 	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentBalloonWnd*		lBalloonWnd;
 
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
@@ -1311,7 +1348,7 @@ bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 		}
 		if	(
 				(mStarted)
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
@@ -1326,7 +1363,7 @@ bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 		}
 		if	(
 				(mStarted)
-			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+			&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 			&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 			)
 		{
@@ -1338,15 +1375,15 @@ bool CQueuedThink::Pause (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, bool p
 	return lRet;
 }
 
-bool CQueuedThink::Abort (CQueuedActions & pQueue, CAgentWnd * pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
+bool CQueuedThink::Abort (CQueuedActions& pQueue, CAgentWnd* pAgentWnd, HRESULT pReqStatus, LPCTSTR pReason)
 {
 	bool					lRet = false;
-	CAgentCharacterWnd *	lCharacterWnd;
-	CAgentBalloonWnd *		lBalloonWnd;
+	CAgentCharacterWnd*	lCharacterWnd;
+	CAgentBalloonWnd*		lBalloonWnd;
 
 	if	(
 			(mStarted)
-		&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd *> (pAgentWnd))
+		&&	(lCharacterWnd = dynamic_cast <CAgentCharacterWnd*> (pAgentWnd))
 		&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (false))
 		&&	(lBalloonWnd->IsWindow ())
 		)

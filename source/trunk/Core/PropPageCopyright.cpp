@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -150,7 +150,7 @@ void CPropPageCopyright::ShowMaVersion ()
 	{
 		HICON								lIcon;
 		CFileVersionEx						lVersion (lMaServerPath);
-		CFileVersionEx::CVersionString *	lCopyright;
+		CFileVersionEx::CVersionString*	lCopyright;
 
 		if	(lIcon = (HICON)LoadImage (lMaServerModule, MAKEINTRESOURCE(113), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR|LR_DEFAULTSIZE))
 		{
@@ -173,7 +173,7 @@ void CPropPageCopyright::ShowMaVersion ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LPDRAWITEMSTRUCT	lDIS = (LPDRAWITEMSTRUCT) lParam;
 
@@ -234,7 +234,7 @@ LRESULT CPropPageCopyright::OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCopyright::CLicenseDlg::OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCopyright::CLicenseDlg::OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	HWND		lTextWnd;
 	CRect		lTextRect;
@@ -257,13 +257,13 @@ LRESULT CPropPageCopyright::CLicenseDlg::OnInitDialog (UINT uMsg, WPARAM wParam,
 	return TRUE;
 }
 
-LRESULT CPropPageCopyright::CLicenseDlg::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCopyright::CLicenseDlg::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	EndDialog (IDCANCEL);
 	return 0;
 }
 
-LRESULT CPropPageCopyright::CLicenseDlg::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageCopyright::CLicenseDlg::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	EndDialog (IDOK);
 	return 0;

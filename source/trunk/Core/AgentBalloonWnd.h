@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -60,7 +60,7 @@ protected:
 	CAgentBalloonWnd ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentBalloonWnd ();
-	_DACORE_IMPEXP static CAgentBalloonWnd * CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify> & pNotify);
+	_DACORE_IMPEXP static CAgentBalloonWnd* CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify>& pNotify);
 
 // Declarations
 public:
@@ -87,17 +87,17 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
+	_DACORE_IMPEXP bool ApplyOptions (CAgentBalloonOptions* pOptions = NULL);
 
-	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
-	_DACORE_IMPEXP bool Attach (long pCharID, class CEventNotify * pNotify, bool pSetActiveCharID);
-	_DACORE_IMPEXP bool Detach (long pCharID, class CEventNotify * pNotify);
+	_DACORE_IMPEXP bool Create (CWindow* pOwnerWnd, DWORD pExStyle = 0);
+	_DACORE_IMPEXP bool Attach (long pCharID, class CEventNotify* pNotify, bool pSetActiveCharID);
+	_DACORE_IMPEXP bool Detach (long pCharID, class CEventNotify* pNotify);
 	_DACORE_IMPEXP void FinalRelease ();
 
 	_DACORE_IMPEXP bool ShowBalloonSpeech (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
-	_DACORE_IMPEXP bool ShowBalloonSpeech (const CAgentText & pText, bool pNoAutoPace = false);
+	_DACORE_IMPEXP bool ShowBalloonSpeech (const CAgentText& pText, bool pNoAutoPace = false);
 	_DACORE_IMPEXP bool ShowBalloonThought (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
-	_DACORE_IMPEXP bool ShowBalloonThought (const CAgentText & pText, bool pNoAutoPace = false);
+	_DACORE_IMPEXP bool ShowBalloonThought (const CAgentText& pText, bool pNoAutoPace = false);
 	_DACORE_IMPEXP bool ShowBalloonNow ();
 	_DACORE_IMPEXP bool ShowBalloonAuto ();
 	_DACORE_IMPEXP bool HideBalloon (bool pFast = false);
@@ -120,28 +120,28 @@ protected:
 // Implementation
 protected:
 	_DACORE_IMPEXP LRESULT OnShow(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	_DACORE_IMPEXP LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnPrint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	_DACORE_IMPEXP LRESULT OnCustomDraw(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnSetRedraw (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentBalloonWnd)
 		REFLECTED_NOTIFY_CODE_HANDLER(TTN_SHOW, OnShow)
@@ -172,12 +172,12 @@ protected:
 
 protected:
 	bool ShowingBalloon ();
-	bool ShowBalloonText (const CAgentText & pText, UINT pForSpeech, bool pNoAutoPace);
+	bool ShowBalloonText (const CAgentText& pText, UINT pForSpeech, bool pNoAutoPace);
 	bool ShowBalloon (bool pForSpeech, bool pTextChanged);
 	void ShowedBalloon (bool pWasVisible);
-	bool CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, CRect & pBounds);
-	bool CalcWinRect (CRect & pWinRect, bool pOnShow = false);
-	void ApplyLayout (const CRect & pWinRect, bool pOnShow = false);
+	bool CalcLayoutRects (CRect& pTextRect, CRect& pOwnerRect, CRect& pBounds);
+	bool CalcWinRect (CRect& pWinRect, bool pOnShow = false);
+	void ApplyLayout (const CRect& pWinRect, bool pOnShow = false);
 	bool ApplyRegion (bool pRedraw = true);
 
 	bool StartAutoPace ();
@@ -187,8 +187,9 @@ protected:
 	bool StartAutoScroll ();
 	bool StopAutoScroll ();
 
-	void DrawBalloon (HDC pDC, const CRect & pDrawRect);
-	void DrawBalloonText (HDC pDC, const CRect & pDrawRect);
+	void DrawBalloon (HDC pDC, const CRect& pDrawRect);
+	void DrawBalloonText (HDC pDC, const CRect& pDrawRect);
+	bool InitBalloonTextLayout (HDC pDC);
 	DWORD ApplyFontLayout (HDC pDC);
 	void ShowedVoiceWord (bool pFastRefresh);
 
@@ -211,7 +212,7 @@ protected:
 	static const UINT					mVoiceEndMsg;
 	static const UINT					mVoiceWordMsg;
 private:
-	CWindow *							mOwnerWnd;
+	CWindow*							mOwnerWnd;
 	bool								mRedrawDisabled;
 	bool								mPacingSpeech;
 	bool								mApplyingLayout;

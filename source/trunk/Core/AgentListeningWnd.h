@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -39,7 +39,7 @@ protected:
 	CAgentListeningWnd ();
 public:
 	_DACORE_IMPEXP virtual ~CAgentListeningWnd ();
-	_DACORE_IMPEXP static CAgentListeningWnd * CreateInstance ();
+	_DACORE_IMPEXP static CAgentListeningWnd* CreateInstance ();
 
 // Attributes
 public:
@@ -48,7 +48,7 @@ public:
 
 // Operations
 public:
-	_DACORE_IMPEXP bool Create (CWindow * pOwnerWnd, DWORD pExStyle = 0);
+	_DACORE_IMPEXP bool Create (CWindow* pOwnerWnd, DWORD pExStyle = 0);
 	_DACORE_IMPEXP bool Attach (long pCharID, LPCTSTR pCharacterName);
 	_DACORE_IMPEXP bool Detach (long pCharID);
 	_DACORE_IMPEXP bool SetLangID (LANGID pLangID);
@@ -66,9 +66,9 @@ public:
 
 // Implementation
 protected:
-	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	_DACORE_IMPEXP LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CAgentListeningWnd)
 		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
@@ -83,7 +83,7 @@ protected:
 	CAtlString GetCommandCaption (LPCTSTR pCommand) const;
 
 	void ShowToolText (LPCTSTR pCaption, LPCTSTR pDetail);
-	bool CalcWinRect (CRect & pWinRect);
+	bool CalcWinRect (CRect& pWinRect);
 
 protected:
 	long					mCharID;
@@ -93,7 +93,7 @@ protected:
 	CAtlString				mCaption;
 	CAtlString				mDetail;
 	tSS <TOOLINFO, UINT>	mToolInfo;
-	CWindow *				mOwnerWnd;
+	CWindow*				mOwnerWnd;
 	CFontHandle				mFont;
 };
 

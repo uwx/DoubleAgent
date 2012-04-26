@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -45,7 +45,7 @@ public:
 
 // Operations
 public:
-	HRESULT Register (IUnknown * punkNotifySink, long * pdwSinkID);
+	HRESULT Register (IUnknown * punkNotifySink, long* pdwSinkID);
 	HRESULT Unregister (long dwSinkID, bool pDelay);
 	void UnregisterDelayed ();
 	void UnregisterAll ();

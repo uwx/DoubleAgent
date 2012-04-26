@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -50,7 +50,7 @@ UINT CQueuedActions::HasActions (long pCharID) const
 	if	(pCharID >= 0)
 	{
 		UINT			lRet = 0;
-		CQueuedAction *	lQueuedAction;
+		CQueuedAction*	lQueuedAction;
 		POSITION		lPos;
 
 		for	(lPos = GetHeadPosition (); lPos;)
@@ -73,10 +73,10 @@ UINT CQueuedActions::HasActions (long pCharID) const
 
 //////////////////////////////////////////////////////////////////////
 
-CQueuedAction * CQueuedActions::GetCharAction (QueueAction pAction, long pCharID, bool pReverseOrder) const
+CQueuedAction* CQueuedActions::GetCharAction (QueueAction pAction, long pCharID, bool pReverseOrder) const
 {
-	CQueuedAction *	lRet = NULL;
-	CQueuedAction *	lQueuedAction;
+	CQueuedAction*	lRet = NULL;
+	CQueuedAction*	lQueuedAction;
 	POSITION		lPos;
 
 	if	(!IsEmpty ())
@@ -121,9 +121,9 @@ CQueuedAction * CQueuedActions::GetCharAction (QueueAction pAction, long pCharID
 	return lRet;
 }
 
-CQueuedAction * CQueuedActions::GetNextAction () const
+CQueuedAction* CQueuedActions::GetNextAction () const
 {
-	CQueuedAction *	lRet = NULL;
+	CQueuedAction*	lRet = NULL;
 
 	if	(!IsEmpty ())
 	{
@@ -132,10 +132,10 @@ CQueuedAction * CQueuedActions::GetNextAction () const
 	return lRet;
 }
 
-CQueuedAction * CQueuedActions::GetNextAction (QueueAction pAction) const
+CQueuedAction* CQueuedActions::GetNextAction (QueueAction pAction) const
 {
-	CQueuedAction *	lRet = NULL;
-	CQueuedAction *	lQueuedAction;
+	CQueuedAction*	lRet = NULL;
+	CQueuedAction*	lQueuedAction;
 
 	if	(
 			(!IsEmpty ())
@@ -148,13 +148,13 @@ CQueuedAction * CQueuedActions::GetNextAction (QueueAction pAction) const
 	return lRet;
 }
 
-CQueuedAction * CQueuedActions::FindNextAction (long pCharID) const
+CQueuedAction* CQueuedActions::FindNextAction (long pCharID) const
 {
-	CQueuedAction *	lRet = NULL;
+	CQueuedAction*	lRet = NULL;
 
 	if	(pCharID >= 0)
 	{
-		CQueuedAction *	lQueuedAction;
+		CQueuedAction*	lQueuedAction;
 		POSITION		lPos;
 
 		for	(lPos = GetHeadPosition (); lPos;)
@@ -179,9 +179,9 @@ CQueuedAction * CQueuedActions::FindNextAction (long pCharID) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedActions::PushQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
+void CQueuedActions::PushQueue (CAtlOwnPtrList <CQueuedAction>& pQueue)
 {
-	CQueuedAction *	lAction;
+	CQueuedAction*	lAction;
 
 	while	(
 				(!IsEmpty ())
@@ -192,9 +192,9 @@ void CQueuedActions::PushQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
 	}
 }
 
-void CQueuedActions::PopQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
+void CQueuedActions::PopQueue (CAtlOwnPtrList <CQueuedAction>& pQueue)
 {
-	CQueuedAction *	lAction;
+	CQueuedAction*	lAction;
 
 	while	(
 				(!pQueue.IsEmpty ())
@@ -219,7 +219,7 @@ void CQueuedActions::LogActions (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			CAtlString				lTitle;
 			CAtlString				lIndent;
 			POSITION				lPosition;
-			const CQueuedAction *	lAction;
+			const CQueuedAction*	lAction;
 
 			if	(pFormat)
 			{

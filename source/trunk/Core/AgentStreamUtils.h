@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "AgentFile.h"
-#include "AgentFileCache.h"
 #include "DaCoreOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -41,29 +40,29 @@ public:
 
 // Attributes
 public:
-	CAgentFile * GetAgentFile () const;
-	CAgentStreamInfo * GetAgentStreamInfo () const;
+	CAgentFile* GetAgentFile () const;
+	CAgentStreamInfo* GetAgentStreamInfo () const;
 
 // Operations
 public:
 	long CalcFileFrameCount () const;
 	long CalcFileDuration () const;
 
-	const CAgentFileStates & GetFileStates (UINT pLogLevel = 15) const;
-	const CAgentFileGestures & GetFileGestures (UINT pLogLevel = 15) const;
-	bool GetFileImages (UINT pLogLevel = 15) const;
-	bool GetFileSounds (UINT pLogLevel = 15) const;
+	const CAgentFileStates& GetFileStates () const;
+	const CAgentFileGestures& GetFileGestures () const;
+	bool GetFileImages () const;
+	bool GetFileSounds () const;
 
 // Implementation
 protected:
-	void SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient * pClient);
-	void SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo);
-	void SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo);
+	void SetAgentFile (CAgentFile* pAgentFile, class CAgentFileClient* pClient);
+	void SetAgentStreamInfo (_IAgentStreamInfo* pStreamInfo);
+	void SetAgentStreamInfo (CAgentStreamInfo* pStreamInfo);
 
 	static void SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTransparentNdx, COLORREF pBkColor);
 
 private:
-	mutable CAgentFile *				mAgentFile;
+	mutable CAgentFile*				mAgentFile;
 	_IAgentStreamInfoPtr				mStreamInfo;
 	mutable CComAutoCriticalSection		mUtilCritSec;
 };
@@ -74,7 +73,7 @@ private:
 
 struct CSeqVideoFrame
 {
-	const CAgentFileFrame *				mFileFrame;
+	const CAgentFileFrame*				mFileFrame;
 	long								mAnimationNdx;
 	long								mFrameNdx;
 	long								mStartTime;

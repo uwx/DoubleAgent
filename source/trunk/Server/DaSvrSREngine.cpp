@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -60,9 +60,9 @@ DaSvrSREngine::~DaSvrSREngine ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSREngine * DaSvrSREngine::CreateInstance (CSapi5InputInfo * pInputInfo, LPCTSTR pClientMutexName)
+DaSvrSREngine * DaSvrSREngine::CreateInstance (CSapi5InputInfo* pInputInfo, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrSREngine> *	lInstance = NULL;
+	CComObject<DaSvrSREngine>*	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive|LogTime, CComObject<DaSvrSREngine>::CreateInstance (&lInstance))))
 	{
@@ -263,7 +263,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageName (VARIANT_BOOL EnglishN
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY**LanguageIDs)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, max(m_dwRef,-1));
@@ -281,7 +281,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageID
 }
 
 
-HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY**LanguageNames)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, max(m_dwRef,-1));

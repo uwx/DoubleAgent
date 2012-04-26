@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -189,7 +189,7 @@ void CPropPageSpeech::EnableControls ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageSpeech::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageSpeech::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 
@@ -210,21 +210,21 @@ LRESULT CPropPageSpeech::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageSpeech::OnSrEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageSpeech::OnSrEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	EnableControls ();
 	return 0;
 }
 
-LRESULT CPropPageSpeech::OnSrPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageSpeech::OnSrPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	EnableControls ();
 	return 0;
 }
 
-LRESULT CPropPageSpeech::OnSrTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageSpeech::OnSrTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	EnableControls ();
@@ -233,14 +233,14 @@ LRESULT CPropPageSpeech::OnSrTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageSpeech::OnSrHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageSpeech::OnSrHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	EnableControls ();
 	return 0;
 }
 
-LRESULT CPropPageSpeech::OnSrHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageSpeech::OnSrHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	SetModified ();
 	return 0;

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of the Double Agent Server.
@@ -197,7 +197,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::SetSite (IUnknown *pUnkSite)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterProps::GetSite (REFIID riid, void **ppvSite)
+HRESULT STDMETHODCALLTYPE CDaCharacterProps::GetSite (REFIID riid, void**ppvSite)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::GetSite [%s]"), this, max(m_dwRef,-1), CGuidStr::GuidName(riid));
@@ -291,13 +291,13 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId
 
 	if	(
 			(lFileNames.GetCount() == 1)
-		&&	(mAgentFile = CAgentFile::CreateInstance())
+		&&	(mAgentFile = CAgentFile::CreateInstance (lFileNames [0]))
 		)
 	{
 		if	(SUCCEEDED (lResult = mAgentFile->Open (lFileNames [0])))
 		{
 #ifdef	_DEBUG_INTERFACE
-			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), this, max(m_dwRef,-1), (BSTR)mAgentFile->GetPath());
+			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), this, max(m_dwRef,-1), (BSTR)mAgentFile->Path);
 #endif
 			lResult = S_OK;
 		}

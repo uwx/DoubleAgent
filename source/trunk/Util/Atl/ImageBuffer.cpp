@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -152,7 +152,7 @@ bool CImageBuffer::ResumeBuffer ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageBuffer::CreateScaledBuffer (const CSize & pSize, bool pForBlending, UINT pScale)
+bool CImageBuffer::CreateScaledBuffer (const CSize& pSize, bool pForBlending, UINT pScale)
 {
 	CSize	lSize (pSize);
 
@@ -230,7 +230,7 @@ bool CImageBuffer::UnscaleBuffer (UINT pScale, UINT pBlend)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CImageBuffer::NewBufferRequired (ATL::CImage * pImage, const CSize & pSize, bool pForBlending, int pSizeFactor)
+bool CImageBuffer::NewBufferRequired (ATL::CImage* pImage, const CSize& pSize, bool pForBlending, int pSizeFactor)
 {
 	if	(
 			(pImage)
@@ -252,7 +252,7 @@ bool CImageBuffer::NewBufferRequired (ATL::CImage * pImage, const CSize & pSize,
 	return true;
 }
 
-bool CImageBuffer::CreateBuffer (const CSize & pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
+bool CImageBuffer::CreateBuffer (const CSize& pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
 {
 	bool	lRet = false;
 
@@ -294,7 +294,7 @@ bool CImageBuffer::CreateBuffer (const CSize & pBufferSize, bool pForBlending, b
 	return lRet;
 }
 
-bool CImageBuffer::DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer, bool pReleaseDC)
+bool CImageBuffer::DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer, bool pReleaseDC)
 {
 	bool	lRet = false;
 
@@ -339,7 +339,7 @@ CImageBufferScaled::~CImageBufferScaled ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CImageBufferScaled::CreateBuffer (const CSize & pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
+bool CImageBufferScaled::CreateBuffer (const CSize& pBufferSize, bool pForBlending, bool pForceNewBuffer, bool pTopDown)
 {
 	bool				lRet = false;
 	CSize				lBufferSize (((pBufferSize.cx + 3) / 4) * 4, ((pBufferSize.cy + 3) / 4) * 4);
@@ -399,7 +399,7 @@ bool CImageBufferScaled::CreateBuffer (const CSize & pBufferSize, bool pForBlend
 	return lRet;
 }
 
-bool CImageBufferScaled::DrawBuffer (HDC pTargetDC, const CRect & pRect, bool pReleaseBuffer, bool pReleaseDC)
+bool CImageBufferScaled::DrawBuffer (HDC pTargetDC, const CRect& pRect, bool pReleaseBuffer, bool pReleaseDC)
 {
 	bool	lRet = false;
 

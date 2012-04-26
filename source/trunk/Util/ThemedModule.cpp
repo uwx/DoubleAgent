@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -52,6 +52,14 @@ bool CThemedModule::InitModuleTheme ()
 	try
 	{
 		IsolationAwareInit ();
+	}
+	catch AnyExceptionSilent
+
+	try
+	{
+		tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
+		lInitControls.dwICC = ICC_WIN95_CLASSES|ICC_STANDARD_CLASSES|ICC_LINK_CLASS|ICC_INTERNET_CLASSES;
+		InitCommonControlsEx (&lInitControls);
 	}
 	catch AnyExceptionSilent
 

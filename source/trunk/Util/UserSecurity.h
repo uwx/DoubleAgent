@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009-2011 Cinnamon Software Inc.
+//	Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -39,18 +39,18 @@ public:
 	static CString GetUserName ();
 	static CString GetComputerName ();
 
-	static bool GetTokenUser (HANDLE pUserToken, CString & pUserName, CString & pDomainName);
-	static bool GetTokenUser (HANDLE pUserToken, CString & pUserId);
+	static bool GetTokenUser (HANDLE pUserToken, CString& pUserName, CString& pDomainName);
+	static bool GetTokenUser (HANDLE pUserToken, CString& pUserId);
 	static CString GetTokenUser (HANDLE pUserToken);
 
 	static CString FormatUserId (LPCTSTR pUserId, bool pDefaultEveryone = true);
 	static CString ParseUserId (LPCTSTR pUserId, CString * pComputerName = NULL, bool pDefaultEveryone = true);
 
 	static CString GetSidName (PSID pSid);
-	static CString GetSidName (const CByteArray & pSid) {return GetSidName ((PSID) pSid.GetData());}
+	static CString GetSidName (const CByteArray& pSid) {return GetSidName ((PSID) pSid.GetData());}
 	static CString GetSidStr (PSID pSid);
-	static CString GetSidStr (const CByteArray & pSid) {return GetSidStr ((PSID) pSid.GetData());}
-	static bool GetNameSid (LPCTSTR pAccountName, CByteArray & pAccountSid, CString * pDomainName = NULL, SID_NAME_USE * pAccountType = NULL);
+	static CString GetSidStr (const CByteArray& pSid) {return GetSidStr ((PSID) pSid.GetData());}
+	static bool GetNameSid (LPCTSTR pAccountName, CByteArray& pAccountSid, CString * pDomainName = NULL, SID_NAME_USE * pAccountType = NULL);
 
 	static bool IsSidNull (PSID pSid);
 	static bool IsSidEveryone (PSID pSid);
@@ -60,32 +60,32 @@ public:
 	static bool IsSidBuiltinGroup (PSID pSid);
 	static bool IsSidAllUsers (PSID pSid);
 
-	static bool IsSidNull (const CByteArray & pSid) {return IsSidNull ((PSID) pSid.GetData());}
-	static bool IsSidEveryone (const CByteArray & pSid) {return IsSidEveryone ((PSID) pSid.GetData());}
-	static bool IsSidSystem (const CByteArray & pSid) {return IsSidSystem ((PSID) pSid.GetData());}
-	static bool IsSidService (const CByteArray & pSid) {return IsSidService ((PSID) pSid.GetData());}
-	static bool IsSidNetService (const CByteArray & pSid) {return IsSidNetService ((PSID) pSid.GetData());}
-	static bool IsSidBuiltinGroup (const CByteArray & pSid) {return IsSidBuiltinGroup ((PSID) pSid.GetData());}
-	static bool IsSidAllUsers (const CByteArray & pSid) {return IsSidAllUsers ((PSID) pSid.GetData());}
+	static bool IsSidNull (const CByteArray& pSid) {return IsSidNull ((PSID) pSid.GetData());}
+	static bool IsSidEveryone (const CByteArray& pSid) {return IsSidEveryone ((PSID) pSid.GetData());}
+	static bool IsSidSystem (const CByteArray& pSid) {return IsSidSystem ((PSID) pSid.GetData());}
+	static bool IsSidService (const CByteArray& pSid) {return IsSidService ((PSID) pSid.GetData());}
+	static bool IsSidNetService (const CByteArray& pSid) {return IsSidNetService ((PSID) pSid.GetData());}
+	static bool IsSidBuiltinGroup (const CByteArray& pSid) {return IsSidBuiltinGroup ((PSID) pSid.GetData());}
+	static bool IsSidAllUsers (const CByteArray& pSid) {return IsSidAllUsers ((PSID) pSid.GetData());}
 
 #ifdef	_UNICODE
-	static bool IsSidNull (const tSidPtr & pSid) {return IsSidNull ((PSID)(const SID*) pSid);}
-	static bool IsSidEveryone (const tSidPtr & pSid) {return IsSidEveryone ((PSID)(const SID*) pSid);}
-	static bool IsSidSystem (const tSidPtr & pSid) {return IsSidSystem ((PSID)(const SID*) pSid);}
-	static bool IsSidService (const tSidPtr & pSid) {return IsSidService ((PSID)(const SID*) pSid);}
-	static bool IsSidNetService (const tSidPtr & pSid) {return IsSidNetService ((PSID)(const SID*) pSid);}
-	static bool IsSidBuiltinGroup (const tSidPtr & pSid) {return IsSidBuiltinGroup ((PSID)(const SID*) pSid);}
-	static bool IsSidAllUsers (const tSidPtr & pSid) {return IsSidAllUsers ((PSID)(const SID*) pSid);}
+	static bool IsSidNull (const tSidPtr& pSid) {return IsSidNull ((PSID)(const SID*) pSid);}
+	static bool IsSidEveryone (const tSidPtr& pSid) {return IsSidEveryone ((PSID)(const SID*) pSid);}
+	static bool IsSidSystem (const tSidPtr& pSid) {return IsSidSystem ((PSID)(const SID*) pSid);}
+	static bool IsSidService (const tSidPtr& pSid) {return IsSidService ((PSID)(const SID*) pSid);}
+	static bool IsSidNetService (const tSidPtr& pSid) {return IsSidNetService ((PSID)(const SID*) pSid);}
+	static bool IsSidBuiltinGroup (const tSidPtr& pSid) {return IsSidBuiltinGroup ((PSID)(const SID*) pSid);}
+	static bool IsSidAllUsers (const tSidPtr& pSid) {return IsSidAllUsers ((PSID)(const SID*) pSid);}
 #endif
 
 #ifdef	_UNICODE
-	static PSID SidMe (tSidPtr & pSid);
-	static PSID SidEveryone (tSidPtr & pSid);
-	static PSID SidSystem (tSidPtr & pSid);
-	static PSID SidService (tSidPtr & pSid);
-	static PSID SidNetService (tSidPtr & pSid);
-	static PSID SidAdministrators (tSidPtr & pSid);
-	static PSID SidUsers (tSidPtr & pSid);
+	static PSID SidMe (tSidPtr& pSid);
+	static PSID SidEveryone (tSidPtr& pSid);
+	static PSID SidSystem (tSidPtr& pSid);
+	static PSID SidService (tSidPtr& pSid);
+	static PSID SidNetService (tSidPtr& pSid);
+	static PSID SidAdministrators (tSidPtr& pSid);
+	static PSID SidUsers (tSidPtr& pSid);
 #endif
 
 	static CString UserNameEveryone (bool pIncludeDomain = true);

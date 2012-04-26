@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2011 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -88,12 +88,12 @@ BOOL CPropPageCharSel::OnInitDialog()
 
 LRESULT CPropPageCharSel::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {
-	CAgentFile *	lFile;
+	CAgentFile*	lFile;
 
 	if	(
 			(lFile = mFiles.Files() (mFileNdx))
-		&&	(CAtlString ((BSTR)mFiles.GetDefCharPath ()).CompareNoCase (CAtlString ((BSTR)lFile->GetPath())) != 0)
-		&&	(SUCCEEDED (LogComErr (LogIfActive|LogTime, mFiles.SetDefCharPath (CAtlString ((BSTR)lFile->GetPath())))))
+		&&	(CAtlString ((BSTR)mFiles.GetDefCharPath ()).CompareNoCase (CAtlString ((BSTR)lFile->Path)) != 0)
+		&&	(SUCCEEDED (LogComErr (LogIfActive|LogTime, mFiles.SetDefCharPath (CAtlString ((BSTR)lFile->Path)))))
 		)
 	{
 		SetModified (FALSE);
@@ -118,8 +118,8 @@ LRESULT CPropPageCharSel::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 
 void CPropPageCharSel::ShowCharacter ()
 {
-	CAgentFile *		lFile;
-	CAgentFileName *	lFileName;
+	CAgentFile*		lFile;
+	CAgentFileName*	lFileName;
 	CRect				lPreviewRect;
 
 	if	(
@@ -127,8 +127,8 @@ void CPropPageCharSel::ShowCharacter ()
 		&&	(lFileName = lFile->FindName ())
 		)
 	{
-		mCharName.SetWindowText (CAtlString ((BSTR)lFileName->mName));
-		mCharDesc.SetWindowText (CAtlString ((BSTR)lFileName->mDesc1));
+		mCharName.SetWindowText (CAtlString ((BSTR)lFileName->Name));
+		mCharDesc.SetWindowText (CAtlString ((BSTR)lFileName->Desc1));
 	}
 	else
 	{
@@ -145,7 +145,7 @@ void CPropPageCharSel::ShowCharacter ()
 			(lFile)
 		&&	(mPreviewWnd = CAgentPreviewWnd::CreateInstance())
 		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd, &lPreviewRect))
-		&&	(mPreviewWnd->Open (CAtlString ((BSTR)lFile->GetPath())))
+		&&	(mPreviewWnd->Open (CAtlString ((BSTR)lFile->Path)))
 		)
 	{
 		mCharPreview.ShowWindow (SW_SHOWNA);
@@ -204,14 +204,14 @@ void CPropPageCharSel::StopCharacter ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCharSel::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCharSel::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	SafeFreeSafePtr (mPreviewWnd);
 	bHandled = FALSE;
 	return 0;
 }
 
-LRESULT CPropPageCharSel::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCharSel::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT lResult = 0;
 
@@ -233,7 +233,7 @@ LRESULT CPropPageCharSel::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam,
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCharSel::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CPropPageCharSel::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
 
@@ -250,7 +250,7 @@ LRESULT CPropPageCharSel::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, B
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageCharSel::OnNext(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageCharSel::OnNext(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(mFileNdx < (INT_PTR)mFiles.Files().GetCount()-1)
 	{
@@ -261,7 +261,7 @@ LRESULT CPropPageCharSel::OnNext(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL 
 	return 0;
 }
 
-LRESULT CPropPageCharSel::OnBack(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageCharSel::OnBack(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	if	(mFileNdx > 0)
 	{
