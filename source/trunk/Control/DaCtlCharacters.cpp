@@ -559,7 +559,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 				&&	(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
 				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
 				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->OpenFile (lAgentFile, lFilePathIsDefault)))
-				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->RealizePopup (mOwner, mOwner->mLocalCharacterStyle)))
+				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->RealizePopup (mOwner, mOwner->mLocalCharacterStyle, WS_EX_TOPMOST)))
 				)
 			{
 				if	(lLoadFile == lAgentFile)

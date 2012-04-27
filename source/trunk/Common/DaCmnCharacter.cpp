@@ -367,6 +367,11 @@ HRESULT CDaCmnCharacter::RealizePopup (CWindow* pParentWnd, DWORD pInitialStyle,
 	CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 	INT_PTR								lClientNdx;
 
+	if	(!pParentWnd)
+	{
+		pExStyle |= WS_EX_TOPMOST;
+	}
+
 	if	(
 			(!mFile)
 		||	(mWnd)
@@ -409,6 +414,7 @@ HRESULT CDaCmnCharacter::RealizePopup (CWindow* pParentWnd, DWORD pInitialStyle,
 
 			if	(lPopupWnd->Create (pParentWnd, NULL, pExStyle|WS_EX_TOOLWINDOW))
 			{
+				lPopupWnd->ModifyStyleEx (WS_EX_TOPMOST, pExStyle|WS_EX_TOOLWINDOW);
 				lResult = Realize (lPopupWnd, pInitialStyle);
 			}
 			else
@@ -2849,7 +2855,7 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged (REFGUID pCharGuid, LPCTSTR pFi
 							(SUCCEEDED (lResult))
 						&&	(
 								(lPopupWnd)
-							?	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, RealizePopup (mNotify->mAnchor->mOwnerWnd, lStyle))))
+							?	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, RealizePopup (mNotify->mAnchor->mOwnerWnd, lStyle, WS_EX_TOPMOST))))
 							:	(SUCCEEDED (lResult = LogComErr (LogNormal|LogTime, Realize (lCharacterWnd, lStyle))))
 							)
 						)

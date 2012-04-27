@@ -315,7 +315,7 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 			{
 				mLocalObject->GetOriginalSize (&lCharacterSize.cx, &lCharacterSize.cy);
 				mLocalObject->Unrealize (true);
-				if	(SUCCEEDED (lResult = mLocalObject->RealizePopup (mOwner, pInitialStyle)))
+				if	(SUCCEEDED (lResult = mLocalObject->RealizePopup (mOwner, pInitialStyle, WS_EX_TOPMOST)))
 				{
 					lRealized = true;
 					mLocalObject->SetSize (lCharacterSize.cx, lCharacterSize.cy);
