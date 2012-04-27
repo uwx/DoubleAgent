@@ -1,0 +1,614 @@
+﻿<panels:FilePartPanel x:Class="AgentCharacterEditor.Panels.FramePanel"
+					  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					  xmlns:theme="clr-namespace:DoubleAgent.Theme;assembly=BlueTheme"
+					  xmlns:panels="clr-namespace:AgentCharacterEditor.Panels"
+					  xmlns:local="clr-namespace:AgentCharacterEditor"
+					  xmlns:custom="clr-namespace:DoubleAgent"
+					  mc:Ignorable="d"
+					  d:DesignHeight="650"
+					  d:DesignWidth="600"
+					  xmlns:my="clr-namespace:System.Windows.Interop;assembly=PresentationFramework">
+	<Control.CommandBindings>
+		<CommandBinding Command="Copy"
+						CanExecute="OnCanEditCopy"
+						Executed="OnEditCopy" />
+		<CommandBinding Command="Cut"
+						CanExecute="OnCanEditCut"
+						Executed="OnEditCut" />
+		<CommandBinding Command="Delete"
+						CanExecute="OnCanEditDelete"
+						Executed="OnEditDelete" />
+		<CommandBinding Command="Paste"
+						CanExecute="OnCanEditPaste"
+						Executed="OnEditPaste" />
+	</Control.CommandBindings>
+	<Control.Resources>
+		<DataTemplate x:Key="ImageListItem">
+			<Grid Margin="{Binding ElementName=ImagesHeaderItems, Path=Margin}"
+				  SnapsToDevicePixels="{Binding ElementName=ImagesHeaderItems, Path=SnapsToDevicePixels}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition SharedSizeGroup="ImageIndex" />
+					<ColumnDefinition SharedSizeGroup="Offset" />
+					<ColumnDefinition SharedSizeGroup="Dimensions" />
+					<ColumnDefinition SharedSizeGroup="Path" />
+				</Grid.ColumnDefinitions>
+				<Label Content="{Binding Path=ImageIndex, Mode=OneWay}"
+					   IsHitTestVisible="False"
+					   HorizontalAlignment="Left"
+					   VerticalAlignment="Center"
+					   Padding="5,2"
+					   Grid.Column="0" />
+				<Label Content="{Binding Path=Offset, Mode=OneWay}"
+					   IsHitTestVisible="False"
+					   HorizontalAlignment="Left"
+					   VerticalAlignment="Center"
+					   Padding="5,2"
+					   Grid.Column="1" />
+				<Label Content="{Binding Path=Dimensions, Mode=OneWay}"
+					   IsHitTestVisible="False"
+					   HorizontalAlignment="Left"
+					   VerticalAlignment="Center"
+					   Padding="5,2"
+					   Grid.Column="2" />
+				<Label Content="{Binding Path=ImageFilePath, Mode=OneWay}"
+					   IsHitTestVisible="False"
+					   HorizontalAlignment="Left"
+					   VerticalAlignment="Center"
+					   Padding="5,2"
+					   Grid.Column="3" />
+			</Grid>
+		</DataTemplate>
+	</Control.Resources>
+	<Grid Name="MainGrid"
+		  Style="{StaticResource PanelMainGrid}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="MainLeft"
+							  MaxWidth="600" />
+			<ColumnDefinition Name="MainRight"
+							  Width="Auto" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<GroupBox Style="{StaticResource PanelGroupBox}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition  Width="Auto" />
+					<ColumnDefinition  Width="Auto" />
+					<ColumnDefinition  Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Label Content="Frame"
+					   HorizontalAlignment="Left"
+					   Name="LabelFrameName"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}" />
+				<custom:TextBoxEx Grid.Column="1"
+								  x:Name="TextBoxFrameName"
+								  VerticalAlignment="Center"
+								  MaxLines="1"
+								  IsReadOnly="True"
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  IsTabStop="False"
+								  IsUndoEnabled="False" />
+				<Label Content="Duration"
+					   HorizontalAlignment="Left"
+					   Name="LabelDuration"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}"
+					   Grid.Column="2"
+					   Margin="12,0,0,0" />
+				<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+									  x:Name="NumericDuration"
+									  Width="60"
+									  HorizontalAlignment="Left"
+									  VerticalAlignment="Center"
+									  ContextMenu="{StaticResource ContextMenuTextBox}"
+									  IsModifiedChanged="NumericDuration_IsModifiedChanged"
+									  Grid.Column="3" />
+				<Label Content="(1/100 seconds)"
+					   HorizontalAlignment="Left"
+					   Name="LabelDurationUnits"
+					   VerticalAlignment="Center"
+					   Style="{StaticResource PanelLabel}"
+					   Grid.Column="4" />
+			</Grid>
+		</GroupBox>
+		<GroupBox Style="{StaticResource PanelGroupBox}"
+				  Name="GroupBoxImages"
+				  Grid.Row="1"
+				  Grid.ColumnSpan="2"
+				  Header="Images"
+				  MinHeight="180"
+				  MaxHeight="250">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Left"
+						 VerticalAlignment="Top"
+						 Margin="2,0,2,2"
+						 Grid.ColumnSpan="2">
+					<Button  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							 Name="ButtonAdd"
+							 ToolTip="Add a new image"
+							 Focusable="False"
+							 HorizontalAlignment="Left"
+							 Click="ButtonAdd_Click">
+						<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonDelete"
+							ToolTip="Delete"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonDelete_Click">
+						<custom:ImageState NormalSource="{StaticResource ImgEditDelete}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonChooseFile"
+							ToolTip="Choose image file"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonChooseFile_Click">
+						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+					<Separator Style="{StaticResource PanelToolBarSeparator}" />
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonMovePrev"
+							ToolTip="Move image up"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonMovePrev_Click">
+						<custom:ImageState NormalSource="{StaticResource IconMoveUp}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Name="ButtonMoveNext"
+							ToolTip="Move image down"
+							Focusable="False"
+							HorizontalAlignment="Left"
+							Click="ButtonMoveNext_Click">
+						<custom:ImageState NormalSource="{StaticResource IconMoveDown}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+				</ToolBar>
+				<ContentControl Name="ImagesContainer"
+								Grid.Row="1"
+								IsTabStop="False"
+								Style="{StaticResource PanelContent}"
+								Background="Transparent"
+								HorizontalContentAlignment="Stretch"
+								VerticalContentAlignment="Stretch"
+								LayoutUpdated="Images_LayoutUpdated">
+					<ScrollViewer Name="ImagesScroller"
+								  Grid.IsSharedSizeScope="true"
+								  Margin="0,0,1,1"
+								  HorizontalScrollBarVisibility="Auto"
+								  VerticalScrollBarVisibility="Auto"
+								  CanContentScroll="False">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<ContentControl Name="ImagesHeader"
+											IsTabStop="False"
+											Grid.Row="0"
+											HorizontalAlignment="Left"
+											Width="{Binding ElementName=ListViewImages, Path=ActualWidth}">
+								<Grid Name="ImagesHeaderItems"
+									  Margin="2,0"
+									  SnapsToDevicePixels="true">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition SharedSizeGroup="ImageIndex" />
+										<ColumnDefinition SharedSizeGroup="Offset" />
+										<ColumnDefinition SharedSizeGroup="Dimensions" />
+										<ColumnDefinition SharedSizeGroup="Path" />
+									</Grid.ColumnDefinitions>
+									<Label Name="ImagesHeaderIndex"
+										   Grid.Column="0"
+										   Content="Image"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="ImagesHeaderOffset"
+										   Grid.Column="1"
+										   Content="Offset"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="ImagesHeaderDimensions"
+										   Grid.Column="2"
+										   Content="Dimensions"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+									<Label Name="ImagesHeaderPath"
+										   Grid.Column="3"
+										   Content="Path"
+										   Style="{StaticResource PanelLabel}"
+										   Padding="5,2"
+										   VerticalContentAlignment="Center"
+										   HorizontalContentAlignment="Left" />
+								</Grid>
+							</ContentControl>
+							<ListView Name="ListViewImages"
+									  OverridesDefaultStyle="True"
+									  Grid.Row="1"
+									  Margin="0"
+									  SelectionMode="Single"
+									  ItemContainerStyle="{StaticResource {x:Static theme:BlueTheme.ListViewItemStyleNpNmKey}}"
+									  IsTextSearchEnabled="False"
+									  IsTabStop="False"
+									  Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+									  Foreground="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"
+									  HorizontalAlignment="Left"
+									  VerticalAlignment="Stretch"
+									  HorizontalContentAlignment="Left"
+									  VerticalContentAlignment="Center"
+									  ItemTemplate="{StaticResource ImageListItem}"
+									  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=panels:FramePanel, AncestorLevel=1}, Path=ImageListItems}"
+									  KeyboardNavigation.TabNavigation="None"
+									  SelectionChanged="ListViewImages_SelectionChanged"
+									  MouseDoubleClick="ListViewImages_MouseDoubleClick"
+									  ContextMenuOpening="ListViewImages_ContextMenuOpening"
+									  PreviewMouseLeftButtonDown="ListViewImages_PreviewMouseLeftButtonDown">
+								<ListView.Template>
+									<ControlTemplate>
+										<ItemsPresenter Name="ItemsHost"
+														SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+									</ControlTemplate>
+								</ListView.Template>
+								<ListView.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Name="ItemsHost"
+													Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+													Orientation="Vertical"
+													IsItemsHost="True">
+										</StackPanel>
+									</ItemsPanelTemplate>
+								</ListView.ItemsPanel>
+								<ListView.ContextMenu>
+									<ContextMenu>
+										<MenuItem Header="Add a new image"
+												  Name="MenuItemAdd"
+												  Click="ButtonAdd_Click">
+											<MenuItem.Icon>
+												<custom:ImageState NormalSource="{StaticResource ImgFileNew}"
+																   Style="{StaticResource MenuItemImage}" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Open image file"
+												  Name="MenuItemChooseFile"
+												  Click="ButtonChooseFile_Click">
+											<MenuItem.Icon>
+												<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+																   Style="{StaticResource MenuItemImage}" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="Move image up"
+												  Name="MenuItemMovePrev"
+												  Click="ButtonMovePrev_Click">
+											<MenuItem.Icon>
+												<custom:ImageState NormalSource="{StaticResource IconMoveUp}"
+																   Style="{StaticResource MenuItemImage}" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Move image down"
+												  Name="MenuItemMoveNext"
+												  Click="ButtonMoveNext_Click">
+											<MenuItem.Icon>
+												<custom:ImageState NormalSource="{StaticResource IconMoveDown}"
+																   Style="{StaticResource MenuItemImage}" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Style="{StaticResource MenuItemCut}" />
+										<MenuItem Style="{StaticResource MenuItemCopy}" />
+										<MenuItem Style="{StaticResource MenuItemPaste}" />
+										<MenuItem Style="{StaticResource MenuItemDelete}" />
+									</ContextMenu>
+								</ListView.ContextMenu>
+							</ListView>
+							<ContentControl Name="ImagesColumns"
+											IsTabStop="False"
+											IsHitTestVisible="False"
+											Grid.RowSpan="2"
+											HorizontalAlignment="Left"
+											Width="{Binding ElementName=ImagesHeader, Path=ActualWidth}">
+								<Grid Name="ImagesColumnLines"
+									  Width="{Binding ElementName=ImagesHeaderItems, Path=ActualWidth}"
+									  Margin="{Binding ElementName=ImagesHeaderItems, Path=Margin}"
+									  SnapsToDevicePixels="{Binding ElementName=ImagesHeaderItems, Path=SnapsToDevicePixels}">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Name="ImagesColumnIndex"
+														  Width="{Binding ElementName=ImagesHeaderIndex, Path=ActualWidth}" />
+										<ColumnDefinition Name="ImagesColumnOffset"
+														  Width="{Binding ElementName=ImagesHeaderOffset, Path=ActualWidth}" />
+										<ColumnDefinition Name="ImagesColumnDimensions"
+														  Width="{Binding ElementName=ImagesHeaderDimensions, Path=ActualWidth}" />
+										<ColumnDefinition />
+									</Grid.ColumnDefinitions>
+									<Rectangle Name="ImagesLineIndex"
+											   Grid.Column="0"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+									<Rectangle Name="ImagesLineOffset"
+											   Grid.Column="1"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+									<Rectangle Name="ImagesLineDimensions"
+											   Grid.Column="2"
+											   HorizontalAlignment="Right"
+											   VerticalAlignment="Stretch"
+											   Stroke="{StaticResource BackgroundDarkishBrush}"
+											   Opacity="0.25" />
+								</Grid>
+							</ContentControl>
+						</Grid>
+					</ScrollViewer>
+				</ContentControl>
+			</Grid>
+		</GroupBox>
+		<Grid Grid.Row="2"
+			  Grid.ColumnSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<GroupBox Grid.Column="0"
+					  Header="Image"
+					  Name="GroupBoxImage"
+					  HorizontalAlignment="Left"
+					  Style="{StaticResource PanelGroupBox}">
+				<StackPanel Orientation="Horizontal"
+							HorizontalAlignment="Left">
+					<StackPanel HorizontalAlignment="Left">
+						<Grid Name="PanelSample"
+							  HorizontalAlignment="Left"
+							  VerticalAlignment="Top">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition  Height="5" />
+								<RowDefinition />
+								<RowDefinition  Height="5" />
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition  Width="5" />
+								<ColumnDefinition />
+								<ColumnDefinition  Width="5" />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+							<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+												   x:Name="ButtonShiftUp"
+												   Grid.Column="2"
+												   HorizontalAlignment="Stretch"
+												   Click="ButtonShiftUp_Click"
+												   RepeatEnd="ButtonShiftUp_RepeatEnd">
+								<Image Source="{StaticResource ImgShiftUp}"
+									   Style="{StaticResource ToolButtonImage}" />
+							</custom:RepeatButtonEx>
+							<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+												   x:Name="ButtonShiftDown"
+												   Grid.Column="2"
+												   Grid.Row="4"
+												   HorizontalAlignment="Stretch"
+												   Click="ButtonShiftDown_Click"
+												   RepeatEnd="ButtonShiftDown_RepeatEnd">
+								<Image Source="{StaticResource ImgShiftDown}"
+									   Style="{StaticResource ToolButtonImage}" />
+							</custom:RepeatButtonEx>
+							<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+												   x:Name="ButtonShiftLeft"
+												   Grid.Row="2"
+												   VerticalAlignment="Stretch"
+												   Click="ButtonShiftLeft_Click"
+												   RepeatEnd="ButtonShiftLeft_RepeatEnd">
+								<Image Source="{StaticResource ImgShiftLeft}"
+									   Style="{StaticResource ToolButtonImage}" />
+							</custom:RepeatButtonEx>
+							<custom:RepeatButtonEx Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+												   x:Name="ButtonShiftRight"
+												   Grid.Column="4"
+												   Grid.Row="2"
+												   VerticalAlignment="Stretch"
+												   Click="ButtonShiftRight_Click"
+												   RepeatEnd="ButtonShiftRight_RepeatEnd">
+								<Image Source="{StaticResource ImgShiftRight}"
+									   Style="{StaticResource ToolButtonImage}" />
+							</custom:RepeatButtonEx>
+							<Border Grid.Column="2"
+									Grid.Row="2"
+									Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+									Focusable="False"
+									Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
+									Padding="0"
+									UseLayoutRounding="False">
+								<ContentControl Name="ImageContainer"
+												HorizontalContentAlignment="Left"
+												VerticalContentAlignment="Top"
+												IsTabStop="False"
+												SnapsToDevicePixels="False"
+												UseLayoutRounding="False"
+												ClipToBounds="True">
+									<local:FrameSample x:Name="ImageSample"
+													   HorizontalAlignment="Left"
+													   VerticalAlignment="Top"
+													   MaxWidth="256"
+													   MaxHeight="256"
+													   SnapsToDevicePixels="False"
+													   UseLayoutRounding="False" />
+								</ContentControl>
+							</Border>
+						</Grid>
+						<CheckBox Content="Show transparency"
+								  Name="CheckBoxImageTransparent"
+								  HorizontalAlignment="Left"
+								  VerticalAlignment="Top"
+								  Style="{StaticResource PanelToggleButtonAlt}"
+								  Checked="CheckBoxImageTransparent_CheckChanged"
+								  Unchecked="CheckBoxImageTransparent_CheckChanged"
+								  Margin="0,5,0,0" />
+					</StackPanel>
+					<StackPanel HorizontalAlignment="Left"
+								Margin="16,0,0,0"
+								VerticalAlignment="Top">
+						<Canvas Height="{Binding ElementName=ButtonShiftUp, Path=ActualHeight}"
+								Margin="0,0,0,2" />
+						<StackPanel Orientation="Horizontal">
+							<Label Content="X Offset"
+								   Name="LabelOffsetX"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Left"
+								   Style="{StaticResource PanelLabel}" />
+							<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+												  x:Name="NumericOffsetX"
+												  Width="60"
+												  HorizontalAlignment="Left"
+												  VerticalAlignment="Center"
+												  ContextMenu="{StaticResource ContextMenuTextBox}"
+												  IsModifiedChanged="NumericOffsetX_IsModifiedChanged" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<Label Content="Y Offset"
+								   Name="LabelOffsetY"
+								   HorizontalAlignment="Left"
+								   VerticalAlignment="Center"
+								   Style="{StaticResource PanelLabel}" />
+							<custom:NumericUpDown Style="{StaticResource NumericUpDown}"
+												  x:Name="NumericOffsetY"
+												  Width="60"
+												  HorizontalAlignment="Left"
+												  VerticalAlignment="Center"
+												  ContextMenu="{StaticResource ContextMenuTextBox}"
+												  IsModifiedChanged="NumericOffsetY_IsModifiedChanged" />
+						</StackPanel>
+					</StackPanel>
+				</StackPanel>
+			</GroupBox>
+			<GroupBox Grid.Column="1"
+					  Header="Frame"
+					  Name="GroupBoxFrame"
+					  Style="{StaticResource PanelGroupBox}">
+				<StackPanel HorizontalAlignment="Left">
+					<Border Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Top"
+							Focusable="False"
+							Style="{StaticResource {x:Static theme:BlueTheme.BorderNormalStyleKey}}"
+							Padding="0"
+							UseLayoutRounding="False">
+						<ContentControl IsTabStop="False"
+										SnapsToDevicePixels="False"
+										UseLayoutRounding="False"
+										ClipToBounds="True">
+							<local:FrameSample x:Name="ImageFrameSample"
+											   MaxWidth="256"
+											   MaxHeight="256"
+											   SnapsToDevicePixels="False"
+											   UseLayoutRounding="False" />
+						</ContentControl>
+					</Border>
+					<CheckBox Content="Show transparency"
+							  Name="CheckBoxFrameTransparent"
+							  HorizontalAlignment="Left"
+							  VerticalAlignment="Top"
+							  Style="{StaticResource PanelToggleButtonAlt}"
+							  Checked="CheckBoxFrameTransparent_CheckChanged"
+							  Unchecked="CheckBoxFrameTransparent_CheckChanged"
+							  Margin="0,5,0,0" />
+				</StackPanel>
+			</GroupBox>
+		</Grid>
+		<GroupBox Style="{StaticResource PanelGroupBox}"
+				  Name="GroupBoxSound"
+				  Grid.Row="3"
+				  Header="Sound Effect">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Left"
+						 VerticalAlignment="Center"
+						 Margin="2,0">
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Height="Auto"
+							Name="ButtonSoundPreview"
+							Width="Auto"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top"
+							Focusable="false"
+							Click="ButtonSoundPreview_Click"
+							ToolTip="Preview">
+						<custom:ImageState NormalSource="{StaticResource IconPlay}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+				</ToolBar>
+				<custom:TextBoxEx x:Name="TextBoxSoundFile"
+								  Margin="2,0"
+								  HorizontalAlignment="Stretch"
+								  VerticalAlignment="Center"
+								  TabIndex="4"
+								  IsModifiedChanged="TextBoxSoundFile_IsModifiedChanged"
+								  ContextMenu="{StaticResource ContextMenuTextBox}"
+								  Grid.Column="1" />
+				<ToolBar Style="{StaticResource PanelToolBar}"
+						 HorizontalAlignment="Right"
+						 VerticalAlignment="Center"
+						 Grid.Column="2"
+						 Margin="2,0">
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Height="Auto"
+							Name="ButtonSoundImport"
+							Width="Auto"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top"
+							Focusable="false"
+							Click="ButtonSoundImport_Click"
+							ToolTip="Open sound file">
+						<custom:ImageState NormalSource="{StaticResource ImgFileOpen}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							Height="Auto"
+							Name="ButtonSoundExport"
+							Width="Auto"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top"
+							Focusable="false"
+							ToolTip="Save sound">
+						<custom:ImageState NormalSource="{StaticResource ImgFileSave}"
+										   Style="{StaticResource ToolButtonImage}" />
+					</Button>
+				</ToolBar>
+			</Grid>
+		</GroupBox>
+	</Grid>
+</panels:FilePartPanel>

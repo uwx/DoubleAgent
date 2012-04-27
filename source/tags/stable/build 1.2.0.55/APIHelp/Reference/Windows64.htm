@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+	<title>Targeting 64-bit Windows</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css" />
+	<xml>
+		<MSHelp:TOCTitle Title="Targeting 64-bit Windows" />
+		<MSHelp:Keyword Index="K" Term="Targeting 64-bit Windows" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">DoubleAgentSDK</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Targeting 64-bit Windows&trade;</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>If you&#39;re writing a 64-bit Windows application, or you expect your 32-bit application to run in a
+					64-bit environment, there are a few special considerations:</p>
+				<ul type="disc">
+					<li>Both the Microsoft<sup>®</sup> Agent and Double Agent <b>Servers</b> are implemented as out-of-process
+						COM servers. This means that they&#39;re loaded from a Portable Executable File (.exe) and run in a
+						<i>different</i> process from the client application. Therefore, either a 32-bit or 64-bit application
+						can use either the 32-bit or 64-bit server (i.e. the processor architecture of the client and server
+						do not need match).</li>
+					<li>
+						<p>When your application creates an instance of the Agent <b>Server</b> object, the server architecture
+							is chosen as follows:</p>
+						<table style="border: thin solid black; margin-bottom: 0.5em; border-collapse: collapse;" cellpadding="4"
+							cellspacing="0" rules="all">
+							<tr>
+								<th style="border-bottom: solid thin" align="left">Agent Server</th>
+								<th style="border-bottom: solid thin" align="left">Server instance created using</th>
+								<th style="border-bottom: solid thin" align="left">Server architecture</th>
+							</tr>
+							<tr>
+								<td>Microsoft<sup>®</sup> Agent</td>
+								<td>ProgId&nbsp;<code class="inline">Agent.Server</code> or&nbsp;<code class="inline">Agent.Server.2</code>
+								</td>
+								<td>64-bit server</td>
+							</tr>
+							<tr>
+								<td>Microsoft<sup>®</sup> Agent</td>
+								<td>ClassId&nbsp;<code class="inline">{D45FD2FC-5C6E-11D1-9EC1-00C04FD7081F}</code> </td>
+								<td>32-bit server</td>
+							</tr>
+							<tr>
+								<td>Microsoft<sup>®</sup> Agent</td>
+								<td>ClassId&nbsp;<code class="inline">{FD0B6205-B0F4-4596-B028-5CDB35D288C1}</code> </td>
+								<td>64-bit server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Server</code> or&nbsp;<code class="inline"> DoubleAgent.Server.1.1</code>
+								</td>
+								<td>Windows decides</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ClassId&nbsp;<code class="inline">{1147E500-A208-11DE-ABF2-002421116FB2}</code> </td>
+								<td>Windows decides</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ClassId&nbsp;<code class="inline">{1147E500-A208-11DE-ABF2-002421116FB2}</code><br />
+									and&nbsp;<code class="inline">CLSCTX_ACTIVATE_64_BIT_SERVER</code></td>
+								<td>64-bit Server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ClassId&nbsp;<code class="inline">{1147E500-A208-11DE-ABF2-002421116FB2}</code><br />
+									and&nbsp;<code class="inline">CLSCTX_ACTIVATE_32_BIT_SERVER</code></td>
+								<td>32-bit Server</td>
+							</tr>
+						</table>
+					</li>
+					<li>Both the Microsoft<sup>®</sup> Agent and Double Agent <b>ActiveX Controls</b> are implemented as <i>
+						in-proc</i> COM servers. This means that they&#39;re loaded from a Dynamic Link Library (.dll) and run
+						in the <i>same</i> process as the client application. Therefore, a 32-bit application can only use the
+						32-bit ActiveX Control, and a 64-bit application can only use the 64-bit ActiveX Control.</li>
+					<li>
+						<p>When your application uses the Agent <b>ActiveX Control</b>, the server architecture is chosen as follows:</p>
+						<table style="border: thin solid black; margin-bottom: 0.5em; border-collapse: collapse;" cellpadding="4"
+							cellspacing="0" rules="all">
+							<tr>
+								<th style="border-bottom: solid thin" align="left">Agent Control</th>
+								<th style="border-bottom: solid thin" align="left">Control created using</th>
+								<th style="border-bottom: solid thin" align="left">Application architecture</th>
+								<th style="border-bottom: solid thin" align="left">Control architecture</th>
+								<th style="border-bottom: solid thin" align="left">Server architecture</th>
+							</tr>
+							<tr>
+								<td>Microsoft<sup>®</sup> Agent</td>
+								<td>ProgId&nbsp;<code class="inline">Agent.Control</code> or&nbsp;<code class="inline">Agent.Control.2</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</code></td>
+								<td>32-bit application</td>
+								<td>32-bit control</td>
+								<td>32-bit server</td>
+							</tr>
+							<tr>
+								<td>Microsoft<sup>®</sup> Agent</td>
+								<td>ProgId&nbsp;<code class="inline">Agent.Control</code> or&nbsp;<code class="inline">Agent.Control.2</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}</code></td>
+								<td>64-bit application</td>
+								<td>64-bit control</td>
+								<td>32-bit server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Control</code> or&nbsp;<code class="inline">DoubleAgent.Control.1.1</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{1147E530-A208-11DE-ABF2-002421116FB2}</code></td>
+								<td>32-bit application<br />
+									(AutoConnect &ne; 0)</td>
+								<td>32-bit control</td>
+								<td>32-bit server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Control</code> or&nbsp;<code class="inline">DoubleAgent.Control.1.1</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{1147E530-A208-11DE-ABF2-002421116FB2}</code></td>
+								<td>32-bit application<br />
+									(AutoConnect = 64)</td>
+								<td>32-bit control</td>
+								<td>64-bit server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Control</code> or&nbsp;<code class="inline">DoubleAgent.Control.1.1</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{1147E530-A208-11DE-ABF2-002421116FB2}</code> </td>
+								<td>32-bit application<br />
+									(AutoConnect = 0)</td>
+								<td>32-bit control<br>
+									(standalone)</td>
+								<td>N/A</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Control</code> or&nbsp;<code class="inline">DoubleAgent.Control.1.1</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{1147E530-A208-11DE-ABF2-002421116FB2}</code></td>
+								<td>64-bit application<br />
+									(AutoConnect &ne; 0)</td>
+								<td>64-bit control</td>
+								<td>64-bit server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Control</code> or&nbsp;<code class="inline">DoubleAgent.Control.1.1</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{1147E530-A208-11DE-ABF2-002421116FB2}</code></td>
+								<td>64-bit application<br />
+									(AutoConnect = 32)</td>
+								<td>64-bit control</td>
+								<td>32-bit server</td>
+							</tr>
+							<tr>
+								<td>Double Agent</td>
+								<td>ProgId&nbsp;<code class="inline">DoubleAgent.Control</code> or&nbsp;<code class="inline">DoubleAgent.Control.1.1</code><br />
+									or&nbsp;ClassId&nbsp;<code class="inline">{1147E530-A208-11DE-ABF2-002421116FB2}</code></td>
+								<td>64-bit application<br />
+									(AutoConnect = 0)</td>
+								<td>64-bit control<br>
+									(standalone)</td>
+								<td>N/A</td>
+							</tr>
+						</table>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

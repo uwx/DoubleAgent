@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>ControlOCX</ProjectName>
+    <ProjectGuid>{7442E3F4-622C-4987-A804-FBAEFEEA89AA}</ProjectGuid>
+    <RootNamespace>DoubleAgent</RootNamespace>
+    <Keyword>AtlProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax86.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaRelease.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax86.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaDebug.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax64.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaRelease.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="VsProps\Dax64.props" />
+    <Import Project="VsProps\DaDll.props" />
+    <Import Project="VsProps\DaDebug.props" />
+    <Import Project="VsProps\DaAtl.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PostBuildEvent</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PostBuildEvent</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PostBuildEvent</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PostBuildEvent</CustomBuildAfterTargets>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DaControl</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DaControl</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DaControl</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DaControl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.ocx</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.ocx</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.ocx</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.ocx</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)Control\DaControl.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName)OCX.pdb</ProgramDatabaseFile>
+      <MapFileName>$(IntDir)$(TargetName)OCX.Map</MapFileName>
+      <ProfileGuidedDatabase>$(TargetDir)$(TargetName)OCX.pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(IntDir)$(TargetName)OCX.lib</ImportLibrary>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_DACORE_LOCAL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)Control\DaControl.def</ModuleDefinitionFile>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName)OCX.pdb</ProgramDatabaseFile>
+      <MapFileName>$(IntDir)$(TargetName)OCX.Map</MapFileName>
+      <ProfileGuidedDatabase>$(TargetDir)$(TargetName)OCX.pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(IntDir)$(TargetName)OCX.lib</ImportLibrary>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_DACORE_LOCAL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)Control\DaControl.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName)OCX.Pdb</ProgramDatabaseFile>
+      <StripPrivateSymbols>$(IntDir)$(TargetName)OCX.Stripped.Pdb</StripPrivateSymbols>
+      <MapFileName>$(IntDir)$(TargetName)OCX.Map</MapFileName>
+      <ProfileGuidedDatabase>$(TargetDir)$(TargetName)OCX.pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(IntDir)$(TargetName)OCX.lib</ImportLibrary>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_DACORE_LOCAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <CustomBuildStep>
+      <Outputs>$(DOUBLE_AGENT)\Install\$(PlatformShortName)\$(TargetName).cab</Outputs>
+      <Inputs>$(TargetPath);$(DOUBLE_AGENT)\Install\DaControlOCX.ddf</Inputs>
+      <Command>makecab /V1 /F "$(DOUBLE_AGENT)\Install\DaControlOCX.ddf" /D TargetDir=$(TargetDir) /D Platform=$(PlatformShortName)  /D InstallDir=$(DOUBLE_AGENT)\Install\ 
+@if exist "$(DOUBLE_AGENT)\Install\setup.inf" del "$(DOUBLE_AGENT)\Install\setup.inf"
+@if exist "$(DOUBLE_AGENT)\Install\setup.rpt" del "$(DOUBLE_AGENT)\Install\setup.rpt"
+@if exist setup.inf del setup.inf
+@if exist setup.rpt del setup.rpt
+signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authenticode "$(DOUBLE_AGENT)\Install\$(PlatformShortName)\$(TargetName).cab"</Command>
+      <Message>Building $(DOUBLE_AGENT)\Install\$(TargetName).cab</Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <ModuleDefinitionFile>$(ProjectDir)Control\DaControl.def</ModuleDefinitionFile>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName)OCX.Pdb</ProgramDatabaseFile>
+      <StripPrivateSymbols>$(IntDir)$(TargetName)OCX.Stripped.Pdb</StripPrivateSymbols>
+      <MapFileName>$(IntDir)$(TargetName)OCX.Map</MapFileName>
+      <ProfileGuidedDatabase>$(TargetDir)$(TargetName)OCX.pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(IntDir)$(TargetName)OCX.lib</ImportLibrary>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_DACORE_LOCAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\AgentAnchor.cpp" />
+    <ClCompile Include="Common\AgentFileCache.cpp" />
+    <ClCompile Include="Core\AgentBalloonOptions.cpp" />
+    <ClCompile Include="Core\AgentBalloonShape.cpp" />
+    <ClCompile Include="Core\AgentBalloonWnd.cpp" />
+    <ClCompile Include="Core\AgentCharacterWnd.cpp" />
+    <ClCompile Include="Core\AgentFile.cpp" />
+    <ClCompile Include="Core\AgentFileAcf.cpp" />
+    <ClCompile Include="Core\AgentFileAcs.cpp" />
+    <ClCompile Include="Core\AgentFileBinary.cpp" />
+    <ClCompile Include="Core\AgentFileParts.cpp" />
+    <ClCompile Include="Core\AgentFiles.cpp" />
+    <ClCompile Include="Core\AgentFileV15.cpp" />
+    <ClCompile Include="Core\AgentIconMaker.cpp" />
+    <ClCompile Include="Core\AgentListeningWnd.cpp" />
+    <ClCompile Include="Core\AgentNotifyIcon.cpp" />
+    <ClCompile Include="Core\AgentPopupWnd.cpp" />
+    <ClCompile Include="Core\AgentPreviewWnd.cpp" />
+    <ClCompile Include="Core\AgentStreamInfo.cpp" />
+    <ClCompile Include="Core\AgentStreamUtils.cpp" />
+    <ClCompile Include="Core\AgentText.cpp" />
+    <ClCompile Include="Common\AgentTextObject.cpp" />
+    <ClCompile Include="Common\DaCmnAnimationNames.cpp" />
+    <ClCompile Include="Common\DaCmnBalloon.cpp" />
+    <ClCompile Include="Common\DaCmnCharacter.cpp" />
+    <ClCompile Include="Common\DaCmnCharacterFiles.cpp" />
+    <ClCompile Include="Common\DaCmnCommand.cpp" />
+    <ClCompile Include="Common\DaCmnCommands.cpp" />
+    <ClCompile Include="Common\DaCmnCommandsWindow.cpp" />
+    <ClCompile Include="Common\DaCmnFormattedText.cpp" />
+    <ClCompile Include="Common\DaCmnPropertySheet.cpp" />
+    <ClCompile Include="Common\DaCmnSettings.cpp" />
+    <ClCompile Include="Common\DaCmnSREngine.cpp" />
+    <ClCompile Include="Common\DaCmnSREngines.cpp" />
+    <ClCompile Include="Common\DaCmnTTSEngine.cpp" />
+    <ClCompile Include="Common\DaCmnTTSEngines.cpp" />
+    <ClCompile Include="Common\DaCmnUserInput.cpp" />
+    <ClCompile Include="Control\DaControl.cpp" />
+    <ClCompile Include="Control\DaControlMod.cpp" />
+    <ClCompile Include="Control\DaCtlAnimationNames.cpp" />
+    <ClCompile Include="Control\DaCtlAudioOutput.cpp" />
+    <ClCompile Include="Control\DaCtlBalloon.cpp" />
+    <ClCompile Include="Control\DaCtlCharacter.cpp" />
+    <ClCompile Include="Control\DaCtlCharacterFiles.cpp" />
+    <ClCompile Include="Control\DaCtlCharacters.cpp" />
+    <ClCompile Include="Control\DaCtlCommand.cpp" />
+    <ClCompile Include="Control\DaCtlCommands.cpp" />
+    <ClCompile Include="Control\DaCtlCommandsWindow.cpp" />
+    <ClCompile Include="Control\DaCtlEvents.cpp" />
+    <ClCompile Include="Control\DaCtlFormattedText.cpp" />
+    <ClCompile Include="Control\DaCtlPropertySheet.cpp" />
+    <ClCompile Include="Control\DaCtlRequest.cpp" />
+    <ClCompile Include="Control\DaCtlSettings.cpp" />
+    <ClCompile Include="Control\DaCtlSpeechInput.cpp" />
+    <ClCompile Include="Control\DaCtlSREngine.cpp" />
+    <ClCompile Include="Control\DaCtlSREngines.cpp" />
+    <ClCompile Include="Control\DaCtlTTSEngine.cpp" />
+    <ClCompile Include="Control\DaCtlTTSEngines.cpp" />
+    <ClCompile Include="Control\DaCtlUserInput.cpp" />
+    <ClCompile Include="Core\AgentTextParse.cpp" />
+    <ClCompile Include="Core\AgentWnd.cpp" />
+    <ClCompile Include="Core\DaCoreAnchor.cpp" />
+    <ClCompile Include="Core\DaError.cpp" />
+    <ClCompile Include="Common\EventNotify.cpp" />
+    <ClCompile Include="Common\ListeningState.cpp" />
+    <ClCompile Include="Control\LocalCharacter.cpp" />
+    <ClCompile Include="Common\PropSheetOptions.cpp" />
+    <ClCompile Include="Core\DaGlobalConfig.cpp" />
+    <ClCompile Include="Core\DaLocalizeMui.cpp" />
+    <ClCompile Include="Core\DirectShowClock.cpp" />
+    <ClCompile Include="Core\DirectShowEnums.cpp" />
+    <ClCompile Include="Core\DirectShowFilter.cpp" />
+    <ClCompile Include="Core\DirectShowPins.cpp" />
+    <ClCompile Include="Core\DirectShowRender.cpp" />
+    <ClCompile Include="Core\DirectShowSeeking.cpp" />
+    <ClCompile Include="Core\DirectShowSource.cpp" />
+    <ClCompile Include="Core\DirectShowTrace.cpp" />
+    <ClCompile Include="Core\DirectShowUtils.cpp" />
+    <ClCompile Include="Core\DirectShowWnd.cpp" />
+    <ClCompile Include="Core\DirectSoundConvert.cpp" />
+    <ClCompile Include="Core\DirectSoundLipSync.cpp" />
+    <ClCompile Include="Core\DirectSoundPinPush.cpp" />
+    <ClCompile Include="Core\FileDownload.cpp" />
+    <ClCompile Include="Core\MmSysError.cpp" />
+    <ClCompile Include="Core\NotifyObjects.cpp" />
+    <ClCompile Include="Core\PropPageCharSel.cpp" />
+    <ClCompile Include="Core\PropPageCopyright.cpp" />
+    <ClCompile Include="Core\PropPageOutput.cpp" />
+    <ClCompile Include="Core\PropPageSpeech.cpp" />
+    <ClCompile Include="Core\QueuedAction.cpp" />
+    <ClCompile Include="Core\QueuedActions.cpp" />
+    <ClCompile Include="Core\QueuedPrepare.cpp" />
+    <ClCompile Include="Core\QueuedSpeech.cpp" />
+    <ClCompile Include="Core\Sapi4Err.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Sapi4Voice.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Sapi4Voices.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Sapi5Err.cpp" />
+    <ClCompile Include="Core\Sapi5Input.cpp" />
+    <ClCompile Include="Core\Sapi5Inputs.cpp" />
+    <ClCompile Include="Core\Sapi5Voice.cpp" />
+    <ClCompile Include="Core\Sapi5Voices.cpp" />
+    <ClCompile Include="Core\SapiInputCache.cpp" />
+    <ClCompile Include="Core\SapiLanguageMatch.cpp" />
+    <ClCompile Include="Core\SapiVoice.cpp" />
+    <ClCompile Include="Core\SapiVoiceCache.cpp" />
+    <ClCompile Include="Core\VfwError.cpp" />
+    <ClCompile Include="Core\VoiceCommandsWnd.cpp" />
+    <ClCompile Include="Util\Atl\StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Include\DaControl_i.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Util\ThemedModule.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Control\DaControl.def" />
+    <None Include="Control\DaCtlEvents1.odl.inl" />
+    <None Include="Control\DaCtlEvents2.odl.inl" />
+    <None Include="Install\DaControlOCX(X86).inf" />
+    <None Include="Install\DaControlOCX.ddf">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Resources\DaAgentCtl.bmp" />
+    <None Include="Resources\DaControl.rc2" />
+    <None Include="Resources\DaCoreDialogs.rc2" />
+    <None Include="Resources\DaCoreStrings.rc2" />
+    <None Include="Control\DaControlRgs.rc2" />
+    <None Include="Control\DaControl.rgs" />
+    <None Include="Control\DaControlMod.rgs" />
+    <None Include="Control\DaCtlAnimationNames.rgs" />
+    <None Include="Control\DaCtlAudioOutput.rgs" />
+    <None Include="Control\DaCtlBalloon.rgs" />
+    <None Include="Control\DaCtlCharacter.rgs" />
+    <None Include="Control\DaCtlCharacterFiles.rgs" />
+    <None Include="Control\DaCtlCharacters.rgs" />
+    <None Include="Control\DaCtlCommand.rgs" />
+    <None Include="Control\DaCtlCommands.rgs" />
+    <None Include="Control\DaCtlCommandsWindow.rgs" />
+    <None Include="Control\DaCtlPropertySheet.rgs" />
+    <None Include="Control\DaCtlRequest.rgs" />
+    <None Include="Control\DaCtlSettings.rgs" />
+    <None Include="Control\DaCtlSpeechInput.rgs" />
+    <None Include="Control\DaCtlSREngine.rgs" />
+    <None Include="Control\DaCtlSREngines.rgs" />
+    <None Include="Control\DaCtlTTSEngine.rgs" />
+    <None Include="Control\DaCtlTTSEngines.rgs" />
+    <None Include="Control\DaCtlUserInput.rgs" />
+    <None Include="Resources\DaError.rc2" />
+    <None Include="Resources\DoubleAgent.ico" />
+    <None Include="Control\GPLicenseHeader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\AgentAnchor.h" />
+    <ClInclude Include="Common\AgentFileCache.h" />
+    <ClInclude Include="Common\CorEnumVariant.h" />
+    <ClInclude Include="ApiHelp\Source\DaApiHelp.h" />
+    <ClInclude Include="Common\DaCmnAnimationNames.h" />
+    <ClInclude Include="Common\DaCmnBalloon.h" />
+    <ClInclude Include="Common\DaCmnCharacter.h" />
+    <ClInclude Include="Common\DaCmnCharacterFiles.h" />
+    <ClInclude Include="Common\DaCmnCommand.h" />
+    <ClInclude Include="Common\DaCmnCommands.h" />
+    <ClInclude Include="Common\DaCmnCommandsWindow.h" />
+    <ClInclude Include="Common\DaCmnFormattedText.h" />
+    <ClInclude Include="Common\DaCmnPropertySheet.h" />
+    <ClInclude Include="Common\DaCmnSettings.h" />
+    <ClInclude Include="Common\DaCmnSREngine.h" />
+    <ClInclude Include="Common\DaCmnSREngines.h" />
+    <ClInclude Include="Common\DaCmnTTSEngine.h" />
+    <ClInclude Include="Common\DaCmnTTSEngines.h" />
+    <ClInclude Include="Common\DaCmnUserInput.h" />
+    <ClInclude Include="Control\DaControl.h" />
+    <ClInclude Include="Core\DaCoreAnchor.h" />
+    <ClInclude Include="Include\DaControlInterface.h" />
+    <ClInclude Include="Control\DaControlMod.h" />
+    <ClInclude Include="Control\DaCtlAnimationNames.h" />
+    <ClInclude Include="Control\DaCtlAudioOutput.h" />
+    <ClInclude Include="Control\DaCtlBalloon.h" />
+    <ClInclude Include="Control\DaCtlCharacter.h" />
+    <ClInclude Include="Control\DaCtlCharacterFiles.h" />
+    <ClInclude Include="Control\DaCtlCharacters.h" />
+    <ClInclude Include="Control\DaCtlCommand.h" />
+    <ClInclude Include="Control\DaCtlCommands.h" />
+    <ClInclude Include="Control\DaCtlCommandsWindow.h" />
+    <ClInclude Include="Control\DaCtlEvents.h" />
+    <ClInclude Include="Control\DaCtlFormattedText.h" />
+    <ClInclude Include="Control\DaCtlPropertySheet.h" />
+    <ClInclude Include="Control\DaCtlRequest.h" />
+    <ClInclude Include="Control\DaCtlSettings.h" />
+    <ClInclude Include="Control\DaCtlSpeechInput.h" />
+    <ClInclude Include="Control\DaCtlSREngine.h" />
+    <ClInclude Include="Control\DaCtlSREngines.h" />
+    <ClInclude Include="Control\DaCtlTTSEngine.h" />
+    <ClInclude Include="Control\DaCtlTTSEngines.h" />
+    <ClInclude Include="Control\DaCtlUserInput.h" />
+    <ClInclude Include="Include\DaVersion.h" />
+    <ClInclude Include="Common\EventNotify.h" />
+    <ClInclude Include="Common\ListeningState.h" />
+    <ClInclude Include="Control\LocalCharacter.h" />
+    <ClInclude Include="Util\Atl\StdAfx.h" />
+    <ClInclude Include="Util\Atl\TargetVer.h" />
+    <ClInclude Include="Control\DaControlRes.h" />
+    <ClInclude Include="Core\DaErrorRes.h" />
+    <ClInclude Include="Include\DaControlOdl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Control\DaControlOCX.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="DaUtil.vcxproj">
+      <Project>{d42ca861-d64a-4dc8-9948-b3e83c300bdf}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="VsProps\FixBatchBuild.targets" />
+  </ImportGroup>
+</Project>

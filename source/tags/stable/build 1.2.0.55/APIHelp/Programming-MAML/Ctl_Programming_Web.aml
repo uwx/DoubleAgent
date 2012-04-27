@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846736-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerSDKTechnologyOverviewScenariosDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>
+				To access the <token>DA</token> control from a Web page, use the HTML &lt;OBJECT&gt;
+				tag within the &lt;HEAD&gt; or &lt;BODY&gt; element of the page, specifying the
+				<languageKeyword>CLSID</languageKeyword> (class identifier) for the control.
+			</para>
+		</introduction>
+
+		<section>
+			<title>
+				The &lt;OBJECT&gt; Tag
+			</title>
+			<content>
+				<para>
+					The following example illustrates how to use the &lt;OBJECT&gt; tag to include the
+					control in a Web page.
+				</para>
+				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT
+CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
+id=AgentControl&gt;
+&lt;/OBJECT&gt;</code>
+				<para>
+					To begin using a character, you must load the character using the
+					<codeEntityReference qualifyHint="true">M:DoubleAgent.Control.Characters.Load</codeEntityReference> method. A
+					character can be loaded from the user's local storage or an <languageKeyword>HTTP</languageKeyword>
+					server. For more information about the syntax for loading a character, see the
+					<codeEntityReference qualifyHint="true">M:DoubleAgent.Control.Characters.Load</codeEntityReference> method.
+				</para>
+				<para>
+					Once the character has been successful loaded, you can use the methods, properties,
+					and events exposed by the <token>DA</token> control to program the character. You can
+					also use the methods, properties, and events exposed by your programming language
+					and the browser to program the character; for example, to program its reaction to
+					a button click. Consult the documentation for your browser to determine what features
+					it exposes in its scripting model.
+				</para>
+				<para>
+					The <token>DA</token> server remains loaded only when there is at least one client application
+					with a connection. This means that when a user moves between <token>Agent</token>-enabled Web pages,
+					the <token>DA</token> server will shut down and any characters you loaded will disappear.
+					To keep the server running between pages (and thereby keep a character visible),
+					create another client that remains loaded between page changes. For example, you
+					can create an HTML frameset and declare an &lt;OBJECT&gt; tag for <token>DA</token> in
+					the parent frame. You can then script the pages you load into the child frame(s),
+					to call into the parent's script. Alternatively, you can also include an &lt;OBJECT&gt;
+					tag on each page you load into the child frame. In this case, remember that each
+					page will be its own client. You may need to use the
+					<codeEntityReference qualifyHint="true">M:DoubleAgent.Control.Character.Activate</codeEntityReference> method
+					to set which client has control when the user interacts
+					with the parent or child page.
+				</para>
+			</content>
+		</section>
+
+		<section>
+			<title>
+				Using the <token>standaloneUc</token> Control
+			</title>
+			<content>
+				<para>
+					You can use the <token>DA</token> control in a Web page in <link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2#standalone">
+						<token>standalone</token>
+					</link> mode, even if <token>DA</token> hasn't been installed on
+					the target machine.&#160; Just modify the &lt;OBJECT&gt; tag to include a <languageKeyword>CODEBASE</languageKeyword> as follows:
+				</para>
+				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT
+CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
+CODEBASE=&quot;http://doubleagent.sourceforge.net/DaControl.cab
+id=AgentControl&gt;
+&lt;/OBJECT&gt;</code>
+				<para>
+					If <token>DA</token> is installed on the target machine, then the installed version will
+					be used (based on the specified <languageKeyword>CLSID</languageKeyword>). If <token>DA</token>
+					is <legacyBold>not</legacyBold> installed, the <token>ActiveXCtl</token> will automatically
+					be downloaded and installed from <codeInline>http://doubleagent.sourceforge.net/DaControl.cab</codeInline>.
+				</para>
+			</content>
+		</section>
+
+		<section>
+			<title>
+				Language Components
+			</title>
+			<content>
+				<para>
+					To support automatic download of a <token>MA</token> language component
+					in a Web page, include the language component's Object tag on the page before the
+					<token>DA</token> control &lt;OBJECT&gt; tag:
+				</para>
+
+				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT width=0 height=0
+CLASSID=&quot;CLSID: C348<i>XXXX</i>-A7F8-11D1-AA75-00C04FA34D72&quot;
+CODEBASE=&quot;http://your server/agt<i>XXXX</i>.dll&quot;&gt;
+&lt;/OBJECT&gt;</code>
+				<para>
+					where <legacyItalic>XXXX</legacyItalic> is replaced with a Language ID. The <token>MA</token> language components are no longer available on the Microsoft Web site, so
+					you must download them from your own site.
+				</para>
+				<list class="bullet">
+					<listItem>
+						<para>
+							<legacyBold>Note</legacyBold> that the &lt;OBJECT&gt; tag for a language component must precede the
+							&lt;OBJECT&gt; tag for the <token>DA</token> control.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							Multiple languages can be installed on the same client.
+						</para>
+					</listItem>
+					<listItem>
+						<para>
+							Before setting the
+							<codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Character.LanguageID</codeEntityReference>
+							of a character, we recommend that your script verify that the locale
+							of the browser, available in the <codeInline>navigator.userLanguage</codeInline> property, matches
+							the language being set.
+						</para>
+					</listItem>
+				</list>
+				<para>
+					To support other language versions of <token>Agent</token>, you use another &lt;OBJECT&gt; tag
+					specifying the language component. However, be aware that attempting to install
+					multiple languages at the same time may require the user to reboot.
+				</para>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846737-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846738-419c-11e1-9d4f-002421116fb2" />
+			<link xlink:href="e0846731-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerSDKTechnologyOverviewScenariosDocument>
+</topic>

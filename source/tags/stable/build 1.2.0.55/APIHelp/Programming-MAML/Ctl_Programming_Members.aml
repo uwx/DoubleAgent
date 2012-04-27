@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e0846735-419c-11e1-9d4f-002421116fb2" revisionNumber="1">
+	<developerSDKTechnologyOverviewScenariosDocument
+	  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+	  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<introduction>
+			<para>Every programming language declares and uses objects in its own fashion. This is a brief example of how it's done in <token>VB</token>.</para>
+		</introduction>
+
+		<section>
+			<title>Declaring Objects</title>
+			<content>
+				<para>
+					Programming languages that provide access to the object types exposed by the <token>DA</token> control, like
+					<token>VB</token>, allow you to use these in your object declarations. For example, instead of declaring
+					an object as a generic type:
+				</para>
+				<para>
+					<codeInline xml:space="preserve">Dim Genie as <languageKeyword>Object</languageKeyword>
+				</codeInline>
+				</para>
+				<para>you can declare an object as a specific type:</para>
+				<para>
+					<codeInline xml:space="preserve">Dim Genie as <languageKeyword>DoubleAgentCtl.DaCtlCharacter</languageKeyword>
+				</codeInline>
+				</para>
+				<para>
+					or, when using the control's <token>PIA</token>:
+				</para>
+				<para>
+					<codeInline xml:space="preserve">Dim Genie as <languageKeyword>DoubleAgent.Control.Character</languageKeyword>
+				</codeInline>
+				</para>
+				<para>
+					This allows the programming environment to identify the object's methods, properties, and events, and
+					may improve the overall performance of your application.
+				</para>
+
+			</content>
+		</section>
+
+		<section>
+			<title>Using Collections</title>
+			<content>
+				<para>
+					Most programming languages that support <token>ActiveXCtls</token> follow indexing conventions similar
+					to <token>VB</token>. For programming languages that don't support object collections, you can use the
+					<codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Characters.Item</codeEntityReference> (get_Item) method to access methods
+					and properties of items in the collection.
+				</para>
+			</content>
+		</section>
+
+		<section>
+			<title>Initializing Properties</title>
+			<content>
+				<para>
+					By default, the <token>DA</token> control will automatically create a connection to the <token>DA</token> server
+					when the application runs. If you want the control to run in
+					<link xlink:href="e084673a-419c-11e1-9d4f-002421116fb2">
+						<token>standalone</token>
+					</link> mode, initialize the control's
+					<codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Control.AutoConnect</codeEntityReference> property to <literal>False</literal>.
+				</para>
+				<para>
+					You should also initialize the <codeEntityReference qualifyHint="false">P:DoubleAgent.Control.Control.RaiseRequestErrors</codeEntityReference>
+					property depending on how you want to handle errors.
+				</para>
+
+			</content>
+		</section>
+
+		<section>
+			<title>Receiving Events</title>
+			<content>
+				<para>
+					When using a programming language that supports <token>ActiveXCtls</token> or
+					<token>WinFormsCtl</token>s, adding the <token>DA</token> control to a form will automatically make the control's
+					events available, with their appropriate parameters.
+				</para>
+				<para>
+					You may also be able to use your programming language's object creation syntax to create an instance
+					of the control at runtime. For example, in <token>VB</token> 6, if you include the <token>DA</token> control in
+					your project's references, you can use a <languageKeyword>With Events...New</languageKeyword> declaration (if
+					you don't include the reference, VB raises an error).
+				</para>
+
+				<code xml:space="preserve" language="vb#">' Declare a global variable for the control
+Dim WithEvents MyAgentControl as DoubleAgent.Control.DaControl
+
+' Create an instance of the control using New
+MyAgentControl = New DoubleAgent.Control.DaControl
+
+' Load a character
+MyAgentControl.Characters.Load ("Genie","Genie.acs")
+
+' Display the character
+MyAgentControl.Characters("Genie").Show()</code>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="e0846733-419c-11e1-9d4f-002421116fb2" />
+		</relatedTopics>
+
+	</developerSDKTechnologyOverviewScenariosDocument>
+</topic>
