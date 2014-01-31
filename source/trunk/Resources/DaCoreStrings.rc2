@@ -1,0 +1,95 @@
+#include "DaCoreRes.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_PROPSHEET_CHARSEL   "Character Properties"
+    IDS_COMMANDS_NO_SPEECH_ENGLISH "Speech input is not available in English."
+    IDS_COMMANDS_NO_SPEECH_DISABLED "Speech input disabled."
+    IDS_COMMANDS_VOICE_TITLE_NONE "No voice commands."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_MS_AGENT            "Microsoft Agent"
+    ID_COMMANDS_WINDOW_OPEN "Open &Voice Commands Window"
+    ID_COMMANDS_WINDOW_CLOSE "Close &Voice Commands Window"
+    IDS_PROPSHEET_OPTIONS   "Advanced Character Options"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMANDS_WINDOW_OPEN_SPEECH
+                            "( ( show | open ) [the] [voice] commands [window] | what can I say [now] )"
+    IDS_COMMANDS_WINDOW_CLOSE_PROMPT "Close Voice Commands Window"
+    IDS_COMMANDS_WINDOW_CLOSE_SPEECH
+                            "( hide | close ) [the] [voice] commands [window]"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMANDS_VOICE_HEARD "Heard ""%1s"""
+    IDS_COMMANDS_VOICE_TITLE "Voice Commands"
+    IDS_COMMANDS_VOICE_TITLE_EX "Voice Commands - %1s"
+    IDS_COMMANDS_HIDE_PROMPT "Hide"
+    IDS_COMMANDS_HIDE_SPEECH "hide"
+    IDS_GENERIC_SUBSTITUTION2 "%1s"
+    IDS_FOR_COMMANDS_EX     "for ""%1s"" commands."
+    IDS_FOR_COMMANDS        "for commands."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_GENERIC_SUBSTITUTION "%1s"
+    IDS_COMMANDS_GLOBAL_TITLE "Global Commands"
+    IDS_COMMANDS_LISTENING_PROMPT "-- %1s is listening --"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_PROPPAGE_CHARACTER  "Version"
+    IDS_PROPPAGE_CHARACTER_NONSTANDARD "No"
+    IDS_PROPPAGE_CHARACTER_INVALID
+                            "No version information available.\nThis file may not be a valid Microsoft Agent character file."
+    IDS_PROPPAGE_CHARACTER_TTSNONE "None"
+    10198                   "Microsoft Agent Warning"
+    10199                   "An application is attempting to load a Microsoft Agent character from an untrusted Web site. Do you want to allow this character to be loaded?"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_UNDEFINED   "(command undefined)"
+    IDS_COMMANDS_SHOW_CHAR_PROMPT "Say the name of a character to display it."
+    IDS_COMMANDS_WAIT_PROMPT "Please wait to speak."
+    IDS_COMMANDS_LISTEN_PREPROMPT "-- %1s is preparing to listen --"
+    IDS_COMMANDS_SAID_NOTHING "I didn't say anything."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMANDS_GLOBAL_TITLE_SPEECH "[show] global commands"
+    IDS_BLANK               """ """
+    IDS_COMMANDS_NO_SPEECH_INPUT "Speech input is not available."
+    IDS_COMMANDS_LISTENING_NOT_PROMPT "-- %1s is not listening --"
+    IDS_COMMAND_HIDE        "&Hide"
+    IDS_COMMAND_SHOW        "&Show"
+    IDS_COMMANDS_HEARD_GARBAGE "Didn't understand your request."
+    IDS_COMMANDS_SAY_NAME   "Please say the name of a character."
+    IDS_PROPPAGE_CHARSEL    "Gallery"
+END
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
