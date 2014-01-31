@@ -71,7 +71,7 @@ id=AgentControl&gt;
 				</para>
 				<code xml:space="preserve" language="other" title="HTML">&lt;OBJECT
 CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
-CODEBASE=&quot;http://doubleagent.sourceforge.net/DaControl.cab
+CODEBASE=&quot;http://doubleagent.sourceforge.net/DaControl.cab&quot;
 id=AgentControl&gt;
 &lt;/OBJECT&gt;</code>
 				<para>

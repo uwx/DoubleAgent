@@ -3,11 +3,11 @@
 /* this ALWAYS GENERATED file contains the proxy stub code */
 
 
- /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Sep 07 12:58:05 2011
+ /* File created by MIDL compiler version 8.00.0595 */
+/* at Fri Jan 31 16:49:18 2014
  */
 /* Compiler settings for Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.00.0595 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -2657,7 +2657,7 @@ const CInterfaceStubVtbl __IAgentStreamSourceStubVtbl =
 };
 
 
-/* Standard interface: __MIDL_itf_DaCore_0000_0003, ver. 0.0,
+/* Standard interface: __MIDL_itf_DaCore_0000_0004, ver. 0.0,
    GUID={0x00000000,0x0000,0x0000,{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}} */
 
 
@@ -2738,7 +2738,7 @@ static const MIDL_STUB_DESC Object_StubDesc =
     1, /* -error bounds_check flag */
     0x50002, /* Ndr library version */
     0,
-    0x700022b, /* MIDL Version 7.0.555 */
+    0x8000253, /* MIDL Version 8.0.595 */
     0,
     UserMarshalRoutines,
     0,  /* notify & notify_flag routine table */

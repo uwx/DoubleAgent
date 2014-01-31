@@ -3,11 +3,11 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 7.00.0555 */
-/* at Fri Apr 27 12:41:18 2012
+ /* File created by MIDL compiler version 8.00.0595 */
+/* at Fri Jan 31 16:50:46 2014
  */
 /* Compiler settings for Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.00.0595 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -44,174 +44,203 @@
 #ifndef __IDaCtlCharacters_FWD_DEFINED__
 #define __IDaCtlCharacters_FWD_DEFINED__
 typedef interface IDaCtlCharacters IDaCtlCharacters;
+
 #endif 	/* __IDaCtlCharacters_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCharacter_FWD_DEFINED__
 #define __IDaCtlCharacter_FWD_DEFINED__
 typedef interface IDaCtlCharacter IDaCtlCharacter;
+
 #endif 	/* __IDaCtlCharacter_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlBalloon_FWD_DEFINED__
 #define __IDaCtlBalloon_FWD_DEFINED__
 typedef interface IDaCtlBalloon IDaCtlBalloon;
+
 #endif 	/* __IDaCtlBalloon_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCommands_FWD_DEFINED__
 #define __IDaCtlCommands_FWD_DEFINED__
 typedef interface IDaCtlCommands IDaCtlCommands;
+
 #endif 	/* __IDaCtlCommands_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCommand_FWD_DEFINED__
 #define __IDaCtlCommand_FWD_DEFINED__
 typedef interface IDaCtlCommand IDaCtlCommand;
+
 #endif 	/* __IDaCtlCommand_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlRequest_FWD_DEFINED__
 #define __IDaCtlRequest_FWD_DEFINED__
 typedef interface IDaCtlRequest IDaCtlRequest;
+
 #endif 	/* __IDaCtlRequest_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlAudioOutput_FWD_DEFINED__
 #define __IDaCtlAudioOutput_FWD_DEFINED__
 typedef interface IDaCtlAudioOutput IDaCtlAudioOutput;
+
 #endif 	/* __IDaCtlAudioOutput_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlSpeechInput_FWD_DEFINED__
 #define __IDaCtlSpeechInput_FWD_DEFINED__
 typedef interface IDaCtlSpeechInput IDaCtlSpeechInput;
+
 #endif 	/* __IDaCtlSpeechInput_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlPropertySheet_FWD_DEFINED__
 #define __IDaCtlPropertySheet_FWD_DEFINED__
 typedef interface IDaCtlPropertySheet IDaCtlPropertySheet;
+
 #endif 	/* __IDaCtlPropertySheet_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlUserInput_FWD_DEFINED__
 #define __IDaCtlUserInput_FWD_DEFINED__
 typedef interface IDaCtlUserInput IDaCtlUserInput;
+
 #endif 	/* __IDaCtlUserInput_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCommandsWindow_FWD_DEFINED__
 #define __IDaCtlCommandsWindow_FWD_DEFINED__
 typedef interface IDaCtlCommandsWindow IDaCtlCommandsWindow;
+
 #endif 	/* __IDaCtlCommandsWindow_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlAnimationNames_FWD_DEFINED__
 #define __IDaCtlAnimationNames_FWD_DEFINED__
 typedef interface IDaCtlAnimationNames IDaCtlAnimationNames;
+
 #endif 	/* __IDaCtlAnimationNames_FWD_DEFINED__ */
 
 
 #ifndef __IDaControl_FWD_DEFINED__
 #define __IDaControl_FWD_DEFINED__
 typedef interface IDaControl IDaControl;
+
 #endif 	/* __IDaControl_FWD_DEFINED__ */
 
 
 #ifndef ___DaCtlEvents_FWD_DEFINED__
 #define ___DaCtlEvents_FWD_DEFINED__
 typedef interface _DaCtlEvents _DaCtlEvents;
+
 #endif 	/* ___DaCtlEvents_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCharacterFiles_FWD_DEFINED__
 #define __IDaCtlCharacterFiles_FWD_DEFINED__
 typedef interface IDaCtlCharacterFiles IDaCtlCharacterFiles;
+
 #endif 	/* __IDaCtlCharacterFiles_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlFormattedText_FWD_DEFINED__
 #define __IDaCtlFormattedText_FWD_DEFINED__
 typedef interface IDaCtlFormattedText IDaCtlFormattedText;
+
 #endif 	/* __IDaCtlFormattedText_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlTTSEngine_FWD_DEFINED__
 #define __IDaCtlTTSEngine_FWD_DEFINED__
 typedef interface IDaCtlTTSEngine IDaCtlTTSEngine;
+
 #endif 	/* __IDaCtlTTSEngine_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlTTSEngines_FWD_DEFINED__
 #define __IDaCtlTTSEngines_FWD_DEFINED__
 typedef interface IDaCtlTTSEngines IDaCtlTTSEngines;
+
 #endif 	/* __IDaCtlTTSEngines_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlSREngine_FWD_DEFINED__
 #define __IDaCtlSREngine_FWD_DEFINED__
 typedef interface IDaCtlSREngine IDaCtlSREngine;
+
 #endif 	/* __IDaCtlSREngine_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlSREngines_FWD_DEFINED__
 #define __IDaCtlSREngines_FWD_DEFINED__
 typedef interface IDaCtlSREngines IDaCtlSREngines;
+
 #endif 	/* __IDaCtlSREngines_FWD_DEFINED__ */
 
 
 #ifndef __IDaControl2_FWD_DEFINED__
 #define __IDaControl2_FWD_DEFINED__
 typedef interface IDaControl2 IDaControl2;
+
 #endif 	/* __IDaControl2_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCharacter2_FWD_DEFINED__
 #define __IDaCtlCharacter2_FWD_DEFINED__
 typedef interface IDaCtlCharacter2 IDaCtlCharacter2;
+
 #endif 	/* __IDaCtlCharacter2_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCharacters2_FWD_DEFINED__
 #define __IDaCtlCharacters2_FWD_DEFINED__
 typedef interface IDaCtlCharacters2 IDaCtlCharacters2;
+
 #endif 	/* __IDaCtlCharacters2_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlBalloon2_FWD_DEFINED__
 #define __IDaCtlBalloon2_FWD_DEFINED__
 typedef interface IDaCtlBalloon2 IDaCtlBalloon2;
+
 #endif 	/* __IDaCtlBalloon2_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlSettings_FWD_DEFINED__
 #define __IDaCtlSettings_FWD_DEFINED__
 typedef interface IDaCtlSettings IDaCtlSettings;
+
 #endif 	/* __IDaCtlSettings_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCommands2_FWD_DEFINED__
 #define __IDaCtlCommands2_FWD_DEFINED__
 typedef interface IDaCtlCommands2 IDaCtlCommands2;
+
 #endif 	/* __IDaCtlCommands2_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlCommand2_FWD_DEFINED__
 #define __IDaCtlCommand2_FWD_DEFINED__
 typedef interface IDaCtlCommand2 IDaCtlCommand2;
+
 #endif 	/* __IDaCtlCommand2_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlPropertySheet2_FWD_DEFINED__
 #define __IDaCtlPropertySheet2_FWD_DEFINED__
 typedef interface IDaCtlPropertySheet2 IDaCtlPropertySheet2;
+
 #endif 	/* __IDaCtlPropertySheet2_FWD_DEFINED__ */
 
 
 #ifndef ___DaCtlEvents2_FWD_DEFINED__
 #define ___DaCtlEvents2_FWD_DEFINED__
 typedef interface _DaCtlEvents2 _DaCtlEvents2;
+
 #endif 	/* ___DaCtlEvents2_FWD_DEFINED__ */
 
 
@@ -460,6 +489,17 @@ extern "C"{
 #endif 
 
 
+/* interface __MIDL_itf_DaControl_0000_0000 */
+/* [local] */ 
+
+#pragma once
+#pragma region Desktop Family
+#pragma endregion
+
+
+extern RPC_IF_HANDLE __MIDL_itf_DaControl_0000_0000_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_DaControl_0000_0000_v0_0_s_ifspec;
+
 
 #ifndef __DoubleAgentCtl_LIBRARY_DEFINED__
 #define __DoubleAgentCtl_LIBRARY_DEFINED__
@@ -505,87 +545,96 @@ class __declspec(uuid("{1147E550-A208-11DE-ABF2-002421116FB2}")) DoubleAgentCtl_
 #define _DA_COMMON_TYPES_
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56A-A208-11DE-ABF2-002421116FB2") 
 enum BalloonStyleFlags
-    {	BalloonStyle_Enabled	= 0x1,
-	BalloonStyle_SizeToText	= 0x2,
-	BalloonStyle_AutoHide	= 0x4,
-	BalloonStyle_AutoPace	= 0x8,
-	BalloonStyle_NoAppend	= 0x10,
-	BalloonStyle_ShowPartialLines	= 0x20
+    {
+        BalloonStyle_Enabled	= 0x1,
+        BalloonStyle_SizeToText	= 0x2,
+        BalloonStyle_AutoHide	= 0x4,
+        BalloonStyle_AutoPace	= 0x8,
+        BalloonStyle_NoAppend	= 0x10,
+        BalloonStyle_ShowPartialLines	= 0x20
     } 	BalloonStyleFlags;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
 enum StopAllFlags
-    {	StopAll_Play	= 0x1,
-	StopAll_Move	= 0x2,
-	StopAll_Speak	= 0x4,
-	StopAll_QueuedPrepare	= 0x8,
-	StopAll_ImmediatePrepare	= 0x10,
-	StopAll_Visibility	= 0x20,
-	StopAll_Everything	= 0xffffffff
+    {
+        StopAll_Play	= 0x1,
+        StopAll_Move	= 0x2,
+        StopAll_Speak	= 0x4,
+        StopAll_QueuedPrepare	= 0x8,
+        StopAll_ImmediatePrepare	= 0x10,
+        StopAll_Visibility	= 0x20,
+        StopAll_Everything	= 0xffffffff
     } 	StopAllFlags;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56D-A208-11DE-ABF2-002421116FB2") 
 enum PrepareResourceType
-    {	PrepareResource_Animation	= 0,
-	PrepareResource_State	= 1,
-	PrepareResource_Wave	= 2
+    {
+        PrepareResource_Animation	= 0,
+        PrepareResource_State	= 1,
+        PrepareResource_Wave	= 2
     } 	PrepareResourceType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56E-A208-11DE-ABF2-002421116FB2") 
 enum MoveCauseType
-    {	MoveCause_NeverMoved	= 0,
-	MoveCause_UserMoved	= 1,
-	MoveCause_ProgramMoved	= 2,
-	MoveCause_OtherProgramMoved	= 3
+    {
+        MoveCause_NeverMoved	= 0,
+        MoveCause_UserMoved	= 1,
+        MoveCause_ProgramMoved	= 2,
+        MoveCause_OtherProgramMoved	= 3
     } 	MoveCauseType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56F-A208-11DE-ABF2-002421116FB2") 
 enum VisibilityCauseType
-    {	VisibilityCause_NeverShown	= 0,
-	VisibilityCause_UserHid	= 1,
-	VisibilityCause_UserShowed	= 2,
-	VisibilityCause_ProgramHid	= 3,
-	VisibilityCause_ProgramShowed	= 4,
-	VisibilityCause_OtherProgramHid	= 5,
-	VisibilityCause_OtherProgramShowed	= 6
+    {
+        VisibilityCause_NeverShown	= 0,
+        VisibilityCause_UserHid	= 1,
+        VisibilityCause_UserShowed	= 2,
+        VisibilityCause_ProgramHid	= 3,
+        VisibilityCause_ProgramShowed	= 4,
+        VisibilityCause_OtherProgramHid	= 5,
+        VisibilityCause_OtherProgramShowed	= 6
     } 	VisibilityCauseType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E590-A208-11DE-ABF2-002421116FB2") 
 enum AudioStatusType
-    {	AudioStatus_Available	= 0,
-	AudioStatus_Disabled	= 1,
-	AudioStatus_UserSpeaking	= 3,
-	AudioStatus_CharacterSpeaking	= 4,
-	AudioStatus_CharacterListening	= 5,
-	AudioStatus_Error	= 6
+    {
+        AudioStatus_Available	= 0,
+        AudioStatus_Disabled	= 1,
+        AudioStatus_UserSpeaking	= 3,
+        AudioStatus_CharacterSpeaking	= 4,
+        AudioStatus_CharacterListening	= 5,
+        AudioStatus_Error	= 6
     } 	AudioStatusType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E591-A208-11DE-ABF2-002421116FB2") 
 enum ListeningStatusType
-    {	ListeningStatus_Available	= 0,
-	ListeningStatus_CharacterInactive	= 2,
-	ListeningStatus_InitializeFailed	= 4,
-	ListeningStatus_InputDisabled	= 5,
-	ListeningStatus_Error	= 6
+    {
+        ListeningStatus_Available	= 0,
+        ListeningStatus_CharacterInactive	= 2,
+        ListeningStatus_InitializeFailed	= 4,
+        ListeningStatus_InputDisabled	= 5,
+        ListeningStatus_Error	= 6
     } 	ListeningStatusType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E592-A208-11DE-ABF2-002421116FB2") 
 enum ListenCompleteType
-    {	ListenComplete_ProgramDisabled	= 1,
-	ListenComplete_ProgramTimedOut	= 2,
-	ListenComplete_UserTimedOut	= 3,
-	ListenComplete_UserReleasedKey	= 4,
-	ListenComplete_UserSpeechEnded	= 5,
-	ListenComplete_CharacterClientDeactivated	= 6,
-	ListenComplete_DefaultCharacterChanged	= 7,
-	ListenComplete_UserDisabled	= 8
+    {
+        ListenComplete_ProgramDisabled	= 1,
+        ListenComplete_ProgramTimedOut	= 2,
+        ListenComplete_UserTimedOut	= 3,
+        ListenComplete_UserReleasedKey	= 4,
+        ListenComplete_UserSpeechEnded	= 5,
+        ListenComplete_CharacterClientDeactivated	= 6,
+        ListenComplete_DefaultCharacterChanged	= 7,
+        ListenComplete_UserDisabled	= 8
     } 	ListenCompleteType;
 
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E593-A208-11DE-ABF2-002421116FB2") 
 enum SpeechGenderType
-    {	SpeechGender_Neutral	= 0,
-	SpeechGender_Female	= 1,
-	SpeechGender_Male	= 2
+    {
+        SpeechGender_Neutral	= 0,
+        SpeechGender_Female	= 1,
+        SpeechGender_Male	= 2
     } 	SpeechGenderType;
 
 #define	PropertySheet_PageName_Character	( "Character" )
@@ -601,12 +650,13 @@ enum SpeechGenderType
 #define _ActiveStateType_Defined
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
 enum ActiveStateType
-    {	ActiveState_Inactive	= 0,
-	ActiveState_Active	= 1,
-	ActiveState_InputActive	= 2,
-	ActiveState_Suspended	= 4,
-	ActiveState_Suspended_Active	= 5,
-	ActiveState_Suspended_InputActive	= 6
+    {
+        ActiveState_Inactive	= 0,
+        ActiveState_Active	= 1,
+        ActiveState_InputActive	= 2,
+        ActiveState_Suspended	= 4,
+        ActiveState_Suspended_Active	= 5,
+        ActiveState_Suspended_InputActive	= 6
     } 	ActiveStateType;
 
 #endif
@@ -614,25 +664,27 @@ enum ActiveStateType
 #define _CharacterStyleFlags_Defined
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
 enum CharacterStyleFlags
-    {	CharacterStyle_SoundEffects	= 0x1,
-	CharacterStyle_IdleEnabled	= 0x2,
-	CharacterStyle_AutoPopupMenu	= 0x4,
-	CharacterStyle_IconShown	= 0x8,
-	CharacterStyle_Smoothed	= 0x30,
-	CharacterStyle_SmoothEdges	= 0x20,
-	CharacterStyle_SuspendPause	= 0x100,
-	CharacterStyle_SuspendStop	= 0x200,
-	CharacterStyle_SuspendHide	= 0x400
+    {
+        CharacterStyle_SoundEffects	= 0x1,
+        CharacterStyle_IdleEnabled	= 0x2,
+        CharacterStyle_AutoPopupMenu	= 0x4,
+        CharacterStyle_IconShown	= 0x8,
+        CharacterStyle_Smoothed	= 0x30,
+        CharacterStyle_SmoothEdges	= 0x20,
+        CharacterStyle_SuspendPause	= 0x100,
+        CharacterStyle_SuspendStop	= 0x200,
+        CharacterStyle_SuspendHide	= 0x400
     } 	CharacterStyleFlags;
 
 #endif
 typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E594-A208-11DE-ABF2-002421116FB2") 
 enum RequestStatus
-    {	RequestStatus_Success	= 0,
-	RequestStatus_Failed	= 1,
-	RequestStatus_Pending	= 2,
-	RequestStatus_Interrupted	= 3,
-	RequestStatus_InProgress	= 4
+    {
+        RequestStatus_Success	= 0,
+        RequestStatus_Failed	= 1,
+        RequestStatus_Pending	= 2,
+        RequestStatus_Interrupted	= 3,
+        RequestStatus_InProgress	= 4
     } 	RequestStatus;
 
 #define	RequestSuccess	( RequestStatus_Success )
@@ -1216,6 +1268,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCharactersVtbl
@@ -1226,7 +1279,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
             IDaCtlCharacters * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCharacters * This);
@@ -1254,14 +1307,22 @@ EXTERN_C const IID IID_IDaCtlCharacters;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCharacters * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCharacters * This,
@@ -1569,6 +1630,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCharacterVtbl
@@ -1579,7 +1641,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCharacter * This);
@@ -1607,14 +1669,22 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCharacter * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
             IDaCtlCharacter * This,
@@ -2187,6 +2257,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlBalloonVtbl
@@ -2197,7 +2268,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             IDaCtlBalloon * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlBalloon * This);
@@ -2225,14 +2296,22 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlBalloon * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlBalloon * This,
@@ -2529,6 +2608,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCommandsVtbl
@@ -2539,7 +2619,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCommands * This);
@@ -2567,14 +2647,22 @@ EXTERN_C const IID IID_IDaCtlCommands;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCommands * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCommands * This,
@@ -2883,6 +2971,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCommandVtbl
@@ -2893,7 +2982,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCommand * This);
@@ -2921,14 +3010,22 @@ EXTERN_C const IID IID_IDaCtlCommand;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCommand * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlCommand * This,
@@ -3118,6 +3215,7 @@ EXTERN_C const IID IID_IDaCtlRequest;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlRequestVtbl
@@ -3128,7 +3226,7 @@ EXTERN_C const IID IID_IDaCtlRequest;
             IDaCtlRequest * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlRequest * This);
@@ -3156,14 +3254,22 @@ EXTERN_C const IID IID_IDaCtlRequest;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlRequest * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [hidden][readonly][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_ID )( 
             IDaCtlRequest * This,
@@ -3266,6 +3372,7 @@ EXTERN_C const IID IID_IDaCtlAudioOutput;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlAudioOutputVtbl
@@ -3276,7 +3383,7 @@ EXTERN_C const IID IID_IDaCtlAudioOutput;
             IDaCtlAudioOutput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlAudioOutput * This);
@@ -3304,14 +3411,22 @@ EXTERN_C const IID IID_IDaCtlAudioOutput;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlAudioOutput * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlAudioOutput * This,
@@ -3419,6 +3534,7 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlSpeechInputVtbl
@@ -3429,7 +3545,7 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
             IDaCtlSpeechInput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlSpeechInput * This);
@@ -3457,14 +3573,22 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlSpeechInput * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlSpeechInput * This,
@@ -3603,6 +3727,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlPropertySheetVtbl
@@ -3613,7 +3738,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
             IDaCtlPropertySheet * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlPropertySheet * This);
@@ -3641,14 +3766,22 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlPropertySheet * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [nonbrowsable][restricted][hidden][propget] */ HRESULT ( STDMETHODCALLTYPE *get__Left )( 
             IDaCtlPropertySheet * This,
@@ -3803,6 +3936,7 @@ EXTERN_C const IID IID_IDaCtlUserInput;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlUserInputVtbl
@@ -3813,7 +3947,7 @@ EXTERN_C const IID IID_IDaCtlUserInput;
             IDaCtlUserInput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlUserInput * This);
@@ -3841,14 +3975,22 @@ EXTERN_C const IID IID_IDaCtlUserInput;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlUserInput * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlUserInput * This,
@@ -4009,6 +4151,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCommandsWindowVtbl
@@ -4019,7 +4162,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
             IDaCtlCommandsWindow * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCommandsWindow * This);
@@ -4047,14 +4190,22 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCommandsWindow * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCommandsWindow * This,
@@ -4165,6 +4316,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlAnimationNamesVtbl
@@ -4175,7 +4327,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
             IDaCtlAnimationNames * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlAnimationNames * This);
@@ -4203,14 +4355,22 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlAnimationNames * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaCtlAnimationNames * This,
@@ -4317,6 +4477,7 @@ EXTERN_C const IID IID_IDaControl;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaControlVtbl
@@ -4327,7 +4488,7 @@ EXTERN_C const IID IID_IDaControl;
             IDaControl * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaControl * This);
@@ -4355,14 +4516,22 @@ EXTERN_C const IID IID_IDaControl;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaControl * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
             IDaControl * This,
@@ -4515,7 +4684,7 @@ EXTERN_C const IID DIID__DaCtlEvents;
             _DaCtlEvents * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             _DaCtlEvents * This);
@@ -4543,14 +4712,22 @@ EXTERN_C const IID DIID__DaCtlEvents;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             _DaCtlEvents * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         END_INTERFACE
     } _DaCtlEventsVtbl;
@@ -4679,6 +4856,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCharacterFilesVtbl
@@ -4689,7 +4867,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCharacterFiles * This);
@@ -4717,14 +4895,22 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCharacterFiles * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
             IDaCtlCharacterFiles * This,
@@ -4975,6 +5161,7 @@ EXTERN_C const IID IID_IDaCtlFormattedText;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlFormattedTextVtbl
@@ -4985,7 +5172,7 @@ EXTERN_C const IID IID_IDaCtlFormattedText;
             IDaCtlFormattedText * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlFormattedText * This);
@@ -5013,14 +5200,22 @@ EXTERN_C const IID IID_IDaCtlFormattedText;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlFormattedText * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RawText )( 
             IDaCtlFormattedText * This,
@@ -5180,6 +5375,7 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlTTSEngineVtbl
@@ -5190,7 +5386,7 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
             IDaCtlTTSEngine * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlTTSEngine * This);
@@ -5218,14 +5414,22 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlTTSEngine * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
             IDaCtlTTSEngine * This,
@@ -5352,6 +5556,7 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlTTSEnginesVtbl
@@ -5362,7 +5567,7 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
             IDaCtlTTSEngines * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlTTSEngines * This);
@@ -5390,14 +5595,22 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlTTSEngines * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlTTSEngines * This,
@@ -5512,6 +5725,7 @@ EXTERN_C const IID IID_IDaCtlSREngine;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlSREngineVtbl
@@ -5522,7 +5736,7 @@ EXTERN_C const IID IID_IDaCtlSREngine;
             IDaCtlSREngine * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlSREngine * This);
@@ -5550,14 +5764,22 @@ EXTERN_C const IID IID_IDaCtlSREngine;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlSREngine * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
             IDaCtlSREngine * This,
@@ -5692,6 +5914,7 @@ EXTERN_C const IID IID_IDaCtlSREngines;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlSREnginesVtbl
@@ -5702,7 +5925,7 @@ EXTERN_C const IID IID_IDaCtlSREngines;
             IDaCtlSREngines * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlSREngines * This);
@@ -5730,14 +5953,22 @@ EXTERN_C const IID IID_IDaCtlSREngines;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlSREngines * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlSREngines * This,
@@ -5930,6 +6161,7 @@ EXTERN_C const IID IID_IDaControl2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaControl2Vtbl
@@ -5940,7 +6172,7 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaControl2 * This);
@@ -5968,14 +6200,22 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaControl2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
             IDaControl2 * This,
@@ -6495,6 +6735,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCharacter2Vtbl
@@ -6505,7 +6746,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCharacter2 * This);
@@ -6533,14 +6774,22 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
             IDaCtlCharacter2 * This,
@@ -7375,6 +7624,7 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCharacters2Vtbl
@@ -7385,7 +7635,7 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
             IDaCtlCharacters2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCharacters2 * This);
@@ -7413,14 +7663,22 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCharacters2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCharacters2 * This,
@@ -7625,6 +7883,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlBalloon2Vtbl
@@ -7635,7 +7894,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlBalloon2 * This);
@@ -7663,14 +7922,22 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlBalloon2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlBalloon2 * This,
@@ -8106,6 +8373,7 @@ EXTERN_C const IID IID_IDaCtlSettings;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlSettingsVtbl
@@ -8116,7 +8384,7 @@ EXTERN_C const IID IID_IDaCtlSettings;
             IDaCtlSettings * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlSettings * This);
@@ -8144,14 +8412,22 @@ EXTERN_C const IID IID_IDaCtlSettings;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlSettings * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsEnabled )( 
             IDaCtlSettings * This,
@@ -8304,6 +8580,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCommands2Vtbl
@@ -8314,7 +8591,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCommands2 * This);
@@ -8342,14 +8619,22 @@ EXTERN_C const IID IID_IDaCtlCommands2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCommands2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCommands2 * This,
@@ -8648,6 +8933,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlCommand2Vtbl
@@ -8658,7 +8944,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlCommand2 * This);
@@ -8686,14 +8972,22 @@ EXTERN_C const IID IID_IDaCtlCommand2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlCommand2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlCommand2 * This,
@@ -8919,6 +9213,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaCtlPropertySheet2Vtbl
@@ -8929,7 +9224,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
             IDaCtlPropertySheet2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaCtlPropertySheet2 * This);
@@ -8957,14 +9252,22 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             IDaCtlPropertySheet2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         /* [nonbrowsable][restricted][hidden][propget] */ HRESULT ( STDMETHODCALLTYPE *get__Left )( 
             IDaCtlPropertySheet2 * This,
@@ -9124,7 +9427,7 @@ EXTERN_C const IID DIID__DaCtlEvents2;
             _DaCtlEvents2 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             _DaCtlEvents2 * This);
@@ -9152,14 +9455,22 @@ EXTERN_C const IID DIID__DaCtlEvents2;
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
             _DaCtlEvents2 * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
         
         END_INTERFACE
     } _DaCtlEvents2Vtbl;

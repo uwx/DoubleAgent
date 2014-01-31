@@ -24,6 +24,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 #else	// __cplusplus_cli
+#include <MsXml6.h>
 #include "StringArrayEx.h"
 #include "DebugStr.h"
 #ifdef	_DEBUG
@@ -1676,7 +1677,7 @@ void CAgentTextParse::ParseText (LPCTSTR pText, CAtlStringArray& pTextWords, CAt
 		lXmlText = lXmlHeader + lXmlStart + lText + lXmlEnd;
 
 		if	(
-				(SUCCEEDED (lResult = CoCreateInstance (__uuidof(SAXXMLReader30), NULL, CLSCTX_SERVER, __uuidof(ISAXXMLReader), (void**)&mSaxReader)))
+				(SUCCEEDED (lResult = CoCreateInstance (__uuidof(SAXXMLReader60), NULL, CLSCTX_SERVER, __uuidof(ISAXXMLReader), (void**)&mSaxReader)))
 			&&	(SUCCEEDED (lResult = mSaxReader->putContentHandler (this)))
 			&&	(SUCCEEDED (lResult = mSaxReader->putErrorHandler (this)))
 			)

@@ -3,11 +3,11 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Dec 21 23:05:54 2011
+ /* File created by MIDL compiler version 8.00.0595 */
+/* at Fri Jan 31 16:49:18 2014
  */
 /* Compiler settings for Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.00.0595 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -48,6 +48,7 @@
 #ifndef __IDaPreview_FWD_DEFINED__
 #define __IDaPreview_FWD_DEFINED__
 typedef interface IDaPreview IDaPreview;
+
 #endif 	/* __IDaPreview_FWD_DEFINED__ */
 
 
@@ -66,18 +67,21 @@ typedef struct DaPreview DaPreview;
 #ifndef ___IAgentStreamInfo_FWD_DEFINED__
 #define ___IAgentStreamInfo_FWD_DEFINED__
 typedef interface _IAgentStreamInfo _IAgentStreamInfo;
+
 #endif 	/* ___IAgentStreamInfo_FWD_DEFINED__ */
 
 
 #ifndef ___IAgentStreamSource_FWD_DEFINED__
 #define ___IAgentStreamSource_FWD_DEFINED__
 typedef interface _IAgentStreamSource _IAgentStreamSource;
+
 #endif 	/* ___IAgentStreamSource_FWD_DEFINED__ */
 
 
 #ifndef ___IAgentStreamRender_FWD_DEFINED__
 #define ___IAgentStreamRender_FWD_DEFINED__
 typedef interface _IAgentStreamRender _IAgentStreamRender;
+
 #endif 	/* ___IAgentStreamRender_FWD_DEFINED__ */
 
 
@@ -185,6 +189,7 @@ EXTERN_C const IID IID_IDaPreview;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDaPreviewVtbl
@@ -195,7 +200,7 @@ EXTERN_C const IID IID_IDaPreview;
             IDaPreview * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDaPreview * This);
@@ -507,6 +512,7 @@ EXTERN_C const IID IID__IAgentStreamInfo;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct _IAgentStreamInfoVtbl
@@ -517,7 +523,7 @@ EXTERN_C const IID IID__IAgentStreamInfo;
             _IAgentStreamInfo * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             _IAgentStreamInfo * This);
@@ -787,6 +793,7 @@ EXTERN_C const IID IID__IAgentStreamSource;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct _IAgentStreamSourceVtbl
@@ -797,7 +804,7 @@ EXTERN_C const IID IID__IAgentStreamSource;
             _IAgentStreamSource * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             _IAgentStreamSource * This);
@@ -887,7 +894,7 @@ EXTERN_C const IID IID__IAgentStreamSource;
 #endif 	/* ___IAgentStreamSource_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_DaCore_0000_0003 */
+/* interface __MIDL_itf_DaCore_0000_0004 */
 /* [local] */ 
 
 #define	RenderSmoothEdges	( 0x1 )
@@ -896,8 +903,8 @@ EXTERN_C const IID IID__IAgentStreamSource;
 
 
 
-extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0003_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0003_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0004_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0004_v0_0_s_ifspec;
 
 #ifndef ___IAgentStreamRender_INTERFACE_DEFINED__
 #define ___IAgentStreamRender_INTERFACE_DEFINED__
@@ -942,6 +949,7 @@ EXTERN_C const IID IID__IAgentStreamRender;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct _IAgentStreamRenderVtbl
@@ -952,7 +960,7 @@ EXTERN_C const IID IID__IAgentStreamRender;
             _IAgentStreamRender * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             _IAgentStreamRender * This);

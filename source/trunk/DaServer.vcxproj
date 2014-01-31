@@ -31,12 +31,14 @@
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -44,12 +46,14 @@
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -94,23 +98,30 @@
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+      <Command>"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
-tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt2FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
 
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
 </Command>
-      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
+      <Outputs>$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -120,69 +131,90 @@ if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+      <Command>"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
-tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt2FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
 
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
 </Command>
-      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
+      <Outputs>$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+      <Command>"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
-tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt2FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
 
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
 </Command>
-      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
+      <Outputs>$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link />
     <CustomBuildStep>
       <Message>Creating interop assemblies for $(TargetFileName)</Message>
-      <Command>"$(WindowsSdkDir)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+      <Command>"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt1FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /version 1.1 /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
-tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
-"$(TargetDir)$(TargetFrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(Alt2FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
+
+"$(WindowsSdkDir_70)bin\tlbimp" /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll $(TargetPath)
+"$(BinDir)Release$(PlatformDir)\$(FrameworkVersion)\TlbToAsm" /fix /save /namespace DoubleAgent.Server /keyfile "$(DOUBLE_AGENT)\Managed\CinSoft.snk" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll"
 
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
 ildasm "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
-ildasm "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.html" /html /caverbal /nobar
+ildasm "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll" /out="$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.html" /html /caverbal /nobar
 
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
 if exist "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
-if exist "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(Alt2FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.il.res"
+if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res" del "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.il.res"
 </Command>
-      <Outputs>$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(TargetFrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
+      <Outputs>$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgentSvr.dll;$(TargetDir)$(Alt1FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

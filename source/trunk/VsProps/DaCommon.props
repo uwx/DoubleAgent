@@ -4,8 +4,9 @@
     <LibDir>$(DOUBLE_AGENT_LIB)Lib\</LibDir>
     <BinDir>$(DOUBLE_AGENT_BIN)Bin\</BinDir>
     <TempDir>$(TEMP)</TempDir>
-    <TargetFrameworkVersion>$(FrameworkVersion)</TargetFrameworkVersion>
     <Alt1FrameworkVersion>v3.5</Alt1FrameworkVersion>
+    <WindowsSDKDir_70>F:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\</WindowsSDKDir_70>
+    <Alt2FrameworkVersion>v4.0</Alt2FrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
@@ -56,11 +57,14 @@
     <BuildMacro Include="TempDir">
       <Value>$(TempDir)</Value>
     </BuildMacro>
-    <BuildMacro Include="TargetFrameworkVersion">
-      <Value>$(TargetFrameworkVersion)</Value>
-    </BuildMacro>
     <BuildMacro Include="Alt1FrameworkVersion">
       <Value>$(Alt1FrameworkVersion)</Value>
+    </BuildMacro>
+    <BuildMacro Include="WindowsSDKDir_70">
+      <Value>$(WindowsSDKDir_70)</Value>
+    </BuildMacro>
+    <BuildMacro Include="Alt2FrameworkVersion">
+      <Value>$(Alt2FrameworkVersion)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
