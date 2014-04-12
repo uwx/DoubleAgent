@@ -1,7 +1,10 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "DaServer.vcxproj", "{0FA66E11-C055-4CAC-A56C-B2E710FEDBE4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EED5B34A-BADA-481D-BBFD-F479D1F2264B} = {EED5B34A-BADA-481D-BBFD-F479D1F2264B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Control", "DaControl.vcxproj", "{394447B3-9AD8-49FC-90B0-9F208F649936}"
 EndProject
@@ -12,8 +15,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Handler", "DaHandler.vcxproj", "{4409AFA8-1863-462E-9567-AC029029628F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Util", "DaUtil.vcxproj", "{D42CA861-D64A-4DC8-9948-B3E83C300BDF}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilMfc", "DaUtilMfc.vcxproj", "{98CBCD3C-8A86-4F51-B48A-5A0C11492995}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TlbToAsm", "Tools\TlbToAsm\TlbToAsm.vcxproj", "{8052FC92-3A66-449E-85EC-626BD6A72782}"
 EndProject
@@ -90,14 +91,6 @@ Global
 		{D42CA861-D64A-4DC8-9948-B3E83C300BDF}.Release|Win32.Build.0 = Release|Win32
 		{D42CA861-D64A-4DC8-9948-B3E83C300BDF}.Release|x64.ActiveCfg = Release|x64
 		{D42CA861-D64A-4DC8-9948-B3E83C300BDF}.Release|x64.Build.0 = Release|x64
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Debug|Win32.ActiveCfg = Debug|Win32
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Debug|Win32.Build.0 = Debug|Win32
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Debug|x64.ActiveCfg = Debug|x64
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Debug|x64.Build.0 = Debug|x64
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Release|Win32.ActiveCfg = Release|Win32
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Release|Win32.Build.0 = Release|Win32
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Release|x64.ActiveCfg = Release|x64
-		{98CBCD3C-8A86-4F51-B48A-5A0C11492995}.Release|x64.Build.0 = Release|x64
 		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|Win32.ActiveCfg = Debug|Win32
 		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|Win32.Build.0 = Debug|Win32
 		{8052FC92-3A66-449E-85EC-626BD6A72782}.Debug|x64.ActiveCfg = Debug|x64

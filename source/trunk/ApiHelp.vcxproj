@@ -143,10 +143,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling API Help</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling API Help</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling API Help</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(BinDir)%(Filename).chm</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(BinDir)%(Filename).chm</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(BinDir)%(Filename).chm</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(BinDir)%(Filename).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(BinDir)$(RootNamespace).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(BinDir)$(RootNamespace).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(BinDir)$(RootNamespace).chm</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(BinDir)$(RootNamespace).chm</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)DoubleAgent.hhc;%(RootDir)%(Directory)DoubleAgent.hhk;%(RootDir)%(Directory)..\Source\DoubleAgent.Control.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.Server.xml;%(RootDir)%(Directory)..\Source\DoubleAgent.AxControl.xml;%(RootDir)%(Directory)html\T_DoubleAgent_Control_Control.htm;%(RootDir)%(Directory)html\T_DoubleAgent_Server_Server.htm;%(RootDir)%(Directory)html\T_DoubleAgent_AxControl_AxControl.htm;%(AdditionalInputs)</AdditionalInputs>

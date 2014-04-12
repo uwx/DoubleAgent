@@ -172,7 +172,7 @@
 							  Background="Transparent"
 							  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 							  HorizontalAlignment="Left"
-							  Margin="{StaticResource {x:Static theme:BlueTheme.ToggleButtonCheckMarginKey}}"
+                              Margin="{StaticResource {x:Static theme:BlueTheme.ToggleButtonCheckMarginKey}}" 
 							  Width="18"
 							  Height="18"
 							  SnapsToDevicePixels="True"

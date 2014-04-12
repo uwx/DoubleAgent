@@ -5,7 +5,7 @@
     <BinDir>$(DOUBLE_AGENT_BIN)Bin\</BinDir>
     <TempDir>$(TEMP)</TempDir>
     <Alt1FrameworkVersion>v3.5</Alt1FrameworkVersion>
-    <WindowsSDKDir_70>F:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\</WindowsSDKDir_70>
+    <WindowsSDKDir_70>\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\</WindowsSDKDir_70>
     <Alt2FrameworkVersion>v4.0</Alt2FrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>

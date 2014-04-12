@@ -112,7 +112,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDD_STRESSTEST_DIALOG   ICON                    "C:\\DoubleAgent\\Resources\\DoubleAgent.ico"
+IDD_STRESSTEST_DIALOG   ICON                    "\\DoubleAgent\\Resources\\DoubleAgent.ico"
 #endif    // English (Canada) resources
 /////////////////////////////////////////////////////////////////////////////
 

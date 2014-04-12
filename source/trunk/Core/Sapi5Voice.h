@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2014 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -45,7 +45,7 @@ public:
 	_DACORE_IMPEXP static tBstrPtr LongOutputId (LPCTSTR pShortOutputId);
 
 // Operations
-	_DACORE_IMPEXP HRESULT PrepareToSpeak (bool pHighPriority = false);
+	_DACORE_IMPEXP HRESULT virtual PrepareToSpeak (bool pHighPriority = false);
 	_DACORE_IMPEXP HRESULT Speak (LPCTSTR pMessage, bool pAsync = true);
 	_DACORE_IMPEXP HRESULT Stop ();
 	_DACORE_IMPEXP HRESULT Pause ();

@@ -60,10 +60,11 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>B1BE236295BEC8C63851C7802E4112F58BDE722E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>DA45F44696F857E96E0B1CC8A2C1D223B139FA24</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>..\..\ksc_signing.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.comodoca.com/authenticode</ManifestTimestampUrl>
@@ -99,9 +100,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DaCharFileCLR">
-      <HintPath>..\..\..\BinDa\Bin\Debug(x86)\v3.5\DaCharFileCLR.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="DaCharFileCLR, Version=1.2.0.55, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BinDa\Bin\Release(x86)\v3.5\DaCharFileCLR.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

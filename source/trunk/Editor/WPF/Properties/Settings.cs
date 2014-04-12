@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2014 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -27,6 +27,7 @@ namespace AgentCharacterEditor.Properties
 		{
 		}
 
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute ()]
 		public System.Boolean IsValid
 		{
 			get

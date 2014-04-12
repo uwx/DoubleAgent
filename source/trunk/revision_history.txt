@@ -1,0 +1,98 @@
+Double Agent Revision History
+========================================================================
+
+Version 1.0
+===========
+
+	Build 1.0.0.29
+	--------------
+	
+	This is the first stable release
+		
+	Build 1.0.0.30
+	--------------
+	
+	Several minor bugs fixed:
+	
+	-	The "Move" action was fixed to make the character move
+		smoothly at a constant speed.
+
+	-	The Agent Character specification indicates that transparent
+		pixels in the animations are identified by a single palette
+		INDEX (the transparent index).  However, some character files
+		use a transparent COLOR, where the palette defines many indices
+		with the same color as the transparent index, and any of these
+		indices should be treated as transparent.
+		
+		MS Agent tolerates this, so Double Agent has been updated
+		to do so as well.
+
+	-	In the process of debugging the lip-sync for TTS speech, the
+		lip-sync for WAV-file speech got messed up. A partial fix has
+		been made, but the final fix will have to wait for the next
+		version.
+	
+	-	If a "Speak" or "Think" action was queued, and then the balloon
+		settings were changed before the action	started, the balloon
+		settings at the time the action	starts would be used.
+		
+		This has been changed so that the balloon settings at the time
+		the action is queued will be used.  It's a minor unlikely bug,
+		but irritating when it happens.
+
+	Build 1.0.0.31
+	--------------
+	
+	The full fix for WAV-file speech lip-sync was implemented.
+
+	A couple of very minor tweaks in the word balloon text drawing.
+	
+	Build 1.0.0.32
+	--------------
+	
+	The Name property in the CtlUserInput object was implemented properly.
+
+	Graphics
+	--------
+	
+	Some nice graphics were added courtesy DesktopMates.com.  Application
+	developers can use these graphics when referring to Double Agent.
+
+Version 1.1
+===========
+
+	Build 1.1.0.50
+	--------------
+	
+	This is the first stable release.  Please refer to the API documentation
+	included in the Double Agent SDK for a summary of changes in version 1.1
+	
+	Additional bugs fixed:
+	
+	The selection of SAPI4 voice engines was revamped to correctly select
+	the appropriate engine for the current character LanguageID.
+	
+	The initial delay when playing sound files with the Speak method was
+	removed.  
+
+Version 1.2
+===========
+
+	Build 1.2.0.53
+	--------------
+
+	Added new ActiveX control packaging in a .CAB file for automatic
+	download and install in web pages.  The file is at 
+	http://doubleagent.sourceforge.net/DaControl.cab
+	
+	Added support for older character files from MS Agent version 1.5
+	
+	Updated the .NET Primary Interop Assemblies to support .NET 4.0
+
+	Build 1.2.0.54
+	--------------
+
+	Changed the default server connection in the 64-bit control from
+	the 64-bit server to the 32-bit server.
+
+	Fixed problem with balloon enable style flag being ignored.

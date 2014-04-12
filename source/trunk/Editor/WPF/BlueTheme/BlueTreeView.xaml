@@ -11,8 +11,8 @@
 		<Setter Property="Padding"
 				Value="0" />
 		<Setter Property="Margin"
-				Value="{StaticResource BorderMargin}" />
-		<Setter Property="Template">
+                Value="{DynamicResource {x:Static theme:BlueTheme.BorderMarginKey}}" />
+        <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TreeView}">
 					<Grid>

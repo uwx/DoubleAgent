@@ -17,7 +17,7 @@
     <ResourceCompile>
     </ResourceCompile>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);F:\Program Files (x86)\Microsoft SDKs\Sapi4\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);\Program Files (x86)\Microsoft SDKs\Sapi4\Include</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />

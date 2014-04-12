@@ -41,16 +41,18 @@
     <NoWarn>1573,1591,0162,1607</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>DoubleAgent.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>B1BE236295BEC8C63851C7802E4112F58BDE722E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>DA45F44696F857E96E0B1CC8A2C1D223B139FA24</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>..\..\ksc_signing.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.comodoca.com/authenticode</ManifestTimestampUrl>
@@ -87,11 +89,6 @@
     <NoWarn>1573,1591,0162,1607</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DaCharFileCLR, Version=1.2.0.51, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BinDa\Bin\Debug(x86)\v4.0\DaCharFileCLR.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -415,6 +412,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <None Include="ksc_signing.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -579,10 +577,13 @@
     <Resource Include="Resources\Lock1.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DaCharFileCLR.vcxproj">
+      <Project>{bc62d6f2-cf64-4f75-99e8-c76b192beee7}</Project>
+      <Name>CharFileCLR</Name>
+    </ProjectReference>
     <ProjectReference Include="BlueTheme.csproj">
-      <Project>{BE87EFB0-2F70-4AA0-831A-39C4D7B4C980}</Project>
+      <Project>{be87efb0-2f70-4aa0-831a-39c4d7b4c980}</Project>
       <Name>BlueTheme</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

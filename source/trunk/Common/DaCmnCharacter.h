@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2014 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -214,9 +214,10 @@ public:
 protected:
 	long										mCharID;
 	LANGID										mLangID;
-	CAgentFile*								mFile;
+	CAgentFile*									mFile;
 	class CSapiVoice*							mSapiVoice;
 	class CSapi5Input*							mSapiInput;
+	tPtr <class CSapi5Voice>					mPrivateSapiVoice;
 	tPtr <class CListeningState>				mListeningState;
 	CAtlOwnPtrMap <long, class CQueuedPrepare>	mPrepares;
 	bool										mIdleEnabled;

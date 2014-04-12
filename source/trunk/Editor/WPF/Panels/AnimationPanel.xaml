@@ -25,7 +25,7 @@
 						Executed="OnEditPaste" />
 	</Control.CommandBindings>
 	<Control.Resources>
-		<Style x:Key="AnimationRateSlider"
+        <Style x:Key="AnimationRateSlider"
 			   TargetType="{x:Type Slider}">
 			<Setter Property="Stylus.IsPressAndHoldEnabled"
 					Value="false" />
@@ -240,7 +240,7 @@
 								  Checked="ButtonShowBranching_CheckChanged"
 								  Unchecked="ButtonShowBranching_CheckChanged">
 							<custom:ImageState NormalSource="{StaticResource ImgShowBranching}"
-											   Style="{StaticResource ToolButtonImage}" />
+											   Style="{DynamicResource ToolButtonImage}" />
 						</CheckBox>
 						<CheckBox Style="{StaticResource {x:Static ToolBar.CheckBoxStyleKey}}"
 								  Height="Auto"

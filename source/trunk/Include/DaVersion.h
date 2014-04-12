@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2014 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -24,11 +24,11 @@
 
 #define	_DOUBLEAGENT_NAME				"Double Agent"
 #define	_DOUBLEAGENT_COMPANY			"Cinnamon Software Inc."
-#define	_DOUBLEAGENT_BUILD				55
-#define	_DOUBLEAGENT_BUILD_STR			"55"
+#define	_DOUBLEAGENT_BUILD				56
+#define	_DOUBLEAGENT_BUILD_STR			"56"
 #define	_DOUBLEAGENT_VERSION			1,2,0,_DOUBLEAGENT_BUILD
 #define	_DOUBLEAGENT_VERSION_STR		"1.2.0." _DOUBLEAGENT_BUILD_STR
-#define	_DOUBLEAGENT_COPYRIGHT			"Copyright © Cinnamon Software Inc. 2009-2012"
+#define	_DOUBLEAGENT_COPYRIGHT			"Copyright © Cinnamon Software Inc. 2009-2014"
 
 /////////////////////////////////////////////////////////////////////////////
 

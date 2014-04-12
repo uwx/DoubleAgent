@@ -188,18 +188,18 @@
 			</Style>
 
 			<ContextMenu x:Key="ContextMenuEdit">
-				<MenuItem Style="{StaticResource MenuItemCut}" />
-				<MenuItem Style="{StaticResource MenuItemCopy}" />
-				<MenuItem Style="{StaticResource MenuItemPaste}" />
-				<MenuItem Style="{StaticResource MenuItemDelete}" />
+				<MenuItem Style="{DynamicResource MenuItemCut}" />
+                <MenuItem Style="{DynamicResource MenuItemCopy}" />
+                <MenuItem Style="{DynamicResource MenuItemPaste}" />
+                <MenuItem Style="{DynamicResource MenuItemDelete}" />
 			</ContextMenu>
 
 			<!-- =========================================================================== -->
 
 			<ContextMenu x:Key="ContextMenuTextBox">
-				<MenuItem Style="{StaticResource MenuItemCut}" />
-				<MenuItem Style="{StaticResource MenuItemCopy}" />
-				<MenuItem Style="{StaticResource MenuItemPaste}" />
+                <MenuItem Style="{DynamicResource MenuItemCut}" />
+                <MenuItem Style="{DynamicResource MenuItemCopy}" />
+                <MenuItem Style="{DynamicResource MenuItemPaste}" />
 			</ContextMenu>
 
 			<Style x:Key="{x:Type custom:TextBoxEx}"

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Double Agent - Copyright 2009-2012 Cinnamon Software Inc.
+//	Double Agent - Copyright 2009-2014 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is part of Double Agent.
@@ -37,6 +37,7 @@
 #include "SapiVoiceCache.h"
 #include "SapiInputCache.h"
 #include "Sapi5Voices.h"
+#include "Sapi5Voice.h"
 #include "Sapi5Inputs.h"
 #include "Sapi5Input.h"
 #ifndef	_WIN64
@@ -1490,6 +1491,11 @@ CSapiVoice* CDaCmnCharacter::GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceNam
 					lFileTts = mFile->Tts;
 					lFileTts.put_Language (mLangID);
 					mSapiVoice = lVoiceCache->GetAgentVoice (lFileTts, true);
+				}
+				else
+				if	(mPrivateSapiVoice)
+				{
+					mSapiVoice = mPrivateSapiVoice;
 				}
 				else
 				{
