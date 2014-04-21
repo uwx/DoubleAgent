@@ -1,0 +1,41 @@
+#include "DaControlRes.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_DACONTROLMOD        REGISTRY                "DaControlMod.rgs"
+IDR_DACTLBALLOON        REGISTRY                "DaCtlBalloon.rgs"
+IDR_DACTLAUDIOOUTPUT    REGISTRY                "DaCtlAudioOutput.rgs"
+IDR_DACTLCHARACTER      REGISTRY                "DaCtlCharacter.rgs"
+IDR_DACTLANIMATIONNAMES	REGISTRY				"DaCtlAnimationNames.rgs"
+IDR_DACTLCHARACTERFILES REGISTRY                "DaCtlCharacterFiles.rgs"
+IDR_DACTLCHARACTERS     REGISTRY                "DaCtlCharacters.rgs"
+IDR_DACTLCOMMAND        REGISTRY                "DaCtlCommand.rgs"
+IDR_DACTLCOMMANDS       REGISTRY                "DaCtlCommands.rgs"
+IDR_DACTLCOMMANDSWINDOW REGISTRY                "DaCtlCommandsWindow.rgs"
+IDR_DACTLPROPERTYSHEET  REGISTRY                "DaCtlPropertySheet.rgs"
+IDR_DACTLSRENGINE		REGISTRY                "DaCtlSREngine.rgs"
+IDR_DACTLSRENGINES		REGISTRY                "DaCtlSREngines.rgs"
+IDR_DACTLREQUEST        REGISTRY                "DaCtlRequest.rgs"
+IDR_DACTLTTSENGINE		REGISTRY                "DaCtlTTSEngine.rgs"
+IDR_DACTLTTSPRIVATE		REGISTRY                "DaCtlTTSPrivate.rgs"
+IDR_DACTLTTSENGINES		REGISTRY                "DaCtlTTSEngines.rgs"
+IDR_DACTLSPEECHINPUT    REGISTRY                "DaCtlSpeechInput.rgs"
+IDR_DACTLUSERINPUT      REGISTRY                "DaCtlUserInput.rgs"
+IDR_DACONTROL           REGISTRY                "DaControl.rgs"
+IDR_DACTLSETTINGS		REGISTRY                "DaCtlSettings.rgs"
+IDR_DACTLFORMATTEDTEXT	REGISTRY                "DaCtlFormattedText.rgs"
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////

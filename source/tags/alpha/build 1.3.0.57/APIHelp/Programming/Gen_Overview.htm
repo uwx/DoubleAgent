@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Double Agent API Overview</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+	<xml>
+		<MSHelp:TOCTitle Title="Double Agent API Overview" />
+		<MSHelp:Keyword Index="K" Term="Double Agent API Overview" />
+		<MSHelp:Attr Name="TopicType" Value="kbOrient" />
+		<MSHelp:Attr Name="TopicType" Value="apiref" />
+		<MSHelp:Attr Name="DocSet" Value="DoubleAgent" />
+		<MSHelp:Attr Name="DocSet" Value="NETFramework" />
+		<MSHelp:Attr Name="DocSet" Value="WindowsForms" />
+		<MSHelp:Attr Name="DocSet" Value="C#" />
+		<MSHelp:Attr Name="DocSet" Value="Visual Basic" />
+		<MSHelp:Attr Name="DocSet" Value="ExpressLibVS" />
+		<MSHelp:Attr Name="Technology" Value="Agent" />
+		<MSHelp:Attr Name="Technology" Value="ManagedCode" />
+		<MSHelp:Attr Name="Technology" Value="ActiveX" />
+		<MSHelp:Attr Name="Technology" Value="WindowsForms" />
+		<MSHelp:Attr Name="Technology" Value="kb3Ptech" />
+		<MSHelp:Attr Name="ProgModel" Value="managed" />
+		<MSHelp:Attr Name="TargetOS" Value="Windows" />
+	</xml>
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">
+				Double&nbsp;Agent&nbsp;API
+			</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h1>
+					Double Agent API Overview</h1>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>
+					The Double Agent API reproduces and extends the features of the Microsoft<sup>®</sup>
+					Agent API.</p>
+				<p>
+					It consists of two main components:</p>
+				<ul>
+					<li>
+						<p>
+							A <em class="glossary"><b>C</b>omponent <b>O</b>bject <b>M</b>odel</em> <em class="keyword">
+								Server</em> that allows multiple applications, called <em>clients </em>or <em>client
+									applications</em>, to access its animation, input, and output services at
+							the same time. A client can be any application that connects to the Double Agent
+							server's <em class="glossary">COM</em> interfaces.</p>
+						<p>
+							As a <em class="glossary">COM</em> server, the Double Agent server automatically
+							starts only when a client application uses its <em class="glossary">COM</em> interfaces
+							and connects to it. It remains running until all clients close their connections.
+							When no connected clients remain, the Double Agent server automatically shuts down.</p>
+					</li>
+					<li>
+						<p>
+							A <em class="glossary">Microsoft ActiveX<sup>®</sup></em> <em class="keyword">Control</em>
+							that makes it easy to access Double Agent's services from programming languages
+							that support the <em class="glossary">ActiveX<sup>®</sup> Control Interface</em>.</p>
+						<p>
+							The control can be connected to the server, allowing Agent characters to be shared
+							among multiple applications. It can also run <a href="Ctl_Programming_Modes.htm#standalone">
+								standalone</a>, providing Agent characters that are private to a specific application.
+							This is a new feature of Double Agent that is not supported by Microsoft<sup>®</sup>
+							Agent.</p>
+						<p>
+							The control also allows Double Agent to provide it's character animation services
+							<a href="Ctl_Programming_Modes.htm#contained">contained</a> within a <em>child</em>
+							window of a <em>client application</em>'s window. This is a new feature of Double
+							Agent that is not supported by Microsoft<sup>®</sup> Agent.</p>
+					</li>
+				</ul>
+				<p>
+					See the Double Agent <a href="Svr_Programming.htm">Server</a> and <a href="Ctl_Programming.htm">
+						Control</a> interfaces for more information on the specific API.</p>
+				<p>
+					In addition to supporting stand-alone programs written for Windows<sup>®</sup>,
+					Double Agent can be scripted to support <a href="Ctl_Programming_Web.htm">Web pages</a>, provided that the browser supports
+					<em class="glossary">OLE Automation</em> or the <em class="glossary">ActiveX<sup>®</sup>
+						Interface</em>. Microsoft Internet Explorer<sup>®</sup> and other browsers include
+					support for ActiveX<sup>®</sup> as well as scripting languages that you can use
+					to program Double Agent.</p>
+				<h4 class="seealso">
+					See Also</h4>
+				<a href="Gen_Animation.htm">Animation Services</a><br>
+				<a href="Gen_Output.htm">Output Services</a><br>
+				<a href="Gen_Input.htm">Input Services</a><br>
+				<a href="Gen_Config.htm">Configuration Services</a><br>
+				<a href="Svr_Programming.htm">Programming the Double Agent Server</a><br>
+				<a href="Ctl_Programming.htm">Programming the Double Agent Control</a>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
