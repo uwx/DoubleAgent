@@ -31,18 +31,18 @@ public:
 
 // Operations
 public:
-	void Initialize (class CSapi5VoiceInfo * pVoiceInfo);
-	bool Initialize (class CSapi5Voice* pVoice);
+	virtual void Initialize (class CSapi5VoiceInfo * pVoiceInfo);
+	virtual bool Initialize (class CSapi5Voice* pVoice);
 #ifndef	_WIN64
 	void Initialize (class CSapi4VoiceInfo* pVoiceInfo);
 	bool Initialize (class CSapi4Voice* pVoice);
 #endif
-	bool Initialize (class CSapiVoice* pVoice);
-	bool Initialize (class CAgentFile* pFile);
+	virtual bool Initialize (class CSapiVoice* pVoice);
+	virtual bool Initialize (class CAgentFile* pFile);
 
 // Interfaces
 public:
-	// ICDaCmnTTSEngine
+	// IDaXxxTTSEngine
 	HRESULT get_TTSModeID (BSTR *TTSModeID);
 	HRESULT get_DisplayName (BSTR *DisplayName);
 	HRESULT get_Manufacturer (BSTR *Manufacturer);

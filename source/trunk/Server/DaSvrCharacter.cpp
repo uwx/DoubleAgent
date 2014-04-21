@@ -28,6 +28,7 @@
 #include "DaSvrUserInput.h"
 #include "DaSvrFormattedText.h"
 #include "DaSvrTTSEngine.h"
+#include "DaSvrTTSPrivate.h"
 #include "DaSvrTTSEngines.h"
 #include "DaSvrSREngine.h"
 #include "DaSvrSREngines.h"
@@ -557,7 +558,8 @@ bool DaSvrCharacter::NotifyVoiceCommand (USHORT pCommandId, ISpRecoResult* pReco
 STDMETHODIMP DaSvrCharacter::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
-			(InlineIsEqualGUID (__uuidof(IDaSvrCharacter2), riid))
+			(InlineIsEqualGUID (__uuidof(IDaSvrCharacter3), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaSvrCharacter2), riid))
 		||	(InlineIsEqualGUID (__uuidof(IDaSvrCharacter), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentCharacter), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentCharacterEx), riid))
@@ -3095,6 +3097,70 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindSREngines (long LanguageID, IDaSvr
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCharacter::FindSREngines"), this, mCharID, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::NewPrivateVoice (IDaSvrTTSPrivate **PrivateVoice)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCharacter::NewPrivateVoice"), this, mCharID, max(m_dwRef,-1));
+	}
+#endif
+	HRESULT					lResult = S_FALSE;
+	tPtr <DaSvrTTSPrivate>	lPrivateVoice = NULL;
+	IDaSvrTTSPrivatePtr		lInterface;
+
+	if	(!PrivateVoice)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*PrivateVoice) = NULL;
+
+		if	(lPrivateVoice = DaSvrTTSPrivate::CreateInstance (mClientMutexName))
+		{
+			lInterface = lPrivateVoice.Detach()->GetControllingUnknown();
+			(*PrivateVoice) = lInterface.Detach();
+			lResult = S_OK;
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter3));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCharacter::NewPrivateVoice"), this, mCharID, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+ 
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::UsePrivateVoice (IDaSvrTTSPrivate *PrivateVoice)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)(%d)] DaSvrCharacter::UsePrivateVoice"), this, mCharID, max(m_dwRef,-1));
+	}
+#endif
+	HRESULT	lResult = CDaCmnCharacter::UsePrivateVoice (dynamic_cast<CDaCmnTTSPrivate*> (PrivateVoice));
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter3));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)(%d)] DaSvrCharacter::UsePrivateVoice"), this, mCharID, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

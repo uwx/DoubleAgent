@@ -187,10 +187,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     <ClCompile Include="Core\AgentTextParse.cpp" />
     <ClCompile Include="Managed\BalloonPreview.cpp" />
     <ClCompile Include="Managed\CharFileCLR.cpp" />
-    <ClCompile Include="Core\Sapi4Voices.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Core\Sapi4Voices.cpp" />
     <ClCompile Include="Managed\FontProperties.cpp" />
     <ClCompile Include="Managed\ScriptStream.cpp" />
     <ClCompile Include="Managed\StdAfx.cpp">

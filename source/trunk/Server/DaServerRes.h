@@ -22,6 +22,7 @@
 #define	IDR_DASVRTTSENGINE	20
 #define	IDR_DASVRTTSENGINES	21
 #define	IDR_DASVRUSERINPUT	22
+#define	IDR_DASVRTTSPRIVATE	23
 #define	IDR_FIXED_CPL_ELEVATED_DESC	2
 #define	IDR_FIXED_DASERVER	1
 // Next default values for new objects

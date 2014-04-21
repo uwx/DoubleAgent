@@ -105,9 +105,11 @@ public:
 	_DACORE_IMPEXP static CSapi5Voices * CreateInstance ();
 
 // Attributes
+public:
 	const UINT	mLogLevelDebug;
 
 // Operations
+public:
 	_DACORE_IMPEXP static bool IsSapi5Installed ();
 	_DACORE_IMPEXP void Enumerate ();
 
@@ -134,7 +136,9 @@ public:
 
 // Implementation
 protected:
-	static void LogVoiceToken (UINT pLogLevel, void* pVoiceToken, LPCTSTR pTitle = NULL);
+	CSapi5VoiceInfo * UniqueVoiceFromToken (struct ISpObjectToken * pVoiceToken);
+public:
+	static _DACORE_IMPEXP CSapi5VoiceInfo * VoiceFromToken (struct ISpObjectToken * pVoiceToken);
 };
 
 #pragma warning (pop)

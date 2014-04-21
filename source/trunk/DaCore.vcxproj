@@ -215,7 +215,7 @@
     <ClCompile Include="Core\Sapi5Inputs.cpp" />
     <ClCompile Include="Core\Sapi5Voice.cpp" />
     <ClCompile Include="Core\Sapi5Voices.cpp" />
-    <ClCompile Include="Core\Sapi5VoiceUnlisted.cpp" />
+    <ClCompile Include="Core\Sapi5VoicePrivate.cpp" />
     <ClCompile Include="Core\SapiInputCache.cpp" />
     <ClCompile Include="Core\SapiLanguageMatch.cpp" />
     <ClCompile Include="Core\SapiVoice.cpp" />
@@ -293,7 +293,7 @@
     <ClInclude Include="Core\DaCoreExp.h" />
     <ClInclude Include="Core\DaError.h" />
     <ClInclude Include="Core\DaGlobalConfig.h" />
-    <ClInclude Include="Core\Sapi5VoiceUnlisted.h" />
+    <ClInclude Include="Core\Sapi5VoicePrivate.h" />
     <ClInclude Include="Include\DaGuid.h" />
     <ClInclude Include="Include\DaVersion.h" />
     <ClInclude Include="Core\DirectShowClock.h" />

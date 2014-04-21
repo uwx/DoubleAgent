@@ -67,7 +67,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaCommands2
+	// IDaXxxCommands2
 	HRESULT Add (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption, long Enabled, long Visible, long *CommandID);
 	HRESULT Insert (BSTR Caption, BSTR VoiceGrammar, BSTR VoiceCaption, long Enabled, long Visible, long RefCommandID, long Before, long *CommandID);
 	HRESULT Remove (long CommandID);

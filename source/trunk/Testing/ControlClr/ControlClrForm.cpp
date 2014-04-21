@@ -321,6 +321,22 @@ System::Void ControlClrForm::SelectCharacter (DoubleAgent::Control::Character^ p
 
 	try
 	{
+		if	(pCharacter)
+		{
+			TTSEngineBinding->DataSource = pCharacter->TTSEngine[false];
+			SREngineBinding->DataSource = pCharacter->SREngine[false];
+		}
+		else
+		{
+			TTSEngineBinding->DataSource = nullptr;
+			SREngineBinding->DataSource = nullptr;
+		}
+	}
+	catch AnyExceptionDebug
+	{}
+
+	try
+	{
 		DoubleAgent::Control::Character^	lContained = TestDaControl->ControlCharacter;
 
 		if	(
@@ -882,6 +898,54 @@ System::Void ControlClrForm::CharGenerateIcon_Click(System::Object^  sender, Sys
 		try
 		{
 			lCharacter->GenerateIcon (-1,-1,-1,-1);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlClrForm::TTS_DefaultVoiceClick(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterPageData->Character)
+	{
+		try
+		{
+			lCharacter->TTSModeID = "";
+			TTSEngineBinding->DataSource = lCharacter->TTSEngine[false];
+		}
+		catch AnyExceptionDebug
+		{}
+	}
+}
+
+System::Void ControlClrForm::TTS_PrivateVoiceClick(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+	DoubleAgent::Control::TTSPrivate^	lPrivateVoice;
+
+	if	(lCharacter = CharacterPageData->Character)
+	{
+		try
+		{
+			lPrivateVoice = lCharacter->NewPrivateVoice ();
+			
+			lPrivateVoice->InitLanguageID = 0x0809;
+			lPrivateVoice->InitGender = DoubleAgent::Control::SpeechGenderType::Female;
+			lPrivateVoice->InitManufacturer = "Microsoft";
+			lPrivateVoice->InitDisplayName = "Microsoft Hazel Private";
+			lPrivateVoice->InitVersion = "11.0";
+			lPrivateVoice->InitAttribute ["Age"] = "Adult";
+			lPrivateVoice->InitString ["CLSID"] = "{C64501F6-E6E6-451f-A150-25D0839BC510}";
+			lPrivateVoice->InitFilePath ["LangDataPath"] = "%SystemRoot%\\Speech\\Engines\\TTS\\en-GB\\MSTTSLocEnGB.dat";
+			lPrivateVoice->InitFilePath ["VoicePath"] = "%SystemRoot%\\Speech\\Engines\\TTS\\en-GB\\M2057HAZ";
+			
+			lCharacter->UsePrivateVoice (lPrivateVoice);
+			DoubleAgent::Control::TTSEngine^	lVoice = lCharacter->TTSEngine[false];
+			
+			TTSEngineBinding->DataSource = lCharacter->TTSEngine[false];
 		}
 		catch AnyExceptionDebug
 	}

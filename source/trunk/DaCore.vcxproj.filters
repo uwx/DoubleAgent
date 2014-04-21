@@ -222,7 +222,7 @@
     <ClCompile Include="Core\DaCoreAnchor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Sapi5VoiceUnlisted.cpp">
+    <ClCompile Include="Core\Sapi5VoicePrivate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -475,7 +475,7 @@
     <ClInclude Include="Core\DaCoreAnchor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Sapi5VoiceUnlisted.h">
+    <ClInclude Include="Core\Sapi5VoicePrivate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

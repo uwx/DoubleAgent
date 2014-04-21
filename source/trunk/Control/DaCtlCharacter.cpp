@@ -26,6 +26,7 @@
 #include "DaCtlAnimationNames.h"
 #include "DaCtlFormattedText.h"
 #include "DaCtlTTSEngine.h"
+#include "DaCtlTTSPrivate.h"
 #include "DaCtlTTSEngines.h"
 #include "DaCtlSREngine.h"
 #include "DaCtlSREngines.h"
@@ -71,7 +72,7 @@ DaCtlCharacter::DaCtlCharacter ()
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
+	_AtlModule.mComObjects.Add ((IDaCtlCharacter2*)this);
 #endif
 }
 
@@ -84,7 +85,7 @@ DaCtlCharacter::~DaCtlCharacter ()
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
+	_AtlModule.mComObjects.Remove ((IDaCtlCharacter2*)this);
 #endif
 
 	Terminate (true);
@@ -5403,6 +5404,142 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SuspendHide (VARIANT_BOOL *Suspend
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::get_SuspendHide"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::NewPrivateVoice (IDaCtlTTSPrivate **PrivateVoice)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::NewPrivateVoice"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject <DaCtlTTSPrivate> >	lObject;
+	IDaCtlTTSPrivatePtr						lInterface;
+
+	if	(!PrivateVoice)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*PrivateVoice) = NULL;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlTTSPrivate>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+					)
+				{
+					lInterface = (IDaCtlTTSPrivate*) lObject.Detach();
+					(*PrivateVoice) = lInterface.Detach();
+				}
+			}
+			catch AnyExceptionDebug
+		}
+#ifndef	_DACORE_LOCAL
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				IDaSvrCharacter3Ptr	lServerCharacter (mServerObject);
+
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlTTSPrivate>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lServerCharacter->NewPrivateVoice (&lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (mOwner)))
+					)
+				{
+					lInterface = (IDaCtlTTSPrivate*) lObject.Detach();
+					(*PrivateVoice) = lInterface.Detach();
+				}
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter3));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::NewPrivateVoice"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::UsePrivateVoice (IDaCtlTTSPrivate *PrivateVoice)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::UsePrivateVoice"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
+#endif
+	HRESULT				lResult = S_OK;
+	DaCtlTTSPrivate*	lObject;
+
+	if	(!PrivateVoice)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				if	((lObject = dynamic_cast<DaCtlTTSPrivate*> (PrivateVoice)))
+				{
+					lResult = mLocalObject->UsePrivateVoice (lObject->mLocalObject);
+				}
+				else
+				{
+					lResult = E_INVALIDARG;
+				}
+			}
+			catch AnyExceptionDebug
+		}
+#ifndef	_DACORE_LOCAL
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				IDaSvrCharacter3Ptr	lServerCharacter (mServerObject);
+
+				if	(
+						((lObject = dynamic_cast<DaCtlTTSPrivate*> (PrivateVoice)))
+					&&	(!lObject->mLocalObject)
+					&&	(lObject->mServerObject)
+					)
+				{
+					lResult = lServerCharacter->UsePrivateVoice (lObject->mServerObject);
+				}
+				else
+				{
+					lResult = E_INVALIDARG;
+				}
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter3));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%u] DaCtlCharacter::UsePrivateVoice"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), IsSuspended());
 	}
 #endif
 	return lResult;

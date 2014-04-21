@@ -311,6 +311,8 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxCont
   <ItemGroup>
     <ClCompile Include="Common\AgentAnchor.cpp" />
     <ClCompile Include="Common\AgentFileCache.cpp" />
+    <ClCompile Include="Common\DaCmnTTSPrivate.cpp" />
+    <ClCompile Include="Control\DaCtlTTSPrivate.cpp" />
     <ClCompile Include="Core\AgentText.cpp" />
     <ClCompile Include="Common\AgentTextObject.cpp" />
     <ClCompile Include="Common\DaCmnAnimationNames.cpp" />
@@ -390,6 +392,7 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxCont
     </None>
     <None Include="Control\DaCtlEvents1.odl.inl" />
     <None Include="Control\DaCtlEvents2.odl.inl" />
+    <None Include="Control\DaCtlTTSPrivate.rgs" />
     <None Include="Resources\DaAgentCtl.bmp" />
     <None Include="Resources\DaControl.rc2" />
     <None Include="Control\DaControl.rgs" />
@@ -435,8 +438,10 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.AxCont
     <ClInclude Include="Common\DaCmnSREngines.h" />
     <ClInclude Include="Common\DaCmnTTSEngine.h" />
     <ClInclude Include="Common\DaCmnTTSEngines.h" />
+    <ClInclude Include="Common\DaCmnTTSPrivate.h" />
     <ClInclude Include="Common\DaCmnUserInput.h" />
     <ClInclude Include="Control\DaControl.h" />
+    <ClInclude Include="Control\DaCtlTTSPrivate.h" />
     <ClInclude Include="Include\DaControlInterface.h" />
     <ClInclude Include="Control\DaControlMod.h" />
     <ClInclude Include="Control\DaCtlAnimationNames.h" />

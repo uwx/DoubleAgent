@@ -146,181 +146,208 @@ void CSapi5Voices::Enumerate ()
 	{
 		while (lEnum->Next (1, &lToken, NULL) == S_OK)
 		{
-			ISpDataKeyPtr		lAttributes;
-			tMallocPtr <WCHAR>	lSapiStr;
-			DWORD				lSapiValue;
 			CSapi5VoiceInfo *	lVoiceInfo;
 
 			if	(LogIsActive (mLogLevelDebug))
 			{
-				LogVoiceToken (mLogLevelDebug, lToken.GetInterfacePtr ());
+				CSapi5Voice::LogToken (mLogLevelDebug, lToken.GetInterfacePtr ());
 			}
 
-			if	(lVoiceInfo = new CSapi5VoiceInfo)
+			if	(lVoiceInfo = UniqueVoiceFromToken (lToken))
 			{
-				if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lSapiStr.Free (), NULL))))
-				{
-					lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
-					lVoiceInfo->mProduct = tBstrPtr (lVoiceInfo->mVoiceName).Detach();
-				}
-				if	(SUCCEEDED (lToken->GetId (lSapiStr.Free ())))
-				{
-					lVoiceInfo->mVoiceIdLong = _bstr_t (lSapiStr).Detach ();
-					lVoiceInfo->mVoiceIdShort = CSapi5Voice::ShortVoiceId (lVoiceInfo->mVoiceIdLong).Detach ();
-				}
-
-				if	(SUCCEEDED (lToken->GetStringValue (L"VoiceName", lSapiStr.Free ())))
-				{
-					CAtlString	lAltName (lSapiStr);
-					CAtlString	lVoiceName (lVoiceInfo->mVoiceName);
-
-					if	(
-							(lAltName.GetLength () > 0)
-						&&	(lAltName.GetLength () < lVoiceName.GetLength ())
-						)
-					{
-						lAltName.MakeUpper ();
-						lVoiceName.MakeUpper ();
-
-						if	(
-								(lVoiceName.Find (lAltName) >= 0)
-							&&	(FindVoiceName (lAltName) < 0)
-							)
-						{
-							lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
-						}
-					}
-				}
-
-				if	(SUCCEEDED (lToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
-				{
-					CAtlStringArray	lLangIdStrs;
-					LPTSTR			lLangIdStrEnd;
-
-					if	(SUCCEEDED (lAttributes->GetStringValue (L"Name", lSapiStr.Free ())))
-					{
-						CAtlString	lAltName (lSapiStr);
-						CAtlString	lVoiceName (lVoiceInfo->mVoiceName);
-
-						if	(
-								(lAltName.GetLength () > 0)
-							&&	(lAltName.GetLength () < lVoiceName.GetLength ())
-							)
-						{
-							lAltName.MakeUpper ();
-							lVoiceName.MakeUpper ();
-
-							if	(
-									(lVoiceName.Find (lAltName) >= 0)
-								&&	(FindVoiceName (lAltName) < 0)
-								)
-							{
-								lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
-							}
-						}
-					}
-
-					if	(SUCCEEDED (lAttributes->GetDWORD (L"Gender", &lSapiValue)))
-					{
-						lVoiceInfo->mSpeakerGender = lSapiValue;
-					}
-					else
-					if	(SUCCEEDED (lAttributes->GetStringValue (L"Gender", lSapiStr.Free ())))
-					{
-						CAtlString	lGenderName (lSapiStr);
-
-						if	(lGenderName.CompareNoCase (_T("Male")) == 0)
-						{
-							lVoiceInfo->mSpeakerGender = GENDER_MALE;
-						}
-						else
-						if	(lGenderName.CompareNoCase (_T("Female")) == 0)
-						{
-							lVoiceInfo->mSpeakerGender = GENDER_FEMALE;
-						}
-					}
-
-					if	(SUCCEEDED (lAttributes->GetDWORD (L"Language", &lSapiValue)))
-					{
-						if	(IsValidLocale (MAKELCID ((LANGID)lSapiValue, SORT_DEFAULT), LCID_SUPPORTED))
-						{
-							lVoiceInfo->mLangId = (LANGID)lSapiValue;
-						}
-					}
-					else
-					if	(
-							(SUCCEEDED (lAttributes->GetStringValue (L"Language", lSapiStr.Free ())))
-						&&	(MakeStringArray (CAtlString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
-						&&	(lSapiValue = _tcstoul (lLangIdStrs [0], &lLangIdStrEnd, 16))
-						&&	(*lLangIdStrEnd == 0)
-						&&	(IsValidLocale (MAKELCID ((LANGID)lSapiValue, SORT_DEFAULT), LCID_SUPPORTED))
-						)
-					{
-						lVoiceInfo->mLangId = (LANGID)lSapiValue;
-					}
-
-					if	(SUCCEEDED (lAttributes->GetStringValue (L"Vendor", lSapiStr.Free ())))
-					{
-						CAtlString	lAltName (lVoiceInfo->mVoiceName);
-						CAtlString	lManufacturer (lSapiStr);
-
-						lVoiceInfo->mManufacturer = _bstr_t (lSapiStr).Detach();
-
-						if	(
-								(lAltName.GetLength () > lManufacturer.GetLength ())
-							&&	(lAltName.Left(lManufacturer.GetLength ()).CompareNoCase (lManufacturer) == 0)
-							)
-						{
-							lAltName.Delete (0, lManufacturer.GetLength ());
-							lAltName.TrimLeft ();
-
-							if	(FindVoiceName (lAltName) < 0)
-							{
-								lVoiceInfo->mVoiceName = lAltName.AllocSysString();
-							}
-						}
-					}
-
-					if	(SUCCEEDED (lAttributes->GetStringValue (L"Age", lSapiStr.Free ())))
-					{
-						CAtlString	lAgeStr (lSapiStr);
-
-						if	(lAgeStr.CompareNoCase (_T("Baby")) == 0)
-						{
-							lVoiceInfo->mSpeakerAge = TTSAGE_BABY;
-						}
-						else
-						if	(lAgeStr.CompareNoCase (_T("Toddler")) == 0)
-						{
-							lVoiceInfo->mSpeakerAge = TTSAGE_TODDLER;
-						}
-						else
-						if	(lAgeStr.CompareNoCase (_T("Child")) == 0)
-						{
-							lVoiceInfo->mSpeakerAge = TTSAGE_CHILD;
-						}
-						else
-						if	(lAgeStr.CompareNoCase (_T("Adult")) == 0)
-						{
-							lVoiceInfo->mSpeakerAge = TTSAGE_ADULT;
-						}
-						else
-						if	(lAgeStr.CompareNoCase (_T("Adolescent")) == 0)
-						{
-							lVoiceInfo->mSpeakerAge = TTSAGE_ADOLESCENT;
-						}
-						else
-						if	(lAgeStr.CompareNoCase (_T("Elderly")) == 0)
-						{
-							lVoiceInfo->mSpeakerAge = TTSAGE_ELDERLY;
-						}
-					}
-				}
-
 				Add (lVoiceInfo);
 			}
 		}
 	}
+}
+
+CSapi5VoiceInfo * CSapi5Voices::UniqueVoiceFromToken (ISpObjectToken * pVoiceToken)
+{
+	CSapi5VoiceInfo *	lVoiceInfo;
+	ISpDataKeyPtr		lAttributes;
+	tMallocPtr <WCHAR>	lSapiStr;
+
+	if	(lVoiceInfo = VoiceFromToken (pVoiceToken))
+	{
+		if	(SUCCEEDED (pVoiceToken->GetStringValue (L"VoiceName", lSapiStr.Free ())))
+		{
+			CAtlString	lAltName (lSapiStr);
+			CAtlString	lVoiceName (lVoiceInfo->mVoiceName);
+
+			if	(
+					(lAltName.GetLength () > 0)
+				&&	(lAltName.GetLength () < lVoiceName.GetLength ())
+				)
+			{
+				lAltName.MakeUpper ();
+				lVoiceName.MakeUpper ();
+
+				if	(
+						(lVoiceName.Find (lAltName) >= 0)
+					&&	(FindVoiceName (lAltName) < 0)
+					)
+				{
+					lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
+				}
+			}
+		}
+
+		if	(SUCCEEDED (pVoiceToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
+		{
+			if	(SUCCEEDED (lAttributes->GetStringValue (L"Name", lSapiStr.Free ())))
+			{
+				CAtlString	lAltName (lSapiStr);
+				CAtlString	lVoiceName (lVoiceInfo->mVoiceName);
+
+				if	(
+						(lAltName.GetLength () > 0)
+					&&	(lAltName.GetLength () < lVoiceName.GetLength ())
+					)
+				{
+					lAltName.MakeUpper ();
+					lVoiceName.MakeUpper ();
+
+					if	(
+							(lVoiceName.Find (lAltName) >= 0)
+						&&	(FindVoiceName (lAltName) < 0)
+						)
+					{
+						lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
+					}
+				}
+			}
+
+			if	(SUCCEEDED (lAttributes->GetStringValue (L"Vendor", lSapiStr.Free ())))
+			{
+				CAtlString	lAltName (lVoiceInfo->mVoiceName);
+				CAtlString	lManufacturer (lSapiStr);
+
+				if	(
+						(lAltName.GetLength () > lManufacturer.GetLength ())
+					&&	(lAltName.Left (lManufacturer.GetLength ()).CompareNoCase (lManufacturer) == 0)
+					)
+				{
+					lAltName.Delete (0, lManufacturer.GetLength ());
+					lAltName.TrimLeft ();
+
+					if	(FindVoiceName (lAltName) < 0)
+					{
+						lVoiceInfo->mVoiceName = lAltName.AllocSysString();
+					}
+				}
+			}
+		}
+	}
+	return lVoiceInfo;
+}
+
+CSapi5VoiceInfo * CSapi5Voices::VoiceFromToken (ISpObjectToken * pVoiceToken)
+{
+	CSapi5VoiceInfo *	lVoiceInfo;
+	ISpDataKeyPtr		lAttributes;
+	tMallocPtr <WCHAR>	lSapiStr;
+	DWORD				lSapiValue;
+
+	if	(lVoiceInfo = new CSapi5VoiceInfo)
+	{
+		if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (pVoiceToken, lSapiStr.Free (), NULL))))
+		{
+			lVoiceInfo->mVoiceName = _bstr_t (lSapiStr).Detach();
+			lVoiceInfo->mProduct = tBstrPtr (lVoiceInfo->mVoiceName).Detach();
+		}
+		if	(SUCCEEDED (pVoiceToken->GetId (lSapiStr.Free ())))
+		{
+			lVoiceInfo->mVoiceIdLong = _bstr_t (lSapiStr).Detach ();
+			lVoiceInfo->mVoiceIdShort = CSapi5Voice::ShortVoiceId (lVoiceInfo->mVoiceIdLong).Detach ();
+		}
+
+		if	(SUCCEEDED (pVoiceToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
+		{
+			CAtlStringArray	lLangIdStrs;
+			LPTSTR			lLangIdStrEnd;
+
+			if	(SUCCEEDED (lAttributes->GetDWORD (L"Gender", &lSapiValue)))
+			{
+				lVoiceInfo->mSpeakerGender = lSapiValue;
+			}
+			else
+			if	(SUCCEEDED (lAttributes->GetStringValue (L"Gender", lSapiStr.Free ())))
+			{
+				CAtlString	lGenderName (lSapiStr);
+
+				if	(lGenderName.CompareNoCase (_T("Male")) == 0)
+				{
+					lVoiceInfo->mSpeakerGender = GENDER_MALE;
+				}
+				else
+				if	(lGenderName.CompareNoCase (_T("Female")) == 0)
+				{
+					lVoiceInfo->mSpeakerGender = GENDER_FEMALE;
+				}
+			}
+
+			if	(SUCCEEDED (lAttributes->GetDWORD (L"Language", &lSapiValue)))
+			{
+				if	(IsValidLocale (MAKELCID ((LANGID)lSapiValue, SORT_DEFAULT), LCID_SUPPORTED))
+				{
+					lVoiceInfo->mLangId = (LANGID)lSapiValue;
+				}
+			}
+			else
+			if	(
+					(SUCCEEDED (lAttributes->GetStringValue (L"Language", lSapiStr.Free ())))
+				&&	(MakeStringArray (CAtlString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
+				&&	(lSapiValue = _tcstoul (lLangIdStrs [0], &lLangIdStrEnd, 16))
+				&&	(*lLangIdStrEnd == 0)
+				&&	(IsValidLocale (MAKELCID ((LANGID)lSapiValue, SORT_DEFAULT), LCID_SUPPORTED))
+				)
+			{
+				lVoiceInfo->mLangId = (LANGID)lSapiValue;
+			}
+
+			if	(SUCCEEDED (lAttributes->GetStringValue (L"Vendor", lSapiStr.Free ())))
+			{
+				lVoiceInfo->mManufacturer = _bstr_t (lSapiStr).Detach();
+			}
+
+			if	(SUCCEEDED (lAttributes->GetStringValue (L"Age", lSapiStr.Free ())))
+			{
+				CAtlString	lAgeStr (lSapiStr);
+
+				if	(lAgeStr.CompareNoCase (_T("Baby")) == 0)
+				{
+					lVoiceInfo->mSpeakerAge = TTSAGE_BABY;
+				}
+				else
+				if	(lAgeStr.CompareNoCase (_T("Toddler")) == 0)
+				{
+					lVoiceInfo->mSpeakerAge = TTSAGE_TODDLER;
+				}
+				else
+				if	(lAgeStr.CompareNoCase (_T("Child")) == 0)
+				{
+					lVoiceInfo->mSpeakerAge = TTSAGE_CHILD;
+				}
+				else
+				if	(lAgeStr.CompareNoCase (_T("Adult")) == 0)
+				{
+					lVoiceInfo->mSpeakerAge = TTSAGE_ADULT;
+				}
+				else
+				if	(lAgeStr.CompareNoCase (_T("Adolescent")) == 0)
+				{
+					lVoiceInfo->mSpeakerAge = TTSAGE_ADOLESCENT;
+				}
+				else
+				if	(lAgeStr.CompareNoCase (_T("Elderly")) == 0)
+				{
+					lVoiceInfo->mSpeakerAge = TTSAGE_ELDERLY;
+				}
+			}
+		}
+	}
+
+	return lVoiceInfo;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -670,122 +697,5 @@ void CSapi5Voices::LogVoiceInfo (UINT pLogLevel, CSapi5VoiceInfo& pVoiceInfo, LP
 			LogMessage (pLogLevel, _T("%s  Product      [%ls]"), lIndent, (BSTR)pVoiceInfo.mProduct);
 		}
 		catch AnyExceptionDebug
-	}
-}
-
-//////////////////////////////////////////////////////////////////////
-
-void CSapi5Voices::LogVoiceToken (UINT pLogLevel, void* pVoiceToken, LPCTSTR pTitle)
-{
-	if	(LogIsActive (pLogLevel))
-	{
-		try
-		{
-			ISpObjectToken *	lToken = (ISpObjectToken *) pVoiceToken;
-			CAtlString			lTitle (pTitle);
-			tMallocPtr <WCHAR>	lVoiceName;
-			tMallocPtr <WCHAR>	lVoiceId;
-			ISpDataKeyPtr		lAttributes;
-			tMallocPtr <WCHAR>	lGenderName;
-			tMallocPtr <WCHAR>	lLanguageIdName;
-			DWORD				lGenderCode;
-			DWORD				lLanguageId;
-
-			if	(lTitle.IsEmpty ())
-			{
-				lTitle = _T("Sapi5Voice");
-			}
-			LogMessage (pLogLevel, _T("%s [%p]"), lTitle, lToken);
-
-			if	(lToken)
-			{
-				try
-				{
-					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, SpGetDescription (lToken, lVoiceName.Free (), NULL))))
-					{
-						LogMessage (pLogLevel, _T("  Name     [%ls]"), (LPWSTR)lVoiceName);
-					}
-					if	(SUCCEEDED (LogSapi5Err (LogNormal|LogTime, lToken->GetId (lVoiceId.Free ()))))
-					{
-						LogMessage (pLogLevel, _T("  Id       [%ls]"), (LPWSTR)lVoiceId);
-					}
-
-					if	(SUCCEEDED (lToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
-					{
-						if	(SUCCEEDED (lAttributes->GetDWORD (L"Gender", &lGenderCode)))
-						{
-							LogMessage (pLogLevel, _T("  Gender   [%u]"), (LPWSTR)lGenderCode);
-						}
-						if	(SUCCEEDED (lAttributes->GetStringValue (L"Gender", lGenderName.Free ())))
-						{
-							LogMessage (pLogLevel, _T("  Gender   [%ls]"), (LPWSTR)lGenderName);
-						}
-
-						if	(SUCCEEDED (lAttributes->GetDWORD (L"Language", &lLanguageId)))
-						{
-							LogMessage (pLogLevel, _T("  Language [%4.4X]"), lLanguageId);
-						}
-						if	(SUCCEEDED (lAttributes->GetStringValue (L"Language", lLanguageIdName.Free ())))
-						{
-							LogMessage (pLogLevel, _T("  Language [%ls]"), (LPWSTR)lLanguageIdName);
-						}
-					}
-					LogMessage (pLogLevel, _T(""));
-				}
-				catch AnyExceptionSilent
-
-#ifdef	_DEBUG_NOT
-				try
-				{
-					ULONG				lValueNdx;
-					tMallocPtr <WCHAR>	lValueName;
-					DWORD				lValueNum;
-					tMallocPtr <WCHAR>	lValueStr;
-
-					for	(lValueNdx = 0; lToken->EnumValues (lValueNdx, lValueName.Free ()) == S_OK; lValueNdx++)
-					{
-						if	(SUCCEEDED (lToken->GetDWORD (lValueName, &lValueNum)))
-						{
-							LogMessage (pLogLevel, _T("  Value [%ls] [%8.8X (%u) (%d)]"), (LPWSTR)lValueName, lValueNum, lValueNum, lValueNum);
-						}
-						else
-						if	(SUCCEEDED (lToken->GetStringValue (lValueName, lValueStr.Free ())))
-						{
-							LogMessage (pLogLevel, _T("  Value [%ls] [%ls]"), (LPWSTR)lValueName, (LPWSTR)lValueStr);
-						}
-						else
-						{
-							LogMessage (pLogLevel, _T("  Value [%ls]"), (LPWSTR)lValueName);
-						}
-					}
-
-					if	(SUCCEEDED (lToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
-					{
-						LogMessage (pLogLevel, _T("  Attributes"));
-
-						for	(lValueNdx = 0; lAttributes->EnumValues (lValueNdx, lValueName.Free ()) == S_OK; lValueNdx++)
-						{
-							if	(SUCCEEDED (lAttributes->GetDWORD (lValueName, &lValueNum)))
-							{
-								LogMessage (pLogLevel, _T("    Value [%ls] [%8.8X (%u) (%d)]"), (LPWSTR)lValueName, lValueNum, lValueNum, lValueNum);
-							}
-							else
-							if	(SUCCEEDED (lAttributes->GetStringValue (lValueName, lValueStr.Free ())))
-							{
-								LogMessage (pLogLevel, _T("    Value [%ls] [%ls]"), (LPWSTR)lValueName, (LPWSTR)lValueStr);
-							}
-							else
-							{
-								LogMessage (pLogLevel, _T("    Value [%ls]"), (LPWSTR)lValueName);
-							}
-						}
-					}
-					LogMessage (pLogLevel, _T(""));
-				}
-				catch AnyExceptionSilent
-#endif
-			}
-		}
-		catch AnyExceptionSilent
 	}
 }

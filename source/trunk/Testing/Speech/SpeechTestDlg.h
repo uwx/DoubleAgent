@@ -69,6 +69,7 @@ protected:
 	afx_msg void OnThinkDesc();
 	afx_msg void OnSpeakDesc();
 	afx_msg void OnListen();
+	afx_msg void OnNewPrivateVoice();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
@@ -157,21 +158,22 @@ protected:
 	CString GetWaveFile ();
 
 protected:
-	CString						mWinTitle;
-	IDaServer2Ptr				mServer;
-	long						mNotifySinkId;
-	CString						mCharacterPath [2];
-	long						mCharacterId [2];
-	IDaSvrCharacter2Ptr			mCharacter [2];
-	tPtr <CPoint>				mCharacterPos[2];
-	long						mLoadReqID;
-	long						mActiveChar;
-	CTypeArray <LANGID>			mLangIDs;
-	IDaSvrTTSEnginesPtr			mTTSEngines;
-	IDaSvrSREnginesPtr			mSREngines;
-	int							mTTSModeAdded;
-	int							mSRModeAdded;
-	UINT_PTR					mStatusTimer;
+	CString								mWinTitle;
+	IDaServer2Ptr						mServer;
+	long								mNotifySinkId;
+	CString								mCharacterPath [2];
+	long								mCharacterId [2];
+	IDaSvrCharacter2Ptr					mCharacter [2];
+	tPtr <CPoint>						mCharacterPos[2];
+	long								mLoadReqID;
+	long								mActiveChar;
+	CTypeArray <LANGID>					mLangIDs;
+	IDaSvrTTSEnginesPtr					mTTSEngines;
+	IDaSvrSREnginesPtr					mSREngines;
+	int									mTTSModeAdded;
+	int									mSRModeAdded;
+	CClassArray <IDaSvrTTSPrivatePtr>	mTTSPrivate;
+	UINT_PTR							mStatusTimer;
 };
 
 /////////////////////////////////////////////////////////////////////////////

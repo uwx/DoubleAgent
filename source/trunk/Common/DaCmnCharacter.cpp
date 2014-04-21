@@ -24,6 +24,7 @@
 #include "DaCmnBalloon.h"
 #include "DaCmnCommands.h"
 #include "DaCmnAnimationNames.h"
+#include "DaCmnTTSPrivate.h"
 #include "AgentAnchor.h"
 #include "AgentFiles.h"
 #include "AgentPopupWnd.h"
@@ -38,6 +39,7 @@
 #include "SapiInputCache.h"
 #include "Sapi5Voices.h"
 #include "Sapi5Voice.h"
+#include "Sapi5VoicePrivate.h"
 #include "Sapi5Inputs.h"
 #include "Sapi5Input.h"
 #ifndef	_WIN64
@@ -1493,11 +1495,6 @@ CSapiVoice* CDaCmnCharacter::GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceNam
 					mSapiVoice = lVoiceCache->GetAgentVoice (lFileTts, true);
 				}
 				else
-				if	(mPrivateSapiVoice)
-				{
-					mSapiVoice = mPrivateSapiVoice;
-				}
-				else
 				{
 					mSapiVoice = lVoiceCache->GetAgentVoice (lVoiceName, mLangID, true);
 				}
@@ -1540,6 +1537,38 @@ void CDaCmnCharacter::ReleaseSapiVoice (bool pAbandonned)
 		catch AnyExceptionDebug
 	}
 	mSapiVoice = NULL;
+}
+
+void CDaCmnCharacter::PreChangeVoice (LPCTSTR pReason)
+{
+	try
+	{
+		CAgentCharacterWnd*	lCharacterWnd;
+
+		if	(
+				(lCharacterWnd = GetCharacterWnd ())
+			&&	(lCharacterWnd->NextQueuedAction (mCharID))
+			&&	(lCharacterWnd->IsSpeakQueued (mCharID) == mWnd->NextQueuedAction (mCharID))
+			)
+		{
+			lCharacterWnd->RemoveQueuedAction (lCharacterWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, pReason);
+		}
+	}
+	catch AnyExceptionDebug
+}
+
+void CDaCmnCharacter::PostChangeVoice ()
+{
+	try
+	{
+		CAgentCharacterWnd*	lCharacterWnd;
+
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			lCharacterWnd->UpdateQueuedSpeak (mCharID, mSapiVoice);
+		}
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4191,8 +4220,7 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 	{
 		try
 		{
-			CAgentCharacterWnd*	lCharacterWnd;
-			CSapiVoice*			lPrevVoice = mSapiVoice;
+			CSapiVoice*	lPrevVoice = mSapiVoice;
 
 #ifdef	_DEBUG_LANGUAGE
 			if	(LogIsActive (_DEBUG_LANGUAGE))
@@ -4200,27 +4228,13 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 				LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaCmnCharacter put_TTSModeID [%ls]"), this, mCharID, TTSModeID);
 			}
 #endif
-			try
-			{
-				if	(
-						(lCharacterWnd = GetCharacterWnd ())
-					&&	(lCharacterWnd->NextQueuedAction (mCharID))
-					&&	(lCharacterWnd->IsSpeakQueued (mCharID) == mWnd->NextQueuedAction (mCharID))
-					)
-				{
-					lCharacterWnd->RemoveQueuedAction (lCharacterWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, _T("put_TTSModeID"));
-				}
-			}
-			catch AnyExceptionDebug
-
+			PreChangeVoice (_T("put_TTSModeID"));
 			mSapiVoice = NULL;
 
 			if	(GetSapiVoice (true, CAtlString (TTSModeID)))
 			{
-				if	(lCharacterWnd = GetCharacterWnd ())
-				{
-					lCharacterWnd->UpdateQueuedSpeak (mCharID, mSapiVoice);
-				}
+				PostChangeVoice ();
+
 				if	(
 						(lPrevVoice)
 					&&	(lPrevVoice != mSapiVoice)
@@ -5015,5 +5029,42 @@ HRESULT CDaCmnCharacter::put_IconTip (BSTR IconTip)
 
 	mIconData.mTip = IconTip;
 	lResult = ShowIcon (IsIconShown());
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaCmnCharacter::UsePrivateVoice (CDaCmnTTSPrivate *PrivateVoice)
+{
+	HRESULT			lResult = E_FAIL;
+	CSapi5Voice*	lSapiVoice;
+
+	if	(!PrivateVoice)
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	{
+		lSapiVoice = PrivateVoice->GetCachedVoice (this);
+		if	(!lSapiVoice)
+		{
+			lSapiVoice = PrivateVoice->PrepareAndCacheVoice (this);
+		}
+		if	(lSapiVoice)
+		{
+#ifdef	_DEBUG_LANGUAGE
+			if	(LogIsActive (_DEBUG_LANGUAGE))
+			{
+				lSapiVoice->Log (_DEBUG_LANGUAGE, _T("Private Voice"));
+				lSapiVoice->CSapi5Voice::Log (_DEBUG_LANGUAGE, _T("Private Voice"));
+			}
+#endif
+			PreChangeVoice (_T("UsePrivateVoice"));
+			ReleaseSapiVoice ();
+			mSapiVoice = lSapiVoice;
+			PostChangeVoice ();
+			lResult = S_OK;
+		}
+	}
 	return lResult;
 }

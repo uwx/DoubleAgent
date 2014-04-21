@@ -31,7 +31,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaPropertySheet2
+	// IDaXxxPropertySheet2
 	HRESULT GetPosition (long *Left, long *Top);
 	HRESULT SetPosition (long Left, long Top);
 	HRESULT GetSize (long *Width, long *Height);

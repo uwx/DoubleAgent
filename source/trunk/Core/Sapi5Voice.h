@@ -25,6 +25,7 @@
 //////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF (ISpVoice, __uuidof(ISpVoice));
+_COM_SMARTPTR_TYPEDEF (ISpObjectToken, __uuidof(ISpObjectToken));
 
 //////////////////////////////////////////////////////////////////////
 
@@ -52,7 +53,7 @@ public:
 	_DACORE_IMPEXP HRESULT Resume ();
 
 	_DACORE_IMPEXP tBstrPtr GetVoiceId ();
-	_DACORE_IMPEXP HRESULT GetVoiceId (tBstrPtr& pVoiceId);
+	_DACORE_IMPEXP virtual HRESULT GetVoiceId (tBstrPtr& pVoiceId);
 	_DACORE_IMPEXP HRESULT SetVoiceId (LPCTSTR pVoiceId);
 
 	_DACORE_IMPEXP tBstrPtr GetOutputId ();
@@ -84,7 +85,14 @@ public:
 	_DACORE_IMPEXP virtual HRESULT GetVolume (USHORT& pVolume);
 	_DACORE_IMPEXP virtual HRESULT SetVolume (USHORT pVolume);
 
+	_DACORE_IMPEXP virtual void Log (UINT pLogLevel, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP static void LogToken (UINT pLogLevel, ISpObjectToken* pToken, LPCTSTR pTitle = NULL, LPCTSTR pIndent = NULL);
+	_DACORE_IMPEXP static void LogDataKey (UINT pLogLevel, ISpDataKey* pDataKey, LPCTSTR pIndent = NULL);
+
 // Implementation
+public:
+	__declspec(property(get=_get_VoiceToken)) ISpObjectTokenPtr VoiceToken;
+	_DACORE_IMPEXP ISpObjectTokenPtr _get_VoiceToken () const;
 private:
 	static void __stdcall VoiceNotifyCallback(WPARAM wParam, LPARAM lParam);
 

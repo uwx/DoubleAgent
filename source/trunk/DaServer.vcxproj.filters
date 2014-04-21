@@ -169,6 +169,12 @@
     <ClCompile Include="Core\AgentTextParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\DaCmnTTSPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\DaSvrTTSPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Common\DaCommon.odl">
@@ -332,6 +338,12 @@
     <ClInclude Include="Include\DaServerOdl.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\DaCmnTTSPrivate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Server\DaSvrTTSPrivate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Server\DaEmulation.rgs">
@@ -398,6 +410,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Server\GPLicenseHeader.txt" />
+    <None Include="Server\DaSvrTTSPrivate.rgs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Server\DaServer.rc">

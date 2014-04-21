@@ -35,7 +35,7 @@ public:
 	HRESULT Initialize (CDaCmnAnimationNames& pSource, LPUNKNOWN pUnknown);
 
 // Interfaces
-	// IDaSvrAnimationNames
+	// IDaXxxAnimationNames
 	HRESULT get__NewEnum (IUnknown ** EnumVariant);
 
 // Implementation

@@ -44,7 +44,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaCommand2
+	// IDaXxxCommand2
 	HRESULT get_Caption (BSTR *Caption);
 	HRESULT put_Caption (BSTR Caption);
 	HRESULT get_Enabled (VARIANT_BOOL *Enabled);

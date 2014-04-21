@@ -24,10 +24,10 @@
 
 #define	_DOUBLEAGENT_NAME				"Double Agent"
 #define	_DOUBLEAGENT_COMPANY			"Cinnamon Software Inc."
-#define	_DOUBLEAGENT_BUILD				56
-#define	_DOUBLEAGENT_BUILD_STR			"56"
-#define	_DOUBLEAGENT_VERSION			1,2,0,_DOUBLEAGENT_BUILD
-#define	_DOUBLEAGENT_VERSION_STR		"1.2.0." _DOUBLEAGENT_BUILD_STR
+#define	_DOUBLEAGENT_BUILD				57
+#define	_DOUBLEAGENT_BUILD_STR			"57"
+#define	_DOUBLEAGENT_VERSION			1,3,0,_DOUBLEAGENT_BUILD
+#define	_DOUBLEAGENT_VERSION_STR		"1.3.0." _DOUBLEAGENT_BUILD_STR
 #define	_DOUBLEAGENT_COPYRIGHT			"Copyright © Cinnamon Software Inc. 2009-2014"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -35,50 +35,50 @@
 #define	_SERVER_REGNAME					"Server"
 #define	_SERVER_FILENAME				"DaServer"
 #define	_SERVER_PROGID					"DoubleAgent.Server"
-#define	_SERVER_PROGID_VER				"DoubleAgent.Server.1.1"
+#define	_SERVER_PROGID_VER				"DoubleAgent.Server.1.3"
 #define	_SERVER_PROGID_NAME				"Double Agent Server"
 #define	_SERVER_HANDLER_NAME			"Double Agent Server COM Handler"
 #define	_SERVER_VER_MAJOR				1
-#define	_SERVER_VER_MINOR				1
+#define	_SERVER_VER_MINOR				3
 #define	_SERVER_VER						_SERVER_VER_MAJOR._SERVER_VER_MINOR
 
 #define	_CONTROL_REGNAME				"Control"
 #define	_CONTROL_FILENAME				"DaControl"
 #define	_CONTROL_PROGID					"DoubleAgent.Control"
-#define	_CONTROL_PROGID_VER				"DoubleAgent.Control.1.1"
+#define	_CONTROL_PROGID_VER				"DoubleAgent.Control.1.3"
 #define	_CONTROL_PROGID_NAME			"Double Agent ActiveX Control"
 #define	_CONTROL_VER_MAJOR				1
-#define	_CONTROL_VER_MINOR				1
+#define	_CONTROL_VER_MINOR				3
 #define	_CONTROL_VER					_CONTROL_VER_MAJOR._CONTROL_VER_MINOR
 
 #define	_CORE_REGNAME					"Core"
 #define	_CORE_FILENAME					"DaCore"
 #define	_CORE_PROGID					"DoubleAgent.Core"
-#define	_CORE_PROGID_VER				"DoubleAgent.Core.1.1"
+#define	_CORE_PROGID_VER				"DoubleAgent.Core.1.3"
 #define	_CORE_PROGID_NAME				"Double Agent Core Components"
 
 #define	_SHELL_REGNAME					"Shell"
 #define	_SHELL_FILENAME					"DaShell"
 #define	_SHELL_PROGID					"DoubleAgent.Shell"
-#define	_SHELL_PROGID_VER				"DoubleAgent.Shell.1.1"
+#define	_SHELL_PROGID_VER				"DoubleAgent.Shell.1.3"
 #define	_SHELL_PROGID_NAME				"Double Agent Shell Extensions"
 
 #define	_PROPERTIES_PROGID				"DoubleAgent.Properties"
-#define	_PROPERTIES_PROGID_VER			"DoubleAgent.Properties.1.1"
+#define	_PROPERTIES_PROGID_VER			"DoubleAgent.Properties.1.3"
 #define	_PROPERTIES_PROGID_NAME			"Agent Character Properties"
 
 #define	_PREVIEW_PROGID					"DoubleAgent.Preview"
-#define	_PREVIEW_PROGID_VER				"DoubleAgent.Preview.1.1"
+#define	_PREVIEW_PROGID_VER				"DoubleAgent.Preview.1.3"
 #define	_PREVIEW_PROGID_NAME			"Double Agent Preview Window"
 
 #define	_DSFILTER_PROGID				"DoubleAgent.DirectShowSource"
-#define	_DSFILTER_PROGID_VER			"DoubleAgent.DirectShowSource.1.1"
+#define	_DSFILTER_PROGID_VER			"DoubleAgent.DirectShowSource.1.3"
 #define	_DSFILTER_PROGID_NAME			"Double Agent Direct Show Filter"
 
 #define	_CPL_NAME						"DoubleAgent"
 #define	_CPL_CANONICAL_NAME				"DoubleAgent"
 #define	_ELEVATED_SETTINGS_PROGID		"DoubleAgent.Settings"
-#define	_ELEVATED_SETTINGS_PROGID_VER	"DoubleAgent.Settings.1.1"
+#define	_ELEVATED_SETTINGS_PROGID_VER	"DoubleAgent.Settings.1.3"
 
 #define	_AGENT_SERVER_PROGID			"Agent.Server"
 #define	_AGENT_SERVER_PROGID2			"Agent.Server.2"

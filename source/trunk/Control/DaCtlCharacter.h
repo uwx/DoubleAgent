@@ -29,6 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E532-A208-11DE-ABF2-002421116FB2}")) D
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCharacter, &__uuidof(DaCtlCharacter)>,
 	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
+	public IDispatchImpl<IDaCtlCharacter3, &__uuidof(IDaCtlCharacter3), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacter), &__uuidof(DoubleAgentCtl_TypeLib), DoubleAgentCtl_MajorVer, DoubleAgentCtl_MinorVer>,
 	public ISupportErrorInfo
 {
@@ -71,6 +72,7 @@ public:
 
 	BEGIN_COM_MAP(DaCtlCharacter)
 		COM_INTERFACE_ENTRY(IDaCtlCharacter2)
+		COM_INTERFACE_ENTRY(IDaCtlCharacter3)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCharacter2)
 		COM_INTERFACE_ENTRY2(IDaCtlCharacter, IDaCtlCharacter2)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCharacter), IDaCtlCharacter2)
@@ -198,6 +200,10 @@ public:
 	HRESULT STDMETHODCALLTYPE put_SuspendHide (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get_SuspendHide (VARIANT_BOOL *Enabled);
 	HRESULT STDMETHODCALLTYPE SetSize (short Width, short Height);
+
+	// IDaCtlCharacter3
+	HRESULT STDMETHODCALLTYPE NewPrivateVoice (IDaCtlTTSPrivate **PrivateVoice);
+	HRESULT STDMETHODCALLTYPE UsePrivateVoice (IDaCtlTTSPrivate *PrivateVoice);
 
 // Implementation
 public:

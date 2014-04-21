@@ -37,6 +37,7 @@ cpp_quote("class __declspec(uuid(\"{1147E550-A208-11DE-ABF2-002421116FB2}\")) Do
 	interface IDaCtlCharacterFiles;
 	interface IDaCtlFormattedText;
 	interface IDaCtlTTSEngine;
+	interface IDaCtlTTSPrivate;
 	interface IDaCtlTTSEngines;
 	interface IDaCtlSREngine;
 	interface IDaCtlSREngines;
@@ -49,6 +50,8 @@ cpp_quote("class __declspec(uuid(\"{1147E550-A208-11DE-ABF2-002421116FB2}\")) Do
 	interface IDaCtlCommand2;
 	interface IDaCtlPropertySheet2;
 	dispinterface _DaCtlEvents2;
+
+	interface IDaCtlCharacter3;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Types
@@ -588,7 +591,6 @@ cpp_quote("#endif")
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden,
 		helpcontext(APIHELP_Ctl_Character)
 	]
 	interface IDaCtlCharacter2 : IDaCtlCharacter
@@ -672,6 +674,24 @@ cpp_quote("#endif")
 			[id(DISPID_IDaCtlCharacter2_SuspendHide), propget, bindable, displaybind] HRESULT SuspendHide ([out, retval] VARIANT_BOOL* SuspendHide);
 		[helpstring("Set the character size (width/height together)"), helpcontext(APIHELP_Ctl_Character_SetSize),
 			id(DISPID_IDaCtlCharacter2_SetSize)] HRESULT SetSize ([in] short Width, [in] short Height);
+	};
+
+	const DISPID DISPID_IDaCtlCharacter3_NewPrivateVoice = 100;
+	const DISPID DISPID_IDaCtlCharacter3_UsePrivateVoice = 101;
+
+	[
+		odl,
+		uuid(1147E585-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		helpcontext(APIHELP_Ctl_Character)
+	]
+	interface IDaCtlCharacter3 : IDispatch
+	{
+		[id(DISPID_IDaCtlCharacter3_NewPrivateVoice)] HRESULT NewPrivateVoice ([out, retval] IDaCtlTTSPrivate **PrivateVoice);
+		[id(DISPID_IDaCtlCharacter3_UsePrivateVoice)] HRESULT UsePrivateVoice ([in] IDaCtlTTSPrivate *PrivateVoice);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1418,6 +1438,43 @@ cpp_quote("#endif")
 			id(DISPID_IDaCtlTTSEngine_LanguageName), propget, readonly, bindable, displaybind] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 	};
 
+	const DISPID DISPID_IDaCtlTTSPrivate_DisplayName = 10;
+	const DISPID DISPID_IDaCtlTTSPrivate_Manufacturer = 11;
+	const DISPID DISPID_IDaCtlTTSPrivate_Version = 12;
+	const DISPID DISPID_IDaCtlTTSPrivate_Gender = 13;
+	const DISPID DISPID_IDaCtlTTSPrivate_LanguageID = 14;
+	const DISPID DISPID_IDaCtlTTSPrivate_StringValue = 16;
+	const DISPID DISPID_IDaCtlTTSPrivate_AttributeValue = 17;
+	const DISPID DISPID_IDaCtlTTSPrivate_FilePath = 18;
+
+	[
+		odl,
+		uuid(1147E583-A208-11DE-ABF2-002421116FB2),
+		dual,
+		oleautomation,
+		nonextensible,
+		helpcontext(APIHELP_Ctl_TTSEngine)
+	]
+	interface IDaCtlTTSPrivate : IDaCtlTTSEngine
+	{
+		[id(DISPID_IDaCtlTTSPrivate_DisplayName), propget, bindable, displaybind] HRESULT InitDisplayName ([out, retval] BSTR* DisplayName);
+		[id(DISPID_IDaCtlTTSPrivate_DisplayName), propput, bindable, displaybind] HRESULT InitDisplayName ([in] BSTR DisplayName);
+		[id(DISPID_IDaCtlTTSPrivate_Manufacturer), propget, bindable, displaybind] HRESULT InitManufacturer ([out, retval] BSTR* Manufacturer);
+		[id(DISPID_IDaCtlTTSPrivate_Manufacturer), propput, bindable, displaybind] HRESULT InitManufacturer ([in] BSTR Manufacturer);
+		[id(DISPID_IDaCtlTTSPrivate_Version), propget, bindable, displaybind] HRESULT InitVersion ([out, retval] BSTR* Version);
+		[id(DISPID_IDaCtlTTSPrivate_Version), propput, bindable, displaybind] HRESULT InitVersion ([in] BSTR Version);
+		[id(DISPID_IDaCtlTTSPrivate_Gender), propget, bindable, displaybind] HRESULT InitGender ([out, retval] SpeechGenderType* Gender);
+		[id(DISPID_IDaCtlTTSPrivate_Gender), propput, bindable, displaybind] HRESULT InitGender ([in] SpeechGenderType Gender);
+		[id(DISPID_IDaCtlTTSPrivate_LanguageID), propget, bindable, displaybind] HRESULT InitLanguageID ([out, retval] long* LanguageID);
+		[id(DISPID_IDaCtlTTSPrivate_LanguageID), propput, bindable, displaybind] HRESULT InitLanguageID ([in] long LanguageID);
+		[id(DISPID_IDaCtlTTSPrivate_StringValue), propget, bindable, displaybind] HRESULT InitString ([in] BSTR ValuePath, [out, retval] BSTR* StringValue);
+		[id(DISPID_IDaCtlTTSPrivate_StringValue), propput, bindable, displaybind] HRESULT InitString ([in] BSTR ValuePath, [in] BSTR StringValue);
+		[id(DISPID_IDaCtlTTSPrivate_AttributeValue), propget, bindable, displaybind] HRESULT InitAttribute ([in] BSTR AttributeName, [out, retval] BSTR* AttributeValue);
+		[id(DISPID_IDaCtlTTSPrivate_AttributeValue), propput, bindable, displaybind] HRESULT InitAttribute ([in] BSTR AttributeName, [in] BSTR AttributeValue);
+		[id(DISPID_IDaCtlTTSPrivate_FilePath), propget, bindable, displaybind] HRESULT InitFilePath ([in] BSTR FileId, [out, retval] BSTR* FilePath);
+		[id(DISPID_IDaCtlTTSPrivate_FilePath), propput, bindable, displaybind] HRESULT InitFilePath ([in] BSTR FileId, [in] BSTR FilePath);
+	};
+
 	[
 		odl,
 		uuid(1147E54D-A208-11DE-ABF2-002421116FB2),
@@ -1536,6 +1593,7 @@ cpp_quote("#endif")
 	coclass DaCtlCharacter
 	{
 		[default] interface IDaCtlCharacter2;
+		interface IDaCtlCharacter3;
 	};
 
 	[
@@ -1747,6 +1805,22 @@ cpp_quote("#endif")
 	coclass DaCtlSREngines
 	{
 		[default] interface IDaCtlSREngines;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.3 Classes
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		uuid(1147E584-A208-11DE-ABF2-002421116FB2),
+		helpstring("A private Text-to-Speech Engine"),
+		helpcontext(APIHELP_Ctl_TTSEngine),
+		noncreatable
+		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Control.TTSPrivate")
+	]
+	coclass DaCtlTTSPrivate
+	{
+		[default] interface IDaCtlTTSPrivate;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

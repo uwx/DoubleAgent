@@ -743,7 +743,7 @@ bool CSapiVoiceCache::UncacheVoice (CSapiVoice* pVoice)
 CSapiVoice* CSapiVoiceCache::GetCachedVoice (INT_PTR pVoiceNdx)
 {
 	CSapiVoice*	lRet = NULL;
-	CLockCS			lLock (mCritSec);
+	CLockCS		lLock (mCritSec);
 
 	try
 	{
@@ -757,11 +757,11 @@ CSapiVoice* CSapiVoiceCache::GetCachedVoice (INT_PTR pVoiceNdx)
 CSapiVoice* CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
 {
 	CSapiVoice*	lRet = NULL;
-	CLockCS			lLock (mCritSec);
+	CLockCS		lLock (mCritSec);
 
 	try
 	{
-		CSapiVoice*	lSapiVoice;
+		CSapiVoice*		lSapiVoice;
 		CAtlString		lVoiceName (pVoiceId);
 		INT_PTR			lNdx;
 

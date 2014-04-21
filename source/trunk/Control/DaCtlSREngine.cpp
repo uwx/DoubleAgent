@@ -122,15 +122,22 @@ HRESULT DaCtlSREngine::SetOwner (DaControl * pOwner)
 {
 	HRESULT	lResult = S_OK;
 
-#ifndef	_DACORE_LOCAL
-	if	(
-			(mOwner = pOwner)
-		&&	((mOwner->mServer == NULL) != (mServerObject == NULL))
-		)
+	if	(mOwner = pOwner)
 	{
-		lResult = E_FAIL;
-	}
+#ifndef	_DACORE_LOCAL
+		if	(mOwner->mServer)
+		{
+			if	(!mServerObject)
+			{
+				lResult = E_FAIL;
+			}
+		}
+		else
 #endif
+		{
+			mLocalObject = new CDaCmnSREngine;
+		}
+	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{

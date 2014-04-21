@@ -25,6 +25,7 @@
 #define	IDR_DACTLTTSENGINE	6018
 #define	IDR_DACTLTTSENGINES	6019
 #define	IDR_DACTLUSERINPUT	6020
+#define	IDR_DACTLTTSPRIVATE	6021
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

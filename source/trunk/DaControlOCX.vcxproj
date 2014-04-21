@@ -168,6 +168,8 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
   <ItemGroup>
     <ClCompile Include="Common\AgentAnchor.cpp" />
     <ClCompile Include="Common\AgentFileCache.cpp" />
+    <ClCompile Include="Common\DaCmnTTSPrivate.cpp" />
+    <ClCompile Include="Control\DaCtlTTSPrivate.cpp" />
     <ClCompile Include="Core\AgentBalloonOptions.cpp" />
     <ClCompile Include="Core\AgentBalloonShape.cpp" />
     <ClCompile Include="Core\AgentBalloonWnd.cpp" />
@@ -276,6 +278,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     <ClCompile Include="Core\Sapi5Inputs.cpp" />
     <ClCompile Include="Core\Sapi5Voice.cpp" />
     <ClCompile Include="Core\Sapi5Voices.cpp" />
+    <ClCompile Include="Core\Sapi5VoicePrivate.cpp" />
     <ClCompile Include="Core\SapiInputCache.cpp" />
     <ClCompile Include="Core\SapiLanguageMatch.cpp" />
     <ClCompile Include="Core\SapiVoice.cpp" />
@@ -356,6 +359,7 @@ signtool sign /n "Cinnamon Software Inc." /t http://timestamp.comodoca.com/authe
     <ClInclude Include="Common\DaCmnSREngines.h" />
     <ClInclude Include="Common\DaCmnTTSEngine.h" />
     <ClInclude Include="Common\DaCmnTTSEngines.h" />
+    <ClInclude Include="Common\DaCmnTTSPrivate.h" />
     <ClInclude Include="Common\DaCmnUserInput.h" />
     <ClInclude Include="Control\DaControl.h" />
     <ClInclude Include="Core\DaCoreAnchor.h" />

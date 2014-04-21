@@ -169,6 +169,12 @@
     <ClCompile Include="Util\ThemedModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\DaCmnTTSPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Control\DaCtlTTSPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Common\DaCommon.odl">
@@ -262,6 +268,9 @@
     </None>
     <None Include="Control\GPLicenseHeader.txt" />
     <None Include="Control\DaControlRgs.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Control\DaCtlTTSPrivate.rgs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -421,6 +430,12 @@
     </ClInclude>
     <ClInclude Include="Include\DaControlOdl.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DaCmnTTSPrivate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\DaCtlTTSPrivate.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

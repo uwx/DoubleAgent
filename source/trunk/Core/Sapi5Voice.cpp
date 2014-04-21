@@ -36,7 +36,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF (ISpAudio, __uuidof(ISpAudio));
-_COM_SMARTPTR_TYPEDEF (ISpObjectToken, __uuidof(ISpObjectToken));
 _COM_SMARTPTR_TYPEDEF (ISpObjectTokenCategory, __uuidof(ISpObjectTokenCategory));
 _COM_SMARTPTR_TYPEDEF (ISpDataKey, __uuidof(ISpDataKey));
 
@@ -732,6 +731,210 @@ tBstrPtr CSapi5Voice::LongOutputId (LPCTSTR pShortOutputId)
 	PathCombine (lOutputId.GetBuffer (MAX_PATH), SPMMSYS_AUDIO_OUT_TOKEN_ID, PathFindFileName (pShortOutputId));
 	lOutputId.ReleaseBuffer ();
 	return lOutputId.AllocSysString();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+ISpObjectTokenPtr CSapi5Voice::_get_VoiceToken () const
+{
+	ISpObjectTokenPtr	lToken;
+	
+	if	(mVoice)
+	{
+		mVoice->GetVoice (&lToken);
+	}
+	return lToken;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CSapi5Voice::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
+{
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			ISpObjectTokenPtr	lToken;
+
+			if	(mVoice)
+			{
+				LogSapi5Err (pLogLevel|LogTime, mVoice->GetVoice (&lToken));
+			}
+			LogToken (pLogLevel, lToken, pTitle, pIndent);
+		}
+		catch AnyExceptionSilent
+	}
+}
+
+void CSapi5Voice::LogToken (UINT pLogLevel, ISpObjectToken* pToken, LPCTSTR pTitle, LPCTSTR pIndent)
+{
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString			lIndent (pIndent);
+			CAtlString			lTitle (pTitle);
+			tMallocPtr <WCHAR>	lVoiceName;
+			tMallocPtr <WCHAR>	lVoiceId;
+			ISpDataKeyPtr		lAttributes;
+			tMallocPtr <WCHAR>	lGenderName;
+			tMallocPtr <WCHAR>	lLanguageIdName;
+			DWORD				lGenderCode;
+			DWORD				lLanguageId;
+
+			if	(lTitle.IsEmpty ())
+			{
+				lTitle = _T("Sapi5Voice");
+			}
+			LogMessage (pLogLevel, _T("%s%s [%p]"), lIndent, lTitle, pToken);
+
+			if	(pToken)
+			{
+				try
+				{
+					if	(SUCCEEDED (LogSapi5Err (pLogLevel|LogTime, SpGetDescription (pToken, lVoiceName.Free (), NULL))))
+					{
+						LogMessage (pLogLevel, _T("%s  Name     [%ls]"), lIndent, (LPWSTR)lVoiceName);
+					}
+					if	(SUCCEEDED (LogSapi5Err (pLogLevel|LogTime, pToken->GetId (lVoiceId.Free ()))))
+					{
+						LogMessage (pLogLevel, _T("%s  Id       [%ls]"), lIndent, (LPWSTR)lVoiceId);
+					}
+				}
+				catch AnyExceptionSilent
+
+				try
+				{
+					if	((pLogLevel & 0x000F) == LogAlways)
+					{
+						ULONG				lValueNdx;
+						tMallocPtr <WCHAR>	lValueName;
+						DWORD				lValueNum;
+						tMallocPtr <WCHAR>	lValueStr;
+
+						for	(lValueNdx = 0; pToken->EnumValues (lValueNdx, lValueName.Free ()) == S_OK; lValueNdx++)
+						{
+							if	(SUCCEEDED (pToken->GetDWORD (lValueName, &lValueNum)))
+							{
+								LogMessage (pLogLevel, _T("%s  Value [%ls] [%8.8X (%u) (%d)]"), lIndent, (LPWSTR)lValueName, lValueNum, lValueNum, lValueNum);
+							}
+							else
+							if	(SUCCEEDED (pToken->GetStringValue (lValueName, lValueStr.Free ())))
+							{
+								LogMessage (pLogLevel, _T("%s  Value [%ls] [%ls]"), lIndent, (LPWSTR)lValueName, (LPWSTR)lValueStr);
+							}
+							else
+							{
+								LogMessage (pLogLevel, _T("%s  Value [%ls]"), lIndent, (LPWSTR)lValueName);
+							}
+						}
+
+						if	(SUCCEEDED (pToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
+						{
+							LogMessage (pLogLevel, _T("%s  Attributes"), lIndent);
+
+							for	(lValueNdx = 0; lAttributes->EnumValues (lValueNdx, lValueName.Free ()) == S_OK; lValueNdx++)
+							{
+								if	(SUCCEEDED (lAttributes->GetDWORD (lValueName, &lValueNum)))
+								{
+									LogMessage (pLogLevel, _T("%s    Value [%ls] [%8.8X (%u) (%d)]"), lIndent, (LPWSTR)lValueName, lValueNum, lValueNum, lValueNum);
+								}
+								else
+								if	(SUCCEEDED (lAttributes->GetStringValue (lValueName, lValueStr.Free ())))
+								{
+									LogMessage (pLogLevel, _T("%s    Value [%ls] [%ls]"), lIndent, (LPWSTR)lValueName, (LPWSTR)lValueStr);
+								}
+								else
+								{
+									LogMessage (pLogLevel, _T("%s    Value [%ls]"), lIndent, (LPWSTR)lValueName);
+								}
+							}
+						}
+					}
+					else
+					{
+						if	(SUCCEEDED (pToken->OpenKey (SPTOKENKEY_ATTRIBUTES, &lAttributes)))
+						{
+							if	(SUCCEEDED (lAttributes->GetDWORD (L"Gender", &lGenderCode)))
+							{
+								LogMessage (pLogLevel, _T("%s  Gender   [%u]"), lIndent, (LPWSTR)lGenderCode);
+							}
+							if	(SUCCEEDED (lAttributes->GetStringValue (L"Gender", lGenderName.Free ())))
+							{
+								LogMessage (pLogLevel, _T("%s  Gender   [%ls]"), lIndent, (LPWSTR)lGenderName);
+							}
+
+							if	(SUCCEEDED (lAttributes->GetDWORD (L"Language", &lLanguageId)))
+							{
+								LogMessage (pLogLevel, _T("%s  Language [%4.4X]"), lIndent, lLanguageId);
+							}
+							if	(SUCCEEDED (lAttributes->GetStringValue (L"Language", lLanguageIdName.Free ())))
+							{
+								LogMessage (pLogLevel, _T("%s  Language [%ls]"), lIndent, (LPWSTR)lLanguageIdName);
+							}
+						}
+					}
+				}
+				catch AnyExceptionSilent
+
+				LogMessage (pLogLevel, _T(""));
+			}
+		}
+		catch AnyExceptionSilent
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CSapi5Voice::LogDataKey (UINT pLogLevel, ISpDataKey* pDataKey, LPCTSTR pIndent)
+{
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			CAtlString			lIndent (pIndent);
+			ULONG				lValueNdx;
+			tMallocPtr <WCHAR>	lValueName;
+			tMallocPtr <WCHAR>	lValue;
+			ULONG				lKeyNdx;
+			tMallocPtr <WCHAR>	lKeyName;
+			ISpDataKeyPtr		lKey;
+
+			lIndent += _T("  ");
+
+			for (lValueNdx = 0; true; lValueNdx++)
+			{
+				if	(SUCCEEDED (pDataKey->EnumValues (lValueNdx, lValueName.Free())))
+				{
+					LogSapi5Err (pLogLevel, pDataKey->GetStringValue (lValueName,	lValue.Free()));
+					LogMessage (pLogLevel, _T("%s%-12.12s [%s]"), lIndent, (LPCWSTR)lValueName, (LPCWSTR)lValue);
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			for (lKeyNdx = 0; true; lKeyNdx++)
+			{
+				if	(SUCCEEDED (pDataKey->EnumKeys (lKeyNdx, lKeyName.Free())))
+				{
+					LogMessage (pLogLevel, _T("%s%s"), lIndent, (LPCWSTR)lKeyName);
+					if	(SUCCEEDED (LogSapi5Err (pLogLevel, pDataKey->OpenKey (lKeyName, &lKey))))
+					{
+						LogDataKey (pLogLevel, lKey, lIndent);
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		catch AnyExceptionSilent
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

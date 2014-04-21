@@ -36,7 +36,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaCmnCommandsWindow2
+	// IDaXxxCommandsWindow2
 	HRESULT GetPosition (long *Left, long *Top);
 	HRESULT GetSize (long *Width, long *Height);
 

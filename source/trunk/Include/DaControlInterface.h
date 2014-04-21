@@ -431,6 +431,8 @@ __if_not_exists(IDaCtlTTSEnginePtr)
 		__declspec(property(get=_get_Gender))									SpeechGenderType		Gender;
 		__declspec(property(get=_get_LanguageID))								long					LanguageID;
 		__declspec(property(get=_get_LanguageName))								_bstr_t					LanguageName[];
+		__declspec(property(get=_get_MajorVersion))								short					MajorVersion;
+		__declspec(property(get=_get_MinorVersion))								short					MinorVersion;
 
 		_bstr_t _get_TTSModeID () {BSTR lTTSModeID=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_TTSModeID(&lTTSModeID); return _bstr_t(lTTSModeID, false);}
 		_bstr_t _get_DisplayName () {BSTR lDisplayName=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_DisplayName(&lDisplayName); return _bstr_t(lDisplayName, false);}
@@ -438,6 +440,62 @@ __if_not_exists(IDaCtlTTSEnginePtr)
 		SpeechGenderType _get_Gender () {SpeechGenderType lGender=SpeechGender_Neutral; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Gender(&lGender); return lGender;}
 		long _get_LanguageID () {long lLanguageID=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_LanguageID(&lLanguageID); return lLanguageID;}
 		_bstr_t _get_LanguageName (bool EnglishName=true) {BSTR lLanguageName=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_LanguageName(EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lLanguageName); return _bstr_t(lLanguageName, false);}
+		short _get_MajorVersion () {short lMajorVersion=0,lMinorVersion=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->GetVersion(&lMajorVersion, &lMinorVersion); return lMajorVersion;}
+		short _get_MinorVersion () {short lMajorVersion=0,lMinorVersion=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->GetVersion(&lMajorVersion, &lMinorVersion); return lMinorVersion;}
+	};
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+__if_not_exists(IDaCtlTTSPrivatePtr)
+{
+	_DACTLPTR_DECLARE(IDaCtlTTSPrivate)
+	{
+	public:
+		_DACTLPTR_CONSTRUCT(IDaCtlTTSPrivate)
+		_DACTLPTR_ASSIGN(IDaCtlTTSPrivate)
+
+		__declspec(property(get=_get_InitDisplayName, put=_put_InitDisplayName))	_bstr_t				InitDisplayName;
+		__declspec(property(get=_get_InitManufacturer, put=_put_InitManufacturer))	_bstr_t				InitManufacturer;
+		__declspec(property(get=_get_InitGender, put=_put_InitGender))				SpeechGenderType	InitGender;
+		__declspec(property(get=_get_InitLanguageID, put=_put_InitLanguageID))		long				InitLanguageID;
+		__declspec(property(get=_get_InitVersion, put=_put_InitVersion))			_bstr_t				InitVersion;
+		__declspec(property(get=_get_InitString, put=_put_InitString))				_bstr_t				InitString[];
+		__declspec(property(get=_get_InitAttribute, put=_put_InitAttribute))		_bstr_t				InitAttribute[];
+		__declspec(property(get=_get_InitFilePath, put=_put_InitFilePath))			_bstr_t				InitFilePath[];
+
+		__declspec(property(get=_get_TTSModeID))									_bstr_t				TTSModeID;
+		__declspec(property(get=_get_DisplayName))									_bstr_t				DisplayName;
+		__declspec(property(get=_get_Manufacturer))									_bstr_t				Manufacturer;
+		__declspec(property(get=_get_Gender))										SpeechGenderType	Gender;
+		__declspec(property(get=_get_LanguageID))									long				LanguageID;
+		__declspec(property(get=_get_MajorVersion))									short				MajorVersion;
+		__declspec(property(get=_get_MinorVersion))									short				MinorVersion;
+
+		_bstr_t _get_InitDisplayName () {BSTR lDisplayName=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitDisplayName(&lDisplayName); return _bstr_t(lDisplayName, false);}
+		HRESULT _put_InitDisplayName (const _bstr_t& Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitDisplayName(Value); else return E_POINTER;}
+		_bstr_t _get_InitManufacturer () {BSTR lManufacturer=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitManufacturer(&lManufacturer); return _bstr_t(lManufacturer, false);}
+		HRESULT _put_InitManufacturer (const _bstr_t& Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitManufacturer(Value); else return E_POINTER;}
+		SpeechGenderType _get_InitGender () {SpeechGenderType lGender=SpeechGender_Neutral; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitGender(&lGender); return lGender;}
+		HRESULT _put_InitGender (SpeechGenderType Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitGender(Value); else return E_POINTER;}
+		long _get_InitLanguageID () {long lLanguageID=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitLanguageID(&lLanguageID); return lLanguageID;}
+		HRESULT _put_InitLanguageID (long Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitLanguageID(Value); else return E_POINTER;}
+		_bstr_t _get_InitVersion () {BSTR lVersion=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitVersion(&lVersion); return _bstr_t(lVersion, false);}
+		HRESULT _put_InitVersion (const _bstr_t& Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitVersion(Value); else return E_POINTER;}
+		_bstr_t _get_InitString (BSTR pValuePath) {BSTR lString=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitString(pValuePath, &lString); return _bstr_t(lString, false);}
+		HRESULT _put_InitString (BSTR pValuePath, const _bstr_t& Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitString(pValuePath, Value); else return E_POINTER;}
+		_bstr_t _get_InitAttribute (BSTR pAttributeName) {BSTR lAttribute=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitAttribute(pAttributeName, &lAttribute); return _bstr_t(lAttribute, false);}
+		HRESULT _put_InitAttribute (BSTR pAttributeName, const _bstr_t& Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitAttribute(pAttributeName, Value); else return E_POINTER;}
+		_bstr_t _get_InitFilePath (BSTR pFileId) {BSTR lFilePath=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_InitFilePath(pFileId, &lFilePath); return _bstr_t(lFilePath, false);}
+		HRESULT _put_InitFilePath (BSTR pFileId, const _bstr_t& Value) {if (_DACTLPTR_CHKNULL) return GetInterfacePtr()->put_InitFilePath(pFileId, Value); else return E_POINTER;}
+
+		_bstr_t _get_TTSModeID () {BSTR lTTSModeID=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_TTSModeID(&lTTSModeID); return _bstr_t(lTTSModeID, false);}
+		_bstr_t _get_DisplayName () {BSTR lDisplayName=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_DisplayName(&lDisplayName); return _bstr_t(lDisplayName, false);}
+		_bstr_t _get_Manufacturer () {BSTR lManufacturer=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Manufacturer(&lManufacturer); return _bstr_t(lManufacturer, false);}
+		SpeechGenderType _get_Gender () {SpeechGenderType lGender=SpeechGender_Neutral; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_Gender(&lGender); return lGender;}
+		long _get_LanguageID () {long lLanguageID=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_LanguageID(&lLanguageID); return lLanguageID;}
+		short _get_MajorVersion () {short lMajorVersion=0,lMinorVersion=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->GetVersion(&lMajorVersion, &lMinorVersion); return lMajorVersion;}
+		short _get_MinorVersion () {short lMajorVersion=0,lMinorVersion=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->GetVersion(&lMajorVersion, &lMinorVersion); return lMinorVersion;}
 	};
 }
 
@@ -476,6 +534,8 @@ __if_not_exists(IDaCtlSREnginePtr)
 		__declspec(property(get=_get_LanguageName))								_bstr_t					LanguageName[];
 		__declspec(property(get=_get_LanguageIDs))								SAFEARRAY*				LanguageIDs;
 		__declspec(property(get=_get_LanguageNames))							SAFEARRAY*				LanguageNames[];
+		__declspec(property(get=_get_MajorVersion))								short					MajorVersion;
+		__declspec(property(get=_get_MinorVersion))								short					MinorVersion;
 
 		_bstr_t _get_SRModeID () {BSTR lSRModeID=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_SRModeID(&lSRModeID); return _bstr_t(lSRModeID, false);}
 		_bstr_t _get_DisplayName () {BSTR lDisplayName=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_DisplayName(&lDisplayName); return _bstr_t(lDisplayName, false);}
@@ -484,6 +544,8 @@ __if_not_exists(IDaCtlSREnginePtr)
 		_bstr_t _get_LanguageName (bool EnglishName=true) {BSTR lLanguageName=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_LanguageName(EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lLanguageName); return _bstr_t(lLanguageName, false);}
 		SAFEARRAY* _get_LanguageIDs () {SAFEARRAY* lLanguageIDs=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_LanguageIDs(&lLanguageIDs); return lLanguageIDs;}
 		SAFEARRAY* _get_LanguageNames (bool EnglishName=true) {SAFEARRAY* lLanguageNames=NULL; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->get_LanguageNames(EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lLanguageNames); return lLanguageNames;}
+		short _get_MajorVersion () {short lMajorVersion=0,lMinorVersion=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->GetVersion(&lMajorVersion, &lMinorVersion); return lMajorVersion;}
+		short _get_MinorVersion () {short lMajorVersion=0,lMinorVersion=0; if (_DACTLPTR_CHKNULL) GetInterfacePtr()->GetVersion(&lMajorVersion, &lMinorVersion); return lMinorVersion;}
 	};
 }
 

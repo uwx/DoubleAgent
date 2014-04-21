@@ -28,6 +28,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E50D-A208-11DE-ABF2-002421116FB2}")) D
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrCharacter, &__uuidof(DaSvrCharacter)>,
 	public IDispatchImpl<IDaSvrCharacter2, &__uuidof(IDaSvrCharacter2), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
+	public IDispatchImpl<IDaSvrCharacter3, &__uuidof(IDaSvrCharacter3), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCharacter), &__uuidof(DoubleAgentSvr_TypeLib), DoubleAgentSvr_MajorVer, DoubleAgentSvr_MinorVer>,
 	public ISupportErrorInfo,
 	public IStdMarshalInfo,
@@ -70,6 +71,7 @@ public:
 
 	BEGIN_COM_MAP(DaSvrCharacter)
 		COM_INTERFACE_ENTRY(IDaSvrCharacter2)
+		COM_INTERFACE_ENTRY(IDaSvrCharacter3)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCharacter2)
 		COM_INTERFACE_ENTRY2(IDaSvrCharacter, IDaSvrCharacter2)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCharacter), IDaSvrCharacter2)
@@ -215,6 +217,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
 	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY**Animations);
 	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY**States);
+
+	// IDaSvrCharacter3
+	HRESULT STDMETHODCALLTYPE NewPrivateVoice (IDaSvrTTSPrivate **PrivateVoice);
+	HRESULT STDMETHODCALLTYPE UsePrivateVoice (IDaSvrTTSPrivate *PrivateVoice);
 
 	// IStdMarshalInfo
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void*pvDestContext, CLSID *pClsid);

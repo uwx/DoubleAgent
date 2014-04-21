@@ -104,7 +104,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaCharacter2
+	// IDaXxxCharacter2
 	HRESULT SetPosition (long Left, long Top);
 	HRESULT GetPosition (long *Left, long *Top);
 	HRESULT SetSize (long Width, long Height);
@@ -177,6 +177,9 @@ public:
 	HRESULT get_VisibilityCause (VisibilityCauseType *VisibilityCause);
 	HRESULT get_ListeningStatus (ListeningStatusType *ListeningStatus);
 
+	// IDaXxxCharacter3
+	HRESULT UsePrivateVoice (class CDaCmnTTSPrivate *PrivateVoice);
+
 // Implementation
 public:
 	virtual class CDaCmnCommands* GetCommands (bool pCreateObject) = 0;
@@ -202,6 +205,8 @@ public:
 
 protected:
 	void PropagateLangID ();
+	void PreChangeVoice (LPCTSTR pReason);
+	void PostChangeVoice ();
 	HRESULT DoPrepare (long pType, LPCTSTR pName, bool pQueue, long& pReqID);
 	bool DoContextMenu (HWND pOwner, const CPoint& pPosition);
 	bool DoDefaultCommand (HWND pOwner, const CPoint& pPosition);
@@ -217,7 +222,6 @@ protected:
 	CAgentFile*									mFile;
 	class CSapiVoice*							mSapiVoice;
 	class CSapi5Input*							mSapiInput;
-	tPtr <class CSapi5Voice>					mPrivateSapiVoice;
 	tPtr <class CListeningState>				mListeningState;
 	CAtlOwnPtrMap <long, class CQueuedPrepare>	mPrepares;
 	bool										mIdleEnabled;

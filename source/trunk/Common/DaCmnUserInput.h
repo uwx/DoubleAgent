@@ -35,7 +35,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaCmnUserInput2
+	// IDaXxxUserInput2
 	HRESULT get_Count (long *Count);
 	HRESULT get_ItemCommandID (long ItemIndex, long *ItemCommandID);
 	HRESULT get_ItemConfidence (long ItemIndex, long *ItemConfidence);

@@ -19,10 +19,11 @@ static char THIS_FILE[] = __FILE__;
 #ifdef	_DEBUG
 //#define	_DEBUG_COM			LogNormal|LogHighVolume
 //#define	_LOG_AGENT_CALLS	LogNormal|LogTimeMs
-#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
+//#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
-#define	_LOG_NOTIFY			LogNormal|LogTimeMs|LogHighVolume
+//#define	_LOG_NOTIFY			LogNormal|LogTimeMs|LogHighVolume
 //#define	_LOG_COMMANDS		LogNormal|LogTimeMs
+//#define	_LOG_TTS_MODES			LogNormal
 #endif
 
 #ifndef	_LOG_TTS_MODES
@@ -66,6 +67,7 @@ BEGIN_MESSAGE_MAP(CSpeechTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_THINK_DESC, OnThinkDesc)
 	ON_BN_CLICKED(IDC_SPEAK_DESC, OnSpeakDesc)
 	ON_BN_CLICKED(IDC_LISTEN, OnListen)
+	ON_BN_CLICKED(IDC_TTS_NEW_PRIVATE, OnNewPrivateVoice)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_CHARACTER_LIST, OnItemChangedCharacterList)
 	ON_NOTIFY(LVN_ITEMACTIVATE, IDC_CHARACTER_LIST, OnItemActivateCharacterList)
 	ON_WM_TIMER()
@@ -925,11 +927,32 @@ void CSpeechTestDlg::ShowTTSModes ()
 #ifdef	_LOG_TTS_MODES
 				if	(LogIsActive (_LOG_TTS_MODES))
 				{
-					short	lVersionMajor;
-					short	lVersionMinor;
+					LogMessage (_LOG_TTS_MODES, _T("  TTSEngine [%2d] [%ls] [%ls] [%hd.%hd] [%s] [%4.4X (%ls)] [%ls]"), lNdx, (BSTR)lTTSEngine.TTSModeID, (BSTR)lTTSEngine.DisplayName, lTTSEngine.MajorVersion, lTTSEngine.MinorVersion, lGenderName, lTTSEngine.LanguageID, (BSTR)lTTSEngine.LanguageName, (BSTR)lTTSEngine.Manufacturer);
+				}
+#endif
+			}
+		}
 
-					lTTSEngine->GetVersion (&lVersionMajor, &lVersionMinor);
-					LogMessage (_LOG_TTS_MODES, _T("  TTSEngine [%2d] [%ls] [%ls] [%hd.%hd] [%s] [%4.4X (%ls)] [%ls]"), lNdx, (BSTR)lTTSEngine.TTSModeID, (BSTR)lTTSEngine.DisplayName, lVersionMajor, lVersionMinor, lGenderName, lTTSEngine.LanguageID, (BSTR)lTTSEngine.LanguageName, (BSTR)lTTSEngine.Manufacturer);
+		if	(mTTSPrivate.GetCount() > 0)
+		{
+			IDaSvrTTSPrivatePtr	lTTSPrivate;
+			long				lNdx;
+
+#ifdef	_LOG_TTS_MODES
+			if	(LogIsActive (_LOG_TTS_MODES))
+			{
+				LogMessage (_LOG_TTS_MODES, _T("TTSPrivate [%d]"), mTTSPrivate.GetCount());
+			}
+#endif
+			for	(lNdx = 0; lNdx < mTTSPrivate.GetCount(); lNdx++)
+			{
+				lTTSPrivate = mTTSPrivate [lNdx];
+				mTTSModes.AddString (lTTSPrivate.TTSModeID);
+
+#ifdef	_LOG_TTS_MODES
+				if	(LogIsActive (_LOG_TTS_MODES))
+				{
+					LogMessage (_LOG_TTS_MODES, _T("  TTSPrivate [%2d] [%ls] [%ls] [%hd.%hd] [%u] [%4.4X] [%ls]"), lNdx, (BSTR)lTTSPrivate.TTSModeID, (BSTR)lTTSPrivate.DisplayName, lTTSPrivate.MajorVersion, lTTSPrivate.MinorVersion, lTTSPrivate.Gender, lTTSPrivate.LanguageID, (BSTR)lTTSPrivate.Manufacturer);
 				}
 #endif
 			}
@@ -974,6 +997,7 @@ int CSpeechTestDlg::FindTTSModeID (LPCTSTR pTTSModeID)
 {
 	CString				lFindModeID (pTTSModeID);
 	IDaSvrTTSEnginePtr	lTTSEngine;
+	IDaSvrTTSPrivatePtr	lTTSPrivate;
 	long				lNdx;
 
 	if	(mTTSEngines != NULL)
@@ -993,6 +1017,17 @@ int CSpeechTestDlg::FindTTSModeID (LPCTSTR pTTSModeID)
 				return lNdx+1;
 			}
 		}
+		for	(lNdx = 0; lNdx < mTTSPrivate.GetCount(); lNdx++)
+		{
+			lTTSPrivate = mTTSPrivate [lNdx];
+			if	(
+					(lFindModeID.CompareNoCase (CString ((BSTR)lTTSPrivate.TTSModeID)) == 0)
+				||	(lFindModeID.CompareNoCase (CString ((BSTR)lTTSPrivate.DisplayName)) == 0)
+				)
+			{
+				return lNdx+mTTSEngines.Count+1;
+			}
+		}
 	}
 	return -1;
 }
@@ -1000,16 +1035,29 @@ int CSpeechTestDlg::FindTTSModeID (LPCTSTR pTTSModeID)
 CString CSpeechTestDlg::GetTTSModeID (INT_PTR pTTSModeNdx)
 {
 	IDaSvrTTSEnginePtr	lTTSEngine;
+	IDaSvrTTSPrivatePtr	lTTSPrivate;
 
 	if	(
 			(mTTSEngines != NULL)
 		&&	(pTTSModeNdx > 0)
 		)
 	{
-		lTTSEngine = mTTSEngines.Item [(long)pTTSModeNdx-1];
-		if	(lTTSEngine != NULL)
+		if	(pTTSModeNdx <= mTTSEngines.Count)
 		{
-			return CString ((BSTR)lTTSEngine.TTSModeID);
+			lTTSEngine = mTTSEngines.Item [(long)pTTSModeNdx-1];
+			if	(lTTSEngine)
+			{
+				return CString ((BSTR)lTTSEngine.TTSModeID);
+			}
+		}
+		else
+		if	(pTTSModeNdx <= mTTSEngines.Count + mTTSPrivate.GetCount())
+		{
+			lTTSPrivate = mTTSPrivate [(long)pTTSModeNdx-mTTSEngines.Count-1];
+			if	(lTTSPrivate)
+			{
+				return CString ((BSTR)lTTSPrivate.TTSModeID);
+			}
 		}
 	}
 	return CString();
@@ -2077,6 +2125,65 @@ void CSpeechTestDlg::OnSelEndOkTTSModes()
 		lTTSModeID = GetTTSModeID (lSelMode);
 		LogComErr (LogAlways, mCharacter [lCharNdx]->put_TTSModeID (_bstr_t(lTTSModeID)), _T("SetTTSModeID [%s]"), lTTSModeID);
 		ShowCharacterState (lCharNdx);
+	}
+}
+
+void CSpeechTestDlg::OnNewPrivateVoice ()
+{
+	INT_PTR				lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+	IDaSvrCharacter3Ptr	lCharacter;
+	IDaSvrTTSPrivatePtr	lPrivateVoice;
+
+	if	((lCharacter = mCharacter [lCharNdx]))
+	{
+		if	(SUCCEEDED (LogComErr (LogAlways, lCharacter->NewPrivateVoice (&lPrivateVoice))))
+		{
+			if	(IsWindows7_AtMost ())
+			{
+				lPrivateVoice.InitLanguageID = 0x0409;
+				lPrivateVoice.InitGender = SpeechGender_Female;
+				lPrivateVoice.InitManufacturer = _bstr_t("Microsoft");
+				lPrivateVoice.InitDisplayName = _bstr_t("Microsoft Anna Private");
+				lPrivateVoice.InitVersion = _bstr_t("2.0");
+				lPrivateVoice.InitString [_bstr_t("CLSID")] = _bstr_t("{F51C7B23-6566-424C-94CF-2C4F83EE96FF}");
+				lPrivateVoice.InitString [_bstr_t("Lex\\CLSID")] = _bstr_t("{90903716-2F42-11D3-9C26-00C04F8EF87C}");
+#ifdef _WIN64
+				lPrivateVoice.InitFilePath [_bstr_t("Description")] = _bstr_t("@%CommonProgramFiles%\\Microsoft\\TTS20\\MSTTSLoc.dll,-1033");
+				lPrivateVoice.InitFilePath [_bstr_t("VoicePath")] = _bstr_t("%CommonProgramFiles(x86)%\\SpeechEngines\\Microsoft\\TTS20\\en-US\\enu-dsk");
+				lPrivateVoice.InitFilePath [_bstr_t("Lex\\DataFile")] = _bstr_t("%CommonProgramFiles(x86)%\\SpeechEngines\\Microsoft\\TTS20\\en-US\\enu-dsk\\M1033DSK.TTS");
+#else
+				lPrivateVoice.InitFilePath [_bstr_t("Description")] = _bstr_t("@%CommonProgramFiles(x86)%\\Microsoft\\TTS20\\MSTTSLoc.dll,-1033");
+				lPrivateVoice.InitFilePath [_bstr_t("VoicePath")] = _bstr_t("%CommonProgramFiles(x86)%\\SpeechEngines\\Microsoft\\TTS20\\en-US\\enu-dsk");
+				lPrivateVoice.InitFilePath [_bstr_t("Lex\\DataFile")] = _bstr_t("%CommonProgramFiles(x86)%\\SpeechEngines\\Microsoft\\TTS20\\en-US\\enu-dsk\\M1033DSK.TTS");
+#endif // _WIN64
+			}
+			else
+			{
+				lPrivateVoice.InitLanguageID = 0x0409;
+				lPrivateVoice.InitGender = SpeechGender_Female;
+				lPrivateVoice.InitManufacturer = _bstr_t("Microsoft");
+				lPrivateVoice.InitDisplayName = _bstr_t("Microsoft Zira Private");
+				lPrivateVoice.InitVersion = _bstr_t("11.0");
+				lPrivateVoice.InitAttribute [_bstr_t("Age")] = _bstr_t("Adult");
+				lPrivateVoice.InitString [_bstr_t("CLSID")] = _bstr_t("{C64501F6-E6E6-451f-A150-25D0839BC510}");
+				lPrivateVoice.InitFilePath [_bstr_t("LangDataPath")] = _bstr_t("%SystemRoot%\\Speech\\Engines\\TTS\\en-US\\MSTTSLocEnUS.dat");
+				lPrivateVoice.InitFilePath [_bstr_t("VoicePath")] = _bstr_t("%SystemRoot%\\Speech\\Engines\\TTS\\en-US\\M1033ZIR");
+			}
+			
+#ifdef	_LOG_TTS_MODES
+			if	(LogIsActive (_LOG_TTS_MODES))
+			{
+				LogMessage (_LOG_TTS_MODES, _T("  New TTSPrivate [%ls] [%ls] [%hd.%hd] [%u] [%4.4X] [%ls]"), (BSTR)lPrivateVoice.TTSModeID, (BSTR)lPrivateVoice.DisplayName, lPrivateVoice.MajorVersion, lPrivateVoice.MinorVersion, lPrivateVoice.Gender, lPrivateVoice.LanguageID, (BSTR)lPrivateVoice.Manufacturer);
+			}
+#endif
+			if	(SUCCEEDED (LogComErr (LogAlways, lCharacter->UsePrivateVoice (lPrivateVoice), _T("[%d] UsePrivateVoice [%s]"), mCharacterId[lCharNdx], (BSTR)lPrivateVoice.TTSModeID)))
+			{
+ 				mTTSPrivate.Add (lPrivateVoice.Detach());
+
+				ShowTTSModes ();
+				ShowCharacterState (lCharNdx);
+			}
+		}
 	}
 }
 

@@ -41,7 +41,7 @@ public:
 
 // Interfaces
 public:
-	// IDaSvrBalloon2
+	// IDaXxxBalloon2
 	HRESULT get_Enabled (VARIANT_BOOL *Enabled);
 	HRESULT get_Style (long *Style);
 	HRESULT put_Style (long Style);

@@ -1,19 +1,19 @@
 HKCR
 {
-	DoubleAgent.Properties.1.1 = s 'Agent Character Properties'
+	DoubleAgent.Properties.1.3 = s 'Agent Character Properties'
 	{
 		CLSID = s '{1147E565-A208-11DE-ABF2-002421116FB2}'
 	}
 	DoubleAgent.Properties = s 'Agent Character Properties'
 	{
 		CLSID = s '{1147E565-A208-11DE-ABF2-002421116FB2}'
-		CurVer = s 'DoubleAgent.Properties.1.1'
+		CurVer = s 'DoubleAgent.Properties.1.3'
 	}
 	NoRemove CLSID
 	{
 		ForceRemove {1147E565-A208-11DE-ABF2-002421116FB2} = s 'Agent Character Properties'
 		{
-			ProgID = s 'Properties.Control.1.1'
+			ProgID = s 'Properties.Control.1.3'
 			VersionIndependentProgID = s 'DoubleAgent.Properties'
 			InprocServer32 = s '%MODULE%'
 			{

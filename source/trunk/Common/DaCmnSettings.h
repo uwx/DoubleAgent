@@ -32,7 +32,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaSettings
+	// IDaXxxSettings
 	HRESULT get_SoundEffectsEnabled (VARIANT_BOOL *SoundEffectsEnabled);
 	HRESULT get_BalloonEnabled (VARIANT_BOOL *BalloonEnabled);
 	HRESULT get_BalloonFont (IFontDisp **BalloonFont);

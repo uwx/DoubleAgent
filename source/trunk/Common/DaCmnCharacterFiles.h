@@ -39,7 +39,7 @@ public:
 
 // Interfaces
 public:
-	// ICDaCharacterFiles
+	// CDaXxxCharacterFiles
 	HRESULT get_FilePaths (SAFEARRAY**FilePaths);
 	HRESULT get_SearchPath (BSTR *SearchPath);
 	HRESULT put_SearchPath (BSTR SearchPath);

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat Apr 12 03:39:11 2014
+/* at Mon Apr 21 01:04:31 2014
  */
 /* Compiler settings for Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -143,6 +143,12 @@ typedef interface IDaCtlTTSEngine IDaCtlTTSEngine;
 #endif 	/* __IDaCtlTTSEngine_FWD_DEFINED__ */
 
 
+#ifndef __IDaCtlTTSPrivate_FWD_DEFINED__
+#define __IDaCtlTTSPrivate_FWD_DEFINED__
+typedef interface IDaCtlTTSPrivate IDaCtlTTSPrivate;
+#endif 	/* __IDaCtlTTSPrivate_FWD_DEFINED__ */
+
+
 #ifndef __IDaCtlTTSEngines_FWD_DEFINED__
 #define __IDaCtlTTSEngines_FWD_DEFINED__
 typedef interface IDaCtlTTSEngines IDaCtlTTSEngines;
@@ -213,6 +219,12 @@ typedef interface IDaCtlPropertySheet2 IDaCtlPropertySheet2;
 #define ___DaCtlEvents2_FWD_DEFINED__
 typedef interface _DaCtlEvents2 _DaCtlEvents2;
 #endif 	/* ___DaCtlEvents2_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlCharacter3_FWD_DEFINED__
+#define __IDaCtlCharacter3_FWD_DEFINED__
+typedef interface IDaCtlCharacter3 IDaCtlCharacter3;
+#endif 	/* __IDaCtlCharacter3_FWD_DEFINED__ */
 
 
 #ifndef __DaControl_FWD_DEFINED__
@@ -455,6 +467,18 @@ typedef struct DaCtlSREngines DaCtlSREngines;
 #endif 	/* __DaCtlSREngines_FWD_DEFINED__ */
 
 
+#ifndef __DaCtlTTSPrivate_FWD_DEFINED__
+#define __DaCtlTTSPrivate_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlTTSPrivate DaCtlTTSPrivate;
+#else
+typedef struct DaCtlTTSPrivate DaCtlTTSPrivate;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlTTSPrivate_FWD_DEFINED__ */
+
+
 #ifdef __cplusplus
 extern "C"{
 #endif 
@@ -470,7 +494,9 @@ extern "C"{
 class __declspec(uuid("{1147E550-A208-11DE-ABF2-002421116FB2}")) DoubleAgentCtl_TypeLib;
 #define	DoubleAgentCtl_MajorVer	( 1 )
 
-#define	DoubleAgentCtl_MinorVer	( 1 )
+#define	DoubleAgentCtl_MinorVer	( 3 )
+
+
 
 
 
@@ -915,6 +941,10 @@ enum RequestStatus
 
 #define	DISPID_IDaCtlCharacter2_SetSize	( 92 )
 
+#define	DISPID_IDaCtlCharacter3_NewPrivateVoice	( 100 )
+
+#define	DISPID_IDaCtlCharacter3_UsePrivateVoice	( 101 )
+
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
 #define	DISPID_IAgentCtlRequest_Description	( 2 )
@@ -1160,6 +1190,22 @@ enum RequestStatus
 #define	DISPID_IDaCtlTTSEngine_LanguageID	( 5 )
 
 #define	DISPID_IDaCtlTTSEngine_LanguageName	( 6 )
+
+#define	DISPID_IDaCtlTTSPrivate_DisplayName	( 10 )
+
+#define	DISPID_IDaCtlTTSPrivate_Manufacturer	( 11 )
+
+#define	DISPID_IDaCtlTTSPrivate_Version	( 12 )
+
+#define	DISPID_IDaCtlTTSPrivate_Gender	( 13 )
+
+#define	DISPID_IDaCtlTTSPrivate_LanguageID	( 14 )
+
+#define	DISPID_IDaCtlTTSPrivate_StringValue	( 16 )
+
+#define	DISPID_IDaCtlTTSPrivate_AttributeValue	( 17 )
+
+#define	DISPID_IDaCtlTTSPrivate_FilePath	( 18 )
 
 #define	DISPID_IDaCtlSREngine_SRModeID	( DISPID_VALUE )
 
@@ -5325,6 +5371,341 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
 #endif 	/* __IDaCtlTTSEngine_INTERFACE_DEFINED__ */
 
 
+#ifndef __IDaCtlTTSPrivate_INTERFACE_DEFINED__
+#define __IDaCtlTTSPrivate_INTERFACE_DEFINED__
+
+/* interface IDaCtlTTSPrivate */
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlTTSPrivate;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E583-A208-11DE-ABF2-002421116FB2")
+    IDaCtlTTSPrivate : public IDaCtlTTSEngine
+    {
+    public:
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitDisplayName( 
+            /* [retval][out] */ BSTR *DisplayName) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitDisplayName( 
+            /* [in] */ BSTR DisplayName) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitManufacturer( 
+            /* [retval][out] */ BSTR *Manufacturer) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitManufacturer( 
+            /* [in] */ BSTR Manufacturer) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitVersion( 
+            /* [retval][out] */ BSTR *Version) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitVersion( 
+            /* [in] */ BSTR Version) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitGender( 
+            /* [retval][out] */ SpeechGenderType *Gender) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitGender( 
+            /* [in] */ SpeechGenderType Gender) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitLanguageID( 
+            /* [retval][out] */ long *LanguageID) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitLanguageID( 
+            /* [in] */ long LanguageID) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitString( 
+            /* [in] */ BSTR ValuePath,
+            /* [retval][out] */ BSTR *StringValue) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitString( 
+            /* [in] */ BSTR ValuePath,
+            /* [in] */ BSTR StringValue) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitAttribute( 
+            /* [in] */ BSTR AttributeName,
+            /* [retval][out] */ BSTR *AttributeValue) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitAttribute( 
+            /* [in] */ BSTR AttributeName,
+            /* [in] */ BSTR AttributeValue) = 0;
+        
+        virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_InitFilePath( 
+            /* [in] */ BSTR FileId,
+            /* [retval][out] */ BSTR *FilePath) = 0;
+        
+        virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_InitFilePath( 
+            /* [in] */ BSTR FileId,
+            /* [in] */ BSTR FilePath) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlTTSPrivateVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlTTSPrivate * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlTTSPrivate * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlTTSPrivate * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ BSTR *TTSModeID);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ BSTR *DisplayName);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ BSTR *Manufacturer);
+        
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+            IDaCtlTTSPrivate * This,
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ SpeechGenderType *Gender);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+            IDaCtlTTSPrivate * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitDisplayName )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ BSTR *DisplayName);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitDisplayName )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR DisplayName);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitManufacturer )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ BSTR *Manufacturer);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitManufacturer )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR Manufacturer);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitVersion )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ BSTR *Version);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitVersion )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR Version);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitGender )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ SpeechGenderType *Gender);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitGender )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ SpeechGenderType Gender);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitLanguageID )( 
+            IDaCtlTTSPrivate * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitLanguageID )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ long LanguageID);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitString )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR ValuePath,
+            /* [retval][out] */ BSTR *StringValue);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitString )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR ValuePath,
+            /* [in] */ BSTR StringValue);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitAttribute )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR AttributeName,
+            /* [retval][out] */ BSTR *AttributeValue);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitAttribute )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR AttributeName,
+            /* [in] */ BSTR AttributeValue);
+        
+        /* [displaybind][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_InitFilePath )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR FileId,
+            /* [retval][out] */ BSTR *FilePath);
+        
+        /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_InitFilePath )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR FileId,
+            /* [in] */ BSTR FilePath);
+        
+        END_INTERFACE
+    } IDaCtlTTSPrivateVtbl;
+
+    interface IDaCtlTTSPrivate
+    {
+        CONST_VTBL struct IDaCtlTTSPrivateVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlTTSPrivate_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlTTSPrivate_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlTTSPrivate_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlTTSPrivate_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlTTSPrivate_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlTTSPrivate_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlTTSPrivate_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlTTSPrivate_get_TTSModeID(This,TTSModeID)	\
+    ( (This)->lpVtbl -> get_TTSModeID(This,TTSModeID) ) 
+
+#define IDaCtlTTSPrivate_get_DisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> get_DisplayName(This,DisplayName) ) 
+
+#define IDaCtlTTSPrivate_get_Manufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> get_Manufacturer(This,Manufacturer) ) 
+
+#define IDaCtlTTSPrivate_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
+
+#define IDaCtlTTSPrivate_get_Gender(This,Gender)	\
+    ( (This)->lpVtbl -> get_Gender(This,Gender) ) 
+
+#define IDaCtlTTSPrivate_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlTTSPrivate_get_LanguageName(This,EnglishName,LanguageName)	\
+    ( (This)->lpVtbl -> get_LanguageName(This,EnglishName,LanguageName) ) 
+
+
+#define IDaCtlTTSPrivate_get_InitDisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> get_InitDisplayName(This,DisplayName) ) 
+
+#define IDaCtlTTSPrivate_put_InitDisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> put_InitDisplayName(This,DisplayName) ) 
+
+#define IDaCtlTTSPrivate_get_InitManufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> get_InitManufacturer(This,Manufacturer) ) 
+
+#define IDaCtlTTSPrivate_put_InitManufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> put_InitManufacturer(This,Manufacturer) ) 
+
+#define IDaCtlTTSPrivate_get_InitVersion(This,Version)	\
+    ( (This)->lpVtbl -> get_InitVersion(This,Version) ) 
+
+#define IDaCtlTTSPrivate_put_InitVersion(This,Version)	\
+    ( (This)->lpVtbl -> put_InitVersion(This,Version) ) 
+
+#define IDaCtlTTSPrivate_get_InitGender(This,Gender)	\
+    ( (This)->lpVtbl -> get_InitGender(This,Gender) ) 
+
+#define IDaCtlTTSPrivate_put_InitGender(This,Gender)	\
+    ( (This)->lpVtbl -> put_InitGender(This,Gender) ) 
+
+#define IDaCtlTTSPrivate_get_InitLanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_InitLanguageID(This,LanguageID) ) 
+
+#define IDaCtlTTSPrivate_put_InitLanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> put_InitLanguageID(This,LanguageID) ) 
+
+#define IDaCtlTTSPrivate_get_InitString(This,ValuePath,StringValue)	\
+    ( (This)->lpVtbl -> get_InitString(This,ValuePath,StringValue) ) 
+
+#define IDaCtlTTSPrivate_put_InitString(This,ValuePath,StringValue)	\
+    ( (This)->lpVtbl -> put_InitString(This,ValuePath,StringValue) ) 
+
+#define IDaCtlTTSPrivate_get_InitAttribute(This,AttributeName,AttributeValue)	\
+    ( (This)->lpVtbl -> get_InitAttribute(This,AttributeName,AttributeValue) ) 
+
+#define IDaCtlTTSPrivate_put_InitAttribute(This,AttributeName,AttributeValue)	\
+    ( (This)->lpVtbl -> put_InitAttribute(This,AttributeName,AttributeValue) ) 
+
+#define IDaCtlTTSPrivate_get_InitFilePath(This,FileId,FilePath)	\
+    ( (This)->lpVtbl -> get_InitFilePath(This,FileId,FilePath) ) 
+
+#define IDaCtlTTSPrivate_put_InitFilePath(This,FileId,FilePath)	\
+    ( (This)->lpVtbl -> put_InitFilePath(This,FileId,FilePath) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlTTSPrivate_INTERFACE_DEFINED__ */
+
+
 #ifndef __IDaCtlTTSEngines_INTERFACE_DEFINED__
 #define __IDaCtlTTSEngines_INTERFACE_DEFINED__
 
@@ -6340,7 +6721,7 @@ EXTERN_C const IID IID_IDaControl2;
 #define __IDaCtlCharacter2_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacter2 */
-/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacter2;
@@ -9205,6 +9586,137 @@ EXTERN_C const IID DIID__DaCtlEvents2;
 #endif 	/* ___DaCtlEvents2_DISPINTERFACE_DEFINED__ */
 
 
+#ifndef __IDaCtlCharacter3_INTERFACE_DEFINED__
+#define __IDaCtlCharacter3_INTERFACE_DEFINED__
+
+/* interface IDaCtlCharacter3 */
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlCharacter3;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E585-A208-11DE-ABF2-002421116FB2")
+    IDaCtlCharacter3 : public IDispatch
+    {
+    public:
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE NewPrivateVoice( 
+            /* [retval][out] */ IDaCtlTTSPrivate **PrivateVoice) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE UsePrivateVoice( 
+            /* [in] */ IDaCtlTTSPrivate *PrivateVoice) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlCharacter3Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlCharacter3 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlCharacter3 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlCharacter3 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlCharacter3 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlCharacter3 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlCharacter3 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlCharacter3 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *NewPrivateVoice )( 
+            IDaCtlCharacter3 * This,
+            /* [retval][out] */ IDaCtlTTSPrivate **PrivateVoice);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *UsePrivateVoice )( 
+            IDaCtlCharacter3 * This,
+            /* [in] */ IDaCtlTTSPrivate *PrivateVoice);
+        
+        END_INTERFACE
+    } IDaCtlCharacter3Vtbl;
+
+    interface IDaCtlCharacter3
+    {
+        CONST_VTBL struct IDaCtlCharacter3Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlCharacter3_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlCharacter3_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlCharacter3_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlCharacter3_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlCharacter3_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlCharacter3_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlCharacter3_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlCharacter3_NewPrivateVoice(This,PrivateVoice)	\
+    ( (This)->lpVtbl -> NewPrivateVoice(This,PrivateVoice) ) 
+
+#define IDaCtlCharacter3_UsePrivateVoice(This,PrivateVoice)	\
+    ( (This)->lpVtbl -> UsePrivateVoice(This,PrivateVoice) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlCharacter3_INTERFACE_DEFINED__ */
+
+
 EXTERN_C const CLSID CLSID_DaControl;
 
 #ifdef __cplusplus
@@ -9363,6 +9875,14 @@ EXTERN_C const CLSID CLSID_DaCtlSREngines;
 
 class DECLSPEC_UUID("1147E556-A208-11DE-ABF2-002421116FB2")
 DaCtlSREngines;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlTTSPrivate;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E584-A208-11DE-ABF2-002421116FB2")
+DaCtlTTSPrivate;
 #endif
 #endif /* __DoubleAgentCtl_LIBRARY_DEFINED__ */
 

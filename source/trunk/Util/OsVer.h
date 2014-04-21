@@ -37,8 +37,12 @@
 #define	IsWindowsVista_AtLeast()	(LOBYTE(LOWORD(::GetVersion ()))>=6)
 
 #define	IsWindows7()				(LOWORD(::GetVersion ())==0x0106)
-#define	IsWindows7_AtMost()			(LOBYTE(LOWORD(::GetVersion ()))=<6)
-#define	IsWindows7_AtLeast()		((LOBYTE(LOWORD(::GetVersion ()))>6)||IsWindows7())
+#define	IsWindows7_AtMost()			((LOBYTE(LOWORD(::GetVersion ()))<6)||((LOBYTE(LOWORD(::GetVersion ()))==6)&&(HIBYTE(LOWORD(::GetVersion ()))<=1)))
+#define	IsWindows7_AtLeast()		((LOBYTE(LOWORD(::GetVersion ()))>6)||((LOBYTE(LOWORD(::GetVersion ()))==6)&&(HIBYTE(LOWORD(::GetVersion ()))>=1)))
+
+#define	IsWindows8()				(LOWORD(::GetVersion ())==0x0206)
+#define	IsWindows8_AtMost()			((LOBYTE(LOWORD(::GetVersion ()))<6)||((LOBYTE(LOWORD(::GetVersion ()))==6)&&(HIBYTE(LOWORD(::GetVersion ()))<=2)))
+#define	IsWindows8_AtLeast()		((LOBYTE(LOWORD(::GetVersion ()))>6)||((LOBYTE(LOWORD(::GetVersion ()))==6)&&(HIBYTE(LOWORD(::GetVersion ()))>=2)))
 
 ////////////////////////////////////////////////////////////////////////
 

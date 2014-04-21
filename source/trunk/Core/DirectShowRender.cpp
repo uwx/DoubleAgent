@@ -69,7 +69,7 @@
 //#define	_DEBUG_STREAM		LogNormal|LogTimeMs|LogHighVolume
 //#define	_DEBUG_STREAM_EX	LogNormal|LogTimeMs|LogHighVolume
 //#define	_DEBUG_SAMPLES		LogNormal|LogTimeMs|LogHighVolume
-#define	_LOG_MISSED_SAMPLES		LogNormal|LogTime|LogHighVolume
+#define	_LOG_MISSED_SAMPLES		LogDetails|LogTime|LogHighVolume
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF|LogTime)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF|LogTime)
 //#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogTime|LogHighVolume)

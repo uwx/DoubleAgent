@@ -43,7 +43,9 @@
 
 //////////////////////////////////////////////////////////////////////
 
+#ifndef	_WIN64
 _COM_SMARTPTR_TYPEDEF (ITTSEnum, IID_ITTSEnum);
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #ifdef	__cplusplus_cli
@@ -130,6 +132,7 @@ CSapi4Voices * CSapi4Voices::CreateInstance ()
 bool CSapi4Voices::IsSapi4Installed ()
 {
 	static bool	lInstalled = false;
+#ifndef	_WIN64
 	static bool	lFirstCheck = true;
 
 	if	(lFirstCheck)
@@ -156,7 +159,7 @@ bool CSapi4Voices::IsSapi4Installed ()
 		}
 		catch AnyExceptionSilent
 	}
-
+#endif	// _WIN64
 	return lInstalled;
 }
 
@@ -164,6 +167,7 @@ bool CSapi4Voices::IsSapi4Installed ()
 
 void CSapi4Voices::Enumerate ()
 {
+#ifndef	_WIN64
 	ITTSEnumPtr			lEnum;
 	tS <TTSMODEINFO>	lModeInfo;
 #ifdef	__cplusplus_cli
@@ -238,6 +242,7 @@ void CSapi4Voices::Enumerate ()
 			lModeInfo.Clear ();
 		}
 	}
+#endif	// _WIN64
 }
 
 //////////////////////////////////////////////////////////////////////

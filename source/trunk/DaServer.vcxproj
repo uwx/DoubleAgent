@@ -220,6 +220,7 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server
   <ItemGroup>
     <ClCompile Include="Common\AgentAnchor.cpp" />
     <ClCompile Include="Common\AgentFileCache.cpp" />
+    <ClCompile Include="Common\DaCmnTTSPrivate.cpp" />
     <ClCompile Include="Core\AgentText.cpp" />
     <ClCompile Include="Common\AgentTextObject.cpp" />
     <ClCompile Include="Common\DaCmnAnimationNames.cpp" />
@@ -260,6 +261,7 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server
     <ClCompile Include="Server\DaSvrSREngines.cpp" />
     <ClCompile Include="Server\DaSvrTTSEngine.cpp" />
     <ClCompile Include="Server\DaSvrTTSEngines.cpp" />
+    <ClCompile Include="Server\DaSvrTTSPrivate.cpp" />
     <ClCompile Include="Server\DaSvrUserInput.cpp" />
     <ClCompile Include="Common\EventNotify.cpp" />
     <ClCompile Include="Common\ListeningState.cpp" />
@@ -295,6 +297,7 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server
   <ItemGroup>
     <ClInclude Include="Common\AgentAnchor.h" />
     <ClInclude Include="Common\AgentFileCache.h" />
+    <ClInclude Include="Common\DaCmnTTSPrivate.h" />
     <ClInclude Include="Server\DaActionTrace.h" />
     <ClInclude Include="ApiHelp\Source\DaApiHelp.h" />
     <ClInclude Include="Common\DaCmnAnimationNames.h" />
@@ -334,6 +337,7 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server
     <ClInclude Include="Server\DaSvrSREngines.h" />
     <ClInclude Include="Server\DaSvrTTSEngine.h" />
     <ClInclude Include="Server\DaSvrTTSEngines.h" />
+    <ClInclude Include="Server\DaSvrTTSPrivate.h" />
     <ClInclude Include="Server\DaSvrUserInput.h" />
     <ClInclude Include="Include\DaVersion.h" />
     <ClInclude Include="Common\EventNotify.h" />
@@ -365,6 +369,7 @@ if exist "$(TargetDir)$(FrameworkVersion)\$(InteropOutputPath)DoubleAgent.Server
     <None Include="Server\DaSvrSREngines.rgs" />
     <None Include="Server\DaSvrTTSEngine.rgs" />
     <None Include="Server\DaSvrTTSEngines.rgs" />
+    <None Include="Server\DaSvrTTSPrivate.rgs" />
     <None Include="Server\DaSvrUserInput.rgs" />
     <None Include="Resources\DoubleAgent.ico" />
     <None Include="Server\GPLicenseHeader.txt" />

@@ -526,7 +526,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 			CAtlString			lFilePath;
 			bool				lFilePathIsDefault;
 			tPtr <CAgentFile>	lLoadFile;
-			CAgentFile*		lAgentFile = NULL;
+			CAgentFile*			lAgentFile = NULL;
 
 			if	(
 					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath, mOwner->GetSearchPath(), &lFilePathIsDefault)))
@@ -566,7 +566,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 				{
 					lLoadFile.Detach ();
 				}
-				mCharacters.SetAt (lCharacterId, (LPDISPATCH) lCharacter);
+				mCharacters.SetAt (lCharacterId, (IDaCtlCharacter2*)lCharacter);
 				lCharacterLoaded = lCharacter.Detach ();
 			}
 		}
@@ -578,19 +578,23 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provi
 	{
 		try
 		{
+			IDaSvrCharacter2Ptr	lServerObject;
+
 			if	(
 					(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
 				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
 				&&	(SUCCEEDED (lResult = mOwner->mServer->Load (Provider, &lCharacter->mServerCharID, &lReqID)))
-				&&	(SUCCEEDED (lResult = mOwner->mServer->get_Character (lCharacter->mServerCharID, &lCharacter->mServerObject)))
+				&&	(SUCCEEDED (lResult = mOwner->mServer->get_Character (lCharacter->mServerCharID, &lServerObject)))
 				)
 			{
+				lCharacter->mServerObject = lServerObject;
+
 				if	(
 						(lCharacter->mServerObject != NULL)
 					&&	(lCharacter->GetCharID () > 0)
 					)
 				{
-					mCharacters.SetAt (lCharacterId, (LPDISPATCH) lCharacter);
+					mCharacters.SetAt (lCharacterId, (IDaCtlCharacter2*)lCharacter);
 					lCharacterLoaded = lCharacter.Detach ();
 				}
 				else

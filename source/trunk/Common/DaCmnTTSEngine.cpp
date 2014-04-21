@@ -24,6 +24,7 @@
 #include "SapiVoiceCache.h"
 #include "Sapi5Voices.h"
 #include "Sapi5Voice.h"
+#include "Sapi5VoicePrivate.h"
 #ifndef	_WIN64
 #include "Sapi4Voices.h"
 #include "Sapi4Voice.h"
@@ -103,19 +104,37 @@ bool CDaCmnTTSEngine::Initialize (CSapi4Voice* pVoice)
 bool CDaCmnTTSEngine::Initialize (CSapiVoice* pVoice)
 {
 	bool				lRet = false;
-	CSapiVoiceCache *	lVoiceCache;
-	CSapi5Voices *		lSapi5Voices;
-	CSapi5VoiceInfo *	lSapi5Voice;
+	CSapiVoiceCache*	lVoiceCache;
+	CSapi5Voices*		lSapi5Voices;
+	CSapi5VoiceInfo*	lSapi5Voice;
+	CSapi5VoicePrivate*	lPrivateVoice;
 #ifndef	_WIN64
-	CSapi4Voices *		lSapi4Voices;
+	CSapi4Voices*		lSapi4Voices;
 	CSapi4VoiceInfo*	lSapi4Voice;
 #endif
 
 	if	(
 			(pVoice)
-		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
+		&&	((lVoiceCache = CSapiVoiceCache::GetStaticInstance ()))
 		)
 	{
+		if	(
+				((lPrivateVoice = dynamic_cast<CSapi5VoicePrivate*> (pVoice)))
+			&&	(pVoice == lVoiceCache->FindCachedVoice (CAtlString (pVoice->GetUniqueId ())))
+			)
+		{
+			ISpObjectTokenPtr	lVoiceToken;
+
+			if	(
+					((lVoiceToken = lPrivateVoice->VoiceToken))
+				||	((lVoiceToken = lPrivateVoice->InitToken))
+				)
+			{
+				Initialize (CSapi5Voices::VoiceFromToken (lVoiceToken));
+				lRet = true;
+			}
+		}
+		else
 		if	(
 				(lSapi5Voices = lVoiceCache->GetSapi5Voices ())
 			&&	(lSapi5Voice = lSapi5Voices->GetVoiceId (CAtlString (pVoice->GetUniqueId ())))

@@ -174,6 +174,34 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  CharCommandsConfide
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  CharCommandsConfidenceTextCol;
 #pragma endregion
 
+#pragma region Voice Page Fields
+private: System::Windows::Forms::TabPage^  PageVoice;
+private: System::Windows::Forms::TableLayoutPanel^  TTS_Panel;
+private: System::Windows::Forms::TextBox^  TTS_TTSModeId;
+private: System::Windows::Forms::TextBox^  TTS_Name;
+private: System::Windows::Forms::TextBox^  TTS_Manufacturer;
+private: System::Windows::Forms::TextBox^  TTS_Gender;
+private: System::Windows::Forms::TextBox^  TTS_Language;
+private: System::Windows::Forms::TableLayoutPanel^  SR_Panel;
+private: System::Windows::Forms::TextBox^  SR_SRModeID;
+private: System::Windows::Forms::TextBox^  SR_Name;
+private: System::Windows::Forms::TextBox^  SR_Manufacturer;
+private: System::Windows::Forms::TextBox^  SR_Language;
+private: System::Windows::Forms::Label^  label24;
+private: System::Windows::Forms::Label^  label25;
+private: System::Windows::Forms::Label^  label26;
+private: System::Windows::Forms::Label^  label27;
+private: System::Windows::Forms::Label^  label29;
+private: System::Windows::Forms::Label^  label30;
+private: System::Windows::Forms::Label^  label31;
+private: System::Windows::Forms::Label^  label32;
+private: System::Windows::Forms::Label^  label28;
+private: System::Windows::Forms::BindingSource^  TTSEngineBinding;
+private: System::Windows::Forms::BindingSource^  SREngineBinding;
+private: System::Windows::Forms::Button^  TTS_PrivateVoice;
+private: System::Windows::Forms::Button^  TTS_DefaultVoice;
+#pragma endregion
+
 #pragma region Control Page Fields
 private: System::Windows::Forms::TabPage^  PageControl;
 private: System::Windows::Forms::CheckBox^  RaiseRequestErrorsButton;
@@ -381,6 +409,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		System::Windows::Forms::Label^  label17;
 		System::Windows::Forms::Label^  label18;
 		System::Windows::Forms::Label^  label22;
+		System::Windows::Forms::Label^  label23;
+		System::Windows::Forms::Label^  label33;
 		System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(ControlClrForm::typeid));
 		this->CharacterPageBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
 		this->SettingsPageBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
@@ -532,6 +562,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharMoveToLeft = (gcnew System::Windows::Forms::NumericUpDown());
 		this->CharHideFast = (gcnew System::Windows::Forms::CheckBox());
 		this->CharShowFast = (gcnew System::Windows::Forms::CheckBox());
+		this->CharResizeFast = (gcnew System::Windows::Forms::Button());
 		this->CharStopAll = (gcnew System::Windows::Forms::Button());
 		this->CharPlay = (gcnew System::Windows::Forms::Button());
 		this->CharShowPopupMenu = (gcnew System::Windows::Forms::Button());
@@ -583,6 +614,31 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharCommandsVoiceGrammar = (gcnew System::Windows::Forms::TextBox());
 		this->CharCommandsVoiceCaption = (gcnew System::Windows::Forms::TextBox());
 		this->CharCommandsCaption = (gcnew System::Windows::Forms::TextBox());
+		this->PageVoice = (gcnew System::Windows::Forms::TabPage());
+		this->TTS_PrivateVoice = (gcnew System::Windows::Forms::Button());
+		this->TTS_DefaultVoice = (gcnew System::Windows::Forms::Button());
+		this->SR_Panel = (gcnew System::Windows::Forms::TableLayoutPanel());
+		this->label29 = (gcnew System::Windows::Forms::Label());
+		this->label30 = (gcnew System::Windows::Forms::Label());
+		this->label31 = (gcnew System::Windows::Forms::Label());
+		this->SR_SRModeID = (gcnew System::Windows::Forms::TextBox());
+		this->SREngineBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
+		this->label32 = (gcnew System::Windows::Forms::Label());
+		this->SR_Name = (gcnew System::Windows::Forms::TextBox());
+		this->SR_Manufacturer = (gcnew System::Windows::Forms::TextBox());
+		this->SR_Language = (gcnew System::Windows::Forms::TextBox());
+		this->TTS_Panel = (gcnew System::Windows::Forms::TableLayoutPanel());
+		this->label24 = (gcnew System::Windows::Forms::Label());
+		this->label25 = (gcnew System::Windows::Forms::Label());
+		this->label26 = (gcnew System::Windows::Forms::Label());
+		this->label27 = (gcnew System::Windows::Forms::Label());
+		this->label28 = (gcnew System::Windows::Forms::Label());
+		this->TTS_TTSModeId = (gcnew System::Windows::Forms::TextBox());
+		this->TTSEngineBinding = (gcnew System::Windows::Forms::BindingSource(this->components));
+		this->TTS_Name = (gcnew System::Windows::Forms::TextBox());
+		this->TTS_Manufacturer = (gcnew System::Windows::Forms::TextBox());
+		this->TTS_Gender = (gcnew System::Windows::Forms::TextBox());
+		this->TTS_Language = (gcnew System::Windows::Forms::TextBox());
 		this->ControlMainPage = (gcnew System::Windows::Forms::TabPage());
 		this->EventsPage = (gcnew System::Windows::Forms::TabPage());
 		this->EventsGridClear = (gcnew System::Windows::Forms::Button());
@@ -596,7 +652,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetCurrentButton = (gcnew System::Windows::Forms::Button());
 		this->CollectButton = (gcnew System::Windows::Forms::Button());
 		this->SetContainedButton = (gcnew System::Windows::Forms::Button());
-		this->CharResizeFast = (gcnew System::Windows::Forms::Button());
 		CharBalloonCharsPerLineLabel = (gcnew System::Windows::Forms::Label());
 		CharIconTipLabel = (gcnew System::Windows::Forms::Label());
 		CharMoveCauseLabel = (gcnew System::Windows::Forms::Label());
@@ -668,6 +723,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		label17 = (gcnew System::Windows::Forms::Label());
 		label18 = (gcnew System::Windows::Forms::Label());
 		label22 = (gcnew System::Windows::Forms::Label());
+		label23 = (gcnew System::Windows::Forms::Label());
+		label33 = (gcnew System::Windows::Forms::Label());
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CharacterPageBinding))->BeginInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SettingsPageBinding))->BeginInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->PropertySheetPageBinding))->BeginInit();
@@ -724,6 +781,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CommandBinding))->BeginInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CommandsBinding))->BeginInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CharCommandsFontSize))->BeginInit();
+		this->PageVoice->SuspendLayout();
+		this->SR_Panel->SuspendLayout();
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SREngineBinding))->BeginInit();
+		this->TTS_Panel->SuspendLayout();
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->TTSEngineBinding))->BeginInit();
 		this->ControlMainPage->SuspendLayout();
 		this->EventsPage->SuspendLayout();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->EventsGrid))->BeginInit();
@@ -1480,6 +1542,28 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		label22->Size = System::Drawing::Size(624, 3);
 		label22->TabIndex = 2;
 		// 
+		// label23
+		// 
+		label23->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+			| System::Windows::Forms::AnchorStyles::Right));
+		label23->BackColor = System::Drawing::SystemColors::ActiveCaption;
+		label23->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+		label23->Location = System::Drawing::Point(5, 174);
+		label23->Name = L"label23";
+		label23->Size = System::Drawing::Size(624, 3);
+		label23->TabIndex = 27;
+		// 
+		// label33
+		// 
+		label33->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+			| System::Windows::Forms::AnchorStyles::Right));
+		label33->BackColor = System::Drawing::SystemColors::ActiveCaption;
+		label33->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+		label33->Location = System::Drawing::Point(9, 325);
+		label33->Name = L"label33";
+		label33->Size = System::Drawing::Size(624, 3);
+		label33->TabIndex = 27;
+		// 
 		// PropertySheetPage
 		// 
 		this->PropertySheetPage->Controls->Add(this->ShowDefaultCharacterY);
@@ -1817,7 +1901,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TestDaControl->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^  >(resources->GetObject(L"TestDaControl.OcxState")));
 		this->TestDaControl->Size = System::Drawing::Size(200, 200);
 		this->TestDaControl->TabIndex = 0;
-		this->TestDaControl->CtlSpeechWord += gcnew DoubleAgent::AxControl::CtlSpeechWordEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechWord);
 		this->TestDaControl->CtlActivateInput += gcnew DoubleAgent::AxControl::CtlActivateInputEventHandler(this, &ControlClrForm::TestDaControl_PopupActivateInput);
 		this->TestDaControl->CtlDeactivateInput += gcnew DoubleAgent::AxControl::CtlDeactivateInputEventHandler(this, &ControlClrForm::TestDaControl_PopupDeactivateInput);
 		this->TestDaControl->CtlClick += gcnew DoubleAgent::AxControl::CtlClickEventHandler(this, &ControlClrForm::TestDaControl_PopupClick);
@@ -1843,6 +1926,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TestDaControl->CtlActiveClientChange += gcnew DoubleAgent::AxControl::CtlActiveClientChangeEventHandler(this, &ControlClrForm::TestDaControl_ActiveClientChange);
 		this->TestDaControl->CtlSpeechStart += gcnew DoubleAgent::AxControl::CtlSpeechStartEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechStart);
 		this->TestDaControl->CtlSpeechEnd += gcnew DoubleAgent::AxControl::CtlSpeechEndEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechEnd);
+		this->TestDaControl->CtlSpeechWord += gcnew DoubleAgent::AxControl::CtlSpeechWordEventHandler(this, &ControlClrForm::TestDaControl_CtlSpeechWord);
 		// 
 		// RaiseRequestErrorsButton
 		// 
@@ -2727,6 +2811,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TabsCharacter->Controls->Add(this->PageActions);
 		this->TabsCharacter->Controls->Add(this->PageBalloon);
 		this->TabsCharacter->Controls->Add(this->PageCommands);
+		this->TabsCharacter->Controls->Add(this->PageVoice);
 		this->TabsCharacter->Location = System::Drawing::Point(6, 6);
 		this->TabsCharacter->Name = L"TabsCharacter";
 		this->TabsCharacter->SelectedIndex = 0;
@@ -3554,6 +3639,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharShowFast->Text = L"Fast";
 		this->CharShowFast->UseVisualStyleBackColor = true;
 		// 
+		// CharResizeFast
+		// 
+		this->CharResizeFast->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+		this->CharResizeFast->Location = System::Drawing::Point(6, 414);
+		this->CharResizeFast->Name = L"CharResizeFast";
+		this->CharResizeFast->Size = System::Drawing::Size(120, 32);
+		this->CharResizeFast->TabIndex = 29;
+		this->CharResizeFast->Text = L"Resize Quickly";
+		this->CharResizeFast->UseVisualStyleBackColor = true;
+		this->CharResizeFast->Click += gcnew System::EventHandler(this, &ControlClrForm::CharResizeFast_Click);
+		// 
 		// CharStopAll
 		// 
 		this->CharStopAll->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
@@ -4191,6 +4287,313 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->CharCommandsCaption->Size = System::Drawing::Size(192, 22);
 		this->CharCommandsCaption->TabIndex = 1;
 		// 
+		// PageVoice
+		// 
+		this->PageVoice->Controls->Add(this->TTS_PrivateVoice);
+		this->PageVoice->Controls->Add(this->TTS_DefaultVoice);
+		this->PageVoice->Controls->Add(this->SR_Panel);
+		this->PageVoice->Controls->Add(this->TTS_Panel);
+		this->PageVoice->Controls->Add(label33);
+		this->PageVoice->Controls->Add(label23);
+		this->PageVoice->Location = System::Drawing::Point(4, 25);
+		this->PageVoice->Name = L"PageVoice";
+		this->PageVoice->Size = System::Drawing::Size(636, 540);
+		this->PageVoice->TabIndex = 5;
+		this->PageVoice->Text = L"Voice";
+		this->PageVoice->UseVisualStyleBackColor = true;
+		// 
+		// TTS_PrivateVoice
+		// 
+		this->TTS_PrivateVoice->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_PrivateVoice->Location = System::Drawing::Point(13, 407);
+		this->TTS_PrivateVoice->Name = L"TTS_PrivateVoice";
+		this->TTS_PrivateVoice->Size = System::Drawing::Size(205, 34);
+		this->TTS_PrivateVoice->TabIndex = 28;
+		this->TTS_PrivateVoice->Text = L"Use private voice";
+		this->TTS_PrivateVoice->UseVisualStyleBackColor = true;
+		this->TTS_PrivateVoice->Click += gcnew System::EventHandler(this, &ControlClrForm::TTS_PrivateVoiceClick);
+		// 
+		// TTS_DefaultVoice
+		// 
+		this->TTS_DefaultVoice->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_DefaultVoice->Location = System::Drawing::Point(13, 367);
+		this->TTS_DefaultVoice->Name = L"TTS_DefaultVoice";
+		this->TTS_DefaultVoice->Size = System::Drawing::Size(205, 34);
+		this->TTS_DefaultVoice->TabIndex = 28;
+		this->TTS_DefaultVoice->Text = L"Use default voice";
+		this->TTS_DefaultVoice->UseVisualStyleBackColor = true;
+		this->TTS_DefaultVoice->Click += gcnew System::EventHandler(this, &ControlClrForm::TTS_DefaultVoiceClick);
+		// 
+		// SR_Panel
+		// 
+		this->SR_Panel->ColumnCount = 2;
+		this->SR_Panel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle()));
+		this->SR_Panel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
+		this->SR_Panel->Controls->Add(this->label29, 0, 0);
+		this->SR_Panel->Controls->Add(this->label30, 0, 1);
+		this->SR_Panel->Controls->Add(this->label31, 0, 2);
+		this->SR_Panel->Controls->Add(this->SR_SRModeID, 1, 0);
+		this->SR_Panel->Controls->Add(this->label32, 0, 3);
+		this->SR_Panel->Controls->Add(this->SR_Name, 1, 1);
+		this->SR_Panel->Controls->Add(this->SR_Manufacturer, 1, 2);
+		this->SR_Panel->Controls->Add(this->SR_Language, 1, 3);
+		this->SR_Panel->Location = System::Drawing::Point(13, 195);
+		this->SR_Panel->Name = L"SR_Panel";
+		this->SR_Panel->RowCount = 5;
+		this->SR_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->SR_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->SR_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->SR_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->SR_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->SR_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+		this->SR_Panel->Size = System::Drawing::Size(616, 123);
+		this->SR_Panel->TabIndex = 1;
+		// 
+		// label29
+		// 
+		this->label29->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label29->AutoSize = true;
+		this->label29->Location = System::Drawing::Point(3, 0);
+		this->label29->Name = L"label29";
+		this->label29->Size = System::Drawing::Size(75, 28);
+		this->label29->TabIndex = 0;
+		this->label29->Text = L"SRModeID";
+		this->label29->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// label30
+		// 
+		this->label30->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label30->AutoSize = true;
+		this->label30->Location = System::Drawing::Point(3, 28);
+		this->label30->Name = L"label30";
+		this->label30->Size = System::Drawing::Size(45, 28);
+		this->label30->TabIndex = 2;
+		this->label30->Text = L"Name";
+		this->label30->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// label31
+		// 
+		this->label31->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label31->AutoSize = true;
+		this->label31->Location = System::Drawing::Point(3, 56);
+		this->label31->Name = L"label31";
+		this->label31->Size = System::Drawing::Size(92, 28);
+		this->label31->TabIndex = 4;
+		this->label31->Text = L"Manufacturer";
+		this->label31->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// SR_SRModeID
+		// 
+		this->SR_SRModeID->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->SREngineBinding, L"SRModeID", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_SRModeID->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_SRModeID->Location = System::Drawing::Point(101, 3);
+		this->SR_SRModeID->Name = L"SR_SRModeID";
+		this->SR_SRModeID->Size = System::Drawing::Size(509, 22);
+		this->SR_SRModeID->TabIndex = 1;
+		// 
+		// SREngineBinding
+		// 
+		this->SREngineBinding->DataSource = DoubleAgent::Control::SREngine::typeid;
+		// 
+		// label32
+		// 
+		this->label32->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label32->AutoSize = true;
+		this->label32->Location = System::Drawing::Point(3, 84);
+		this->label32->Name = L"label32";
+		this->label32->Size = System::Drawing::Size(72, 28);
+		this->label32->TabIndex = 6;
+		this->label32->Text = L"Language";
+		this->label32->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// SR_Name
+		// 
+		this->SR_Name->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->SREngineBinding, L"DisplayName", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_Name->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_Name->Location = System::Drawing::Point(101, 31);
+		this->SR_Name->Name = L"SR_Name";
+		this->SR_Name->Size = System::Drawing::Size(509, 22);
+		this->SR_Name->TabIndex = 3;
+		// 
+		// SR_Manufacturer
+		// 
+		this->SR_Manufacturer->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->SREngineBinding, L"Manufacturer", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_Manufacturer->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_Manufacturer->Location = System::Drawing::Point(101, 59);
+		this->SR_Manufacturer->Name = L"SR_Manufacturer";
+		this->SR_Manufacturer->Size = System::Drawing::Size(509, 22);
+		this->SR_Manufacturer->TabIndex = 5;
+		// 
+		// SR_Language
+		// 
+		this->SR_Language->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->SREngineBinding, L"LanguageID", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_Language->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->SR_Language->Location = System::Drawing::Point(101, 87);
+		this->SR_Language->Name = L"SR_Language";
+		this->SR_Language->Size = System::Drawing::Size(121, 22);
+		this->SR_Language->TabIndex = 7;
+		// 
+		// TTS_Panel
+		// 
+		this->TTS_Panel->ColumnCount = 2;
+		this->TTS_Panel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle()));
+		this->TTS_Panel->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
+		this->TTS_Panel->Controls->Add(this->label24, 0, 0);
+		this->TTS_Panel->Controls->Add(this->label25, 0, 1);
+		this->TTS_Panel->Controls->Add(this->label26, 0, 2);
+		this->TTS_Panel->Controls->Add(this->label27, 0, 3);
+		this->TTS_Panel->Controls->Add(this->label28, 0, 4);
+		this->TTS_Panel->Controls->Add(this->TTS_TTSModeId, 1, 0);
+		this->TTS_Panel->Controls->Add(this->TTS_Name, 1, 1);
+		this->TTS_Panel->Controls->Add(this->TTS_Manufacturer, 1, 2);
+		this->TTS_Panel->Controls->Add(this->TTS_Gender, 1, 3);
+		this->TTS_Panel->Controls->Add(this->TTS_Language, 1, 4);
+		this->TTS_Panel->Location = System::Drawing::Point(13, 18);
+		this->TTS_Panel->Name = L"TTS_Panel";
+		this->TTS_Panel->RowCount = 6;
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+		this->TTS_Panel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
+		this->TTS_Panel->Size = System::Drawing::Size(616, 153);
+		this->TTS_Panel->TabIndex = 0;
+		// 
+		// label24
+		// 
+		this->label24->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label24->AutoSize = true;
+		this->label24->Location = System::Drawing::Point(3, 0);
+		this->label24->Name = L"label24";
+		this->label24->Size = System::Drawing::Size(83, 28);
+		this->label24->TabIndex = 0;
+		this->label24->Text = L"TTSModeID";
+		this->label24->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// label25
+		// 
+		this->label25->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label25->AutoSize = true;
+		this->label25->Location = System::Drawing::Point(3, 28);
+		this->label25->Name = L"label25";
+		this->label25->Size = System::Drawing::Size(45, 28);
+		this->label25->TabIndex = 2;
+		this->label25->Text = L"Name";
+		this->label25->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// label26
+		// 
+		this->label26->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label26->AutoSize = true;
+		this->label26->Location = System::Drawing::Point(3, 56);
+		this->label26->Name = L"label26";
+		this->label26->Size = System::Drawing::Size(92, 28);
+		this->label26->TabIndex = 4;
+		this->label26->Text = L"Manufacturer";
+		this->label26->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// label27
+		// 
+		this->label27->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label27->AutoSize = true;
+		this->label27->Location = System::Drawing::Point(3, 84);
+		this->label27->Name = L"label27";
+		this->label27->Size = System::Drawing::Size(56, 28);
+		this->label27->TabIndex = 6;
+		this->label27->Text = L"Gender";
+		this->label27->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// label28
+		// 
+		this->label28->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			| System::Windows::Forms::AnchorStyles::Left));
+		this->label28->AutoSize = true;
+		this->label28->Location = System::Drawing::Point(3, 112);
+		this->label28->Name = L"label28";
+		this->label28->Size = System::Drawing::Size(72, 28);
+		this->label28->TabIndex = 8;
+		this->label28->Text = L"Language";
+		this->label28->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+		// 
+		// TTS_TTSModeId
+		// 
+		this->TTS_TTSModeId->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->TTSEngineBinding, L"TTSModeID", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_TTSModeId->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_TTSModeId->Location = System::Drawing::Point(101, 3);
+		this->TTS_TTSModeId->Name = L"TTS_TTSModeId";
+		this->TTS_TTSModeId->Size = System::Drawing::Size(509, 22);
+		this->TTS_TTSModeId->TabIndex = 1;
+		// 
+		// TTSEngineBinding
+		// 
+		this->TTSEngineBinding->DataSource = DoubleAgent::Control::TTSEngine::typeid;
+		// 
+		// TTS_Name
+		// 
+		this->TTS_Name->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->TTSEngineBinding, L"DisplayName", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Name->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Name->Location = System::Drawing::Point(101, 31);
+		this->TTS_Name->Name = L"TTS_Name";
+		this->TTS_Name->Size = System::Drawing::Size(509, 22);
+		this->TTS_Name->TabIndex = 3;
+		// 
+		// TTS_Manufacturer
+		// 
+		this->TTS_Manufacturer->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->TTSEngineBinding, L"Manufacturer", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Manufacturer->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Manufacturer->Location = System::Drawing::Point(101, 59);
+		this->TTS_Manufacturer->Name = L"TTS_Manufacturer";
+		this->TTS_Manufacturer->Size = System::Drawing::Size(509, 22);
+		this->TTS_Manufacturer->TabIndex = 5;
+		// 
+		// TTS_Gender
+		// 
+		this->TTS_Gender->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->TTSEngineBinding, L"Gender", true, 
+			System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Gender->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Gender->Location = System::Drawing::Point(101, 87);
+		this->TTS_Gender->Name = L"TTS_Gender";
+		this->TTS_Gender->Size = System::Drawing::Size(121, 22);
+		this->TTS_Gender->TabIndex = 7;
+		// 
+		// TTS_Language
+		// 
+		this->TTS_Language->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Text", this->TTSEngineBinding, L"LanguageID", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Language->DataBindings->Add((gcnew System::Windows::Forms::Binding(L"Enabled", this->CharacterPageBinding, L"Bound", 
+			true, System::Windows::Forms::DataSourceUpdateMode::Never)));
+		this->TTS_Language->Location = System::Drawing::Point(101, 115);
+		this->TTS_Language->Name = L"TTS_Language";
+		this->TTS_Language->Size = System::Drawing::Size(121, 22);
+		this->TTS_Language->TabIndex = 9;
+		// 
 		// ControlMainPage
 		// 
 		this->ControlMainPage->Controls->Add(this->TabsControl);
@@ -4325,17 +4728,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->SetContainedButton->UseVisualStyleBackColor = true;
 		this->SetContainedButton->Click += gcnew System::EventHandler(this, &ControlClrForm::SetContainedButton_Click);
 		// 
-		// CharResizeFast
-		// 
-		this->CharResizeFast->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-		this->CharResizeFast->Location = System::Drawing::Point(6, 414);
-		this->CharResizeFast->Name = L"CharResizeFast";
-		this->CharResizeFast->Size = System::Drawing::Size(120, 32);
-		this->CharResizeFast->TabIndex = 29;
-		this->CharResizeFast->Text = L"Resize Quickly";
-		this->CharResizeFast->UseVisualStyleBackColor = true;
-		this->CharResizeFast->Click += gcnew System::EventHandler(this, &ControlClrForm::CharResizeFast_Click);
-		// 
 		// ControlClrForm
 		// 
 		this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -4426,6 +4818,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CommandBinding))->EndInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CommandsBinding))->EndInit();
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->CharCommandsFontSize))->EndInit();
+		this->PageVoice->ResumeLayout(false);
+		this->SR_Panel->ResumeLayout(false);
+		this->SR_Panel->PerformLayout();
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SREngineBinding))->EndInit();
+		this->TTS_Panel->ResumeLayout(false);
+		this->TTS_Panel->PerformLayout();
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->TTSEngineBinding))->EndInit();
 		this->ControlMainPage->ResumeLayout(false);
 		this->EventsPage->ResumeLayout(false);
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->EventsGrid))->EndInit();
@@ -4671,6 +5070,12 @@ private: System::Void ShowDefaultCharacter_Click(System::Object^  Sender, System
 		}
 		ShowConnected ();
 	}
+
+//===========================================================================
+
+private: System::Void TTS_DefaultVoiceClick(System::Object^  sender, System::EventArgs^  e);
+private: System::Void TTS_PrivateVoiceClick(System::Object^  sender, System::EventArgs^  e);
+
 };
 /////////////////////////////////////////////////////////////////////////////
 } // namespace DoubleAgent

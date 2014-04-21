@@ -22,6 +22,11 @@
 #define _SAPI4ERR_H
 ////////////////////////////////////////////////////////////////////////
 #include "Log.h"
+#ifdef	_WIN64
+#define LogSapi4Err LogComErr
+#define LogSapi4ErrAnon LogComErrAnon
+#else	// _WIN64
+////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
 #pragma warning (disable: 4005)
 #include "speech.h"
@@ -48,4 +53,5 @@ DEFINE_LogErrFL(Sapi4,HRESULT)
 #define LogSapi4ErrAnon LogComErrAnon
 #endif
 ////////////////////////////////////////////////////////////////////////
+#endif	// _WIN64
 #endif	// _Sapi4ERR_H
