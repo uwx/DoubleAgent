@@ -567,7 +567,7 @@ HRESULT CDaCmnTTSPrivate::put_InitAttribute (BSTR AttributeName, BSTR AttributeV
 	{
 		if	(mSapi5VoicePrivate)
 		{
-			lResult = mSapi5VoicePrivate->SetStringValue (AttributeName, AttributeValue);
+			lResult = mSapi5VoicePrivate->SetAttribute (AttributeName, AttributeValue);
 		}
 	}
 	return lResult;
@@ -616,6 +616,47 @@ HRESULT CDaCmnTTSPrivate::put_InitFilePath (BSTR FileId, BSTR FilePath)
 		if	(mSapi5VoicePrivate)
 		{
 			lResult = mSapi5VoicePrivate->SetStringValue (FileId, FilePath);
+		}
+	}
+	return lResult;
+}
+ 
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaCmnTTSPrivate::InitFromRegistry (BSTR RegistryPath, BSTR VoiceId, VARIANT_BOOL *Success)
+{
+	HRESULT	lResult = E_FAIL;
+
+	if	(Success)
+	{
+		(*Success) = VARIANT_FALSE;
+	}
+
+	if	(	
+			(!RegistryPath)
+		||	(!VoiceId)
+		)
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	if	(mSapi5Voice)
+	{
+		lResult = E_UNEXPECTED;
+	}
+	else
+	{
+		SafeFreeSafePtr (mSapi5VoicePrivate);
+		SafeFreeSafePtr (mPrivateVoiceInfo);
+		mSapi5VoicePrivate = CSapi5VoicePrivate::CreateInstance (RegistryPath, VoiceId);
+
+		if	(mSapi5VoicePrivate->InitToken)
+		{
+			if	(Success)
+			{
+				(*Success) = VARIANT_TRUE;
+			}
+			lResult = S_OK;
 		}
 	}
 	return lResult;

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Mon Apr 21 01:04:31 2014
+/* at Thu Jun 05 00:26:28 2014
  */
 /* Compiler settings for Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -1206,6 +1206,8 @@ enum RequestStatus
 #define	DISPID_IDaCtlTTSPrivate_AttributeValue	( 17 )
 
 #define	DISPID_IDaCtlTTSPrivate_FilePath	( 18 )
+
+#define	DISPID_IDaCtlTTSPrivate_InitFromRegistry	( 19 )
 
 #define	DISPID_IDaCtlSREngine_SRModeID	( DISPID_VALUE )
 
@@ -5440,6 +5442,11 @@ EXTERN_C const IID IID_IDaCtlTTSPrivate;
             /* [in] */ BSTR FileId,
             /* [in] */ BSTR FilePath) = 0;
         
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE InitFromRegistry( 
+            /* [in] */ BSTR RegistryPath,
+            /* [in] */ BSTR VoiceId,
+            /* [retval][out] */ VARIANT_BOOL *Success) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -5589,6 +5596,12 @@ EXTERN_C const IID IID_IDaCtlTTSPrivate;
             /* [in] */ BSTR FileId,
             /* [in] */ BSTR FilePath);
         
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *InitFromRegistry )( 
+            IDaCtlTTSPrivate * This,
+            /* [in] */ BSTR RegistryPath,
+            /* [in] */ BSTR VoiceId,
+            /* [retval][out] */ VARIANT_BOOL *Success);
+        
         END_INTERFACE
     } IDaCtlTTSPrivateVtbl;
 
@@ -5694,6 +5707,9 @@ EXTERN_C const IID IID_IDaCtlTTSPrivate;
 
 #define IDaCtlTTSPrivate_put_InitFilePath(This,FileId,FilePath)	\
     ( (This)->lpVtbl -> put_InitFilePath(This,FileId,FilePath) ) 
+
+#define IDaCtlTTSPrivate_InitFromRegistry(This,RegistryPath,VoiceId,Success)	\
+    ( (This)->lpVtbl -> InitFromRegistry(This,RegistryPath,VoiceId,Success) ) 
 
 #endif /* COBJMACROS */
 

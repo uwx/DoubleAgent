@@ -556,3 +556,22 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSPrivate::put_InitFilePath (BSTR FileId, BSTR F
 #endif
 	return lResult;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrTTSPrivate::InitFromRegistry (BSTR RegistryPath, BSTR VoiceId, VARIANT_BOOL *Success)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSPrivate::InitFromRegistry"), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult = CDaCmnTTSPrivate::InitFromRegistry (RegistryPath, VoiceId, Success);
+
+	PutServerError (lResult, __uuidof(IDaSvrTTSPrivate));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSPrivate::InitFromRegistry"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}

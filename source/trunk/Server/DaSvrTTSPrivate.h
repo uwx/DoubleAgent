@@ -103,6 +103,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_InitFilePath (BSTR FileId, BSTR *FilePath);
     HRESULT STDMETHODCALLTYPE put_InitFilePath (BSTR FileId, BSTR FilePath);
 
+    HRESULT STDMETHODCALLTYPE InitFromRegistry (BSTR RegistryPath, BSTR VoiceId, VARIANT_BOOL *Success);
+
 // Implementation
 protected:
 	void Disconnect (bool pAbandonned);

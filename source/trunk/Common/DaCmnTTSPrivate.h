@@ -68,6 +68,8 @@ public:
 	HRESULT get_InitFilePath (BSTR FileId, BSTR *FilePath);
     HRESULT put_InitFilePath (BSTR FileId, BSTR FilePath);
 
+    HRESULT InitFromRegistry (BSTR RegistryPath, BSTR VoiceId, VARIANT_BOOL *Success);
+
 // Implementation
 protected:
 	tPtr<class CSapi5VoicePrivate>	mSapi5VoicePrivate;

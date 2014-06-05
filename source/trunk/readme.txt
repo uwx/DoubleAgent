@@ -2,7 +2,7 @@ For Windows XP, 32-bit Windows Vista, or 32-bit Windows 7:
 
 	Download and install DoubleAgent_x86.msi. 
 
-For 64-bit Windows Vista 64-bit or Windows 7:
+For 64-bit Windows Vista, Windows 7, Windows 8:
 
 	Download and install DoubleAgent_x64x86.msi 
 

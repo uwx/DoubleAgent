@@ -1446,6 +1446,7 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaCtlTTSPrivate_StringValue = 16;
 	const DISPID DISPID_IDaCtlTTSPrivate_AttributeValue = 17;
 	const DISPID DISPID_IDaCtlTTSPrivate_FilePath = 18;
+	const DISPID DISPID_IDaCtlTTSPrivate_InitFromRegistry = 19;
 
 	[
 		odl,
@@ -1473,6 +1474,8 @@ cpp_quote("#endif")
 		[id(DISPID_IDaCtlTTSPrivate_AttributeValue), propput, bindable, displaybind] HRESULT InitAttribute ([in] BSTR AttributeName, [in] BSTR AttributeValue);
 		[id(DISPID_IDaCtlTTSPrivate_FilePath), propget, bindable, displaybind] HRESULT InitFilePath ([in] BSTR FileId, [out, retval] BSTR* FilePath);
 		[id(DISPID_IDaCtlTTSPrivate_FilePath), propput, bindable, displaybind] HRESULT InitFilePath ([in] BSTR FileId, [in] BSTR FilePath);
+
+		[id(DISPID_IDaCtlTTSPrivate_InitFromRegistry)] HRESULT InitFromRegistry ([in] BSTR RegistryPath, [in] BSTR VoiceId, [out, retval] VARIANT_BOOL* Success);
 	};
 
 	[

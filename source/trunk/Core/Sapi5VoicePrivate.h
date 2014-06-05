@@ -33,9 +33,11 @@ class CSapi5VoicePrivate : public CSapi5Voice
 	DECLARE_DLL_OBJECT_EX(CSapi5VoicePrivate, _DACORE_IMPEXP)
 protected:
 	CSapi5VoicePrivate (LPCTSTR pVoiceId = NULL);
+	CSapi5VoicePrivate (LPCTSTR pTokenPath, LPCTSTR pVoiceId);
 public:
 	_DACORE_IMPEXP virtual ~CSapi5VoicePrivate ();
 	_DACORE_IMPEXP static CSapi5VoicePrivate* CreateInstance (LPCTSTR pVoiceId = NULL);
+	_DACORE_IMPEXP static CSapi5VoicePrivate* CreateInstance (LPCTSTR pTokenPath, LPCTSTR pVoiceId);
 
 // Attributes
 	_DACORE_IMPEXP virtual HRESULT GetVoiceId (tBstrPtr& pVoiceId);
@@ -72,14 +74,18 @@ protected:
 
 // Implementation
 public:
-	__declspec(property(get=_get_InitToken)) ISpDataKey* InitToken;
+	__declspec(property(get=_get_InitToken))		ISpDataKey* InitToken;
+	__declspec(property(get=_get_TokenIsPrivate))	bool		TokenIsPrivate;
+
 	_DACORE_IMPEXP ISpDataKey* _get_InitToken () const {return mToken.GetInterfacePtr();}
+	_DACORE_IMPEXP bool _get_TokenIsPrivate () const {return mTokenIsPrivate;}
 protected:
 	_DACORE_IMPEXP HRESULT GetKeyToken (ISpDataKey* pParentToken, LPCTSTR pValuePath, ISpDataKeyPtr& pToken, CAtlString& pValueId, bool pCreate = false);
 	_DACORE_IMPEXP HRESULT GetAttributesToken (ISpDataKeyPtr& pToken, bool pCreate = false, LPCTSTR pAttributesKey = NULL);
 
 protected:
 	ISpDataKeyPtr	mToken;
+	bool			mTokenIsPrivate;
 };
 
 //////////////////////////////////////////////////////////////////////

@@ -109,6 +109,8 @@ public:
     HRESULT STDMETHODCALLTYPE put_InitAttribute (BSTR AttributeName, BSTR AttributeValue);
 	HRESULT STDMETHODCALLTYPE get_InitFilePath (BSTR FileId, BSTR *FilePath);
     HRESULT STDMETHODCALLTYPE put_InitFilePath (BSTR FileId, BSTR FilePath);
+        
+	HRESULT STDMETHODCALLTYPE InitFromRegistry (BSTR RegistryPath, BSTR VoiceId, VARIANT_BOOL *Success);
 
 // Implementation
 private:

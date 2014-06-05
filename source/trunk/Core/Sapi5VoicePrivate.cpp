@@ -34,6 +34,7 @@ static LPCTSTR sAttributesKey = _T("Attributes");
 IMPLEMENT_DLL_OBJECT(CSapi5VoicePrivate)
 
 CSapi5VoicePrivate::CSapi5VoicePrivate (LPCTSTR pVoiceId)
+:	mTokenIsPrivate (true)
 {
 	ISpObjectTokenPtr	lToken;
 
@@ -42,20 +43,33 @@ CSapi5VoicePrivate::CSapi5VoicePrivate (LPCTSTR pVoiceId)
 	mVoice = NULL;
 }
 
+CSapi5VoicePrivate::CSapi5VoicePrivate (LPCTSTR pTokenPath, LPCTSTR pVoiceId)
+:	mTokenIsPrivate (false)
+{
+	ISpObjectTokenPtr	lToken;
+
+	LogSapi5Err (LogIfActive|LogTime, SpCreateNewToken (pTokenPath, pVoiceId, &lToken));
+	mToken = lToken;
+	mVoice = NULL;
+}
+
 CSapi5VoicePrivate::~CSapi5VoicePrivate ()
 {
 	CSapi5Voice::~CSapi5Voice ();
 
-	try
+	if	(mTokenIsPrivate)
 	{
-		ISpObjectTokenPtr	lToken;
-
-		if	(lToken = mToken)
+		try
 		{
-			LogSapi5Err (LogNormal|LogTime, lToken->Remove (NULL));
+			ISpObjectTokenPtr	lToken;
+
+			if	(lToken = mToken)
+			{
+				LogSapi5Err (LogNormal|LogTime, lToken->Remove (NULL));
+			}
 		}
+		catch AnyExceptionSilent
 	}
-	catch AnyExceptionSilent
 
 	SafeFreeSafePtr (mToken);
 }
@@ -63,6 +77,11 @@ CSapi5VoicePrivate::~CSapi5VoicePrivate ()
 CSapi5VoicePrivate* CSapi5VoicePrivate::CreateInstance (LPCTSTR pVoiceId)
 {
 	return new CSapi5VoicePrivate (pVoiceId);
+}
+
+CSapi5VoicePrivate* CSapi5VoicePrivate::CreateInstance (LPCTSTR pTokenPath, LPCTSTR pVoiceId)
+{
+	return new CSapi5VoicePrivate (pTokenPath, pVoiceId);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -106,6 +125,7 @@ HRESULT CSapi5VoicePrivate::SetDisplayName (LPCTSTR pDisplayName)
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -156,6 +176,7 @@ HRESULT CSapi5VoicePrivate::SetLanguage (LANGID pLanguageId)
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -201,6 +222,7 @@ HRESULT CSapi5VoicePrivate::SetAge (LPCTSTR pAgeString)
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -238,6 +260,7 @@ HRESULT CSapi5VoicePrivate::SetGender (LPCTSTR pGenderString)
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -275,6 +298,7 @@ HRESULT CSapi5VoicePrivate::SetVendor (LPCTSTR pVendorName)
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -312,6 +336,7 @@ HRESULT CSapi5VoicePrivate::SetVersion (LPCTSTR pVersionString)
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -393,6 +418,7 @@ HRESULT CSapi5VoicePrivate::SetStringValue (LPCTSTR pValueId, LPCTSTR pStringVal
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		)
 	{
@@ -495,6 +521,7 @@ HRESULT CSapi5VoicePrivate::SetAttribute (LPCTSTR pAttributeName, LPCTSTR pAttri
 
 	if	(
 			(mToken != NULL)
+		&&	(mTokenIsPrivate)
 		&&	(!CSapi5Voice::_IsPrepared ())
 		&&	(SUCCEEDED (lResult = GetAttributesToken (lAttributesToken, true)))
 		)

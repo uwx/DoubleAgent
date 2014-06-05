@@ -1275,3 +1275,59 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSPrivate::put_InitFilePath (BSTR FileId, BSTR F
 #endif
 	return lResult;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlTTSPrivate::InitFromRegistry (BSTR RegistryPath, BSTR VoiceId, VARIANT_BOOL *Success)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSPrivate::InitFromRegistry"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult;
+
+	if	(Success)
+	{
+		(*Success) = VARIANT_FALSE;
+	}
+
+	if	(
+			(!RegistryPath)
+		||	(!VoiceId)
+		)
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->InitFromRegistry (RegistryPath, VoiceId, Success);
+			}
+			catch AnyExceptionDebug
+		}
+#ifndef	_DACORE_LOCAL
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->InitFromRegistry (RegistryPath, VoiceId, Success);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlTTSPrivate));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSPrivate::InitFromRegistry"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
